@@ -137,7 +137,6 @@ export const Header: React.FC<HeaderProps> = ({
       ];
     } else if (activeUnitId === 'deputi-investasi') {
       return [
-        { id: 'ikhtisar', label: 'Ikhtisar 4 IKP & Realisasi', icon: LayoutDashboard },
         { id: 'deep_dive', label: 'Unit Deep-Dive Center (3 Unit)', icon: Sparkles, isSpecial: true },
         { id: 'kamus_rumus', label: 'Manual 4 IKP (PDF)', icon: FileCode2 },
         { id: 'satu_data', label: 'Katalog 30 Dataset (PDF)', icon: Database },

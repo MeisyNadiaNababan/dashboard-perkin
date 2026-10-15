@@ -19,23 +19,23 @@ export const KebijakanStrategisNarasiAi: React.FC = () => {
 
       {/* Kolom Kanan: 3 Poin Inti Sejajar Horizontal Khusus DEP-A2 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 lg:gap-6 flex-1">
-        {/* Poin 01: Perencanaan Strategis (Pusren) & Harmonisasi (PHKS) */}
+        {/* Poin 01: Perencanaan Strategis (Pusren) */}
         <div className="flex items-start gap-2.5">
           <span className="text-slate-400 font-black text-xs sm:text-sm font-mono shrink-0 leading-snug">
             01
           </span>
           <p className="text-xs text-white font-medium leading-relaxed">
-            Indeks Perencanaan (IPPN) mencapai 94,20 (Sangat Baik) dengan 5 masterplan strategis on track; harmonisasi regulasi Perka tuntas 100% selaras regulasi pusat PP 41/2021.
+            Indeks Perencanaan (IPPN) mencapai 94,20 (Sangat Baik) didukung penetapan Master Plan Jalan 94,9 Km dan penyelesaian rekomendasi peruntukan lahan 95,8% (1.248 berkas selesai).
           </p>
         </div>
 
-        {/* Poin 02: Transformasi SPBE & Infrastruktur TI (PDSI) */}
+        {/* Poin 02: Transformasi SPBE, Data Center & Keamanan Siber (PDSI) */}
         <div className="flex items-start gap-2.5">
           <span className="text-slate-400 font-black text-xs sm:text-sm font-mono shrink-0 leading-snug">
             02
           </span>
           <p className="text-xs text-white font-medium leading-relaxed">
-            Kematangan SPBE meraih indeks 4,12 (Level 4 Terpadu); keandalan uptime data center 99,98% serta penggelaran 151,2 Km backbone fiber optik menjamin ketahanan infrastruktur digital.
+            Kematangan SPBE mencapai 4,12 dan evaluasi EPSS 2,85 (Baik); okupansi rak data center 81,3% di 4 ruangan dengan kepuasan pelanggan 93,9% serta 100% mitigasi serangan IT SOC.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export const KebijakanStrategisNarasiAi: React.FC = () => {
             03
           </span>
           <p className="text-xs text-white font-medium leading-relaxed">
-            IKM PTSP mencapai 88,42 (Mutu A) dengan 1.486 izin terbit dan kepatuhan SLA 88,6%; akselerasi verifikasi teknis sektor kelautan diprioritaskan untuk memangkas backlog izin.
+            IKM PTSP mencapai 88,42 (Mutu A) dengan kepatuhan SLA perizinan tepat waktu 94,8% (14.080 izin) serta penyelesaian monitoring pengaduan masyarakat tuntas 98,4% (185 dari 188 aduan).
           </p>
         </div>
       </div>

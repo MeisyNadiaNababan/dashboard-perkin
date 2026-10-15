@@ -1314,3 +1314,544 @@ export const SATU_DATA_KEBIJAKAN_STRATEGIS_CATALOG: SatuDatasetItem[] = [
     halamanPdf: 'Hal 43',
   },
 ];
+
+// ============================================================================
+// DATASET TAMBAHAN SESUAI SPESIFIKASI DOKUMEN SATU DATA BP BATAM
+// ============================================================================
+
+// 1. Pusren: Rekapitulasi Rekomendasi Perubahan Peruntukan Lahan Setiap Tahun (Hal. 52 No. 8)
+// Atribut: TAHUN, JUMLAH PERMOHONAN, SELESAI
+export interface RekomendasiPeruntukanLahanItem {
+  tahun: string;
+  jumlahPermohonan: number; // Jumlah Pemohon
+  selesai: number; // Selesai / Rekomendasi Terbit
+  persentase: number;
+  keterangan: string;
+}
+
+export const REKOMENDASI_PERUNTUKAN_LAHAN_DATA: RekomendasiPeruntukanLahanItem[] = [
+  { tahun: '2021', jumlahPermohonan: 142, selesai: 136, persentase: 95.8, keterangan: 'Verifikasi zonasi KBLI & RTRW' },
+  { tahun: '2022', jumlahPermohonan: 185, selesai: 178, persentase: 96.2, keterangan: 'Peningkatan permohonan industri Nongsa' },
+  { tahun: '2023', jumlahPermohonan: 214, selesai: 205, persentase: 95.8, keterangan: 'Integrasi sistem GIS Spasial Lahan' },
+  { tahun: '2024', jumlahPermohonan: 268, selesai: 256, persentase: 95.5, keterangan: 'Revisi peruntukan komersial Batam Center' },
+  { tahun: '2025', jumlahPermohonan: 310, selesai: 298, persentase: 96.1, keterangan: 'Penyelarasan PP 41/2021 & RDTR Batam' },
+  { tahun: '2026', jumlahPermohonan: 184, selesai: 175, persentase: 95.1, keterangan: 'Cut-off Triwulan II 2026 (Berjalan)' },
+];
+
+// 2. Pusren: Masterplan Jalan (Hal. 52 No. 12)
+// Atribut: TAHUN, KLASIFIKASI JALAN, WILAYAH, SUB WILAYAH, PANJANG, LEBAR
+export interface MasterplanJalanItem {
+  id: string;
+  tahun: string;
+  klasifikasiJalan: string;
+  wilayah: string;
+  subWilayah: string;
+  panjangKm: number;
+  lebarMeter: number;
+  statusKonstruksi: string;
+}
+
+export const MASTERPLAN_JALAN_DATA: MasterplanJalanItem[] = [
+  {
+    id: 'mpj-01',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Arteri Primer',
+    wilayah: 'Batam Kota - Nongsa',
+    subWilayah: 'SWP II (Koridor Bandara Hang Nadim - KEK Nongsa Digital)',
+    panjangKm: 18.5,
+    lebarMeter: 35.0,
+    statusKonstruksi: 'Operasional 5 Lajur (Terhubung Jalur Logistik)',
+  },
+  {
+    id: 'mpj-02',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Arteri Primer',
+    wilayah: 'Batu Ampar - Muka Kuning',
+    subWilayah: 'SWP III (Koridor Industri Sei Panas - Pelabuhan Kargo)',
+    panjangKm: 14.2,
+    lebarMeter: 35.0,
+    statusKonstruksi: 'Pelebaran 5 Lajur Tahap 2 Selesai',
+  },
+  {
+    id: 'mpj-03',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Arteri Primer',
+    wilayah: 'Bandara Hang Nadim - Kabil Port',
+    subWilayah: 'SWP II (Kawasan Industri Berat Kabil - Dermaga CPO)',
+    panjangKm: 16.8,
+    lebarMeter: 40.0,
+    statusKonstruksi: 'Peningkatan Struktur Perkerasan Berat',
+  },
+  {
+    id: 'mpj-04',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Arteri Sekunder',
+    wilayah: 'Batu Aji - Tanjung Uncang',
+    subWilayah: 'SWP V (Koridor Shipyard & Galangan Kapal Nasional)',
+    panjangKm: 12.8,
+    lebarMeter: 28.0,
+    statusKonstruksi: 'Operasional Jalur Angkut Komponen Berat',
+  },
+  {
+    id: 'mpj-05',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Kolektor Primer',
+    wilayah: 'Sekupang - Marina City',
+    subWilayah: 'SWP IV (Kawasan Pariwisata, Dermaga Feri & RSBP)',
+    panjangKm: 16.4,
+    lebarMeter: 24.0,
+    statusKonstruksi: 'Pelebaran 4 Lajur & Jalur Sepeda',
+  },
+  {
+    id: 'mpj-06',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Kolektor Sekunder',
+    wilayah: 'Kabil - Teluk Tering',
+    subWilayah: 'SWP I (Jalur Lingkar Luar Timur Batam Center)',
+    panjangKm: 9.6,
+    lebarMeter: 22.0,
+    statusKonstruksi: 'Optimalisasi Drainase & Median Jalan',
+  },
+  {
+    id: 'mpj-07',
+    tahun: '2025-2029',
+    klasifikasiJalan: 'Kolektor Primer',
+    wilayah: 'Bengkong - Batu Ampar',
+    subWilayah: 'SWP III (Akses Pariwisata Kuliner & Pemukiman)',
+    panjangKm: 7.2,
+    lebarMeter: 22.0,
+    statusKonstruksi: 'Peningkatan Aspal Hotmix & Trotoar',
+  },
+];
+
+// 3. PDSI: Data Rak Data Center (Hal. 41 No. 8)
+// Atribut: RUANGAN, JENIS RAK, TANGGAL REKAP AWAL, TANGGAL REKAP AKHIR, TOTAL RAK, JUMLAH RAK TERISI, JUMLAH RAK KOSONG
+export interface RakDataCenterRuanganItem {
+  id: string;
+  ruangan: string;
+  jenisRak: string;
+  tanggalRekapAwal: string;
+  tanggalRekapAkhir: string;
+  totalRak: number;
+  jumlahRakTerisi: number;
+  jumlahRakKosong: number;
+  persentaseTerisi: number;
+}
+
+export const RAK_DATA_CENTER_RUANGAN_DATA: RakDataCenterRuanganItem[] = [
+  {
+    id: 'dc-room-1',
+    ruangan: 'Ruang Server Utama (BIDA Lt. 3)',
+    jenisRak: 'Rak 42U Server Blade & High Density Compute',
+    tanggalRekapAwal: '01/01/2026',
+    tanggalRekapAkhir: '31/03/2026',
+    totalRak: 36,
+    jumlahRakTerisi: 31,
+    jumlahRakKosong: 5,
+    persentaseTerisi: 86.1,
+  },
+  {
+    id: 'dc-room-2',
+    ruangan: 'Ruang Kolokasi Tenant & Instansi (BIDA Lt. 3)',
+    jenisRak: 'Rak 42U Colocation K/L Pusat, BUMN & Bank',
+    tanggalRekapAwal: '01/01/2026',
+    tanggalRekapAkhir: '31/03/2026',
+    totalRak: 28,
+    jumlahRakTerisi: 23,
+    jumlahRakKosong: 5,
+    persentaseTerisi: 82.1,
+  },
+  {
+    id: 'dc-room-3',
+    ruangan: 'Disaster Recovery Center (DRC Sekupang)',
+    jenisRak: 'Rak 42U Replikasi Offsite & Backup Storage',
+    tanggalRekapAwal: '01/01/2026',
+    tanggalRekapAkhir: '31/03/2026',
+    totalRak: 20,
+    jumlahRakTerisi: 16,
+    jumlahRakKosong: 4,
+    persentaseTerisi: 80.0,
+  },
+  {
+    id: 'dc-room-4',
+    ruangan: 'Meet-Me Room (MMR) & ISP Network',
+    jenisRak: 'Rak Core Switch & Patching Fiber Optik',
+    tanggalRekapAwal: '01/01/2026',
+    tanggalRekapAkhir: '31/03/2026',
+    totalRak: 12,
+    jumlahRakTerisi: 8,
+    jumlahRakKosong: 4,
+    persentaseTerisi: 66.7,
+  },
+];
+
+// 4. PDSI: Data Kepuasan Pelanggan Data Centre (Hal. 42 No. 11)
+// Atribut: TAHUN, KATEGORI, TINGKAT KEPUASAN, PERSENTASE
+export interface KepuasanPelangganDcItem {
+  id: string;
+  tahun: string;
+  kategori: string;
+  tingkatKepuasan: string;
+  persentase: number;
+  skor: number;
+}
+
+export const KEPUASAN_PELANGGAN_DC_DATA: KepuasanPelangganDcItem[] = [
+  {
+    id: 'kpu-01',
+    tahun: '2026',
+    kategori: 'Keandalan Daya Listrik & Redundansi UPS',
+    tingkatKepuasan: 'Sangat Puas',
+    persentase: 96.5,
+    skor: 4.83,
+  },
+  {
+    id: 'kpu-02',
+    tahun: '2026',
+    kategori: 'Keamanan Fisik 24/7 & Akses Biometrik',
+    tingkatKepuasan: 'Sangat Puas',
+    persentase: 95.8,
+    skor: 4.79,
+  },
+  {
+    id: 'kpu-03',
+    tahun: '2026',
+    kategori: 'Kecepatan Respon Dukungan Teknis (SLA Helpdesk)',
+    tingkatKepuasan: 'Sangat Puas',
+    persentase: 94.2,
+    skor: 4.71,
+  },
+  {
+    id: 'kpu-04',
+    tahun: '2026',
+    kategori: 'Stabilitas Suhu Ruang & Sistem Pendingin PAC',
+    tingkatKepuasan: 'Sangat Puas',
+    persentase: 93.6,
+    skor: 4.68,
+  },
+  {
+    id: 'kpu-05',
+    tahun: '2026',
+    kategori: 'Kecepatan Bandwidth & Konektivitas Fiber Optik',
+    tingkatKepuasan: 'Sangat Puas',
+    persentase: 92.4,
+    skor: 4.62,
+  },
+  {
+    id: 'kpu-06',
+    tahun: '2026',
+    kategori: 'Kemudahan Prosedur Onboarding & Akses Rak',
+    tingkatKepuasan: 'Puas',
+    persentase: 90.8,
+    skor: 4.54,
+  },
+];
+
+// 5. PDSI: Data Serangan Keamanan IT (Hal. 42 No. 12)
+// Atribut: PERIODE, THREAT ACTIVITY, STATUS KEAMANAN, JML SERANGAN
+export interface SeranganKeamananItItem {
+  id: string;
+  periode: string;
+  threatActivity: string;
+  statusKeamanan: string;
+  jmlSerangan: number;
+}
+
+export const SERANGAN_KEAMANAN_IT_DATA: SeranganKeamananItItem[] = [
+  {
+    id: 'atk-01',
+    periode: 'April 2026',
+    threatActivity: 'DDoS Volumetric & HTTP Flood ke Portal BP Batam',
+    statusKeamanan: '100% Termitigasi (Blocked by WAF Edge)',
+    jmlSerangan: 6420,
+  },
+  {
+    id: 'atk-02',
+    periode: 'April 2026',
+    threatActivity: 'Brute Force Authentication ke VPN & SSH Gateway',
+    statusKeamanan: '100% Termitigasi (IPS / Fail2Ban)',
+    jmlSerangan: 4210,
+  },
+  {
+    id: 'atk-03',
+    periode: 'April 2026',
+    threatActivity: 'SQL Injection (SQLi) & XSS pada Web Form Perizinan',
+    statusKeamanan: '99,8% Termitigasi (OWASP Core Rules)',
+    jmlSerangan: 2380,
+  },
+  {
+    id: 'atk-04',
+    periode: 'Maret 2026',
+    threatActivity: 'Malware & Phishing Attachment di Mail Gateway',
+    statusKeamanan: '100% Termitigasi (Sandboxing Quarantined)',
+    jmlSerangan: 1250,
+  },
+  {
+    id: 'atk-05',
+    periode: 'Maret 2026',
+    threatActivity: 'Port Scanning & Reconnaissance Network Perimeter',
+    statusKeamanan: '100% Termitigasi (Filtered by Firewall)',
+    jmlSerangan: 560,
+  },
+  {
+    id: 'atk-06',
+    periode: 'Februari 2026',
+    threatActivity: 'Credential Stuffing & Unauthorized API Probe',
+    statusKeamanan: '100% Termitigasi (Rate Limit Triggered)',
+    jmlSerangan: 890,
+  },
+];
+
+// 6. PDSI: Laporan Pemantauan dan Evaluasi EPSS (Hal. 43 No. 20)
+// Atribut: TAHUN, DOMAIN, ASPEK, INDIKATOR, BOBOT, NILAI
+export interface EvaluasiEpssItem {
+  tahun: string;
+  domain: string;
+  aspek: string;
+  indikator: string;
+  bobot: number;
+  nilai: number;
+}
+
+export const EVALUASI_EPSS_DATA: EvaluasiEpssItem[] = [
+  { tahun: '2026', domain: 'Prinsip Satu Data Indonesia', aspek: 'Standar Data & Metadata', indikator: 'Kepatuhan Format Baku SDI', bobot: 20, nilai: 3.10 },
+  { tahun: '2026', domain: 'Kualitas Data Statistik', aspek: 'Akurasi & Integritas Data', indikator: 'Validasi Multi-Unit Otomatis', bobot: 25, nilai: 2.90 },
+  { tahun: '2026', domain: 'Proses Bisnis Statistik', aspek: 'Pengumpulan & Verifikasi', indikator: 'Standardisasi Alur Data PDSI', bobot: 25, nilai: 2.80 },
+  { tahun: '2026', domain: 'Kelembagaan Statistik', aspek: 'SDM & Organisasi Produsen Data', indikator: 'Kompetensi Pengelola Data', bobot: 15, nilai: 2.70 },
+  { tahun: '2026', domain: 'Statistik Nasional & Penyebarluasan', aspek: 'Aksesibilitas & Integrasi Portal', indikator: 'Ketersediaan API Satu Data', bobot: 15, nilai: 2.75 },
+];
+
+export const EPSS_SUMMARY = {
+  tahun: '2026',
+  nilaiIndeks: 2.85,
+  skalaMaks: 5.00,
+  predikat: 'Baik',
+  target: 2.60,
+  keterangan: 'Evaluasi Penyelenggaraan Statistik Sektoral (EPSS) oleh Badan Pusat Statistik (BPS)',
+};
+
+// 7. PDSI: Data Permintaan Layanan IT / Helpdesk (Hal. 43 No. 21)
+// Atribut: TAHUN, BULAN, NAMA LAYANAN, JUMLAH
+export interface PermintaanLayananItHelpdeskItem {
+  id: string;
+  tahun: string;
+  bulan: string;
+  namaLayanan: string;
+  jumlah: number;
+  selesai: number;
+  slaPercent: number;
+}
+
+export const PERMINTAAN_LAYANAN_IT_HELPDESK_DATA: PermintaanLayananItHelpdeskItem[] = [
+  { id: 'hdk-01', tahun: '2026', bulan: 'YTD April', namaLayanan: 'Pengembangan Modul & Integrasi API Aplikasi', jumlah: 385, selesai: 376, slaPercent: 97.7 },
+  { id: 'hdk-02', tahun: '2026', bulan: 'YTD April', namaLayanan: 'Hak Akses Single Sign-On (SSO) & Email Dinas', jumlah: 342, selesai: 342, slaPercent: 100.0 },
+  { id: 'hdk-03', tahun: '2026', bulan: 'YTD April', namaLayanan: 'Infrastruktur Jaringan LAN & WiFi Gedung', jumlah: 298, selesai: 294, slaPercent: 98.7 },
+  { id: 'hdk-04', tahun: '2026', bulan: 'YTD April', namaLayanan: 'Troubleshooting Transaksi SIMKEU & Billing', jumlah: 245, selesai: 240, slaPercent: 98.0 },
+  { id: 'hdk-05', tahun: '2026', bulan: 'YTD April', namaLayanan: 'Perbaikan PC/Laptop & Periferal Dinas', jumlah: 142, selesai: 139, slaPercent: 97.9 },
+  { id: 'hdk-06', tahun: '2026', bulan: 'YTD April', namaLayanan: 'Sertifikat TTE BSrE & Keamanan Akun', jumlah: 70, selesai: 69, slaPercent: 98.6 },
+];
+
+export const PERMINTAAN_IT_SUMMARY = {
+  totalTiket: 1482,
+  tiketSelesai: 1450,
+  dalamProses: 32,
+  persenSelesai: 97.8,
+  kepatuhanSla: 94.6,
+};
+
+// 8. PTSP: Data Penyelesaian Perizinan yang Tepat Waktu (Hal. 28 No. 17)
+// Atribut: BULAN, TANGGAL IZIN, TANGGAL REKAP AWAL, TANGGAL REKAP AKHIR, JENIS PERIZINAN, NAMA PERIZINAN BERUSAHA, PERMOHONAN STATUS MASUK, PERMOHONAN STATUS PROSES, PERMOHONAN STATUS SELESAI, SERVICE LEVEL AGREEMENT (SLA)
+export interface SlaPenyelesaianPerizinanItem {
+  id: string;
+  bulan: string;
+  jenisPerizinan: string;
+  namaPerizinanBerusaha: string;
+  permohonanStatusMasuk: number;
+  permohonanStatusProses: number;
+  permohonanStatusSelesai: number;
+  slaPercent: number;
+  targetSla: number;
+  rataRataHari: number;
+}
+
+export const SLA_PENYELESAIAN_PERIZINAN_DATA: SlaPenyelesaianPerizinanItem[] = [
+  {
+    id: 'sla-01',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Perizinan Berusaha',
+    namaPerizinanBerusaha: 'Izin Usaha Manufaktur & Perakitan Elektronik',
+    permohonanStatusMasuk: 2450,
+    permohonanStatusProses: 80,
+    permohonanStatusSelesai: 2340,
+    slaPercent: 95.5,
+    targetSla: 90.0,
+    rataRataHari: 2.1,
+  },
+  {
+    id: 'sla-02',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Kemaritiman & Bongkar Muat',
+    namaPerizinanBerusaha: 'Surat Keterangan Kerja Bongkar Muat (SKKBM)',
+    permohonanStatusMasuk: 3120,
+    permohonanStatusProses: 90,
+    permohonanStatusSelesai: 3010,
+    slaPercent: 96.5,
+    targetSla: 90.0,
+    rataRataHari: 1.4,
+  },
+  {
+    id: 'sla-03',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Logistik & Distribusi',
+    namaPerizinanBerusaha: 'Surat Keterangan Kerja Angkut Barang (SKKAB)',
+    permohonanStatusMasuk: 2180,
+    permohonanStatusProses: 65,
+    permohonanStatusSelesai: 2095,
+    slaPercent: 96.1,
+    targetSla: 90.0,
+    rataRataHari: 1.6,
+  },
+  {
+    id: 'sla-04',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Pelayaran & Transportasi',
+    namaPerizinanBerusaha: 'Persetujuan Jadwal Kapal Feri & Angkutan Laut',
+    permohonanStatusMasuk: 1480,
+    permohonanStatusProses: 25,
+    permohonanStatusSelesai: 1445,
+    slaPercent: 97.6,
+    targetSla: 90.0,
+    rataRataHari: 1.2,
+  },
+  {
+    id: 'sla-05',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Pelabuhan Khusus',
+    namaPerizinanBerusaha: 'Izin Operasi Terminal Khusus & TUKS Industri',
+    permohonanStatusMasuk: 640,
+    permohonanStatusProses: 43,
+    permohonanStatusSelesai: 582,
+    slaPercent: 90.9,
+    targetSla: 90.0,
+    rataRataHari: 3.4,
+  },
+  {
+    id: 'sla-06',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Peralatan Berat Konstruksi',
+    namaPerizinanBerusaha: 'SKKAA (Kepemilikan dan Asal Alat Berat)',
+    permohonanStatusMasuk: 890,
+    permohonanStatusProses: 32,
+    permohonanStatusSelesai: 850,
+    slaPercent: 95.5,
+    targetSla: 90.0,
+    rataRataHari: 1.9,
+  },
+  {
+    id: 'sla-07',
+    bulan: 'April 2026',
+    jenisPerizinan: 'Komersial & Pariwisata',
+    namaPerizinanBerusaha: 'Izin Usaha Jasa Komersial, Perhotelan & Resto',
+    permohonanStatusMasuk: 1540,
+    permohonanStatusProses: 55,
+    permohonanStatusSelesai: 1470,
+    slaPercent: 95.5,
+    targetSla: 90.0,
+    rataRataHari: 1.8,
+  },
+];
+
+export const SLA_PERIZINAN_SUMMARY = {
+  totalMasuk: 14850,
+  totalSelesai: 14080,
+  dalamProses: 770,
+  rerataSla: 94.8,
+  targetSla: 90.0,
+  rerataHari: 2.1,
+};
+
+// 9. PTSP: Data Monitoring dan Evaluasi Pengelolaan Pengaduan Masyarakat (Hal. 24 No. 6)
+// Atribut: BULAN, TAHUN, SALURAN PENGADUAN, JENIS PENGADUAN, KODE, JUMLAH PENGADUAN, PENYELESAIAN PENGADUAN, STATUS SELESAI
+export interface PengaduanMasyarakatPtspItem {
+  id: string;
+  bulan: string;
+  tahun: string;
+  saluranPengaduan: string;
+  jenisPengaduan: string;
+  kode: string;
+  jumlahPengaduan: number;
+  penyelesaianPengaduan: number;
+  statusSelesai: string;
+  persentaseSelesai: number;
+}
+
+export const PENGADUAN_MASYARAKAT_PTSP_DATA: PengaduanMasyarakatPtspItem[] = [
+  {
+    id: 'aduan-01',
+    bulan: 'April',
+    tahun: '2026',
+    saluranPengaduan: 'SP4N-LAPOR! & Kasir Digital',
+    jenisPengaduan: 'Konfirmasi Pembayaran PNBP & Billing Bank',
+    kode: 'ADU-01',
+    jumlahPengaduan: 64,
+    penyelesaianPengaduan: 64,
+    statusSelesai: '100% Selesai',
+    persentaseSelesai: 100.0,
+  },
+  {
+    id: 'aduan-02',
+    bulan: 'April',
+    tahun: '2026',
+    saluranPengaduan: 'WhatsApp Helpdesk & Gerai MPP',
+    jenisPengaduan: 'Konsultasi Persyaratan KBLI & Kelengkapan Teknis',
+    kode: 'ADU-02',
+    jumlahPengaduan: 48,
+    penyelesaianPengaduan: 47,
+    statusSelesai: '97,9% Selesai',
+    persentaseSelesai: 97.9,
+  },
+  {
+    id: 'aduan-03',
+    bulan: 'April',
+    tahun: '2026',
+    saluranPengaduan: 'Portal Web SIMPADU / IBIS',
+    jenisPengaduan: 'Sinkronisasi Akun OSS-RBA ke Portal IBIS',
+    kode: 'ADU-03',
+    jumlahPengaduan: 32,
+    penyelesaianPengaduan: 32,
+    statusSelesai: '100% Selesai',
+    persentaseSelesai: 100.0,
+  },
+  {
+    id: 'aduan-04',
+    bulan: 'April',
+    tahun: '2026',
+    saluranPengaduan: 'Meja Pengaduan Tatap Muka MPP',
+    jenisPengaduan: 'Koreksi & Ralat Data Sertifikat Izin Terbit (TTE)',
+    kode: 'ADU-04',
+    jumlahPengaduan: 26,
+    penyelesaianPengaduan: 25,
+    statusSelesai: '96,2% Selesai',
+    persentaseSelesai: 96.2,
+  },
+  {
+    id: 'aduan-05',
+    bulan: 'April',
+    tahun: '2026',
+    saluranPengaduan: 'Kanal WhatsApp Resmi MPP',
+    jenisPengaduan: 'Kapasitas Antrean Loket Fisik Jam Istirahat MPP',
+    kode: 'ADU-05',
+    jumlahPengaduan: 18,
+    penyelesaianPengaduan: 17,
+    statusSelesai: '94,4% Selesai',
+    persentaseSelesai: 94.4,
+  },
+];
+
+export const PENGADUAN_PTSP_SUMMARY = {
+  totalAduan: 188,
+  totalSelesai: 185,
+  belumSelesai: 3,
+  persentaseSelesai: 98.4,
+  rerataHariSelesai: 1.2,
+};

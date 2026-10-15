@@ -70,14 +70,18 @@ export const KebijakanStrategisDashboard: React.FC<KebijakanStrategisDashboardPr
       ]);
     });
 
-    // Add Operational KPIs
+    // Add Operational KPIs based on Satu Data BP Batam
     rows.push(
-      ['Monitoring Operasional', '"Keselarasan Renstra thd Prioritas Nasional"', '95,0%', '98,2%', '103.4', 'Optimal'],
-      ['Monitoring Operasional', '"Target Rincian Output (RO) Renstra"', '29 RO', '28 RO', '96.5', 'On Track'],
-      ['Monitoring Operasional', '"Sinkronisasi Regulasi K/L & PP 41/2021"', '100% Selaras', '42 Perka Diselaraskan', '100.0', 'Tuntas'],
-      ['Monitoring Operasional', '"Uji Kewajaran 7 Level Tarif Layanan"', '85,0%', '89,2%', '104.9', 'Valid'],
-      ['Monitoring Operasional', '"Penerapan TTE Tersertifikasi BSrE"', '40 Aplikasi', '48 Aplikasi', '120.0', 'Optimal'],
-      ['Monitoring Operasional', '"Kecepatan Penerbitan Izin Berusaha (EODB)"', '5 Hari Kerja', '2,1 Hari Kerja', '158.0', 'Sangat Cepat']
+      ['Monitoring Operasional', '"SLA Data Penyelesaian Perizinan Tepat Waktu"', '90,0%', '94,8%', '105.3', 'Optimal'],
+      ['Monitoring Operasional', '"Laporan Pemantauan & Evaluasi EPSS (BPS)"', '2,60', '2,85', '109.6', 'Baik'],
+      ['Monitoring Operasional', '"Data Permintaan Layanan IT (Helpdesk)"', '1.400 Tiket', '1.482 Tiket', '105.9', '97,8% Selesai'],
+      ['Monitoring Operasional', '"Kecepatan Penerbitan Izin Berusaha (EODB)"', '5 Hari Kerja', '2,1 Hari Kerja', '158.0', 'Sangat Cepat'],
+      ['Monitoring Operasional', '"Pengelolaan Pengaduan Masyarakat PTSP"', '180 Aduan', '185 Selesai', '102.8', '98,4% Tuntas'],
+      ['Monitoring Operasional', '"Rekomendasi Perubahan Peruntukan Lahan"', '175 Berkas', '184 Pemohon', '105.1', '95,1% Selesai'],
+      ['Monitoring Operasional', '"Master Plan Jaringan Jalan Strategis"', '90,0 Km', '94,9 Km', '105.4', 'Tersusun'],
+      ['Monitoring Operasional', '"Okupansi Rak Tier-3 Data Center (4 Ruangan)"', '75,0%', '81,3%', '108.4', '78 / 96 Rak'],
+      ['Monitoring Operasional', '"Survei Kepuasan Pelanggan Data Center"', '90,0%', '93,9%', '104.3', 'Sangat Puas'],
+      ['Monitoring Operasional', '"Data Serangan Keamanan IT (SOC CSIRT)"', '100% Mitigasi', '15.710 Serangan', '100.0', '100% Termitigasi']
     );
 
     const csvContent =

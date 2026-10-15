@@ -1,954 +1,1073 @@
 import React, { useState } from 'react';
 import {
   TrendingUp,
-  PieChart as PieIcon,
   Globe,
+  Building2,
+  ShieldCheck,
+  CheckCircle2,
+  HelpCircle,
+  FileCode2,
   Layers,
   Sparkles,
-  ArrowUpRight,
-  ShieldCheck,
-  Building2,
-  FileCheck2,
-  Users,
-  Compass,
-  Briefcase,
   ChevronRight,
-  Filter,
-  DollarSign,
-  BarChart3,
-  Calendar,
-  ExternalLink,
-  Info,
-  CheckCircle2,
-  Activity,
-  Maximize2,
+  Briefcase,
+  Award,
 } from 'lucide-react';
 import {
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
   ResponsiveContainer,
-  BarChart,
-  Bar,
+  Legend,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
 } from 'recharts';
-import {
-  SEKTOR_INVESTASI_DATA,
-  NEGARA_INVESTOR_DATA,
-  INVESTOR_PIPELINE_STAGES,
-  INVESTOR_PIPELINE_TABLE,
-  KERJASAMA_PENGUSAHAAN_DATA,
-  PERKIN_A4_KPIS,
-} from './investasiPengusahaanData';
+import { PERKIN_A4_KPIS } from './investasiPengusahaanData';
 
 interface InvestasiPengusahaanVisualChartsProps {
   onOpenFormulaModal: (kpiId: string) => void;
   onNavigateToUnit?: (unitId: string) => void;
 }
 
+// Data Radar Capaian 4 IKP Perkin A4 (Normalized to 100% target baseline)
+const RADAR_4_IKP_A4 = [
+  { subject: '1. Investasi (Dit. Investasi)', target: 100, realisasi: 106.4, skorAsli: 'Rp 63,85 T / Rp 60 T' },
+  { subject: '2. Promosi (Dit. Investasi)', target: 100, realisasi: 109.0, skorAsli: '218 Leads / 200 Leads' },
+  { subject: '3. Kajian KEK (Dit. KEK)', target: 100, realisasi: 100.0, skorAsli: '100% / 100%' },
+  { subject: '4. Pengendalian BU (Dit. Pengendalian)', target: 100, realisasi: 95.5, skorAsli: '95,45% / 100%' },
+];
+
+// Tren Tahunan IKP 1: Realisasi Penanaman Modal (Rp Triliun)
+const INVESTASI_TREND_ANNUAL = [
+  { tahun: '2022', skor: 48.2, target: 45.0 },
+  { tahun: '2023', skor: 52.4, target: 50.0 },
+  { tahun: '2024', skor: 54.2, target: 52.0 },
+  { tahun: '2025', skor: 63.85, target: 60.0 },
+  { tahun: '2026', skor: 68.5, target: 65.0 },
+];
+
+// Tren Tahunan IKP 2: Minat Investasi dari Promosi (Leads)
+const PROMOSI_TREND_ANNUAL = [
+  { tahun: '2022', skor: 145, target: 140 },
+  { tahun: '2023', skor: 168, target: 160 },
+  { tahun: '2024', skor: 185, target: 180 },
+  { tahun: '2025', skor: 218, target: 200 },
+  { tahun: '2026', skor: 240, target: 220 },
+];
+
+// Tren Tahunan IKP 3: Kajian KEK Berkelanjutan (%)
+const KEK_TREND_ANNUAL = [
+  { tahun: '2022', skor: 100, target: 100 },
+  { tahun: '2023', skor: 100, target: 100 },
+  { tahun: '2024', skor: 100, target: 100 },
+  { tahun: '2025', skor: 100, target: 100 },
+  { tahun: '2026', skor: 100, target: 100 },
+];
+
+// Tren Tahunan IKP 4: Pengendalian Pengusahaan & Kerja Sama (%)
+const PENGENDALIAN_TREND_ANNUAL = [
+  { tahun: '2022', skor: 82.4, target: 80.0 },
+  { tahun: '2023', skor: 85.8, target: 85.0 },
+  { tahun: '2024', skor: 88.5, target: 90.0 },
+  { tahun: '2025', skor: 95.45, target: 100.0 },
+  { tahun: '2026', skor: 97.2, target: 100.0 },
+];
+
+// Tren Konsolidasi Sinergi 3 Satker DEP-A4
+const SINERGI_TREND_ANNUAL = [
+  { tahun: '2022', serapanPersen: 38.5, capaianIku: 98.4 },
+  { tahun: '2023', serapanPersen: 40.2, capaianIku: 100.2 },
+  { tahun: '2024', serapanPersen: 41.5, capaianIku: 101.5 },
+  { tahun: '2025', serapanPersen: 42.6, capaianIku: 102.72 },
+  { tahun: '2026', serapanPersen: 45.0, capaianIku: 104.5 },
+];
+
 export const InvestasiPengusahaanVisualCharts: React.FC<
   InvestasiPengusahaanVisualChartsProps
-> = ({ onOpenFormulaModal, onNavigateToUnit }) => {
-  const [activeVisualTab, setActiveVisualTab] = useState<
-    'realisasi_kpbpb' | 'kek_matrix' | 'pengendalian_kerjasama' | 'investor_pipeline'
-  >('realisasi_kpbpb');
+> = ({ onOpenFormulaModal }) => {
+  // Tab state: ikp-1, ikp-2, ikp-3, ikp-4, matriks
+  const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3' | 'ikp-4' | 'matriks'>('ikp-1');
 
-  const [realisasiViewMode, setRealisasiViewMode] = useState<'sektor' | 'negara' | 'tren_kuartal'>('sektor');
-  const [pipelineFilterTahap, setPipelineFilterTahap] = useState<string>('ALL');
-
-  // Chart Data: Quarterly Target vs Realization
-  const quarterlyChartData = [
-    { name: 'Q1 (Jan-Mar)', target: 6.50, realisasi: 6.85, pma: 5.15, pmdn: 1.70, naker: 4520 },
-    { name: 'Q2 (Apr-Jun)', target: 7.00, realisasi: 7.42, pma: 5.48, pmdn: 1.94, naker: 5120 },
-    { name: 'Q3 (Jul-Sep)', target: 7.30, realisasi: 8.11, pma: 6.02, pmdn: 2.09, naker: 5850 },
-    { name: 'Q4 (Okt-Des)', target: 7.70, realisasi: 9.10, pma: 6.59, pmdn: 2.51, naker: 6350 },
-  ];
-
-  // KEK Comparison Data
-  const kekComparisonData = [
-    { name: 'KEK Nongsa Digital', target: 4.50, realisasi: 4.89, naker: 680, proyek: 22, color: '#3B82F6' },
-    { name: 'KEK Batam Aero Technic', target: 2.80, realisasi: 3.12, naker: 610, proyek: 16, color: '#10B981' },
-    { name: 'KEK Kesehatan & Pariwisata', target: 1.20, realisasi: 1.08, naker: 192, proyek: 10, color: '#8B5CF6' },
-  ];
-
-  // Pipeline Filtered
-  const filteredPipelineTable =
-    pipelineFilterTahap === 'ALL'
-      ? INVESTOR_PIPELINE_TABLE
-      : INVESTOR_PIPELINE_TABLE.filter((item) => item.tahap === pipelineFilterTahap);
+  const ikpInvestasi = PERKIN_A4_KPIS[0];
+  const ikpPromosi = PERKIN_A4_KPIS[1];
+  const ikpKek = PERKIN_A4_KPIS[2];
+  const ikpPengendalian = PERKIN_A4_KPIS[3];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
-      {/* 1. SECTION TOP BAR & TAB SELECTOR - POLOS PUTIH */}
-      <div className="p-3.5 sm:p-4 bg-white text-slate-900 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center shrink-0 shadow-2xs">
-            <BarChart3 className="w-4 h-4 text-blue-600" />
-          </div>
+    <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3.5 font-sans">
+      {/* Two Column Grid: Left is Radar Chart (NO MINI CARDS BELOW IT AS REQUESTED), Right is Detailed Table + Trend Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
+        {/* ================================================================== */}
+        {/* KOLOM KIRI: RADAR CHART CAPAIAN 4 IKP (TANPA KARTU MINI DI BAWAHNYA) */}
+        {/* ================================================================== */}
+        <div className="lg:col-span-4 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 uppercase">
-                EXECUTIVE ANALYTICS
-              </span>
-              <span className="text-xs text-slate-500 font-mono hidden sm:inline">
-                Perkin A.4 Tahun 2025
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
+                  Radar Capaian 4 IKP DEP-A4
+                </h3>
+                <p className="text-[10px] text-slate-500">
+                  Realisasi Aktual vs Target Penetapan Perkin A4 2025
+                </p>
+              </div>
+              <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
+                0 - 130%
               </span>
             </div>
-            <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-              Visualisasi Analitik Investasi &amp; Pengusahaan BP Batam
-            </h2>
+
+            {/* Radar Visual */}
+            <div className="h-56 w-full mt-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={RADAR_4_IKP_A4} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+                  <PolarGrid stroke="#CBD5E1" />
+                  <PolarAngleAxis
+                    dataKey="subject"
+                    tick={{ fill: '#334155', fontSize: 9.5, fontWeight: 700 }}
+                  />
+                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={8} />
+                  <Radar
+                    name="Target Perkin (100%)"
+                    dataKey="target"
+                    stroke="#94A3B8"
+                    fill="#94A3B8"
+                    fillOpacity={0.12}
+                    strokeDasharray="4 4"
+                  />
+                  <Radar
+                    name="Realisasi Aktual"
+                    dataKey="realisasi"
+                    stroke="#0284C7"
+                    fill="#0284C7"
+                    fillOpacity={0.35}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '6px' }} />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => [
+                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                      name,
+                    ]}
+                    contentStyle={{
+                      fontSize: '11px',
+                      borderRadius: '8px',
+                      backgroundColor: '#0F172A',
+                      color: '#FFFFFF',
+                      border: 'none',
+                    }}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="pt-2.5 border-t border-slate-200/60 text-[10.5px] text-slate-500 flex items-center justify-between">
+            <span className="flex items-center gap-1 font-medium text-slate-700">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              Status: 4 IKP Optimal On Track
+            </span>
+            <span className="font-mono text-emerald-600 font-bold">102.72% Rerata</span>
           </div>
         </div>
 
-        {/* 4 Interactive Visual Tabs */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 overflow-x-auto no-scrollbar">
-          <button
-            onClick={() => setActiveVisualTab('realisasi_kpbpb')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeVisualTab === 'realisasi_kpbpb'
-                ? 'bg-white text-blue-700 shadow-2xs ring-1 ring-slate-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-          >
-            <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
-            <span>Realisasi KPBPB</span>
-          </button>
+        {/* ================================================================== */}
+        {/* KOLOM KANAN: TABEL DETAIL PERSIS GAMBAR REFERENSI + GRAFIK TREN     */}
+        {/* ================================================================== */}
+        <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200/80 p-3 sm:p-3.5 space-y-3">
+          {/* Header Tab Switcher */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+            <div className="flex items-center gap-1.5 bg-slate-100/80 p-0.5 rounded-lg border border-slate-200/60 overflow-x-auto text-[11px] font-bold">
+              <button
+                type="button"
+                onClick={() => setActiveTab('ikp-1')}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'ikp-1'
+                    ? 'bg-white text-blue-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+                <span>IKP 1 &bull; Investasi</span>
+              </button>
 
-          <button
-            onClick={() => setActiveVisualTab('kek_matrix')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeVisualTab === 'kek_matrix'
-                ? 'bg-white text-emerald-700 shadow-2xs ring-1 ring-slate-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-          >
-            <Building2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Kawasan KEK (3 KEK)</span>
-          </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('ikp-2')}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'ikp-2'
+                    ? 'bg-white text-sky-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Globe className="w-3.5 h-3.5 text-sky-600" />
+                <span>IKP 2 &bull; Promosi</span>
+              </button>
 
-          <button
-            onClick={() => setActiveVisualTab('pengendalian_kerjasama')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeVisualTab === 'pengendalian_kerjasama'
-                ? 'bg-white text-indigo-700 shadow-2xs ring-1 ring-slate-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Pengendalian Pengusahaan</span>
-          </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('ikp-3')}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'ikp-3'
+                    ? 'bg-white text-emerald-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span>IKP 3 &bull; KEK</span>
+              </button>
 
-          <button
-            onClick={() => setActiveVisualTab('investor_pipeline')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeVisualTab === 'investor_pipeline'
-                ? 'bg-white text-amber-700 shadow-2xs ring-1 ring-slate-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>Investor Pipeline &amp; Web</span>
-          </button>
-        </div>
-      </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('ikp-4')}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'ikp-4'
+                    ? 'bg-white text-indigo-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                <span>IKP 4 &bull; Pengendalian BU</span>
+              </button>
 
-      {/* 2. TAB BODY CONTENT */}
-      <div className="p-4 sm:p-5 space-y-4">
-        {/* ============================================================== */}
-        {/* TAB 1: REALISASI INVESTASI KPBPB (SEKTOR, NEGARA, DAN KUARTAL) */}
-        {/* ============================================================== */}
-        {activeVisualTab === 'realisasi_kpbpb' && (
-          <div className="space-y-4">
-            {/* View Sub-Filter Controls */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200">
-              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
-                <button
-                  onClick={() => setRealisasiViewMode('sektor')}
-                  className={`px-3 py-1 rounded-md font-bold transition-all cursor-pointer ${
-                    realisasiViewMode === 'sektor'
-                      ? 'bg-white text-blue-700 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Distribusi 7 Sektor Unggulan
-                </button>
-                <button
-                  onClick={() => setRealisasiViewMode('negara')}
-                  className={`px-3 py-1 rounded-md font-bold transition-all cursor-pointer ${
-                    realisasiViewMode === 'negara'
-                      ? 'bg-white text-blue-700 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Asal Negara Investor
-                </button>
-                <button
-                  onClick={() => setRealisasiViewMode('tren_kuartal')}
-                  className={`px-3 py-1 rounded-md font-bold transition-all cursor-pointer ${
-                    realisasiViewMode === 'tren_kuartal'
-                      ? 'bg-white text-blue-700 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Tren Kuartalan Q1 - Q4
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
-                <span>Total Realisasi: <strong className="text-slate-900 font-black">Rp 31,48 Triliun</strong></span>
-                <span className="text-slate-300">|</span>
-                <span className="text-emerald-700 font-bold">110,46% Target</span>
-              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('matriks')}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'matriks'
+                    ? 'bg-white text-purple-700 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5 text-purple-600" />
+                <span>Matriks Sinergi Satker</span>
+              </button>
             </div>
 
-            {/* View Mode 1: Sektor Unggulan */}
-            {realisasiViewMode === 'sektor' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                {/* Horizontal Bar Breakdown */}
-                <div className="lg:col-span-7 bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                      <PieIcon className="w-3.5 h-3.5 text-blue-600" />
-                      <span>7 SEKTOR INVESTASI UNGGULAN KPBPB BATAM (2025)</span>
-                    </h3>
-                    <span className="text-[10px] text-slate-500 font-mono">Nilai &amp; Pangsa Pasar</span>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    {SEKTOR_INVESTASI_DATA.map((item) => (
-                      <div key={item.sektor} className="space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-semibold text-slate-800 flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                            <span>{item.sektor}</span>
-                          </span>
-                          <span className="font-mono text-slate-900 font-bold">
-                            Rp {(item.total / 1000).toFixed(2)} T ({item.sharePersen.toFixed(1)}%)
-                          </span>
-                        </div>
-                        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden flex">
-                          <div
-                            className="h-full bg-blue-600"
-                            style={{ width: `${(item.pma / item.total) * item.sharePersen * 3.5}%` }}
-                            title={`PMA: Rp ${(item.pma / 1000).toFixed(2)} T`}
-                          />
-                          <div
-                            className="h-full bg-indigo-500"
-                            style={{ width: `${(item.pmdn / item.total) * item.sharePersen * 3.5}%` }}
-                            title={`PMDN: Rp ${(item.pmdn / 1000).toFixed(2)} T`}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
-                          <span>PMA: Rp {(item.pma / 1000).toFixed(2)} T | PMDN: Rp {(item.pmdn / 1000).toFixed(2)} T</span>
-                          <span>{item.proyekCount} Proyek • {item.nakerCount.toLocaleString()} Tenaga Kerja</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500">
-                    <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-1 font-mono"><span className="w-2 h-2 rounded-xs bg-blue-600" /> PMA (73.8%)</span>
-                      <span className="flex items-center gap-1 font-mono"><span className="w-2 h-2 rounded-xs bg-indigo-500" /> PMDN (26.2%)</span>
-                    </div>
-                    <span>Data: Direktorat Investasi (Dataset #13)</span>
-                  </div>
-                </div>
-
-                {/* Sektor Highlights & Insight Cards */}
-                <div className="lg:col-span-5 space-y-3">
-                  <div className="p-3.5 rounded-xl bg-gradient-to-br from-blue-900 to-[#002B49] text-white space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-cyan-300 font-bold">
-                        SEKTOR LEADERSHIP
-                      </span>
-                      <span className="text-[10px] text-slate-300 font-mono">Tahun 2025</span>
-                    </div>
-                    <h4 className="text-base font-black tracking-tight text-white">
-                      Pusat Data Hyperscale &amp; Semikonduktor
-                    </h4>
-                    <p className="text-xs text-slate-200 leading-relaxed">
-                      Sektor Digital &amp; High-Tech kini menguasai <strong>51,33%</strong> total investasi Batam, dipicu peresmian Data Center KEK Nongsa dan fasilitas manufaktur sirkuit elektronik di Batamindo dan Kabil.
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-blue-800/80 text-xs font-mono">
-                      <div>
-                        <div className="text-slate-400 text-[10px]">Data Center &amp; Digital:</div>
-                        <div className="font-extrabold text-cyan-300">Rp 8,89 Triliun</div>
-                      </div>
-                      <div>
-                        <div className="text-slate-400 text-[10px]">Semikonduktor &amp; Mikro:</div>
-                        <div className="font-extrabold text-cyan-300">Rp 7,27 Triliun</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <h4 className="text-xs font-bold font-mono text-slate-800 uppercase">
-                      Penyerapan Tenaga Kerja per Sektor
-                    </h4>
-                    <div className="space-y-1.5 text-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-600">Industri Elektronik / Semi</span>
-                        <span className="font-mono font-bold text-slate-900">7.850 orang (35,9%)</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-600">Galangan Maritim &amp; Offshore</span>
-                        <span className="font-mono font-bold text-slate-900">5.200 orang (23,8%)</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-600">Pusat Data &amp; IT Spesialis</span>
-                        <span className="font-mono font-bold text-slate-900">2.450 orang (11,2%)</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-600">Energi Terbarukan Solar PV</span>
-                        <span className="font-mono font-bold text-slate-900">1.980 orang (9,1%)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {onOpenFormulaModal && (
+              <button
+                onClick={() =>
+                  onOpenFormulaModal(
+                    activeTab === 'ikp-1'
+                      ? 'ikp-1-investasi-kpbpb'
+                      : activeTab === 'ikp-2'
+                      ? 'ikp-2-promosi-investasi'
+                      : activeTab === 'ikp-3'
+                      ? 'ikp-3-kajian-kek'
+                      : activeTab === 'ikp-4'
+                      ? 'ikp-4-pengendalian-pengusahaan'
+                      : 'ikp-1-investasi-kpbpb'
+                  )
+                }
+                className="text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1 cursor-pointer self-start sm:self-auto"
+              >
+                <span>Lihat Metodologi Formula</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             )}
+          </div>
 
-            {/* View Mode 2: Negara Investor */}
-            {realisasiViewMode === 'negara' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                <div className="lg:col-span-8 bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                      <Globe className="w-3.5 h-3.5 text-blue-600" />
-                      <span>PERINGKAT ASAL NEGARA INVESTOR DI KPBPB BATAM</span>
-                    </h3>
-                    <span className="text-[10px] text-slate-500 font-mono">PMA &amp; PMDN Domestik</span>
+          {/* DYNAMIC TAB BODY: SIDE-BY-SIDE (DETAIL TABEL & GRAFIK TREN SEPERTI DEP-A3) */}
+
+          {/* TAB 1: IKP-1 DIT. INVESTASI */}
+          {activeTab === 'ikp-1' && (
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+              {/* KOLOM A: TABEL PERUSAHAAN SAMPEL INVESTASI */}
+              <div className="xl:col-span-7 bg-white rounded-xl border border-blue-200 p-3 shadow-2xs flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
+                      <Briefcase className="w-3 h-3" />
+                      IKP-1 &bull; DIT. INVESTASI
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      106.42% Melampaui Target
+                    </span>
+                  </div>
+
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
+                    Meningkatnya Kualitas Pelayanan Penanaman Modal di KPBPB Batam
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Unit: Direktorat Investasi (Sumber: KPU Bea Cukai, BPS, BKPM/OSS)
+                  </p>
+
+                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-blue-100">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl sm:text-2xl font-black font-mono text-blue-700">Rp 63,85</span>
+                      <span className="text-xs font-bold text-slate-600">Triliun Rupiah</span>
+                    </div>
+                    <span className="text-[10.5px] text-slate-500">
+                      Target: <strong className="text-slate-800">Rp 60,00 T</strong> <span className="text-emerald-600 font-bold">(+Rp 3,85 T)</span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
+                    <span>Realisasi Penanaman Modal (5 Perusahaan Sampel):</span>
+                    <span className="text-[9.5px] font-normal text-slate-400">Modal Tetap &amp; Lancar</span>
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
+                    <table className="w-full text-[10px] text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-slate-200 text-left text-[11px] font-mono text-slate-500">
-                          <th className="pb-2 font-bold">Negara / Asal Modal</th>
-                          <th className="pb-2 font-bold text-right">Nilai Realisasi</th>
-                          <th className="pb-2 font-bold text-right">Pangsa (%)</th>
-                          <th className="pb-2 font-bold text-center">Jumlah Proyek</th>
-                          <th className="pb-2 font-bold">Sektor Utama</th>
+                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                          <th className="py-1 px-1.5">NAMA PERUSAHAAN</th>
+                          <th className="py-1 px-1.5">SEKTOR / WILAYAH</th>
+                          <th className="py-1 px-1.5 text-center">JENIS</th>
+                          <th className="py-1 px-1.5 text-right">NILAI (RP T)</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {NEGARA_INVESTOR_DATA.map((item, idx) => (
-                          <tr key={item.negara} className="hover:bg-white/80 transition-colors">
-                            <td className="py-2.5 font-bold text-slate-800 flex items-center gap-2">
-                              <span className="text-base">{item.bendera}</span>
-                              <span>{item.negara}</span>
-                              {idx === 0 && (
-                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-bold">
-                                  Top 1
-                                </span>
-                              )}
-                            </td>
-                            <td className="py-2.5 font-mono font-bold text-slate-900 text-right">
-                              Rp {(item.realisasiMiliar / 1000).toFixed(2)} T
-                            </td>
-                            <td className="py-2.5 font-mono text-right">
-                              <span className="px-2 py-0.5 rounded bg-slate-100 font-bold text-slate-700">
-                                {item.sharePersen.toFixed(1)}%
-                              </span>
-                            </td>
-                            <td className="py-2.5 font-mono text-center text-slate-700">
-                              {item.proyekCount} Proyek
-                            </td>
-                            <td className="py-2.5 text-slate-600 text-[11px] truncate max-w-xs">
-                              {item.sektorUtama}
-                            </td>
-                          </tr>
-                        ))}
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">PT Schneider Electric Batam</td>
+                          <td className="py-1 px-1.5 text-slate-500">Semikonduktor &bull; Batamindo</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9px]"><span className="px-1 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200">PMA</span></td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">Rp 5,40 T</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">PT Pegatron Technology Batam</td>
+                          <td className="py-1 px-1.5 text-slate-500">Elektronik &bull; Batamindo</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9px]"><span className="px-1 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200">PMA</span></td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">Rp 6,25 T</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">PT Nongsa Digital Park Data Center</td>
+                          <td className="py-1 px-1.5 text-slate-500">Data Center &bull; KEK Nongsa</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9px]"><span className="px-1 py-0.2 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">PMDN</span></td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">Rp 4,89 T</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">PT McDermott Indonesia</td>
+                          <td className="py-1 px-1.5 text-slate-500">Konstruksi Lepas Pantai &bull; Batu Ampar</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9px]"><span className="px-1 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200">PMA</span></td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">Rp 4,15 T</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">PT Infineon Technologies Batam</td>
+                          <td className="py-1 px-1.5 text-slate-500">Semikonduktor &bull; Batamindo</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9px]"><span className="px-1 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200">PMA</span></td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">Rp 3,80 T</td>
+                        </tr>
+                        <tr className="bg-blue-50/60 font-bold border-t border-blue-200">
+                          <td className="py-1 px-1.5 text-blue-900">Total Realisasi Investasi</td>
+                          <td className="py-1 px-1.5 text-[10px] text-blue-700">PMA 74,7% &bull; PMDN 25,3%</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9px] text-blue-800">100%</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-blue-800">Rp 63,85 T</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 space-y-3">
-                  <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
-                    <h4 className="text-xs font-mono font-bold text-blue-900 uppercase">
-                      Kemitraan Strategis Koridor Singapura - Batam
-                    </h4>
-                    <p className="text-xs text-blue-800 leading-relaxed">
-                      Singapura tetap menjadi mitra investasi PMA terbesar dengan nilai <strong>Rp 10,45 Triliun (33,2%)</strong>, didorong oleh inisiatif <em>Twin City Digital Hub</em> dan relokasi rantai pasok industri berteknologi tinggi ke KPBPB Batam.
-                    </p>
-                    <div className="pt-2 border-t border-blue-200 text-[11px] text-blue-900 font-mono">
-                      <span>Proyek Strategis: Nongsa D-Park, Kabil Port, Singtel Hub</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <h4 className="text-xs font-mono font-bold text-slate-800 uppercase">
-                      Kekuatan Modal Domestik (PMDN)
-                    </h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      PMDN menyumbang <strong>Rp 8,24 Triliun (26,17%)</strong> terutama menggerakkan industri galangan kapal, docking reparasi tanker migas di Tanjung Uncang, serta pembangunan kawasan industri baru.
-                    </p>
-                  </div>
+                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                  <button
+                    onClick={() => onOpenFormulaModal?.('ikp-1-investasi-kpbpb')}
+                    className="text-[10.5px] font-bold text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <FileCode2 className="w-3.5 h-3.5" />
+                    <span>Lihat Manual &amp; Formula IKP-1 (Penanaman Modal)</span>
+                  </button>
                 </div>
               </div>
-            )}
 
-            {/* View Mode 3: Tren Kuartalan */}
-            {realisasiViewMode === 'tren_kuartal' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                <div className="lg:col-span-8 bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                      <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
-                      <span>PERBANDINGAN TARGET VS REALISASI PER KUARTAL (Q1 - Q4)</span>
-                    </h3>
-                    <span className="text-[10px] text-slate-500 font-mono">Satuan: Triliun Rupiah (Rp T)</span>
+              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <h5 className="text-xs font-bold text-slate-800">
+                      Tren Historis Realisasi Investasi (2022 - 2026)
+                    </h5>
+                    <span className="text-[10px] font-mono font-bold text-blue-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                      Rp Triliun
+                    </span>
                   </div>
+                  <p className="text-[10px] text-slate-500 mb-2">
+                    Trajektori realisasi investasi PMA dan PMDN di KPBPB Batam
+                  </p>
 
-                  <div className="h-64 w-full">
+                  <div className="h-44 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={quarterlyChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#475569' }} />
-                        <YAxis tick={{ fontSize: 11, fill: '#475569' }} domain={[0, 10]} />
+                      <LineChart data={INVESTASI_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <YAxis domain={[40, 75]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
                         <Tooltip
-                          formatter={(value: any) => [`Rp ${Number(value).toFixed(2)} Triliun`]}
-                          contentStyle={{ backgroundColor: '#0F172A', color: '#fff', borderRadius: '8px', fontSize: '11px' }}
+                          formatter={(val: any, name: any) => [`Rp ${val} Triliun`, name]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
                         />
-                        <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                        <Bar dataKey="target" name="Target Perkin" fill="#94A3B8" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="realisasi" name="Realisasi Akumulasi" fill="#2563EB" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="pma" name="Komponen PMA" fill="#06B6D4" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="pmdn" name="Komponen PMDN" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
-                      </BarChart>
+                        <Legend wrapperStyle={{ fontSize: '10px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          name="Target Perkin"
+                          stroke="#94A3B8"
+                          strokeDasharray="4 4"
+                          strokeWidth={1.5}
+                          dot={{ r: 3 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="skor"
+                          name="Realisasi Investasi"
+                          stroke="#2563EB"
+                          strokeWidth={2.5}
+                          dot={{ r: 4, fill: '#2563EB' }}
+                        />
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 space-y-3">
-                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
-                    <div className="flex items-center gap-1.5 text-emerald-800 font-mono text-xs font-bold">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>AKSELERASI KUARTER AKHIR (Q4)</span>
-                    </div>
-                    <p className="text-xs text-emerald-900 leading-relaxed">
-                      Realisasi Q4 mencatat lonjakan tertinggi sebesar <strong>Rp 9,10 Triliun</strong> (118,18% dari target kuartal) berkat finalisasi pencatatan modal tetap data center dan fasilitas energi terbarukan.
-                    </p>
-                    <div className="pt-2 border-t border-emerald-200 text-[10px] text-emerald-800 font-mono">
-                      <span>Rata-rata pertumbuhan triwulanan: +10.2% per kuartal</span>
-                    </div>
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
+                    <span className="text-xs font-black text-emerald-600">+Rp 3,85 T (+6,4%)</span>
                   </div>
-
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <h4 className="text-xs font-mono font-bold text-slate-800 uppercase">
-                      Statistik Proyek &amp; Tenaga Kerja 2025
-                    </h4>
-                    <div className="space-y-1 text-xs font-mono">
-                      <div className="flex justify-between text-slate-600">
-                        <span>Total Proyek Usaha:</span>
-                        <strong className="text-slate-900">184 Proyek</strong>
-                      </div>
-                      <div className="flex justify-between text-slate-600">
-                        <span>Penyerapan Tenaga Kerja:</span>
-                        <strong className="text-emerald-700">21.840 Orang</strong>
-                      </div>
-                      <div className="flex justify-between text-slate-600">
-                        <span>Rata-rata Nilai / Proyek:</span>
-                        <strong className="text-slate-900">Rp 171,1 Miliar</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ============================================================== */}
-        {/* TAB 2: MATRIKS KAWASAN EKONOMI KHUSUS (KEK) BATAM */}
-        {/* ============================================================== */}
-        {activeVisualTab === 'kek_matrix' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <div>
-                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>3 KAWASAN EKONOMI KHUSUS (KEK) RESMI DI KPBPB BATAM (IKP-2)</span>
-                </h3>
-                <span className="text-[11px] text-slate-500 font-sans">
-                  Target Perkin: Rp 8,50 T • Realisasi: Rp 9,09 T (106,94% Tercapai)
-                </span>
-              </div>
-
-              <button
-                onClick={() => onNavigateToUnit && onNavigateToUnit('dit-pengembangan-kek')}
-                className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
-              >
-                <span>Buka Dashboard Unit KEK</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* 3 KEK Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* KEK Nongsa */}
-              <div className="bg-gradient-to-b from-blue-50/50 to-white rounded-xl border border-blue-200 p-4 space-y-3 shadow-2xs">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold font-mono">
-                      NDP
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">KEK Nongsa Digital Park</h4>
-                      <span className="text-[10px] text-slate-500 font-mono">Luas: 166,45 Ha</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    108,7%
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="text-[11px] text-slate-500">Realisasi Investasi:</div>
-                  <div className="text-xl font-black text-slate-900 font-mono">
-                    Rp 4,89 Triliun
-                  </div>
-                  <div className="text-[10px] text-slate-500 font-mono">
-                    Target: Rp 4,50 T | Komitmen: Rp 16,0 T
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 text-xs space-y-1 text-slate-600">
-                  <div className="flex justify-between">
-                    <span>Fokus Kawasan:</span>
-                    <strong className="text-slate-800">Hyperscale Data Center &amp; AI Studio</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Pelaku Usaha:</span>
-                    <strong className="text-slate-800">22 Tenant Aktif</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Tenaga Kerja:</span>
-                    <strong className="text-blue-700">680 Talenta Digital</strong>
-                  </div>
-                </div>
-              </div>
-
-              {/* KEK Batam Aero Technic */}
-              <div className="bg-gradient-to-b from-emerald-50/50 to-white rounded-xl border border-emerald-200 p-4 space-y-3 shadow-2xs">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold font-mono">
-                      BAT
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">KEK Batam Aero Technic</h4>
-                      <span className="text-[10px] text-slate-500 font-mono">Luas: 30,00 Ha (Bandara Hang Nadim)</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    111,4%
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="text-[11px] text-slate-500">Realisasi Investasi:</div>
-                  <div className="text-xl font-black text-slate-900 font-mono">
-                    Rp 3,12 Triliun
-                  </div>
-                  <div className="text-[10px] text-slate-500 font-mono">
-                    Target: Rp 2,80 T | Komitmen: Rp 7,2 T
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 text-xs space-y-1 text-slate-600">
-                  <div className="flex justify-between">
-                    <span>Fokus Kawasan:</span>
-                    <strong className="text-slate-800">MRO Pesawat Terbang &amp; Hanggar</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Pelaku Usaha:</span>
-                    <strong className="text-slate-800">16 Tenant / Unit Maintenance</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Tenaga Kerja:</span>
-                    <strong className="text-emerald-700">610 Teknisi &amp; Aviasi</strong>
-                  </div>
-                </div>
-              </div>
-
-              {/* KEK Pariwisata & Kesehatan */}
-              <div className="bg-gradient-to-b from-purple-50/50 to-white rounded-xl border border-purple-200 p-4 space-y-3 shadow-2xs">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold font-mono">
-                      PKI
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">KEK Pariwisata &amp; Kesehatan</h4>
-                      <span className="text-[10px] text-slate-500 font-mono">Luas: 44,23 Ha (Sekupang)</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200">
-                    90,0%
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="text-[11px] text-slate-500">Realisasi Investasi:</div>
-                  <div className="text-xl font-black text-slate-900 font-mono">
-                    Rp 1,08 Triliun
-                  </div>
-                  <div className="text-[10px] text-slate-500 font-mono">
-                    Target: Rp 1,20 T | Komitmen: Rp 6,9 T
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 text-xs space-y-1 text-slate-600">
-                  <div className="flex justify-between">
-                    <span>Fokus Kawasan:</span>
-                    <strong className="text-slate-800">Medical Tourism &amp; Wellness Resort</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Pelaku Usaha:</span>
-                    <strong className="text-slate-800">10 Tenant (Apollo, RSBP Health)</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Tenaga Kerja:</span>
-                    <strong className="text-purple-700">192 Tenaga Medis &amp; Layanan</strong>
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Pertumbuhan YoY</span>
+                    <span className="text-xs font-black text-blue-700">+17,80% YoY</span>
                   </div>
                 </div>
               </div>
             </div>
+          )}
 
-            {/* Administrator KEK Stats & Kajian */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-                <h4 className="text-xs font-mono font-bold text-slate-800 uppercase flex items-center justify-between">
-                  <span>Layanan Administrator KEK (Dataset #4 s/d #8)</span>
-                  <span className="text-[10px] text-emerald-700 font-bold">142 Dokumen Terbit</span>
-                </h4>
-                <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="bg-white p-2 rounded-lg border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">Perizinan Berusaha</div>
-                    <div className="font-mono font-bold text-blue-700 text-base">76 Izin</div>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">Non-Perizinan</div>
-                    <div className="font-mono font-bold text-cyan-700 text-base">42 Dok</div>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">Perizinan Lainnya</div>
-                    <div className="font-mono font-bold text-indigo-700 text-base">24 Dok</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-                <h4 className="text-xs font-mono font-bold text-slate-800 uppercase flex items-center justify-between">
-                  <span>Kajian Strategis Perkin KEK (Dataset #9 s/d #12)</span>
-                  <span className="text-[10px] text-blue-700 font-bold">91,7% Capaian</span>
-                </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  11 dari 12 kajian perkin telah ditindaklanjuti untuk harmonisasi insentif fiskal (Tax Holiday/Allowance KEK) dan masterplan kesiapan utilitas gardu induk serta transmisi fiber optik tier-4.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ============================================================== */}
-        {/* TAB 3: PENGENDALIAN PENGUSAHAAN & KERJASAMA KEMITRAAN */}
-        {/* ============================================================== */}
-        {activeVisualTab === 'pengendalian_kerjasama' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <div>
-                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>EVALUASI PENGENDALIAN KERJASAMA PENGUSAHAAN BADAN USAHA (IKP-3)</span>
-                </h3>
-                <span className="text-[11px] text-slate-500 font-sans">
-                  Target: 85,00% • Realisasi: 94,60% (Dataset #1, #2, #3, #4 Dit. Pengendalian Pengusahaan)
-                </span>
-              </div>
-
-              <button
-                onClick={() => onNavigateToUnit && onNavigateToUnit('dit-pengendalian-usaha')}
-                className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
-              >
-                <span>Buka Dashboard Pengendalian Usaha</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Stat Counters Row */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-indigo-50/60 p-3 rounded-xl border border-indigo-200">
-                <div className="text-[10px] text-indigo-700 font-mono font-bold">REKOMENDASI TERBIT</div>
-                <div className="text-2xl font-black text-indigo-950 font-mono">48</div>
-                <div className="text-[10px] text-indigo-600">Dataset #1 Pengendalian</div>
-              </div>
-              <div className="bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
-                <div className="text-[10px] text-emerald-700 font-mono font-bold">TUNTAS DITINDAKLANJUTI</div>
-                <div className="text-2xl font-black text-emerald-950 font-mono">45 (94,6%)</div>
-                <div className="text-[10px] text-emerald-600">Dataset #3 Hasil Evaluasi</div>
-              </div>
-              <div className="bg-blue-50/60 p-3 rounded-xl border border-blue-200">
-                <div className="text-[10px] text-blue-700 font-mono font-bold">PERBAIKAN / AMANDEMEN</div>
-                <div className="text-2xl font-black text-blue-950 font-mono">91,80%</div>
-                <div className="text-[10px] text-blue-600">Dataset #4 Perubahan PKS</div>
-              </div>
-              <div className="bg-slate-100 p-3 rounded-xl border border-slate-200">
-                <div className="text-[10px] text-slate-700 font-mono font-bold">LAPORAN PENGAWASAN</div>
-                <div className="text-2xl font-black text-slate-900 font-mono">12 Laporan</div>
-                <div className="text-[10px] text-slate-600">Dataset #2 Monitoring Bulanan</div>
-              </div>
-            </div>
-
-            {/* Daftar Kerjasama Pengusahaan Table */}
-            <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-mono font-bold text-slate-800 uppercase">
-                  Daftar Evaluasi Perjanjian Kerjasama Pengusahaan (KSO, BTO, BOT &amp; Konsesi)
-                </h4>
-                <span className="text-[10px] text-slate-500 font-mono">6 Sampel Mitra Strategis Aktif</span>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-200 text-left text-[11px] font-mono text-slate-500">
-                      <th className="pb-2 font-bold">Mitra Pengusahaan</th>
-                      <th className="pb-2 font-bold">Skema PKS</th>
-                      <th className="pb-2 font-bold">Bidang Kerjasama</th>
-                      <th className="pb-2 font-bold text-right">Nilai Investasi</th>
-                      <th className="pb-2 font-bold text-center">Status Kepatuhan</th>
-                      <th className="pb-2 font-bold">Tindak Lanjut Rekomendasi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {KERJASAMA_PENGUSAHAAN_DATA.map((row) => (
-                      <tr key={row.id} className="hover:bg-white/80 transition-colors">
-                        <td className="py-2.5 font-bold text-slate-900">
-                          <div>{row.namaMitra}</div>
-                          <div className="text-[10px] text-slate-400 font-mono">{row.nomorPks} • {row.periodeKerjasama}</div>
-                        </td>
-                        <td className="py-2.5 font-mono text-slate-700">
-                          <span className="px-2 py-0.5 rounded bg-slate-200/70 text-[10px] font-bold">
-                            {row.skemaKerjasama.split(' ')[0]}
-                          </span>
-                        </td>
-                        <td className="py-2.5 text-slate-700 max-w-xs truncate">
-                          {row.bidangKerjasama}
-                        </td>
-                        <td className="py-2.5 font-mono font-bold text-slate-900 text-right">
-                          Rp {(row.nilaiInvestasiMitra / 1000).toFixed(2)} T
-                        </td>
-                        <td className="py-2.5 text-center">
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              row.statusKepatuhan.includes('(A)')
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {row.statusKepatuhan}
-                          </span>
-                        </td>
-                        <td className="py-2.5">
-                          <span className="flex items-center gap-1 text-[11px] font-medium text-slate-700">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            <span>{row.rekomendasiStatus}</span>
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ============================================================== */}
-        {/* TAB 4: INVESTOR PIPELINE INTELLIGENCE & DIGITAL PROMOTION */}
-        {/* ============================================================== */}
-        {activeVisualTab === 'investor_pipeline' && (
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200">
-              <div>
-                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>INVESTOR PIPELINE INTELLIGENCE &amp; PROMOSI PENANAMAN MODAL (IKP-4)</span>
-                </h3>
-                <span className="text-[11px] text-slate-500 font-sans">
-                  52 Investor Minat Terfasilitasi • Potensi Nilai Pipeline: Rp 18,75 Triliun (US$ 1,21 Miliar)
-                </span>
-              </div>
-
-              {/* Filter Pipeline Stage */}
-              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
-                {(['ALL', 'Inquiry', 'Site Visit', 'LoI Minat', 'Perizinan', 'Konstruksi'] as const).map((stage) => (
-                  <button
-                    key={stage}
-                    onClick={() => setPipelineFilterTahap(stage)}
-                    className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all cursor-pointer ${
-                      pipelineFilterTahap === stage
-                        ? 'bg-white text-blue-700 shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    {stage}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Funnel 5 Stages Visual Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
-              {INVESTOR_PIPELINE_STAGES.map((stg) => (
-                <div
-                  key={stg.stageId}
-                  className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5 hover:border-blue-400 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700">
-                      Step {stg.stageId}
+          {/* TAB 2: IKP-2 DIT. INVESTASI (PROMOSI & MINAT) */}
+          {activeTab === 'ikp-2' && (
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+              {/* KOLOM A: TABEL AGENDA PROMOSI & MINAT INVESTASI */}
+              <div className="xl:col-span-7 bg-white rounded-xl border border-sky-200 p-3 shadow-2xs flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 flex items-center gap-1">
+                      <Globe className="w-3 h-3 text-sky-700" />
+                      IKP-2 &bull; DIT. INVESTASI (PROMOSI)
                     </span>
-                    <span className="text-[10px] font-mono text-slate-500 font-bold">
-                      {stg.persenKonversi.toFixed(1)}%
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      109.00% Melampaui Target
                     </span>
                   </div>
-                  <div className="text-xs font-bold text-slate-800 truncate" title={stg.stageTitle}>
-                    {stg.stageTitle}
-                  </div>
-                  <div className="text-xl font-mono font-black text-slate-900">
-                    {stg.investorCount} <span className="text-[11px] font-sans font-normal text-slate-500">Investor</span>
-                  </div>
-                  <div className="text-[10px] font-mono text-blue-700 font-bold">
-                    Est: Rp {stg.nilaiEstimasiTriliun.toFixed(2)} T
-                  </div>
-                  <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-blue-600 rounded-full"
-                      style={{ width: `${stg.persenKonversi}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
 
-            {/* Investor Pipeline Table & Website Visit Insights */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-1">
-              <div className="lg:col-span-8 bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-mono font-bold text-slate-800 uppercase">
-                    Pipeline Calon Investor Riil Terfasilitasi (Dataset #14 &amp; #6)
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
+                    Terlaksananya Kegiatan Promosi Dalam Maupun Luar Negeri
                   </h4>
-                  <span className="text-[10px] text-slate-500 font-mono">
-                    Menampilkan {filteredPipelineTable.length} dari {INVESTOR_PIPELINE_TABLE.length} Proyek
-                  </span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="border-b border-slate-200 text-left text-[11px] font-mono text-slate-500">
-                        <th className="pb-2 font-bold">Nama Perusahaan</th>
-                        <th className="pb-2 font-bold">Sektor &amp; Lokasi</th>
-                        <th className="pb-2 font-bold text-right">Estimasi Modal</th>
-                        <th className="pb-2 font-bold text-center">Tahapan</th>
-                        <th className="pb-2 font-bold">Status Kesiapan</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {filteredPipelineTable.map((p) => (
-                        <tr key={p.id} className="hover:bg-white/80 transition-colors">
-                          <td className="py-2.5 font-bold text-slate-900">
-                            <div className="flex items-center gap-1.5">
-                              <span>{p.bendera}</span>
-                              <span>{p.namaPerusahaan}</span>
-                            </div>
-                            <div className="text-[10px] text-slate-400 font-mono">{p.asalNegara} • Fasilitasi: {p.tanggalFasilitasi}</div>
-                          </td>
-                          <td className="py-2.5 text-slate-700">
-                            <div>{p.sektor}</div>
-                            <div className="text-[10px] text-slate-500 font-mono">{p.lokasiTujuan}</div>
-                          </td>
-                          <td className="py-2.5 font-mono font-bold text-slate-900 text-right">
-                            Rp {(p.nilaiEstimasiMiliar / 1000).toFixed(2)} T
-                          </td>
-                          <td className="py-2.5 text-center">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-100 text-blue-800">
-                              {p.tahap}
-                            </span>
-                          </td>
-                          <td className="py-2.5 text-[11px] font-medium text-slate-800">
-                            <span className="flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                              <span>{p.statusKesiapan}</span>
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Website Telemetry & Pameran Insights */}
-              <div className="lg:col-span-4 space-y-3">
-                <div className="p-3.5 rounded-xl bg-gradient-to-br from-slate-900 to-[#1F3864] text-white space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-cyan-300 font-bold">
-                      PORTAL RESMI INVEST IN-BATAM
-                    </span>
-                    <span className="text-[10px] text-emerald-400 font-mono font-bold">+16,3% YoY</span>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-2xl font-black text-white font-mono">239.250 Hits</div>
-                    <div className="text-xs text-slate-300">164.200 Pengunjung Unik dari 38 Negara</div>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-700/80 space-y-1.5 text-xs text-slate-300">
-                    <div className="flex justify-between">
-                      <span>Singapura:</span>
-                      <strong className="text-white font-mono">34% (81.345 hits)</strong>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Amerika Serikat:</span>
-                      <strong className="text-white font-mono">21% (50.240 hits)</strong>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Tiongkok:</span>
-                      <strong className="text-white font-mono">20% (47.850 hits)</strong>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Halaman Terpopuler:</span>
-                      <strong className="text-cyan-300 font-mono">/kek-nongsa-digital-park</strong>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                  <h4 className="text-xs font-mono font-bold text-slate-800 uppercase flex items-center justify-between">
-                    <span>Pameran &amp; Roadshow Investasi</span>
-                    <span className="text-emerald-700 font-bold">14 Event</span>
-                  </h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    Partisipasi aktif BP Batam dalam 14 forum investasi internasional meliputi Singapore Fintech Festival, Hannover Messe Jerman, Global Investment Forum Dubai, dan IIGF Jakarta.
+                  <p className="text-[10px] text-slate-500">
+                    Unit: Direktorat Investasi (Log Promosi, Pameran &amp; Business Matching)
                   </p>
+
+                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-sky-100">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl sm:text-2xl font-black font-mono text-sky-700">218</span>
+                      <span className="text-xs font-bold text-slate-600">Minat Investasi (Leads)</span>
+                    </div>
+                    <span className="text-[10.5px] text-slate-500">
+                      Target: <strong className="text-slate-800">200 Minat</strong> <span className="text-emerald-600 font-bold">(+18 Minat)</span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
+                    <span>Agenda Promosi &amp; Minat Investasi (5 Kegiatan Sampel):</span>
+                    <span className="text-[9.5px] font-normal text-slate-400">97 Agenda Aktif</span>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[10px] text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                          <th className="py-1 px-1.5">NAMA KEGIATAN PROMOSI</th>
+                          <th className="py-1 px-1.5">LOKASI / NEGARA</th>
+                          <th className="py-1 px-1.5 text-center">TAMU</th>
+                          <th className="py-1 px-1.5 text-right">MINAT (LEADS)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Hannover Messe Industri</td>
+                          <td className="py-1 px-1.5 text-slate-500">Hannover, Jerman</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">1.250</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-sky-700">42 Leads</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Singapore Business Mission</td>
+                          <td className="py-1 px-1.5 text-slate-500">Singapura</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">890</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-sky-700">58 Leads</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Tokyo High-Tech Investment Forum</td>
+                          <td className="py-1 px-1.5 text-slate-500">Tokyo, Jepang</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">620</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-sky-700">36 Leads</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Batam International Business Summit</td>
+                          <td className="py-1 px-1.5 text-slate-500">Batam, Indonesia</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">1.840</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-sky-700">54 Leads</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Taipei Electronics Show</td>
+                          <td className="py-1 px-1.5 text-slate-500">Taipei, Taiwan</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">920</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-sky-700">28 Leads</td>
+                        </tr>
+                        <tr className="bg-sky-50/60 font-bold border-t border-sky-200">
+                          <td className="py-1 px-1.5 text-sky-950">Total Kumulatif Promosi</td>
+                          <td className="py-1 px-1.5 text-[10px] text-sky-800">97 Pelaksanaan Promosi</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9.5px] text-sky-900">5.520</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-sky-900">218 Leads</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                  <button
+                    onClick={() => onOpenFormulaModal?.('ikp-2-promosi-investasi')}
+                    className="text-[10.5px] font-bold text-sky-700 hover:text-sky-900 inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <FileCode2 className="w-3.5 h-3.5" />
+                    <span>Lihat Manual &amp; Formula IKP-2 (Promosi Investasi)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <h5 className="text-xs font-bold text-slate-800">
+                      Tren Minat Investasi Promosi (2022 - 2026)
+                    </h5>
+                    <span className="text-[10px] font-mono font-bold text-sky-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                      Minat (Leads)
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 mb-2">
+                    Jumlah calon investor potensial hasil promosi aktif
+                  </p>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={PROMOSI_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <YAxis domain={[120, 260]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [`${val} Leads`, name]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '10px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          name="Target Perkin"
+                          stroke="#94A3B8"
+                          strokeDasharray="4 4"
+                          strokeWidth={1.5}
+                          dot={{ r: 3 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="skor"
+                          name="Realisasi Minat"
+                          stroke="#0284C7"
+                          strokeWidth={2.5}
+                          dot={{ r: 4, fill: '#0284C7' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
+                    <span className="text-xs font-black text-sky-700">+18 Leads (+9,0%)</span>
+                  </div>
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Konversi ke Proyek</span>
+                    <span className="text-xs font-black text-emerald-600">38,4% Lolos Studi</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* TAB 3: IKP-3 DIT. PENGEMBANGAN KPBPBB DAN KEK */}
+          {activeTab === 'ikp-3' && (
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+              {/* KOLOM A: TABEL KAJIAN STRATEGIS KEK */}
+              <div className="xl:col-span-7 bg-white rounded-xl border border-emerald-200 p-3 shadow-2xs flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                      <Building2 className="w-3 h-3 text-emerald-700" />
+                      IKP-3 &bull; DIT. PENGEMBANGAN KEK
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      100.00% Tercapai Penuh
+                    </span>
+                  </div>
+
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
+                    Persentase Kajian Pengembangan, Kerja Sama &amp; KEK Berkelanjutan
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Unit: Dit. Pengembangan KPBPBB dan KEK (20 Dokumen Analisis Strategis)
+                  </p>
+
+                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-emerald-100">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl sm:text-2xl font-black font-mono text-emerald-700">100,0</span>
+                      <span className="text-xs font-bold text-slate-600">% Ditindaklanjuti</span>
+                    </div>
+                    <span className="text-[10.5px] text-slate-500">
+                      Target: <strong className="text-slate-800">100,0%</strong> <span className="text-emerald-600 font-bold">(20 / 20 Selesai)</span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
+                    <span>Dokumen Kajian Pengembangan KEK (4 Pilar Utama):</span>
+                    <span className="text-[9.5px] font-normal text-slate-400">100% Ditindaklanjuti</span>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[10px] text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                          <th className="py-1 px-1.5">PILAR KAJIAN STRATEGIS</th>
+                          <th className="py-1 px-1.5 text-center">DOKUMEN</th>
+                          <th className="py-1 px-1.5">OUTPUT KEBIJAKAN</th>
+                          <th className="py-1 px-1.5 text-right">STATUS</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Hilirisasi Industri Semikonduktor &amp; EV</td>
+                          <td className="py-1 px-1.5 text-center font-mono">6 Dok</td>
+                          <td className="py-1 px-1.5 text-slate-500 text-[9.5px]">Roadmap Rantai Pasok Chip KPBPB</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">100% Tuntas</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Kemitraan Strategis KEK Nongsa Digital</td>
+                          <td className="py-1 px-1.5 text-center font-mono">5 Dok</td>
+                          <td className="py-1 px-1.5 text-slate-500 text-[9.5px]">Insentif Subsea Cable &amp; AI Hub</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">100% Tuntas</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Daya Saing Logistik Maritim KEK BAT</td>
+                          <td className="py-1 px-1.5 text-center font-mono">5 Dok</td>
+                          <td className="py-1 px-1.5 text-slate-500 text-[9.5px]">Regulasi Fasilitas MRO Pesawat</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">100% Tuntas</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">Pengembangan KEK Hijau &amp; Energi Terbarukan</td>
+                          <td className="py-1 px-1.5 text-center font-mono">4 Dok</td>
+                          <td className="py-1 px-1.5 text-slate-500 text-[9.5px]">Kajian PLTS &amp; Green Data Center</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">100% Tuntas</td>
+                        </tr>
+                        <tr className="bg-emerald-50/60 font-bold border-t border-emerald-200">
+                          <td className="py-1 px-1.5 text-emerald-950">Total Kajian Strategis KEK</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9.5px] text-emerald-900">20 Dok</td>
+                          <td className="py-1 px-1.5 text-[9.5px] text-emerald-800">4 Pilar Regulasi Diselaraskan</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-emerald-900">100.0%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                  <button
+                    onClick={() => onOpenFormulaModal?.('ikp-3-kajian-kek')}
+                    className="text-[10.5px] font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <FileCode2 className="w-3.5 h-3.5" />
+                    <span>Lihat Manual &amp; Formula IKP-3 (Kajian KEK)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <h5 className="text-xs font-bold text-slate-800">
+                      Tren Capaian Kajian KEK (2022 - 2026)
+                    </h5>
+                    <span className="text-[10px] font-mono font-bold text-emerald-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                      Persentase (%)
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 mb-2">
+                    Konsistensi penyelesaian dan tindak lanjut rekomendasi KEK
+                  </p>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={KEK_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <YAxis domain={[90, 105]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [`${val}%`, name]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '10px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          name="Target Perkin"
+                          stroke="#94A3B8"
+                          strokeDasharray="4 4"
+                          strokeWidth={1.5}
+                          dot={{ r: 3 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="skor"
+                          name="Realisasi Kajian"
+                          stroke="#059669"
+                          strokeWidth={2.5}
+                          dot={{ r: 4, fill: '#059669' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Kajian Selesai</span>
+                    <span className="text-xs font-black text-emerald-700">20 / 20 Dokumen</span>
+                  </div>
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Kesiapan Regulasi</span>
+                    <span className="text-xs font-black text-blue-700">100% Selaras PP 41</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: IKP-4 DIT. PENGENDALIAN PENGUSAHAAN */}
+          {activeTab === 'ikp-4' && (
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+              {/* KOLOM A: TABEL PENGENDALIAN KERJASAMA BADAN USAHA */}
+              <div className="xl:col-span-7 bg-white rounded-xl border border-indigo-200 p-3 shadow-2xs flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-200 flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-indigo-700" />
+                      IKP-4 &bull; DIT. PENGENDALIAN PENGUSAHAAN
+                    </span>
+                    <span className="text-[10px] font-bold text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded border border-indigo-200">
+                      95.45% Kepatuhan Sangat Tinggi
+                    </span>
+                  </div>
+
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
+                    Persentase Pelaksanaan Pengendalian Pengusahaan &amp; Kerja Sama BU
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Unit: Dit. Pengendalian Pengusahaan (110 Rekomendasi Pengawasan &amp; Pembinaan)
+                  </p>
+
+                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-indigo-100">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl sm:text-2xl font-black font-mono text-indigo-700">95,45</span>
+                      <span className="text-xs font-bold text-slate-600">% Ditindaklanjuti</span>
+                    </div>
+                    <span className="text-[10.5px] text-slate-500">
+                      Target: <strong className="text-slate-800">100,0%</strong> <span className="text-indigo-600 font-bold">(105 / 110 Tuntas)</span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
+                    <span>Pengawasan &amp; Pembinaan 4 Klaster Badan Usaha:</span>
+                    <span className="text-[9.5px] font-normal text-slate-400">28 Dokumen PKS</span>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[10px] text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                          <th className="py-1 px-1.5">KLASTER BADAN USAHA</th>
+                          <th className="py-1 px-1.5 text-center">PKS</th>
+                          <th className="py-1 px-1.5 text-center">REKOMENDASI</th>
+                          <th className="py-1 px-1.5 text-right">TINDAK LANJUT</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">BU Pelabuhan &amp; Logistik Maritim</td>
+                          <td className="py-1 px-1.5 text-center font-mono">10 PKS</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">38 Rek</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-indigo-700">37 Tuntas (97,4%)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">BU Fasilitas Bandara &amp; Kargo</td>
+                          <td className="py-1 px-1.5 text-center font-mono">6 PKS</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">26 Rek</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-indigo-700">25 Tuntas (96,2%)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">BU SPAM &amp; Pengelolaan Air Baku</td>
+                          <td className="py-1 px-1.5 text-center font-mono">8 PKS</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">30 Rek</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-indigo-700">28 Tuntas (93,3%)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-medium">BU Rumah Sakit &amp; Fasilitas Medis</td>
+                          <td className="py-1 px-1.5 text-center font-mono">4 PKS</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">16 Rek</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-indigo-700">15 Tuntas (93,8%)</td>
+                        </tr>
+                        <tr className="bg-indigo-50/60 font-bold border-t border-indigo-200">
+                          <td className="py-1 px-1.5 text-indigo-950">Total Pengawasan Badan Usaha</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9.5px] text-indigo-900">28 PKS</td>
+                          <td className="py-1 px-1.5 text-center font-mono text-[9.5px] text-indigo-900">110 Rek</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-indigo-900">105 Tuntas (95,45%)</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                  <button
+                    onClick={() => onOpenFormulaModal?.('ikp-4-pengendalian-pengusahaan')}
+                    className="text-[10.5px] font-bold text-indigo-700 hover:text-indigo-900 inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <FileCode2 className="w-3.5 h-3.5" />
+                    <span>Lihat Manual &amp; Formula IKP-4 (Pengendalian BU)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <h5 className="text-xs font-bold text-slate-800">
+                      Tren Kepatuhan Badan Usaha (2022 - 2026)
+                    </h5>
+                    <span className="text-[10px] font-mono font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                      Persentase (%)
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 mb-2">
+                    Tingkat kepatuhan mitra terhadap rekomendasi pembinaan BU
+                  </p>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={PENGENDALIAN_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <YAxis domain={[75, 105]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [`${val}%`, name]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '10px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          name="Target Perkin"
+                          stroke="#94A3B8"
+                          strokeDasharray="4 4"
+                          strokeWidth={1.5}
+                          dot={{ r: 3 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="skor"
+                          name="Realisasi Kepatuhan"
+                          stroke="#4F46E5"
+                          strokeWidth={2.5}
+                          dot={{ r: 4, fill: '#4F46E5' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">PKS Diawasi</span>
+                    <span className="text-xs font-black text-indigo-700">28 Kemitraan Aktif</span>
+                  </div>
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Tingkat Tindak Lanjut</span>
+                    <span className="text-xs font-black text-emerald-600">95,45% Kepatuhan</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: KONSOLIDASI • MATRIKS SINERGI SATKER */}
+          {activeTab === 'matriks' && (
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+              {/* KOLOM A: TABEL MATRIKS SINERGI 3 SATKER */}
+              <div className="xl:col-span-7 bg-white rounded-xl border border-purple-200 p-3 shadow-2xs flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200 flex items-center gap-1">
+                      <Layers className="w-3 h-3 text-purple-700" />
+                      KONSOLIDASI &bull; 3 UNIT KERJA PENGAMPU PERKIN A4
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      102.72% Rata-Rata Capaian
+                    </span>
+                  </div>
+
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
+                    Matriks Sinergi Anggaran, IKP &amp; Capaian 3 Satker
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Integrasi Portofolio: Dit. Investasi (14 DS), Dit. KEK (12 DS), Dit. Pengendalian BU (4 DS)
+                  </p>
+
+                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-purple-100">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl sm:text-2xl font-black font-mono text-purple-700">Rp 18,43</span>
+                      <span className="text-xs font-bold text-slate-600">Miliar Pagu DIPA</span>
+                    </div>
+                    <span className="text-[10.5px] text-slate-500">
+                      Serapan Berjalan: <strong className="text-slate-800">Rp 7,85 M (42,6%)</strong>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
+                    <span>Kontribusi 3 Satker Bidang Deputi A4:</span>
+                    <span className="text-[9.5px] font-normal text-slate-400">Konsolidasi Terpadu</span>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[10px] text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                          <th className="py-1 px-1.5">SATKER PELAKSANA</th>
+                          <th className="py-1 px-1.5 text-right">PAGU DIPA</th>
+                          <th className="py-1 px-1.5 text-right">SERAPAN</th>
+                          <th className="py-1 px-1.5 text-right">OUTPUT UTAMA</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                          <td className="py-1 px-1.5 font-semibold text-slate-900">
+                            <div>DINV</div>
+                            <div className="text-[9px] text-slate-400 font-normal">Direktorat Investasi</div>
+                          </td>
+                          <td className="py-1 px-1.5 text-right font-mono text-slate-600">Rp 9,68 M</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-slate-600">Rp 4,12 M (42,6%)</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">Rp 63,85 T Investasi (106,4%)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-semibold text-slate-900">
+                            <div>DKPB</div>
+                            <div className="text-[9px] text-slate-400 font-normal">Dit. Pengembangan KPBPBB &amp; KEK</div>
+                          </td>
+                          <td className="py-1 px-1.5 text-right font-mono text-slate-600">Rp 7,33 M</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-slate-600">Rp 3,18 M (43,4%)</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">20 Kajian KEK (100%)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-1.5 font-semibold text-slate-900">
+                            <div>DPPU</div>
+                            <div className="text-[9px] text-slate-400 font-normal">Dit. Pengendalian Pengusahaan</div>
+                          </td>
+                          <td className="py-1 px-1.5 text-right font-mono text-slate-600">Rp 1,42 M</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-slate-600">Rp 0,55 M (38,7%)</td>
+                          <td className="py-1 px-1.5 text-right font-mono font-bold text-purple-700">105 Rekomendasi (95,5%)</td>
+                        </tr>
+                        <tr className="bg-purple-50/60 font-bold border-t border-purple-200">
+                          <td className="py-1 px-1.5 text-purple-950">Total Konsolidasi DEP-A4:</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-purple-900">Rp 18,43 M</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-purple-900">Rp 7,85 M (42,6%)</td>
+                          <td className="py-1 px-1.5 text-right font-mono text-purple-900">4 IKP Melampaui</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 mt-2 text-[10px] text-slate-600 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                  <span>Sinergi 3 Unit Kerja Pengampu: 39 Dataset Terintegrasi Buku Satu Data BP Batam</span>
+                </div>
+              </div>
+
+              {/* KOLOM B: GRAFIK TREN KONSOLIDASI */}
+              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <h5 className="text-xs font-bold text-slate-800">
+                      Tren Capaian Kinerja Program (2022 - 2026)
+                    </h5>
+                    <span className="text-[10px] font-mono font-bold text-purple-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                      Persentase (%)
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 mb-2">
+                    Rata-rata capaian IKP dan efisiensi serapan DIPA
+                  </p>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={SINERGI_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <YAxis domain={[30, 110]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [`${val}%`, name]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '10px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="capaianIku"
+                          name="Rerata Capaian IKP (%)"
+                          stroke="#7C3AED"
+                          strokeWidth={2.5}
+                          dot={{ r: 4, fill: '#7C3AED' }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="serapanPersen"
+                          name="Serapan Anggaran (%)"
+                          stroke="#94A3B8"
+                          strokeDasharray="4 4"
+                          strokeWidth={1.5}
+                          dot={{ r: 3 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Efektivitas Kinerja</span>
+                    <span className="text-xs font-black text-emerald-700">102.72% Melampaui</span>
+                  </div>
+                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                    <span className="text-[9px] text-slate-500 block">Status DIPA</span>
+                    <span className="text-xs font-black text-purple-700">On Track Optimal</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

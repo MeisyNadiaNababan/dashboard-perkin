@@ -14,6 +14,7 @@ import {
   BarChart3,
   Network,
   HelpCircle,
+  Activity,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -221,164 +222,105 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
       </div>
 
       {/* ================================================================== */}
-      {/* 2. BARIS KEDUA: 8 KARTU KPI OPERASIONAL ULTRA-SLIM                   */}
-      {/* Sesuai Permintaan Poin 5:                                          */}
-      {/* - KPI turunan tidak boleh menduplikasi visualisasi di unit deep dive */}
-      {/*   (misalnya panjang FO 151,2 km sudah ada di deep dive, jadi TIDAK   */}
-      {/*   dimasukkan ke sini).                                               */}
-      {/* - Mengambil KPI strategis dari 4 unit kerja DEP-A2:                */}
-      {/*   Pusren, Harmonisasi, PDSI, PTSP dari Buku Satu Data                  */}
+      {/* 2. BARIS KEDUA: 4 KARTU KPI OPERASIONAL SESUAI BUKU SATU DATA        */}
+      {/* (SLA Penyelesaian Izin, Evaluasi EPSS, Permintaan IT Helpdesk, dsb)  */}
       {/* ================================================================== */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-        {/* KPI 1: KESELARASAN RENSTRA & DIPA THD PRIORITAS NASIONAL (PUSREN - DATASET #3) */}
-        <div
-          onClick={() => onSelectUnit?.('pusat-perencanaan-program')}
-          className="bg-gradient-to-br from-sky-50/80 via-blue-50/40 to-white rounded-lg border border-sky-200/80 hover:border-sky-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Keselarasan Renstra & DIPA thd Prioritas Nasional (Buku Satu Data Pusren Hal. 51)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-sky-600 text-white flex items-center justify-center font-bold shrink-0">
-                <Compass className="w-2.5 h-2.5" />
-              </span>
-              Keselarasan Renstra
-            </span>
-            <span className="font-bold text-sky-800 bg-white/90 border border-sky-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              Optimal
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              98,2% Selaras
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Evaluasi SE Bappenas
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 2: KETERCAPAIAN RINCIAN OUTPUT (RO) RENSTRA (PUSREN - DATASET #17) */}
-        <div
-          onClick={() => onSelectUnit?.('pusat-perencanaan-program')}
-          className="bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-white rounded-lg border border-blue-200/80 hover:border-blue-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Ketercapaian Rincian Output (RO) Renstra BP Batam (Dataset No. 17)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
-                <Target className="w-2.5 h-2.5" />
-              </span>
-              Target RO Renstra
-            </span>
-            <span className="font-bold text-blue-700 bg-white/90 border border-blue-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              96,5% Selesai
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              28 / 29 RO
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Target KRO DIPA On Track
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 3: SINKRONISASI EKSTERNAL REGULASI K/L & PP 41/2021 (HARMONISASI - DATASET #2) */}
-        <div
-          onClick={() => onSelectUnit?.('pusat-harmonisasi')}
-          className="bg-gradient-to-br from-indigo-50/80 via-purple-50/40 to-white rounded-lg border border-indigo-200/80 hover:border-indigo-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Sinkronisasi Regulasi Internal-Eksternal dengan Regulasi K/L Pusat (Hal. 12)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0">
-                <FileCheck className="w-2.5 h-2.5" />
-              </span>
-              Sinkronisasi Regulasi K/L
-            </span>
-            <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              100% Selaras
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              42 Perka Diselaraskan
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Harmonisasi PP 41/2021
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 4: SURVEI KEWAJARAN 7 LEVEL TARIF BADAN USAHA (HARMONISASI - DATASET #5) */}
-        <div
-          onClick={() => onSelectUnit?.('pusat-harmonisasi')}
-          className="bg-gradient-to-br from-teal-50/80 via-emerald-50/40 to-white rounded-lg border border-teal-200/80 hover:border-teal-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Uji Kewajaran Tarif Layanan Badan Usaha BP Batam (Dataset No. 5 Hal. 13)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-teal-600 text-white flex items-center justify-center font-bold shrink-0">
-                <Scale className="w-2.5 h-2.5" />
-              </span>
-              Kewajaran Tarif Layanan
-            </span>
-            <span className="font-bold text-teal-800 bg-white/90 border border-teal-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              Validasi 7 Level
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              89,2% Wajar
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Survei Pelaku Usaha
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 5: PENERAPAN TANDA TANGAN ELEKTRONIK (TTE) PADA SISTEM (PDSI - DATASET #15) */}
-        <div
-          onClick={() => onSelectUnit?.('pdsi')}
-          className="bg-gradient-to-br from-indigo-50/80 via-sky-50/40 to-white rounded-lg border border-indigo-200/80 hover:border-indigo-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Integrasi Tanda Tangan Elektronik Tersertifikasi BSrE (Dataset No. 15 Hal. 42)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0">
-                <ShieldCheck className="w-2.5 h-2.5" />
-              </span>
-              Integrasi TTE BSrE
-            </span>
-            <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              BSrE Certified
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              48 Aplikasi TTE
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              100% Modul Naskah Dinas
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 6: EFISIENSI WAKTU PENERBITAN IZIN BERUSAHA (PTSP - DATASET #17) */}
+        {/* KPI 1: SLA DATA PENYELESAIAN PERIZINAN TEPAT WAKTU (PTSP - DATASET #17 HAL. 28) */}
         <div
           onClick={() => onSelectUnit?.('ptsp')}
           className="bg-gradient-to-br from-emerald-50/80 via-teal-50/40 to-white rounded-lg border border-emerald-200/80 hover:border-emerald-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Lead Time Penerbitan Izin Berusaha vs Batas Waktu Standar (Dataset No. 17 Hal. 28)"
+          title="Data Penyelesaian Perizinan yang Tepat Waktu (Buku Satu Data PTSP Hal. 28 No. 17)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
               <span className="w-4 h-4 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0">
+                <CheckCircle2 className="w-2.5 h-2.5" />
+              </span>
+              SLA Penyelesaian Izin
+            </span>
+            <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Target 90% (PP 41)
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              94,8% Tepat Waktu
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              14.080 dari 14.850 Berkas Terbit
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 2: LAPORAN PEMANTAUAN DAN EVALUASI EPSS MENAMPILKAN NILAI (PDSI - DATASET #20 HAL. 43) */}
+        <div
+          onClick={() => onSelectUnit?.('pdsi')}
+          className="bg-gradient-to-br from-indigo-50/80 via-blue-50/40 to-white rounded-lg border border-indigo-200/80 hover:border-indigo-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Laporan Pemantauan dan Evaluasi EPSS (Buku Satu Data PDSI Hal. 43 No. 20)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0">
+                <BarChart3 className="w-2.5 h-2.5" />
+              </span>
+              Evaluasi EPSS (BPS)
+            </span>
+            <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Predikat Baik
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              Nilai: 2,85 / 5,00
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              Target 2,60 (BPS Satu Data)
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 3: DATA PERMINTAAN LAYANAN IT (HELPDESK) MENAMPILKAN JUMLAH (PDSI - DATASET #21 HAL. 43) */}
+        <div
+          onClick={() => onSelectUnit?.('pdsi')}
+          className="bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-white rounded-lg border border-blue-200/80 hover:border-blue-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Data Permintaan Layanan IT Helpdesk (Buku Satu Data PDSI Hal. 43 No. 21)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
+                <Activity className="w-2.5 h-2.5" />
+              </span>
+              Permintaan Layanan IT
+            </span>
+            <span className="font-bold text-blue-700 bg-white/90 border border-blue-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              97,8% Selesai
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              1.482 Tiket Masuk
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              1.450 Selesai Ditangani
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 4: EFISIENSI WAKTU PENERBITAN IZIN BERUSAHA / EODB (PTSP - DATASET #17 HAL. 28) */}
+        <div
+          onClick={() => onSelectUnit?.('ptsp')}
+          className="bg-gradient-to-br from-teal-50/80 via-emerald-50/40 to-white rounded-lg border border-teal-200/80 hover:border-teal-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Kecepatan Waktu Penyelesaian Izin Berusaha (Lead Time EODB)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-teal-600 text-white flex items-center justify-center font-bold shrink-0">
                 <Zap className="w-2.5 h-2.5" />
               </span>
               Kecepatan Terbit Izin
             </span>
-            <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+            <span className="font-bold text-teal-800 bg-white/90 border border-teal-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
               EODB Unggul
             </span>
           </div>
@@ -387,61 +329,7 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               2,1 Hari Kerja
             </span>
             <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Standar PP: 5 Hari Kerja
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 7: TINGKAT PENYELESAIAN PENGADUAN LAYANAN MPP (PTSP - DATASET #6) */}
-        <div
-          onClick={() => onSelectUnit?.('ptsp')}
-          className="bg-gradient-to-br from-blue-50/80 via-teal-50/40 to-white rounded-lg border border-blue-200/80 hover:border-blue-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Tindak Lanjut & Solusi Pengaduan Masyarakat Mal Pelayanan Publik (Dataset No. 6 Hal. 24)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
-                <CheckCircle2 className="w-2.5 h-2.5" />
-              </span>
-              Penyelesaian Aduan MPP
-            </span>
-            <span className="font-bold text-blue-700 bg-white/90 border border-blue-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              SP4N Lapor
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              98,4% Selesai
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              122 dari 124 Aduan Tuntas
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 8: TINDAK LANJUT HASIL RAPIM & RDP DEPUTI A2 (HARMONISASI - DATASET #6 & 7) */}
-        <div
-          onClick={() => onSelectUnit?.('pusat-harmonisasi')}
-          className="bg-gradient-to-br from-purple-50/80 via-indigo-50/40 to-white rounded-lg border border-purple-200/80 hover:border-purple-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Tindak Lanjut Risalah RDP & Rapim Koordinasi Kebijakan (Dataset No. 6 & 7 Hal. 13)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-purple-600 text-white flex items-center justify-center font-bold shrink-0">
-                <FileText className="w-2.5 h-2.5" />
-              </span>
-              Tindak Lanjut Rapim
-            </span>
-            <span className="font-bold text-purple-800 bg-white/90 border border-purple-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
-              Akuntabel
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              94,5% Tuntas
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              76 dari 80 Arahan Strategis
+              Standar PP 41: 5 Hari Kerja
             </span>
           </div>
         </div>
