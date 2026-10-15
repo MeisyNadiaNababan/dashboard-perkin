@@ -85,7 +85,7 @@ export const SpipMaturitasChart: React.FC<SpipMaturitasChartProps> = ({ onOpenFo
                 Penilaian Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)
               </h3>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">
-                🏷️ Visualisasi: Grafik Batang 5 Unsur Pengendalian Intern (Bar Chart with Benchmark Line)
+                Visualisasi: Grafik Batang 5 Unsur Pengendalian Intern (Bar Chart with Benchmark Line)
               </span>
             </div>
             <div className="flex items-center gap-2 mt-1">

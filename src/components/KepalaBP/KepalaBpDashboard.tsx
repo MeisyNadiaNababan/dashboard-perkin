@@ -47,12 +47,9 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState<boolean>(false);
   const [selectedIksIdModal, setSelectedIksIdModal] = useState<string>('iks-1');
 
-  // Filter state
+  // Filter state (Hanya Tahun)
   const [filterState, setFilterState] = useState<KepalaBpFilterState>({
-    periode: 'YTD 2026',
-    klaster: 'ALL',
-    statusCapaian: 'ALL',
-    searchQuery: '',
+    periode: '2026',
   });
 
   // Active view: external prop if provided, else internal state
@@ -64,10 +61,7 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
 
   const handleResetFilter = () => {
     setFilterState({
-      periode: 'YTD 2026',
-      klaster: 'ALL',
-      statusCapaian: 'ALL',
-      searchQuery: '',
+      periode: '2026',
     });
   };
 
@@ -155,7 +149,10 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
   };
 
   return (
-    <div className="space-y-4 pb-12 font-sans text-slate-800">
+    <div
+      className="space-y-4 pb-4 font-sans text-slate-800 origin-top"
+      style={{ zoom: '80%' }}
+    >
       {/* 1. OFFICIAL LETTERHEAD & PERKIN HEADER (HANYA DI TAB NASKAH PERKIN AGAR COMMAND CENTER BERSIH) */}
       {activeTab === 'naskah_perkin' && (
         <KepalaBpBanner
@@ -164,114 +161,19 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
         />
       )}
 
-      {/* 2. COMPACT NON-INTRUSIVE FILTER BAR */}
-      <KepalaBpCompactFilter
-        filterState={filterState}
-        onFilterChange={handleFilterChange}
-        onResetFilter={handleResetFilter}
-        onExportCsv={handleExportConsolidatedCsv}
-        activeView={activeTab}
-        onSelectView={(v) => setInternalTab(v)}
-      />
+      {/* 2. COMPACT FILTER BAR (Hanya di tab sekunder agar Command Center bersih) */}
+      {activeTab !== 'ikhtisar' && (
+        <KepalaBpCompactFilter
+          filterState={filterState}
+          onFilterChange={handleFilterChange}
+          onResetFilter={handleResetFilter}
+          onExportCsv={handleExportConsolidatedCsv}
+          activeView={activeTab}
+          onSelectView={(v) => setInternalTab(v)}
+        />
+      )}
 
-      {/* 3. SUB-NAVIGATION TABS BAR */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar p-1.5 bg-white rounded-xl border border-slate-200/90 shadow-2xs">
-        <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            onClick={() => setInternalTab('ikhtisar')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'ikhtisar'
-                ? 'bg-[#002B49] text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Compass className="w-4 h-4 text-cyan-300" />
-            <span>Ringkasan Konsolidasi Lintas Unit</span>
-          </button>
 
-          <button
-            onClick={() => setInternalTab('investasi')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'investasi'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <TrendingUp className="w-4 h-4 text-cyan-200" />
-            <span>IKS 1: Realisasi Investasi (Rp 70 T)</span>
-          </button>
-
-          <button
-            onClick={() => setInternalTab('ikm')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'ikm'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Smile className="w-4 h-4 text-emerald-200" />
-            <span>IKS 2: Kepuasan Masyarakat (IKM 88)</span>
-          </button>
-
-          <button
-            onClick={() => setInternalTab('pnbp')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'pnbp'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <DollarSign className="w-4 h-4 text-indigo-200" />
-            <span>IKS 3: Realisasi PNBP (Rp 2,447 T)</span>
-          </button>
-
-          <button
-            onClick={() => setInternalTab('rb')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'rb'
-                ? 'bg-amber-600 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <ShieldCheck className="w-4 h-4 text-amber-200" />
-            <span>IKS 4: Reformasi Birokrasi (80 BB)</span>
-          </button>
-
-          <button
-            onClick={() => setInternalTab('matriks_satker')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'matriks_satker'
-                ? 'bg-slate-900 text-cyan-300 shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Building2 className="w-4 h-4 text-sky-400" />
-            <span>Matriks 24 Satker (Satu Data)</span>
-          </button>
-        </div>
-
-        <div className="flex items-center gap-1.5 shrink-0 pl-2 border-l border-slate-200">
-          <button
-            onClick={() => setInternalTab('naskah_perkin')}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'naskah_perkin'
-                ? 'bg-slate-800 text-white shadow-xs'
-                : 'text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5 text-amber-500" />
-            <span>Word (.doc)</span>
-          </button>
-
-          <button
-            onClick={() => handleOpenManual('iks-1')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors cursor-pointer"
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Manual 4 IKS</span>
-          </button>
-        </div>
-      </div>
 
       {/* 4. CONDITIONAL TAB CONTENTS */}
       {/* ------------------------------------------------------------------ */}

@@ -90,7 +90,7 @@ export const InvestasiVisualHeader: React.FC<InvestasiVisualHeaderProps> = ({
         {/* Nama Visualisasi Badge */}
         <span className="text-[10.5px] font-bold px-2.5 py-0.5 rounded-md bg-teal-50 text-teal-900 border border-teal-200 font-mono inline-flex items-center gap-1.5 shadow-2xs shrink-0">
           {visualIcon || <BarChart3 className="w-3.5 h-3.5 text-teal-600" />}
-          <span>🏷️ Visualisasi: {visualName}</span>
+          <span>Visualisasi: {visualName}</span>
         </span>
 
         {/* Atribut yang Ditampilkan Badges */}

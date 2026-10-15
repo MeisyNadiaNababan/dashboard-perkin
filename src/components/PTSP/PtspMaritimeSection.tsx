@@ -215,7 +215,7 @@ export const PtspMaritimeSection: React.FC<PtspMaritimeSectionProps> = ({ onExpl
           {/* Executive Insight Box for Maritime */}
           <div className="p-3.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs text-slate-700 leading-relaxed shadow-2xs mt-3">
             <span className="font-bold text-[#002B49] flex items-center gap-1.5 mb-1 text-xs">
-              <span>💡</span> Executive Insight &amp; Operasional Logistik Maritim PTSP:
+              <span></span> Executive Insight &amp; Operasional Logistik Maritim PTSP:
             </span>
             <p className="text-[11.5px] text-slate-600">
               Aktivitas bongkar muat kargo curah, peti kemas, dan kapal tongkang (barge) mencatat <strong>4.280 dokumen SKKBM terbit</strong> dengan keterlibatan 1.840 tenaga kerja bongkar muat (TKBM). Kepatuhan jadwal sandar dan persetujuan SKKAA/SKKAB terintegrasi secara elektronik dengan KSOP Khusus Batam, menghasilkan rata-rata waktu tunggu izin bongkar muat kurang dari <strong>1,4 hari kerja</strong>.

@@ -461,35 +461,37 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* 3. SUB-MENU SHEETS (Ikhtisar, Sub-Dashboard sheets, Kamus Rumus) */}
-      <div className="bg-white border-b border-slate-200 px-3 py-1.5 flex items-center gap-1 overflow-x-auto">
-        <span className="text-[10px] font-bold uppercase text-slate-500 px-1.5 tracking-wider shrink-0 hidden md:inline font-mono">
-          Sub Menu:
-        </span>
-        {subMenus.map((menu) => {
-          const isActive = activeSheet === menu.id;
-          const Icon = menu.icon;
+      {/* 3. SUB-MENU SHEETS - DITIADAKAN UNTUK KEPALA BP, DEPUTI ADM KEUANGAN, DAN DEPUTI KEBIJAKAN STRATEGIS AGAR BERSIH */}
+      {activeUnitId !== 'kepala-bp' && activeUnitId !== 'deputi-administrasi-keuangan' && activeUnitId !== 'deputi-kebijakan-strategis' && (
+        <div className="bg-white border-b border-slate-200 px-3 py-1.5 flex items-center gap-1 overflow-x-auto">
+          <span className="text-[10px] font-bold uppercase text-slate-500 px-1.5 tracking-wider shrink-0 hidden md:inline font-mono">
+            Sub Menu:
+          </span>
+          {subMenus.map((menu) => {
+            const isActive = activeSheet === menu.id;
+            const Icon = menu.icon;
 
-          return (
-            <button
-              key={menu.id}
-              onClick={() => onSelectSheet(menu.id)}
-              className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold whitespace-nowrap rounded-lg transition-all cursor-pointer ${
-                isActive
-                  ? menu.isSpecial
-                    ? 'bg-blue-600 text-white shadow-xs font-bold'
-                    : 'bg-[#1F3864] text-white shadow-xs font-bold'
-                  : menu.isSpecial
-                  ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : menu.isSpecial ? 'text-blue-600' : 'text-slate-500'}`} />
-              <span>{menu.label}</span>
-            </button>
-          );
-        })}
-      </div>
+            return (
+              <button
+                key={menu.id}
+                onClick={() => onSelectSheet(menu.id)}
+                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold whitespace-nowrap rounded-lg transition-all cursor-pointer ${
+                  isActive
+                    ? menu.isSpecial
+                      ? 'bg-blue-600 text-white shadow-xs font-bold'
+                      : 'bg-[#1F3864] text-white shadow-xs font-bold'
+                    : menu.isSpecial
+                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : menu.isSpecial ? 'text-blue-600' : 'text-slate-500'}`} />
+                <span>{menu.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 };

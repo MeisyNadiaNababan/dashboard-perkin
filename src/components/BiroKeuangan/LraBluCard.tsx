@@ -467,7 +467,7 @@ export const LraBluCard: React.FC<LraBluCardProps> = ({ onOpenFormulaModal }) =>
       {/* Footer Info */}
       <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex flex-wrap items-center justify-between gap-1">
         <span>
-          🏛️ <strong>Kuasa Pengguna Anggaran (KPA):</strong> {LRA_SUMMARY.meta.penanggungJawab} • Satker {LRA_SUMMARY.meta.kodeSatker}
+          <strong>Kuasa Pengguna Anggaran (KPA):</strong> {LRA_SUMMARY.meta.penanggungJawab} • Satker {LRA_SUMMARY.meta.kodeSatker}
         </span>
         <span className="text-slate-600 font-mono text-[10.5px]">
           Status Data: FINAL (Dicetak 23/07/26 8:04 AM)

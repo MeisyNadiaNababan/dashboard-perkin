@@ -62,7 +62,7 @@ export const PtspPerizinanSheetSwapSection: React.FC<PtspPerizinanSheetSwapSecti
               POIN #10 • SHEET SWAP VIEW
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 font-mono">
-              🏷️ Visualisasi: Sheet Swap Stacked Bar Chart &amp; Tabel Monitoring Status Berkas
+              Visualisasi: Sheet Swap Stacked Bar Chart &amp; Tabel Monitoring Status Berkas
             </span>
           </div>
           <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mt-0.5">

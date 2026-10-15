@@ -589,7 +589,7 @@ export const SurplusDefisitUnitCard: React.FC<SurplusDefisitUnitCardProps> = ({
       {/* Footer Info */}
       <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between flex-wrap gap-1">
         <span>
-          📊 <strong>Kemandirian Fiskal Satker:</strong> Unit Badan Usaha (Pelabuhan, Lahan, Bandara, RSBP) menghasilkan surplus untuk menopang layanan publik &amp; birokrasi penunjang.
+          <strong>Kemandirian Fiskal Satker:</strong> Unit Badan Usaha (Pelabuhan, Lahan, Bandara, RSBP) menghasilkan surplus untuk menopang layanan publik &amp; birokrasi penunjang.
         </span>
         <span className="text-slate-600 font-medium">Buku Satu Data BP Batam Hal. 2-5</span>
       </div>

@@ -127,7 +127,7 @@ export const PenyelesaianBluPieChart: React.FC<PenyelesaianBluPieChartProps> = (
                 Persentase Penyelesaian Pengawasan &amp; Modernisasi Pengelolaan BLU
               </h3>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                🏷️ Visualisasi: Grafik Lingkaran Terpadu (Combined Pie / Donut Chart)
+                Visualisasi: Grafik Lingkaran Terpadu (Combined Pie / Donut Chart)
               </span>
             </div>
             <div className="flex items-center gap-2 mt-1">

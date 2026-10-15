@@ -504,7 +504,7 @@ export const PelayananUmumVisualCharts: React.FC<VisualChartsProps> = ({
             </div>
 
             <div className="p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-[11px] text-blue-900">
-              💡 <strong>Kontribusi Terbesar:</strong> BU SPAM Fasling menyumbang 53.2% dari total PNBP fungsional, disusul oleh BU Rumah Sakit sebesar 45.4%. Kedua Badan Usaha menghasilkan surplus operasional mandiri senilai +Rp {FINANCIAL_TOWER_CONSOLIDATED.buNetSurplusMiliar.toFixed(1)}M.
+              <strong>Kontribusi Terbesar:</strong> BU SPAM Fasling menyumbang 53.2% dari total PNBP fungsional, disusul oleh BU Rumah Sakit sebesar 45.4%. Kedua Badan Usaha menghasilkan surplus operasional mandiri senilai +Rp {FINANCIAL_TOWER_CONSOLIDATED.buNetSurplusMiliar.toFixed(1)}M.
             </div>
           </div>
         </div>

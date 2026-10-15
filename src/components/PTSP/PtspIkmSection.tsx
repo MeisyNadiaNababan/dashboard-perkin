@@ -529,7 +529,7 @@ export const PtspIkmSection: React.FC<PtspIkmSectionProps> = ({
         {/* Executive Insight Box for IKM PTSP */}
         <div className="p-3.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs text-slate-700 leading-relaxed shadow-2xs">
           <span className="font-bold text-[#002B49] flex items-center gap-1.5 mb-1 text-xs">
-            <span>💡</span> Executive Insight &amp; Analisis Hasil IKM PTSP ({currentData.tahun}):
+            <span></span> Executive Insight &amp; Analisis Hasil IKM PTSP ({currentData.tahun}):
           </span>
           <p className="text-[11.5px] text-slate-600">
             Indeks Kepuasan Masyarakat (IKM) PTSP BP Batam tahun {currentData.tahun} mencapai skor <strong>{currentData.nilaiIkmTotal.toFixed(2)} ({currentData.kategoriLabel})</strong> dari total <strong>{currentData.jumlahRespondenTotal.toLocaleString('id-ID')} responden</strong>, melampaui target Renstra (&ge; {currentData.targetIkm.toFixed(1)}). Unsur dengan skor kepuasan tertinggi dicatat oleh <strong>U5 (Kompetensi Pelaksana: 91,20)</strong> dan <strong>U7 (Kesopanan &amp; Keramahan: 90,80)</strong>. Prioritas tindak lanjut difokuskan pada <strong>U3 (Waktu Penyelesaian: 86,50 - Mutu B)</strong> melalui otomasi notifikasi tracking berkas perizinan dan digitalisasi tanda tangan elektronik (TTE BSrE).

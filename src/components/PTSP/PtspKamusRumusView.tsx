@@ -639,7 +639,7 @@ export const PtspKamusRumusView: React.FC = () => {
                     {item.kode}
                   </span>
                   <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-800 border border-blue-200">
-                    🏷️ {item.datasetNomor}
+                    {item.datasetNomor}
                   </span>
                   <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
                     {item.kategori}

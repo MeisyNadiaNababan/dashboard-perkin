@@ -280,7 +280,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   fontWeight="bold"
                   fontFamily="monospace"
                 >
-                  ⚡ {kapasitasCore} CORE SM
+                  {kapasitasCore} CORE SM
                 </text>
               </g>
             )}
@@ -510,7 +510,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Data Jalur Fiber Optic (FO)
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 font-mono">
-                  🏷️ Visualisasi: Treemap Hirarki Proporsi Panjang Bentang &amp; Kapasitas Core FO
+                  Visualisasi: Treemap Hirarki Proporsi Panjang Bentang &amp; Kapasitas Core FO
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -894,7 +894,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Data Rak Data Center
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                  🏷️ Visualisasi: Stacked Bar Chart Okupansi Rak Server 42U per Ruangan
+                  Visualisasi: Stacked Bar Chart Okupansi Rak Server 42U per Ruangan
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -999,7 +999,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Data Kepuasan Pelanggan Data Centre
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                  🏷️ Visualisasi: Scorecard Radar &amp; Horizontal Rating Bar Chart
+                  Visualisasi: Scorecard Radar &amp; Horizontal Rating Bar Chart
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -1074,7 +1074,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Data Serangan Keamanan IT
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                  🏷️ Visualisasi: Grafik Batang Horizontal Berperingkat (Ranked Threat Bar Chart)
+                  Visualisasi: Grafik Batang Horizontal Berperingkat (Ranked Threat Bar Chart)
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -1165,7 +1165,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Rekap Infrastruktur Server dan Storage
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                  🏷️ Visualisasi: Grafik Batang Horizontal &amp; Inventaris Alokasi Unit Komputasi
+                  Visualisasi: Grafik Batang Horizontal &amp; Inventaris Alokasi Unit Komputasi
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -1255,7 +1255,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Data Aplikasi BP Batam
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                  🏷️ Visualisasi: Treemap Distribusi &amp; Katalog Matriks per Unit Operasional
+                  Visualisasi: Treemap Distribusi &amp; Katalog Matriks per Unit Operasional
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -1486,7 +1486,7 @@ export const PdsiSatuDataVisualSuite: React.FC = () => {
                   Data Permintaan Layanan IT (Helpdesk)
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono">
-                  🏷️ Visualisasi: Grafik Batang Horizontal Volume Tiket per Nama Layanan
+                  Visualisasi: Grafik Batang Horizontal Volume Tiket per Nama Layanan
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">

@@ -153,7 +153,7 @@ export const SkmSurveyChart: React.FC<SkmSurveyChartProps> = ({ onOpenFormula })
                 Rekapitulasi Hasil Survei Kepuasan Masyarakat (SKM)
               </h3>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-mono">
-                🏷️ Grafik Batang Horizontal &amp; Rekapitulasi Unit Usaha
+                Grafik Batang Horizontal &amp; Rekapitulasi Unit Usaha
               </span>
             </div>
             <div className="flex items-center gap-2 mt-1">

@@ -137,7 +137,7 @@ export const InvestasiKpiRow: React.FC<InvestasiKpiRowProps> = ({
               Indikator Kinerja Strategis Investasi Batam
             </h3>
             <span className="text-[10.5px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-900 border border-teal-200 font-mono">
-              🏷️ Visualisasi: Kartu Ringkasan Eksekutif & Micro-Sparklines (Executive BANs Scorecard)
+              Visualisasi: Kartu Ringkasan Eksekutif & Micro-Sparklines (Executive BANs Scorecard)
             </span>
           </div>
         </div>

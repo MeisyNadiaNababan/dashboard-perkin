@@ -199,7 +199,7 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <span>★</span>
+            <span>•</span>
             <span>Hanya KPI Utama Perkin</span>
           </button>
           <button

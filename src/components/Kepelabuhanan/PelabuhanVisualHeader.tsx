@@ -79,7 +79,7 @@ export const PelabuhanVisualHeader: React.FC<PelabuhanVisualHeaderProps> = ({
         {/* Visualization Name Badge (Req 9) */}
         <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-900 border border-purple-200 font-mono inline-flex items-center gap-1 shadow-2xs shrink-0">
           {visualIcon || <BarChart3 className="w-3 h-3 text-purple-600" />}
-          <span>🏷️ Visualisasi: {visualName}</span>
+          <span>Visualisasi: {visualName}</span>
         </span>
 
         {/* Attributes Label & Tags */}

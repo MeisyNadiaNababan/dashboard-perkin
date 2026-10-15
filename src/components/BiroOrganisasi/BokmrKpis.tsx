@@ -34,7 +34,7 @@ export const BokmrKpis: React.FC<BokmrKpisProps> = ({
             Indikator Utama Tata Kelola &amp; Akuntabilitas (Satu Data Hal. 38 - 40)
           </h2>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200 font-mono">
-            🏷️ Visualisasi: Kartu Metrik KPI Eksekutif (BANs)
+            Visualisasi: Kartu Metrik KPI Eksekutif (BANs)
           </span>
         </div>
         <span className="text-[11px] font-semibold text-slate-500 font-mono">

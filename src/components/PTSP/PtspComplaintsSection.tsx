@@ -194,7 +194,7 @@ export const PtspComplaintsSection: React.FC<PtspComplaintsSectionProps> = ({ on
         {/* Executive Insight Box for Complaints */}
         <div className="p-3.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs text-slate-700 leading-relaxed shadow-2xs mt-3">
           <span className="font-bold text-[#002B49] flex items-center gap-1.5 mb-1 text-xs">
-            <span>💡</span> Executive Insight &amp; Penanganan Pengaduan Layanan PTSP:
+            <span></span> Executive Insight &amp; Penanganan Pengaduan Layanan PTSP:
           </span>
           <p className="text-[11.5px] text-slate-600">
             Tingkat penyelesaian aduan (Customer Complaint Resolution / CCR) mencapai <strong>98,4%</strong> dengan waktu respons rata-rata <strong>1,4 jam</strong>. Integrasi kanal SP4N-LAPOR! Kemenpan RB dengan helpdesk internal PTSP di MPP Batam Centre memastikan setiap aduan diverifikasi dan diberikan solusi konkret dalam waktu kurang dari batas toleransi SLA (&le; 4 jam kerja).

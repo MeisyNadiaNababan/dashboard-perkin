@@ -62,7 +62,7 @@ export const PelabuhanKpiRow: React.FC<PelabuhanKpiRowProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10.5px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-900 border border-purple-200 font-mono">
-            🏷️ Visualisasi: Kartu Metrik KPI (BANs - Big Numbers)
+            Visualisasi: Kartu Metrik KPI (BANs - Big Numbers)
           </span>
           <span className="text-[10.5px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded font-mono hidden sm:inline-block">
             Atribut: <strong>REALISASI</strong>, <strong>TARGET</strong>, <strong>PERSEN CAPAIAN</strong>

@@ -278,7 +278,7 @@ export const KepalaBpWordDocView: React.FC = () => {
               {/* Tanda Tangan & Stempel Visual */}
               <div className="h-20 flex items-center justify-center relative my-2">
                 <div className="w-20 h-20 rounded-full border-2 border-blue-600/40 text-blue-600 text-[8px] font-mono flex items-center justify-center rotate-[-12deg] absolute opacity-50 uppercase text-center p-1">
-                  Badan Pengusahaan Batam ★ TTD Resmi
+                  Badan Pengusahaan Batam • TTD Resmi
                 </div>
                 <svg viewBox="0 0 150 60" className="w-32 h-16 text-blue-900 stroke-current fill-none">
                   <path d="M 10 40 Q 30 10 50 35 T 90 20 Q 110 5 130 35 T 145 25" strokeWidth="2" strokeLinecap="round" />

@@ -103,7 +103,7 @@ export const PtspCatalogSection: React.FC = () => {
                         </span>
                         {item.no === 10 && (
                           <span className="px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                            ★ Dataset Utama (IKM Permenpan RB)
+                            • Dataset Utama (IKM Permenpan RB)
                           </span>
                         )}
                       </div>

@@ -51,8 +51,8 @@ import { BP_BATAM_24_UNITS, BpBatamUnit } from './data/bpBatamUnits';
 import { CheckCircle2, FileCode2, Database, Layers, Sparkles } from 'lucide-react';
 
 export default function App() {
-  // Navigation & Multi-Unit State - Set default to deputi-kebijakan-strategis (Perkin A2 / DEP A2)
-  const [activeUnitId, setActiveUnitId] = useState<string>('deputi-kebijakan-strategis');
+  // Navigation & Multi-Unit State - Set default to kepala-bp (Perkin 2026 Kepala BP Batam)
+  const [activeUnitId, setActiveUnitId] = useState<string>('kepala-bp');
   const [isUnitsDrawerOpen, setIsUnitsDrawerOpen] = useState<boolean>(false);
   const [activeSheet, setActiveSheet] = useState<string>('ikhtisar');
 
@@ -228,14 +228,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-full bg-[#F4F6F8] text-slate-800 font-sans overflow-hidden antialiased selection:bg-[#002B49] selection:text-white">
-      {/* 1. Left Navigation Rail (Direktori 24 Unit Kerja BP Batam) */}
-      <NavigationRail
-        activeUnitId={activeUnitId}
-        onSelectUnit={handleSelectUnit}
-        onOpenUnitsDrawer={() => setIsUnitsDrawerOpen(true)}
-      />
-
-      {/* 2. Main Workspace Area */}
+      {/* Main Workspace Area (Tanpa Sidebar Navigation Rail) */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header with Unit switcher and Sub-menus */}
         <Header
@@ -282,7 +275,9 @@ export default function App() {
             ) : activeUnitId === 'deputi-administrasi-keuangan' ? (
               /* --- DASHBOARD DEPUTI BIDANG ADMINISTRASI DAN KEUANGAN (PERKIN A1) --- */
               <AdministrasiKeuanganDashboard
+                activeSheet={activeSheet}
                 activeSubTab={activeSheet}
+                onSelectSheet={handleSelectSheet}
                 onOpenFormulaModal={(kpiId) => {
                   setSelectedKpiFormulaId(kpiId || 'ikp-1-rb');
                   setIsKpiFormulaModalOpen(true);

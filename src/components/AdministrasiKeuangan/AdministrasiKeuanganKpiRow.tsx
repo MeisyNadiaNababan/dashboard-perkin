@@ -1,28 +1,25 @@
 import React from 'react';
 import {
-  Building2,
   Users,
   ShieldCheck,
   ShieldAlert,
   Award,
-  CheckCircle2,
-  HelpCircle,
-  DollarSign,
-  Coins,
-  Scale,
-  FileCheck2,
-  GraduationCap,
-  ArrowUpRight,
-  TrendingUp,
-  Layers,
-  Sparkles,
-  CreditCard,
-  MessageSquare,
-  FileText,
+  Clock,
   Activity,
-  CheckSquare,
+  CheckCircle2,
+  TrendingUp,
+  Target,
+  FileText,
+  FileCheck,
+  Scale,
+  Sparkles,
 } from 'lucide-react';
-import { PERKIN_A1_KPIS, PERKIN_A1_INFO } from './administrasiKeuanganData';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+} from 'recharts';
+import { PERKIN_A1_KPIS } from './administrasiKeuanganData';
 
 interface AdministrasiKeuanganKpiRowProps {
   onOpenFormulaModal: (kpiId: string) => void;
@@ -30,680 +27,418 @@ interface AdministrasiKeuanganKpiRowProps {
   onSelectUnit?: (unitId: string) => void;
 }
 
+// Sparkline Mock Data for 4 IKPs
+const SPARKLINE_IKP1 = [
+  { v: 72 }, { v: 74 }, { v: 76 }, { v: 75 }, { v: 77 }, { v: 78.45 },
+];
+const SPARKLINE_IKP2 = [
+  { v: 290 }, { v: 310 }, { v: 315 }, { v: 330 }, { v: 338 }, { v: 342.5 },
+];
+const SPARKLINE_IKP3 = [
+  { v: 3.1 }, { v: 3.18 }, { v: 3.25 }, { v: 3.32 }, { v: 3.38 }, { v: 3.42 },
+];
+const SPARKLINE_IKP4 = [
+  { v: 100 }, { v: 100 }, { v: 100 }, { v: 100 }, { v: 100 }, { v: 100 },
+];
+
 export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProps> = ({
   onOpenFormulaModal,
-  selectedKpiId,
+  selectedKpiId: _selectedKpiId,
   onSelectUnit,
 }) => {
-  // Mapping 4 Perkin IKPs
   const ikpRb = PERKIN_A1_KPIS.find((k) => k.id === 'ikp-1-rb') || PERKIN_A1_KPIS[0];
   const ikpMerit = PERKIN_A1_KPIS.find((k) => k.id === 'ikp-2-merit') || PERKIN_A1_KPIS[1];
   const ikpSpip = PERKIN_A1_KPIS.find((k) => k.id === 'ikp-3-spip') || PERKIN_A1_KPIS[2];
-  const ikpWtp = PERKIN_A1_KPIS.find((k) => k.id === 'ikp-4-wtp') || PERKIN_A1_KPIS[3];
 
   return (
-    <div className="space-y-3 font-sans">
-      {/* Header Bar - Model Tampilan Satker Eksekutif Terpadu (Persis Model DEP-A3) */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
-          <h2 className="text-sm sm:text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <span>3 PILAR UNIT KERJA PENGAMPU PERKIN A1 (ADMINISTRASI &amp; KEUANGAN)</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold border border-blue-200">
-              KONSOLIDASI 59 DATASET SATU DATA
+    <div className="space-y-2.5 font-sans">
+      {/* ================================================================== */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A1 (KOMPAK & EKSEKUTIF)        */}
+      {/* ================================================================== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        {/* IKP 1: Indeks Reformasi Birokrasi */}
+        <div
+          onClick={() => onOpenFormulaModal('ikp-1-rb')}
+          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
+          title="Buka detail IKP 1 Reformasi Birokrasi"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-blue-100">IKP 1 &bull; Reformasi RB</span>
+              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-white" />
+              </div>
+            </div>
+
+            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
+              78,45 / BB
             </span>
-          </h2>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-blue-100/90">Target BB (75,00)</span>
+              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
+                {ikpRb.capaianPersen.toFixed(1)}% Tercapai
+              </span>
+            </div>
+          </div>
+
+          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-white/15">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={SPARKLINE_IKP1} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="sparkIkp1White" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area type="monotone" dataKey="v" stroke="#FFFFFF" strokeWidth={1.5} fill="url(#sparkIkp1White)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="text-xs text-slate-500 font-medium">
-          DIPA Program: <span className="font-bold text-slate-700">Rp 725,15 Miliar</span> &bull; Sasaran:{' '}
-          <span className="font-bold text-emerald-600">Meningkatkan Kualitas Pengelolaan Internal BP Batam</span>
+
+        {/* IKP 2: Indeks Sistem Merit */}
+        <div
+          onClick={() => onOpenFormulaModal('ikp-2-merit')}
+          className="bg-gradient-to-br from-emerald-50/90 via-teal-50/60 to-emerald-50/30 border border-emerald-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Buka detail IKP 2 Sistem Merit"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-emerald-800">IKP 2 &bull; Sistem Merit</span>
+              <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+                <Users className="w-3.5 h-3.5 text-white" />
+              </div>
+            </div>
+
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              342,5 / IV
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-slate-500 font-medium">Target 280 (Baik)</span>
+              <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                {ikpMerit.capaianPersen.toFixed(1)}% Sangat Baik
+              </span>
+            </div>
+          </div>
+
+          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-emerald-200/50">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={SPARKLINE_IKP2} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="sparkIkp2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#059669" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area type="monotone" dataKey="v" stroke="#059669" strokeWidth={1.5} fill="url(#sparkIkp2)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* IKP 3: Indeks Maturitas SPIP */}
+        <div
+          onClick={() => onOpenFormulaModal('ikp-3-spip')}
+          className="bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-50/30 border border-amber-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Buka detail IKP 3 Maturitas SPIP"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-amber-800">IKP 3 &bull; Maturitas SPIP</span>
+              <div className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shadow-xs">
+                <ShieldAlert className="w-3.5 h-3.5 text-white" />
+              </div>
+            </div>
+
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              3,42 / Level 3
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-slate-500 font-medium">Target 3,20</span>
+              <span className="font-bold text-amber-800 bg-white/90 border border-amber-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                {ikpSpip.capaianPersen.toFixed(1)}% Terdefinisi
+              </span>
+            </div>
+          </div>
+
+          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-amber-200/50">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={SPARKLINE_IKP3} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="sparkIkp3" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#D97706" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#D97706" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area type="monotone" dataKey="v" stroke="#D97706" strokeWidth={1.5} fill="url(#sparkIkp3)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* IKP 4: Opini BPK Laporan Keuangan */}
+        <div
+          onClick={() => onOpenFormulaModal('ikp-4-wtp')}
+          className="bg-gradient-to-br from-purple-50/90 via-indigo-50/50 to-purple-50/30 border border-purple-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Buka detail IKP 4 Opini BPK WTP"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-purple-800">IKP 4 &bull; Opini BPK RI</span>
+              <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold shadow-xs">
+                <Award className="w-3.5 h-3.5 text-white" />
+              </div>
+            </div>
+
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              WTP
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-slate-500 font-medium">8x Berturut-turut</span>
+              <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                100% Tercapai
+              </span>
+            </div>
+          </div>
+
+          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-purple-200/50">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={SPARKLINE_IKP4} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="sparkIkp4" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#4F46E5" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area type="monotone" dataKey="v" stroke="#4F46E5" strokeWidth={1.5} fill="url(#sparkIkp4)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* 3 CONSOLIDATED WORK UNIT KPI CARDS (IDENTIK MODEL KARTU DEP-A3) */}
-      <div className="grid gap-3.5 grid-cols-1 lg:grid-cols-3">
-        {/* ========================================================================= */}
-        {/* KARTU 1: BIRO 1 - BIRO KEUANGAN                                           */}
-        {/* ========================================================================= */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all p-4 flex flex-col justify-between relative overflow-hidden group border-t-4 border-t-blue-600">
-          <div>
-            {/* Top Badge & Unit Header */}
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 shrink-0">
-                  <Building2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 uppercase">
-                    UNIT KERJA 1 &bull; KEUANGAN
-                  </span>
-                  <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-snug group-hover:text-blue-700 transition-colors">
-                    Biro Keuangan
-                  </h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1 font-mono">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  100.0% WTP
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onOpenFormulaModal('ikp-4-wtp')}
-                  className="p-1 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
-                  title="Formula & Manual Teknis IKP 4 Biro Keuangan"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Primary IKP Card Block: IKP #4 Opini BPK (KPI Utama Perkin) */}
-            <div className="bg-gradient-to-br from-blue-50/70 to-slate-50/90 rounded-lg p-3 border border-blue-100/80 my-3">
-              <div className="text-[10.5px] font-bold text-blue-950 flex items-center justify-between">
-                <span>IKP #4: Opini BPK</span>
-                <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
-                  TERCAPAI OPTIMAL
-                </span>
-              </div>
-
-              <div className="flex items-baseline justify-between mt-1.5">
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900">
-                    WTP
-                  </span>
-                  <span className="text-xs font-bold text-blue-700">8x Berturut-turut</span>
-                </div>
-                <div className="text-right text-xs">
-                  <span className="text-[10px] text-slate-500 block">Target Perkin:</span>
-                  <span className="font-bold font-mono text-slate-700">WTP</span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-slate-200 mt-2 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500"
-                  style={{ width: '100%' }}
-                />
-              </div>
-            </div>
-
-            {/* Ringkasan Kinerja Keseluruhan Unit (KPI Lainnya dari Informasi Biro Keuangan) */}
-            <div className="space-y-2">
-              <div className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-wider">
-                Ringkasan Kinerja Keseluruhan:
-              </div>
-
-              {/* Metric 1: Realisasi Pendapatan BLU (LRA) */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <DollarSign className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Realisasi Pendapatan BLU (LRA)</div>
-                    <div className="text-[10px] text-slate-500 truncate">Target Rp 2,05 T (Buku Satu Data Hal. 2-3)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-emerald-700">Rp 2,49 T</div>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">
-                    121.5% Target
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 2: Realisasi Belanja Total */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
-                    <CreditCard className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Realisasi Belanja &amp; Pagu Anggaran</div>
-                    <div className="text-[10px] text-slate-500 truncate">Pagu Rp 2,24 T (Buku Satu Data Hal. 3)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-cyan-700">Rp 2,12 T</div>
-                  <span className="text-[10px] font-bold text-cyan-800 bg-cyan-50 px-1 py-0.2 rounded border border-cyan-200">
-                    94.8% Serapan
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 3: Saldo Kas & Bank Real-Time */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-                    <Coins className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Saldo Kas &amp; Bank Real-Time</div>
-                    <div className="text-[10px] text-slate-500 truncate">Likuiditas 242.8% (Buku Satu Data Hal. 4)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-slate-900">Rp 1,42 T</div>
-                  <span className="text-[10px] font-mono text-blue-700 font-bold bg-blue-50 px-1 py-0.2 rounded border border-blue-200">
-                    Likuid &amp; Aman
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 4: Indeks Kinerja Pelaksanaan Anggaran (IKPA) */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-                    <Award className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Indeks Pelaksanaan Anggaran (IKPA)</div>
-                    <div className="text-[10px] text-slate-500 truncate">Kemenkeu RI (Buku Satu Data Hal. 4)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-amber-700">96.25</div>
-                  <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1 py-0.2 rounded border border-amber-200">
-                    Sangat Baik
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 5: Penyelesaian Piutang & BMN */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
-                    <Scale className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Penyelesaian Piutang &amp; BMN</div>
-                    <div className="text-[10px] text-slate-500 truncate">Tertagih Rp 74,8 M dari 21 Debitur (Hal. 5)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-indigo-700">88.4%</div>
-                  <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-1 py-0.2 rounded">
-                    KPKNL Selesai
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Card Footer */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mt-3">
-            <span className="text-[11px] font-medium text-emerald-700 flex items-center gap-1 font-sans">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Status: Akuntabel &amp; WTP
+      {/* ================================================================== */}
+      {/* 2. BARIS KEDUA: 8 KARTU KPI OPERASIONAL ULTRA-SLIM                   */}
+      {/* Sesuai instruksi 4, 7, dan 8:                                      */}
+      {/* - Realisasi pendapatan, belanja, kas & bank, piutang, ip asn, dan   */}
+      {/*   20 jp pelatihan DIHAPUS agar tidak duplikat dengan deep dive.      */}
+      {/* - Ditambahkan Indeks Manajemen Risiko (MRI) dan KPI strategis baru  */}
+      {/*   dari Buku Satu Data yang belum ada di deep dive.                   */}
+      {/* ================================================================== */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+        {/* KPI 1: INDEKS MANAJEMEN RISIKO (MRI) - REQ #7 & DATASET #18 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-organisasi')}
+          className="bg-gradient-to-br from-emerald-50/80 via-teal-50/40 to-white rounded-lg border border-emerald-200/80 hover:border-emerald-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Indeks Manajemen Risiko (MRI) BP Batam (Dataset #18)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0">
+                <Target className="w-2.5 h-2.5" />
+              </span>
+              Indeks Manajemen Risiko
             </span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => onSelectUnit?.('biro-keuangan')}
-                className="font-bold text-blue-700 hover:text-blue-900 transition-colors flex items-center gap-1 cursor-pointer text-xs"
-                title="Buka Visualisasi Mendalam Biro Keuangan"
-              >
-                <span>Analisis Satker</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => onOpenFormulaModal('ikp-4-wtp')}
-                className="text-slate-500 hover:text-blue-700 text-xs font-semibold cursor-pointer"
-                title="Kamus & Manual Regulasi"
-              >
-                Manual Naskah ↗
-              </button>
-            </div>
+            <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Tingkat 3 Managed
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              3,65 / 5,00
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              Target 3,25 &bull; 94,2% Mitigasi
+            </span>
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* KARTU 2: BIRO 2 - BIRO SUMBER DAYA MANUSIA (BIRO SDM)                     */}
-        {/* ========================================================================= */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all p-4 flex flex-col justify-between relative overflow-hidden group border-t-4 border-t-indigo-600">
-          <div>
-            {/* Top Badge & Unit Header */}
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 shrink-0">
-                  <Users className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-200 uppercase">
-                    UNIT KERJA 2 &bull; SDM
-                  </span>
-                  <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-snug group-hover:text-indigo-700 transition-colors">
-                    Biro Sumber Daya Manusia
-                  </h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1 font-mono">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  {ikpMerit.capaianPersen.toFixed(1)}%
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onOpenFormulaModal('ikp-2-merit')}
-                  className="p-1 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer"
-                  title="Formula & Manual Teknis IKP 2 Sistem Merit"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Primary IKP Card Block: IKP #2 Indeks Sistem Merit (KPI Utama Perkin) */}
-            <div className="bg-gradient-to-br from-indigo-50/70 to-slate-50/90 rounded-lg p-3 border border-indigo-100/80 my-3">
-              <div className="text-[10.5px] font-bold text-indigo-950 flex items-center justify-between">
-                <span>IKP #2: Indeks Sistem Merit</span>
-                <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
-                  MELAMPAUI TARGET
-                </span>
-              </div>
-
-              <div className="flex items-baseline justify-between mt-1.5">
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900">
-                    {ikpMerit.realisasi2025}
-                  </span>
-                  <span className="text-xs font-bold text-indigo-700">Poin (Kategori IV)</span>
-                </div>
-                <div className="text-right text-xs">
-                  <span className="text-[10px] text-slate-500 block">Target Perkin:</span>
-                  <span className="font-bold font-mono text-slate-700">{ikpMerit.target2025} Poin</span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-slate-200 mt-2 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-indigo-600 to-blue-600"
-                  style={{ width: `${Math.min(100, ikpMerit.capaianPersen)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Ringkasan Kinerja Keseluruhan Unit (KPI Lainnya dari Informasi Biro SDM) */}
-            <div className="space-y-2">
-              <div className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-wider">
-                Ringkasan Kinerja Keseluruhan:
-              </div>
-
-              {/* Metric 1: Total Pegawai Aktif */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
-                    <Users className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Total Pegawai Aktif BP Batam</div>
-                    <div className="text-[10px] text-slate-500 truncate">Pria 1.796 (60.3%) | Wanita 1.182 (39.7%)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-indigo-700">2.978 Peg</div>
-                  <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-1 py-0.2 rounded border border-slate-200">
-                    Terdata 100%
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 2: Kenaikan Gaji Berkala (KGB) & Pensiun */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <FileCheck2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Layanan Kenaikan Gaji (KGB) &amp; Pensiun</div>
-                    <div className="text-[10px] text-slate-500 truncate">642 Berkas Tepat Waktu (Hal. 1-2 Satu Data)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-emerald-700">100%</div>
-                  <span className="text-[10px] font-mono text-emerald-800 font-bold bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">
-                    SLA Terpenuhi
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 3: Pengembangan Kompetensi & Diklat */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-                    <GraduationCap className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Pengembangan Kompetensi SDM &amp; Diklat</div>
-                    <div className="text-[10px] text-slate-500 truncate">84 Pegawai Tubel &amp; 48 Angkatan Diklat</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-blue-700">92.6%</div>
-                  <span className="text-[10px] font-bold text-blue-800 bg-blue-50 px-1 py-0.2 rounded border border-blue-200">
-                    Kompeten
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 4: Pemenuhan Standar Kualifikasi S1-S3 */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
-                    <Sparkles className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Kualifikasi Pendidikan S1-S3 Pegawai</div>
-                    <div className="text-[10px] text-slate-500 truncate">2.156 dari 2.978 Pegawai (Hal. 2)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-purple-700">72.4%</div>
-                  <span className="text-[10px] font-bold text-purple-800 bg-purple-50 px-1 py-0.2 rounded border border-purple-200">
-                    Pendidikan Tinggi
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 5: Indeks Profesionalitas ASN (IP ASN) */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
-                    <CheckSquare className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Indeks Profesionalitas ASN (IP ASN)</div>
-                    <div className="text-[10px] text-slate-500 truncate">Dimensi Kualifikasi, Kompetensi &amp; Disiplin</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-rose-700">88.40</div>
-                  <span className="text-[10px] font-bold text-rose-800 bg-rose-50 px-1 py-0.2 rounded border border-rose-200">
-                    Kategori Tinggi
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Card Footer */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mt-3">
-            <span className="text-[11px] font-medium text-indigo-700 flex items-center gap-1 font-sans">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Status: Merit Kategori IV (Sangat Baik)
+        {/* KPI 2: PENYELESAIAN MODERNISASI PENGELOLAAN BLU - DATASET #7 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-keuangan')}
+          className="bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-white rounded-lg border border-blue-200/80 hover:border-blue-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Persentase Penyelesaian Modernisasi Pengelolaan BLU (Dataset #7)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
+                <Sparkles className="w-2.5 h-2.5" />
+              </span>
+              Modernisasi BLU
             </span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => onSelectUnit?.('biro-sdm')}
-                className="font-bold text-indigo-700 hover:text-indigo-900 transition-colors flex items-center gap-1 cursor-pointer text-xs"
-                title="Buka Visualisasi Mendalam Biro SDM"
-              >
-                <span>Analisis Satker</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => onOpenFormulaModal('ikp-2-merit')}
-                className="text-slate-500 hover:text-indigo-700 text-xs font-semibold cursor-pointer"
-                title="Kamus & Manual Regulasi"
-              >
-                Manual Naskah ↗
-              </button>
-            </div>
+            <span className="font-bold text-blue-700 bg-white/90 border border-blue-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Sesuai Target
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              93,2% Tuntas
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              Integrasi BIOS &amp; Cash Hub
+            </span>
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* KARTU 3: BIRO 3 - BIRO OKMR                                               */}
-        {/* ========================================================================= */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all p-4 flex flex-col justify-between relative overflow-hidden group border-t-4 border-t-cyan-600">
-          <div>
-            {/* Top Badge & Unit Header */}
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-800 shrink-0">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200 uppercase">
-                    UNIT KERJA 3 &bull; TATA KELOLA &amp; MR
-                  </span>
-                  <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-snug group-hover:text-cyan-800 transition-colors">
-                    Biro Organisasi, Kepatuhan &amp; MR
-                  </h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1 font-mono">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  {ikpRb.capaianPersen.toFixed(1)}%
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onOpenFormulaModal('ikp-1-rb')}
-                  className="p-1 rounded-md text-slate-400 hover:text-cyan-800 hover:bg-cyan-50 transition-colors cursor-pointer"
-                  title="Formula & Manual Teknis IKP 1 Reformasi Birokrasi"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Primary IKP Card Block: IKP #1 Indeks Reformasi Birokrasi (KPI Utama Perkin) */}
-            <div className="bg-gradient-to-br from-cyan-50/70 to-slate-50/90 rounded-lg p-3 border border-cyan-100/80 my-2.5">
-              <div className="text-[10.5px] font-bold text-cyan-950 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span>IKP #1: Indeks Reformasi Birokrasi</span>
-                  <button
-                    type="button"
-                    onClick={() => onOpenFormulaModal('ikp-1-rb')}
-                    className="p-0.5 rounded text-slate-400 hover:text-cyan-800 transition-colors cursor-pointer"
-                    title="Formula & Manual Teknis IKP 1 Reformasi Birokrasi"
-                  >
-                    <HelpCircle className="w-3 h-3" />
-                  </button>
-                </div>
-                <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
-                  MELAMPAUI TARGET
-                </span>
-              </div>
-
-              <div className="flex items-baseline justify-between mt-1.5">
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900">
-                    {ikpRb.realisasi2025}
-                  </span>
-                  <span className="text-xs font-bold text-cyan-800">Predikat BB (Sangat Baik)</span>
-                </div>
-                <div className="text-right text-xs">
-                  <span className="text-[10px] text-slate-500 block">Target Perkin:</span>
-                  <span className="font-bold font-mono text-slate-700">{ikpRb.target2025}</span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-slate-200 mt-2 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-cyan-600 to-teal-500"
-                  style={{ width: `${Math.min(100, ikpRb.capaianPersen)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Model IKP #3: Indeks Maturitas SPIP (Ukuran & Desain Identik dengan IKP #1) */}
-            <div className="bg-gradient-to-br from-emerald-50/70 to-slate-50/90 rounded-lg p-3 border border-emerald-100/80 mb-2.5">
-              <div className="text-[10.5px] font-bold text-emerald-950 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span>IKP #3: Indeks Maturitas SPIP</span>
-                  <button
-                    type="button"
-                    onClick={() => onOpenFormulaModal('ikp-3-spip')}
-                    className="p-0.5 rounded text-slate-400 hover:text-emerald-800 transition-colors cursor-pointer"
-                    title="Formula & Manual Teknis IKP 3 Maturitas SPIP"
-                  >
-                    <HelpCircle className="w-3 h-3" />
-                  </button>
-                </div>
-                <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
-                  MELAMPAUI TARGET
-                </span>
-              </div>
-
-              <div className="flex items-baseline justify-between mt-1.5">
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900">
-                    {ikpSpip.realisasi2025}
-                  </span>
-                  <span className="text-xs font-bold text-emerald-800">Level 3 (Terdefinisi)</span>
-                </div>
-                <div className="text-right text-xs">
-                  <span className="text-[10px] text-slate-500 block">Target Perkin:</span>
-                  <span className="font-bold font-mono text-slate-700">{ikpSpip.target2025}</span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-slate-200 mt-2 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-teal-500"
-                  style={{ width: `${Math.min(100, ikpSpip.capaianPersen)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Ringkasan Kinerja Keseluruhan Unit (KPI Lainnya dari Informasi Biro OKMR) */}
-            <div className="space-y-2">
-              <div className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-wider">
-                Ringkasan Kinerja Keseluruhan:
-              </div>
-
-              {/* Metric 1: Nilai Akuntabilitas SAKIP */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Nilai Akuntabilitas SAKIP BP Batam</div>
-                    <div className="text-[10px] text-slate-500 truncate">Predikat A (Memuaskan - KemenPAN-RB)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-teal-700">82.68</div>
-                  <span className="text-[10px] font-bold text-teal-800 bg-teal-50 px-1 py-0.2 rounded border border-teal-200">
-                    Predikat A
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 2: Indeks Pelayanan Publik (PEKPPP) */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-                    <Award className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Indeks Pelayanan Publik (PEKPPP)</div>
-                    <div className="text-[10px] text-slate-500 truncate">Kategori A (Pelayanan Prima - Hal. 40)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-amber-700">4.38 / 5.0</div>
-                  <span className="text-[10px] font-mono text-amber-800 font-bold bg-amber-50 px-1 py-0.2 rounded border border-amber-200">
-                    Pelayanan Prima
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 3: Tindak Lanjut Pengaduan Publik */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-                    <MessageSquare className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Tindak Lanjut Pengaduan Publik</div>
-                    <div className="text-[10px] text-slate-500 truncate">450/468 Selesai (Rata-rata 1.4 Hari)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-blue-700">96.2%</div>
-                  <span className="text-[10px] font-bold text-blue-800 bg-blue-50 px-1 py-0.2 rounded border border-blue-200">
-                    SP4N-LAPOR!
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 4: Akuntabilitas Kinerja Instansi (SAKIP) */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
-                    <Activity className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Akuntabilitas Kinerja (SAKIP)</div>
-                    <div className="text-[10px] text-slate-500 truncate">Evaluasi KemenPAN-RB (Hal. 38)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-teal-700">84.60 Poin</div>
-                  <span className="text-[10px] font-bold text-teal-800 bg-teal-50 px-1 py-0.2 rounded border border-teal-200">
-                    Predikat A
-                  </span>
-                </div>
-              </div>
-
-              {/* Metric 5: Kepatuhan Pelaporan LHKPN */}
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs hover:bg-slate-100/70 transition-colors">
-                <div className="flex items-center gap-2 min-w-0 pr-2">
-                  <div className="w-6 h-6 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-800 truncate">Kepatuhan LHKPN &amp; Gratifikasi</div>
-                    <div className="text-[10px] text-slate-500 truncate">Wajib Lapor Tepat Waktu (Hal. 39)</div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="font-black font-mono text-emerald-700">100%</div>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">
-                    Nihil Fraud
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Card Footer */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mt-3">
-            <span className="text-[11px] font-medium text-cyan-800 flex items-center gap-1 font-sans">
-              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-700" /> Status: SPIP &amp; RB Terakreditasi Tinggi
+        {/* KPI 3: KEPATUHAN STANDAR OPERASIONAL PROSEDUR (SOP) & PROBIS - DATASET #1 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-organisasi')}
+          className="bg-gradient-to-br from-indigo-50/80 via-purple-50/40 to-white rounded-lg border border-indigo-200/80 hover:border-indigo-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Kepatuhan SOP dan Proses Bisnis Terstandarisasi SPBE (Dataset #1)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0">
+                <FileCheck className="w-2.5 h-2.5" />
+              </span>
+              Kepatuhan SOP &amp; Probis
             </span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => onSelectUnit?.('biro-organisasi')}
-                className="font-bold text-cyan-800 hover:text-cyan-950 transition-colors flex items-center gap-1 cursor-pointer text-xs"
-                title="Buka Visualisasi Mendalam Biro OKMR"
-              >
-                <span>Analisis Satker</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => onOpenFormulaModal('ikp-1-rb')}
-                className="text-slate-500 hover:text-cyan-800 text-xs font-semibold cursor-pointer"
-                title="Kamus & Manual Regulasi"
-              >
-                Manual Naskah ↗
-              </button>
-            </div>
+            <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Level 3 SPBE
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              94,9% Patuh
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              486 dari 512 SOP Aktif
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 4: KETEPATAN LAYANAN PEGAWAI (KGB & PANGKAT) - DATASET #4 & #5 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-sdm')}
+          className="bg-gradient-to-br from-teal-50/80 via-emerald-50/40 to-white rounded-lg border border-teal-200/80 hover:border-teal-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Ketepatan Waktu Kenaikan Gaji Berkala & Pangkat Pegawai (Dataset #4 & #5)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-teal-600 text-white flex items-center justify-center font-bold shrink-0">
+                <Clock className="w-2.5 h-2.5" />
+              </span>
+              Ketepatan Layanan ASN
+            </span>
+            <span className="font-bold text-teal-800 bg-white/90 border border-teal-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Nol Sanggah
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              98,7% Tepat Waktu
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              742 ASN Otomasi SIASN
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 5: REKOMENDASI PENGAWASAN BLU (DEWAS & SPI) - DATASET #6 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-organisasi')}
+          className="bg-gradient-to-br from-purple-50/80 via-indigo-50/40 to-white rounded-lg border border-purple-200/80 hover:border-purple-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Tindak Lanjut Rekomendasi Pengawasan Dewas & SPI BLU (Dataset #6)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-purple-600 text-white flex items-center justify-center font-bold shrink-0">
+                <Scale className="w-2.5 h-2.5" />
+              </span>
+              Pengawasan BLU
+            </span>
+            <span className="font-bold text-purple-800 bg-white/90 border border-purple-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Dewas &amp; SPI
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              95,8% Tuntas
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              448/467 Rekomendasi Selesai
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 6: KESESUAIAN BEBAN KERJA (ANJAB/ABK) - DATASET #13 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-sdm')}
+          className="bg-gradient-to-br from-cyan-50/80 via-sky-50/40 to-white rounded-lg border border-cyan-200/80 hover:border-cyan-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Kesesuaian Analisa Jabatan dan Beban Kerja (Dataset #13)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-cyan-600 text-white flex items-center justify-center font-bold shrink-0">
+                <Users className="w-2.5 h-2.5" />
+              </span>
+              Formasi Anjab / ABK
+            </span>
+            <span className="font-bold text-cyan-800 bg-white/90 border border-cyan-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Peta Optimal
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              92,4% Sesuai
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              Rerata Beban Kerja 110,5%
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 7: PEMENUHAN KONTRAK KINERJA IKU SATKER - DATASET #5 */}
+        <div
+          onClick={() => onSelectUnit?.('biro-organisasi')}
+          className="bg-gradient-to-br from-emerald-50/80 via-teal-50/40 to-white rounded-lg border border-emerald-200/80 hover:border-emerald-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Pemenuhan Kontrak Kinerja IKU Satker Triwulanan (Dataset #5)"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0">
+                <TrendingUp className="w-2.5 h-2.5" />
+              </span>
+              Kontrak Kinerja IKU
+            </span>
+            <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Melampaui
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              102,1% Tercapai
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              Evaluasi Seluruh Satker A1
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 8: INDEKS REFORMASI KEBIJAKAN (IRK) PUBLIK - DATASET REGULASI BOKMR */}
+        <div
+          onClick={() => onSelectUnit?.('biro-organisasi')}
+          className="bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-white rounded-lg border border-amber-200/80 hover:border-amber-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Indeks Reformasi Kebijakan Publik & Kualitas Regulasi Perka BP Batam"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-md bg-amber-600 text-white flex items-center justify-center font-bold shrink-0">
+                <FileText className="w-2.5 h-2.5" />
+              </span>
+              Reformasi Kebijakan (IRK)
+            </span>
+            <span className="font-bold text-amber-800 bg-white/90 border border-amber-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+              Kategori A
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+              84,75 / 100
+            </span>
+            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+              Harmonisasi Regulasi Perka
+            </span>
           </div>
         </div>
       </div>

@@ -321,7 +321,7 @@ export const PenerimaanSumberDanaCard: React.FC<PenerimaanSumberDanaCardProps> =
       {/* Footer */}
       <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
         <span>
-          💡 <strong>Rekonsiliasi Kas:</strong> Penerimaan disetor langsung ke Rekening Kas BLU dan disahkan secara periodik (SP3B BLU).
+          <strong>Rekonsiliasi Kas:</strong> Penerimaan disetor langsung ke Rekening Kas BLU dan disahkan secara periodik (SP3B BLU).
         </span>
         <span className="text-slate-600 font-medium">Buku Satu Data BP Batam Hal. 4-5 Item 14</span>
       </div>

@@ -431,7 +431,7 @@ export const PtspExecutiveOverview: React.FC<PtspExecutiveOverviewProps> = ({
         {/* Executive Insight Box */}
         <div className="p-3.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs text-slate-700 leading-relaxed shadow-2xs">
           <span className="font-bold text-[#002B49] flex items-center gap-1.5 mb-1 text-xs">
-            <span>💡</span> Executive Insight &amp; Interpretasi Kinerja Sektoral PTSP:
+            <span></span> Executive Insight &amp; Interpretasi Kinerja Sektoral PTSP:
           </span>
           <p className="text-[11.5px] text-slate-600">
             Sektor <strong>Industri Manufaktur</strong> dan <strong>Maritim &amp; Kepelabuhanan</strong> menjadi motor perizinan utama dengan kontribusi 53,2% dari total permohonan, mencatat rasio izin terbit di atas 95,6% dan kecepatan median lead time optimal (&le; 1,6 hari kerja). Untuk sektor Pariwisata &amp; Hospitaliti, evaluasi teknis dokumen izin lingkungan dan tata ruang telah dipercepat melalui loket klinik asistensi OSS terpadu di MPP Batam Centre.

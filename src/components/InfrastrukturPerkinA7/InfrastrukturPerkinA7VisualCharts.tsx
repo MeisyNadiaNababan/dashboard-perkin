@@ -1038,7 +1038,7 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<InfrastrukturPerkinA7Vi
 
                     <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                       <div className="text-slate-600 text-[11px] font-sans">
-                        💡 <strong>Catatan Kinerja:</strong> Surplus penerimaan PNBP (+Rp 629 Juta) didorong oleh tingginya penetrasi galian jaringan kabel serat optik bawah tanah (FTTH &amp; Backbone Kabil-Batu Ampar) dan retribusi reklame ROW koridor Batam Center.
+                        <strong>Catatan Kinerja:</strong> Surplus penerimaan PNBP (+Rp 629 Juta) didorong oleh tingginya penetrasi galian jaringan kabel serat optik bawah tanah (FTTH &amp; Backbone Kabil-Batu Ampar) dan retribusi reklame ROW koridor Batam Center.
                       </div>
                       <button
                         onClick={() => setActiveVisualTab('pnbp-row')}

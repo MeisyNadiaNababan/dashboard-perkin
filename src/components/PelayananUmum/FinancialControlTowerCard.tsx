@@ -233,7 +233,7 @@ export const FinancialControlTowerCard: React.FC<FinancialControlTowerCardProps>
               {/* Catatan Fiskal Singkat */}
               {row.catatanFiskal && (
                 <div className="mt-1.5 ml-12 text-[10px] text-slate-400 italic">
-                  💡 {row.catatanFiskal}
+                  {row.catatanFiskal}
                 </div>
               )}
             </div>

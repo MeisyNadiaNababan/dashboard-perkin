@@ -285,7 +285,7 @@ export const SpipMaturitasCard: React.FC<SpipMaturitasCardProps> = ({
                 Penilaian Indeks Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)
               </h3>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200">
-                🏷️ 5 Unsur Penilaian BPKP (PP No. 60/2008)
+                5 Unsur Penilaian BPKP (PP No. 60/2008)
               </span>
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">

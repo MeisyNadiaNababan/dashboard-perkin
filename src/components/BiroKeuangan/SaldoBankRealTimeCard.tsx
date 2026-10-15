@@ -309,7 +309,7 @@ export const SaldoBankRealTimeCard: React.FC<SaldoBankRealTimeCardProps> = ({
       {/* Footer */}
       <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
         <span>
-          💡 <strong>Integrasi Host-to-Host (H2H) CMS:</strong> Data saldo termutakhir dari Bank Mandiri, BRI, BNI, BRK Syariah, BTN, dan BCA.
+          <strong>Integrasi Host-to-Host (H2H) CMS:</strong> Data saldo termutakhir dari Bank Mandiri, BRI, BNI, BRK Syariah, BTN, dan BCA.
         </span>
         <span className="text-slate-600 font-medium">Buku Satu Data BP Batam Hal. 4 Item 13</span>
       </div>

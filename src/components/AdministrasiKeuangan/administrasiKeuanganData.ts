@@ -1,12 +1,18 @@
-// Data Model & Constants grounded in:
-// 1. Dokumen Perjanjian Kinerja (Perkin A1) Nomor: 4 /KA/ 3 /2025
-//    Pihak Pertama: Alexander Zulkarnain (Anggota/Deputi Bidang Administrasi dan Keuangan)
-//    Pihak Kedua: Amsakar Achmad (Kepala BP Batam), Batam 13 Maret 2025
-// 2. Lampiran I & II: Penetapan & Penjelasan Uraian 4 Indikator Kinerja Program (IKP)
-// 3. Buku Satu Data BP Batam:
-//    - Biro Sumber Daya Manusia (13 Dataset, Hal. 1-2)
-//    - Biro Keuangan (28 Dataset, Hal. 2-6)
-//    - Biro Organisasi, Kepatuhan dan Manajemen Risiko (18 Dataset, Hal. 38-40)
+/**
+ * DATA & KONSTANTA RESMI DASHBOARD DEPUTI BIDANG ADMINISTRASI DAN KEUANGAN (DEP-A1)
+ * Landasan Hukum & Acuan:
+ * 1. Dokumen Perjanjian Kinerja (Perkin A1) Nomor: 4 /KA/ 3 /2025
+ *    Pihak Pertama: Alexander Zulkarnain (Anggota/Deputi Bidang Administrasi dan Keuangan)
+ *    Pihak Kedua: Amsakar Achmad (Kepala Badan Pengusahaan Batam), Batam 13 Maret 2025
+ * 2. Lampiran I & II Perkin: Penetapan & Penjelasan 4 IKP (RB, Sistem Merit, SPIP, Opini BPK)
+ * 3. 5 Kegiatan Anggaran Perkin 2025 (Total Pagu Rp 725.148.975.000,-)
+ * 4. Dokumen Resmi Buku Satu Data BP Batam:
+ *    - Biro Sumber Daya Manusia (Hal. 1-2)
+ *    - Biro Keuangan (Hal. 2-6)
+ *    - Biro Organisasi, Kepatuhan dan Manajemen Risiko (Hal. 38-40)
+ *    - Biro Umum (Hal. 43-46)
+ *    - Biro Hukum (Hal. 2)
+ */
 
 export interface PerkinA1HeaderInfo {
   nomorPerkin: string;
@@ -20,6 +26,7 @@ export interface PerkinA1HeaderInfo {
   totalPaguFormatted: string;
   realisasiTotalAnggaran: number;
   persentaseSerapan: number;
+  terakhirDiperbarui: string;
 }
 
 export const PERKIN_A1_INFO: PerkinA1HeaderInfo = {
@@ -31,1224 +38,852 @@ export const PERKIN_A1_INFO: PerkinA1HeaderInfo = {
   jabatanPihakKedua: 'Kepala Badan Pengusahaan Batam',
   sasaranProgram: 'Meningkatkan kualitas pengelolaan internal BP Batam',
   totalPaguAnggaran: 725148975000,
-  totalPaguFormatted: 'Rp 725.148.975.000,-',
-  realisasiTotalAnggaran: 241650000000,
-  persentaseSerapan: 33.32,
+  totalPaguFormatted: 'Rp 725,15 M',
+  realisasiTotalAnggaran: 263255140000,
+  persentaseSerapan: 36.3,
+  terakhirDiperbarui: '12/10/2026',
 };
 
-// 4 INDIKATOR KINERJA PROGRAM (IKP) PERKIN A1 (HAL. 2-6 DOKUMEN PDF)
-export interface PerkinA1Kpi {
+// ============================================================================
+// 1. ATURAN STATUS (3 STATUS SAJA: TERCAPAI, DALAM PANTAUAN, PERLU PERHATIAN)
+// ============================================================================
+export type StatusKpi = 'TERCAPAI' | 'DALAM_PANTAUAN' | 'PERLU_PERHATIAN';
+
+export interface StatusConfig {
+  label: string;
+  colorClass: string;
+  bgClass: string;
+  borderClass: string;
+  dotClass: string;
+}
+
+export const STATUS_CONFIG: Record<StatusKpi, StatusConfig> = {
+  TERCAPAI: {
+    label: 'Tercapai',
+    colorClass: 'text-emerald-700',
+    bgClass: 'bg-emerald-50',
+    borderClass: 'border-emerald-200',
+    dotClass: 'bg-emerald-500',
+  },
+  DALAM_PANTAUAN: {
+    label: 'Dalam Pantauan',
+    colorClass: 'text-amber-700',
+    bgClass: 'bg-amber-50',
+    borderClass: 'border-amber-200',
+    dotClass: 'bg-amber-500',
+  },
+  PERLU_PERHATIAN: {
+    label: 'Perlu Perhatian',
+    colorClass: 'text-rose-700',
+    bgClass: 'bg-rose-50',
+    borderClass: 'border-rose-200',
+    dotClass: 'bg-rose-500',
+  },
+};
+
+export const getStatusFromAchievement = (capaianPersen: number): StatusKpi => {
+  if (capaianPersen >= 100) return 'TERCAPAI';
+  if (capaianPersen >= 90) return 'DALAM_PANTAUAN';
+  return 'PERLU_PERHATIAN';
+};
+
+// ============================================================================
+// 2. DATA 4 INDIKATOR KINERJA PROGRAM (IKP) PERKIN DEP-A1
+// ============================================================================
+export interface KomponenIkpDrawer {
+  nama: string;
+  bobotMaksimal: number;
+  skorCapaian: number;
+  capaianPersen: number;
+  status: StatusKpi;
+  keterangan: string;
+}
+
+export interface SkalaPredikatItem {
+  kode: string;
+  rentang: string;
+  predikat: string;
+  keterangan?: string;
+  isTarget?: boolean;
+}
+
+export interface PerkinIkpItem {
   id: string;
   no: number;
-  namaIndikator: string;
-  sasaranProgram: string;
-  target2025: string;
-  targetNumeric?: number;
-  realisasi2025: string;
-  realisasiNumeric?: number;
+  judulSingkat: string; // Maks 4 kata
+  namaLengkap: string;
+  biroPengampu: string;
+  nilaiUtama: string;
+  angkaTampil: number | string;
+  targetTeks: string;
+  targetAngka: number;
+  realisasiAngka: number;
   capaianPersen: number;
+  status: StatusKpi;
   predikat: string;
-  mutuKategori: string;
-  satuan: string;
-  polarisasi: 'Maximize' | 'Minimize';
-  periodePelaporan: string;
+  barisKonteks: string;
+  jenisPeriode: 'Tahunan' | 'Kuartal';
+  deltaVsTahunLalu?: string;
+  sparklineTw?: number[];
   sumberData: string;
+  datasetSatuData: string;
+  rumusPerhitungan: string;
   dasarHukum: string;
-  ringkasanPenjelasan: string;
-  formulaLengkap: string;
-  komponenPenyusun: {
-    nama: string;
-    bobot?: string;
-    skor?: string | number;
-    keterangan: string;
+  komponenDrawer: KomponenIkpDrawer[];
+  skalaPredikat: SkalaPredikatItem[];
+  kriteriaSapChecklist?: {
+    id: string;
+    kriteria: string;
+    deskripsi: string;
+    terpenuhi: boolean;
   }[];
 }
 
-export const PERKIN_A1_KPIS: PerkinA1Kpi[] = [
+// Skala Predikat Reformasi Birokrasi (PermenPAN-RB No. 3/2023 & KepmenPAN-RB No. 182/2025)
+export const SKALA_PREDIKAT_RB: SkalaPredikatItem[] = [
+  { kode: 'AA', rentang: '> 90 - 100', predikat: 'Sangat Memuaskan' },
+  { kode: 'A', rentang: '> 80 - 90', predikat: 'Memuaskan' },
+  { kode: 'BB', rentang: '> 70 - 80', predikat: 'Sangat Baik', isTarget: true },
+  { kode: 'B', rentang: '> 60 - 70', predikat: 'Baik' },
+  { kode: 'CC', rentang: '> 50 - 60', predikat: 'Cukup' },
+  { kode: 'C', rentang: '> 30 - 50', predikat: 'Kurang' },
+  { kode: 'D', rentang: '0 - 30', predikat: 'Sangat Kurang' },
+];
+
+// Skala Predikat Sistem Merit (PermenPAN-RB No. 40/2018 & Perka KASN No. 9/2019)
+export const SKALA_PREDIKAT_MERIT: SkalaPredikatItem[] = [
+  { kode: 'Kategori IV', rentang: '325 - 400', predikat: 'Sangat Baik' },
+  { kode: 'Kategori III', rentang: '250 - 324', predikat: 'Baik', isTarget: true },
+  { kode: 'Kategori II', rentang: '175 - 249', predikat: 'Kurang' },
+  { kode: 'Kategori I', rentang: '100 - 174', predikat: 'Buruk' },
+];
+
+// Skala Predikat Maturitas SPIP (PP No. 60/2008 & Perka BPKP No. 5/2021)
+export const SKALA_PREDIKAT_SPIP: SkalaPredikatItem[] = [
+  { kode: 'Level 5', rentang: '4,50 - 5,00', predikat: 'Optimum', keterangan: 'Pengendalian intern adaptif & membudaya' },
+  { kode: 'Level 4', rentang: '3,50 - 4,49', predikat: 'Terdefinisi', keterangan: 'Terintegrasi dalam manajemen berkala' },
+  { kode: 'Level 3', rentang: '3,00 - 3,49', predikat: 'Berkembang', keterangan: 'Terdokumentasi & diterapkan konsisten', isTarget: true },
+  { kode: 'Level 2', rentang: '2,00 - 2,99', predikat: 'Rintisan', keterangan: 'Kebijakan dasar ada, belum menyeluruh' },
+  { kode: 'Level 1', rentang: '1,00 - 1,99', predikat: 'Rintisan Awal', keterangan: 'Belum ada penerapan formal' },
+];
+
+export const PERKIN_A1_IKP_LIST: PerkinIkpItem[] = [
   {
     id: 'ikp-1-rb',
     no: 1,
-    namaIndikator: 'Indeks Reformasi Birokrasi',
-    sasaranProgram: 'Meningkatkan kualitas pengelolaan internal BP Batam',
-    target2025: 'BB',
-    realisasi2025: 'BB (78.45)',
-    realisasiNumeric: 78.45,
-    capaianPersen: 104.6,
-    predikat: 'Sangat Baik',
-    mutuKategori: 'BB (>70 - 80)',
-    satuan: 'Nilai Indeks',
-    polarisasi: 'Maximize',
-    periodePelaporan: 'Tahunan',
+    judulSingkat: 'Reformasi Birokrasi',
+    namaLengkap: 'Indeks Reformasi Birokrasi',
+    biroPengampu: 'Biro OKMR',
+    nilaiUtama: '81,14',
+    angkaTampil: 81.14,
+    targetTeks: 'Target BB (80,00)',
+    targetAngka: 80.0,
+    realisasiAngka: 81.14,
+    capaianPersen: 101.4,
+    status: 'TERCAPAI',
+    predikat: 'Sangat Baik (A)',
+    barisKonteks: 'Target 80,00 (BB) · +2,69 vs 2024 (78,45)',
+    jenisPeriode: 'Tahunan',
+    deltaVsTahunLalu: '+2,69 vs tahun lalu',
     sumberData: 'Biro Organisasi, Kepatuhan dan Manajemen Risiko (BOKMR)',
+    datasetSatuData: 'Buku Satu Data Hal. 39 No. 12: Data Kebijakan Road Map Reformasi Birokrasi',
+    rumusPerhitungan:
+      'Penjumlahan pembobotan 8 area perubahan RB General (Manajemen Perubahan, Deregulasi, Organisasi, Tata Laksana, SDM, SAKIP, Pengawasan, Pelayanan Publik) dan RB Tematik.',
     dasarHukum:
-      'PermenPAN-RB No. 3/2023, PermenPAN-RB No. 25/2020, dan KepmenPAN-RB No. 182/2025 tentang Petunjuk Teknis Evaluasi Reformasi Birokrasi.',
-    ringkasanPenjelasan:
-      'Perbaikan tata kelola pemerintahan yang efektif dan efisien, bersih dari KKN, serta menghadirkan pelayanan publik yang berkualitas.',
-    formulaLengkap:
-      'Evaluasi komprehensif 8 area perubahan RB General (Manajemen Perubahan, Deregulasi Kebijakan, Penataan Organisasi, Penataan Tata Laksana/SPBE, Penataan SDM Aparatur, Penguatan Akuntabilitas Kinerja, Penguatan Pengawasan, dan Peningkatan Kualitas Pelayanan Publik) serta RB Tematik (Digitalisasi Administrasi & Investasi).',
-    komponenPenyusun: [
-      { nama: 'Manajemen Perubahan', bobot: '10%', skor: '8.40', keterangan: 'Kultur kerja BerAKHLAK dan agen perubahan' },
-      { nama: 'Deregulasi Kebijakan', bobot: '10%', skor: '8.15', keterangan: 'Harmonisasi Perka & kemudahan investasi' },
-      { nama: 'Penataan Organisasi', bobot: '10%', skor: '7.90', keterangan: 'Right-sizing kelembagaan BP Batam' },
-      { nama: 'Penataan Tata Laksana (SPBE)', bobot: '15%', skor: '12.80', keterangan: 'Arsitektur SPBE terintegrasi PDSI' },
-      { nama: 'Penataan Sistem Manajemen SDM', bobot: '15%', skor: '12.65', keterangan: 'Penerapan Sistem Merit Kategori Sangat Baik' },
-      { nama: 'Penguatan Akuntabilitas (SAKIP)', bobot: '15%', skor: '12.40', keterangan: 'Akuntabilitas kinerja instansi predikat A' },
-      { nama: 'Penguatan Pengawasan Intern', bobot: '10%', skor: '8.15', keterangan: 'Maturitas SPIP & kepatuhan LHKPN' },
-      { nama: 'Peningkatan Pelayanan Publik', bobot: '15%', skor: '8.00', keterangan: 'Standar pelayanan PTSP, RSBP & SPAM' },
+      'PermenPAN-RB No. 3/2023 tentang Road Map Reformasi Birokrasi dan KepmenPAN-RB No. 182/2025 tentang Petunjuk Teknis Evaluasi RB.',
+    komponenDrawer: [
+      {
+        nama: 'Peningkatan Kualitas Pelayanan Publik',
+        bobotMaksimal: 15.0,
+        skorCapaian: 11.2,
+        capaianPersen: 74.7,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Perlu optimalisasi SLA perizinan dan digitalisasi PTSP',
+      },
+      {
+        nama: 'Penataan Organisasi',
+        bobotMaksimal: 10.0,
+        skorCapaian: 7.8,
+        capaianPersen: 78.0,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Right-sizing kelembagaan dan efisiensi tugas fungsi',
+      },
+      {
+        nama: 'Penguatan Pengawasan Intern',
+        bobotMaksimal: 10.0,
+        skorCapaian: 8.05,
+        capaianPersen: 80.5,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Tindak lanjut rekomendasi audit SPI dan pengaduan WBS',
+      },
+      {
+        nama: 'Deregulasi Kebijakan',
+        bobotMaksimal: 10.0,
+        skorCapaian: 8.3,
+        capaianPersen: 83.0,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Harmonisasi Perka terkait kemudahan berusaha',
+      },
+      {
+        nama: 'Manajemen Perubahan',
+        bobotMaksimal: 10.0,
+        skorCapaian: 8.5,
+        capaianPersen: 85.0,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Implementasi budaya kerja BerAKHLAK satker',
+      },
+      {
+        nama: 'Penataan Sistem Manajemen SDM',
+        bobotMaksimal: 15.0,
+        skorCapaian: 13.1,
+        capaianPersen: 87.3,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Penerapan sistem merit dan manajemen talenta',
+      },
+      {
+        nama: 'Penguatan Akuntabilitas (SAKIP)',
+        bobotMaksimal: 15.0,
+        skorCapaian: 13.25,
+        capaianPersen: 88.3,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Kualitas pelaporan kinerja berorientasi dampak',
+      },
+      {
+        nama: 'Penataan Tata Laksana (SPBE)',
+        bobotMaksimal: 15.0,
+        skorCapaian: 13.4,
+        capaianPersen: 89.3,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Keterpaduan proses bisnis dan layanan Satu Data',
+      },
     ],
+    skalaPredikat: SKALA_PREDIKAT_RB,
   },
   {
     id: 'ikp-2-merit',
     no: 2,
-    namaIndikator: 'Indeks Sistem Merit',
-    sasaranProgram: 'Meningkatkan kualitas pengelolaan internal BP Batam',
-    target2025: '280',
-    targetNumeric: 280,
-    realisasi2025: '342.5',
-    realisasiNumeric: 342.5,
+    judulSingkat: 'Sistem Merit',
+    namaLengkap: 'Indeks Sistem Merit',
+    biroPengampu: 'Biro SDM',
+    nilaiUtama: '342,5',
+    angkaTampil: 342.5,
+    targetTeks: 'Target 280 (Baik)',
+    targetAngka: 280.0,
+    realisasiAngka: 342.5,
     capaianPersen: 122.3,
+    status: 'TERCAPAI',
     predikat: 'Sangat Baik (Kategori IV)',
-    mutuKategori: 'Kategori IV (325 - 400)',
-    satuan: 'Angka/Nilai (Skala 400)',
-    polarisasi: 'Maximize',
-    periodePelaporan: 'Kuartal / Tahunan',
+    barisKonteks: 'Target 280 · Tren naik TW1–TW4 (Kategori IV)',
+    jenisPeriode: 'Kuartal',
+    sparklineTw: [315.0, 328.0, 336.0, 342.5],
     sumberData: 'Biro Sumber Daya Manusia (BSDM)',
+    datasetSatuData: 'Buku Satu Data Hal. 2 No. 12: Indeks Sistem Merit',
+    rumusPerhitungan:
+      'Penjumlahan perkalian skor atas 36 parameter kegiatan pada 8 aspek penilaian mandiri Sistem Merit (skala maksimal 400 poin).',
     dasarHukum:
       'PermenPAN-RB No. 40/2018 tentang Pedoman Sistem Merit dan Peraturan KASN No. 9/2019 tentang Tata Cara Penilaian Mandiri Sistem Merit.',
-    ringkasanPenjelasan:
-      'Instrumen pengukuran sejauh mana penerapan prinsip-prinsip sistem merit (kualifikasi, kompetensi, dan kinerja secara adil tanpa diskriminasi) dalam manajemen ASN/pegawai BP Batam.',
-    formulaLengkap:
-      'Nilai diperoleh berdasarkan penjumlahan perkalian skor atas 36 kegiatan x bobot (1-4) pada 8 aspek penilaian Sistem Merit.',
-    komponenPenyusun: [
-      { nama: '1. Perencanaan Kebutuhan ASN', bobot: 'Bobot 24', skor: '22.0', keterangan: 'Anjab & ABK 5 tahunan' },
-      { nama: '2. Pengadaan ASN & Pegawai', bobot: 'Bobot 24', skor: '23.0', keterangan: 'Seleksi CAT transparan' },
-      { nama: '3. Pengembangan Karier', bobot: 'Bobot 80', skor: '71.5', keterangan: 'Talent Pool & 9-Box Grid' },
-      { nama: '4. Promosi dan Mutasi', bobot: 'Bobot 40', skor: '36.0', keterangan: 'Uji kompetensi & assessment center' },
-      { nama: '5. Manajemen Kinerja Pegawai', bobot: 'Bobot 80', skor: '68.0', keterangan: 'Sasaran Kinerja Pegawai (e-Kinerja)' },
-      { nama: '6. Penggajian, Penghargaan, Disiplin', bobot: 'Bobot 60', skor: '52.0', keterangan: 'Remunerasi BLU, reward & punishment' },
-      { nama: '7. Perlindungan dan Pelayanan', bobot: 'Bobot 16', skor: '15.0', keterangan: 'BPJS, bantuan hukum & asuransi' },
-      { nama: '8. Sistem Informasi Kepegawaian', bobot: 'Bobot 76', skor: '55.0', keterangan: 'Simpeg terintegrasi Satu Data' },
+    komponenDrawer: [
+      {
+        nama: '7. Perlindungan dan Pelayanan',
+        bobotMaksimal: 16.0,
+        skorCapaian: 12.0,
+        capaianPersen: 75.0,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Peningkatan jaminan kesehatan, hukum, dan asuransi',
+      },
+      {
+        nama: '8. Sistem Informasi Kepegawaian',
+        bobotMaksimal: 76.0,
+        skorCapaian: 60.5,
+        capaianPersen: 79.6,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Integrasi SIMPEG dengan Satu Data dan presensi digital',
+      },
+      {
+        nama: '4. Promosi dan Mutasi',
+        bobotMaksimal: 40.0,
+        skorCapaian: 32.5,
+        capaianPersen: 81.3,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Optimalisasi uji kompetensi assessment center berkala',
+      },
+      {
+        nama: '6. Penggajian, Penghargaan, Disiplin',
+        bobotMaksimal: 60.0,
+        skorCapaian: 51.5,
+        capaianPersen: 85.8,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Remunerasi BLU dan penegakan disiplin pegawai',
+      },
+      {
+        nama: '5. Manajemen Kinerja Pegawai',
+        bobotMaksimal: 80.0,
+        skorCapaian: 69.5,
+        capaianPersen: 86.9,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Kesesuaian SKP periodik dan evaluasi kinerja bawahan',
+      },
+      {
+        nama: '3. Pengembangan Karier',
+        bobotMaksimal: 80.0,
+        skorCapaian: 71.0,
+        capaianPersen: 88.8,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Talent mapping 9-box grid dan jalur pendidikan tubel',
+      },
+      {
+        nama: '1. Perencanaan Kebutuhan ASN',
+        bobotMaksimal: 24.0,
+        skorCapaian: 22.5,
+        capaianPersen: 93.8,
+        status: 'TERCAPAI',
+        keterangan: 'Anjab & ABK 5 tahunan terverifikasi KemenPAN-RB',
+      },
+      {
+        nama: '2. Pengadaan ASN',
+        bobotMaksimal: 24.0,
+        skorCapaian: 23.0,
+        capaianPersen: 95.8,
+        status: 'TERCAPAI',
+        keterangan: 'Proses seleksi berbasis CAT transparan dan akuntabel',
+      },
     ],
+    skalaPredikat: SKALA_PREDIKAT_MERIT,
   },
   {
     id: 'ikp-3-spip',
     no: 3,
-    namaIndikator: 'Indeks Maturitas SPIP',
-    sasaranProgram: 'Meningkatkan kualitas pengelolaan internal BP Batam',
-    target2025: '3,2',
-    targetNumeric: 3.2,
-    realisasi2025: '3.42',
-    realisasiNumeric: 3.42,
+    judulSingkat: 'Maturitas SPIP',
+    namaLengkap: 'Indeks Maturitas SPIP',
+    biroPengampu: 'Biro OKMR',
+    nilaiUtama: '3,42',
+    angkaTampil: 3.42,
+    targetTeks: 'Target 3,2 (Level 3)',
+    targetAngka: 3.2,
+    realisasiAngka: 3.42,
     capaianPersen: 106.9,
-    predikat: 'Level 3 Berkembang Menuju Terdefinisi',
-    mutuKategori: 'Level 3 (Berkembang: 3.00 - 3.49)',
-    satuan: 'Indeks (Skala 1 - 5)',
-    polarisasi: 'Maximize',
-    periodePelaporan: 'Tahunan',
-    sumberData: 'Kepala Biro Hukum / Biro Organisasi, Kepatuhan dan Manajemen Risiko (BOKMR)',
+    status: 'TERCAPAI',
+    predikat: 'Level 3 (Berkembang)',
+    barisKonteks: 'Target 3,2 · +0,24 vs 2024 (3,18)',
+    jenisPeriode: 'Tahunan',
+    deltaVsTahunLalu: '+0,24 vs tahun lalu',
+    sumberData: 'Biro Organisasi, Kepatuhan dan Manajemen Risiko (BOKMR)',
+    datasetSatuData: 'Buku Satu Data Hal. 40 No. 17: Data Penilaian Maturitas SPIP',
+    rumusPerhitungan:
+      'Penilaian mandiri terintegrasi BPKP atas 5 unsur SPIP dikombinasikan dengan Manajemen Risiko Indeks (MRI) dan Indeks Efektivitas Pencegahan Korupsi (IEPK).',
     dasarHukum:
       'PP No. 60/2008 tentang Sistem Pengendalian Intern Pemerintah dan Perka BPKP No. 5/2021 tentang Penilaian Maturitas SPIP Terintegrasi.',
-    ringkasanPenjelasan:
-      'Tingkat kematangan penyelenggaraan SPIP pada seluruh unit kerja BP Batam untuk memastikan pencapaian tujuan organisasi secara efektif, efisien, keandalan pelaporan keuangan, pengamanan aset, dan ketaatan regulasi.',
-    formulaLengkap:
-      'Penilaian mandiri terintegrasi BPKP atas 5 unsur SPIP (Lingkungan Pengendalian, Penilaian Risiko, Kegiatan Pengendalian, Informasi & Komunikasi, Pemantauan Pengendalian Intern) dipadukan dengan Manajemen Risiko Indeks (MRI) dan Indeks Efektivitas Pencegahan Korupsi (IEPK).',
-    komponenPenyusun: [
-      { nama: 'Lingkungan Pengendalian', bobot: '30%', skor: '3.50', keterangan: 'Integritas pimpinan, kode etik & struktur tata kelola' },
-      { nama: 'Penilaian Risiko (Risk Assessment)', bobot: '20%', skor: '3.38', keterangan: 'Identifikasi register risiko satker & mitigasi' },
-      { nama: 'Kegiatan Pengendalian', bobot: '25%', skor: '3.45', keterangan: 'SOP terstandar, otorisasi & pemisahan fungsi' },
-      { nama: 'Informasi dan Komunikasi', bobot: '10%', skor: '3.40', keterangan: 'Diseminasi informasi & integrasi Satu Data' },
-      { nama: 'Pemantauan Pengendalian Intern', bobot: '15%', skor: '3.35', keterangan: 'Audit berkala SPI & reviu tindak lanjut' },
+    komponenDrawer: [
+      {
+        nama: '2. Penilaian Risiko (Risk Assessment)',
+        bobotMaksimal: 5.0,
+        skorCapaian: 3.25,
+        capaianPersen: 65.0,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Register risiko unit operasional dan rencana mitigasi',
+      },
+      {
+        nama: '5. Pemantauan Pengendalian Intern',
+        bobotMaksimal: 5.0,
+        skorCapaian: 3.35,
+        capaianPersen: 67.0,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Reviu berkala dan pemantauan tindak lanjut audit SPI',
+      },
+      {
+        nama: '4. Informasi dan Komunikasi',
+        bobotMaksimal: 5.0,
+        skorCapaian: 3.4,
+        capaianPersen: 68.0,
+        status: 'PERLU_PERHATIAN',
+        keterangan: 'Diseminasi kebijakan pengendalian dan saluran WBS',
+      },
+      {
+        nama: '3. Kegiatan Pengendalian',
+        bobotMaksimal: 5.0,
+        skorCapaian: 3.52,
+        capaianPersen: 70.4,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Pemisahan otorisasi, standar SOP, dan verifikasi dokumen',
+      },
+      {
+        nama: '1. Lingkungan Pengendalian',
+        bobotMaksimal: 5.0,
+        skorCapaian: 3.58,
+        capaianPersen: 71.6,
+        status: 'DALAM_PANTAUAN',
+        keterangan: 'Keteladanan integritas, kode etik pimpinan, komitmen SDM',
+      },
     ],
+    skalaPredikat: SKALA_PREDIKAT_SPIP,
   },
   {
     id: 'ikp-4-wtp',
     no: 4,
-    namaIndikator: 'Opini BPK',
-    sasaranProgram: 'Meningkatkan kualitas pengelolaan internal BP Batam',
-    target2025: 'WTP',
-    realisasi2025: 'WTP (8x Berturut-turut)',
+    judulSingkat: 'Opini BPK',
+    namaLengkap: 'Opini Badan Pemeriksa Keuangan (BPK)',
+    biroPengampu: 'Biro Keuangan',
+    nilaiUtama: 'WTP',
+    angkaTampil: 'WTP',
+    targetTeks: 'Target WTP',
+    targetAngka: 100.0,
+    realisasiAngka: 100.0,
     capaianPersen: 100.0,
+    status: 'TERCAPAI',
     predikat: 'Wajar Tanpa Pengecualian',
-    mutuKategori: 'Opini Tertinggi BPK RI',
-    satuan: 'Opini Pemeriksaan',
-    polarisasi: 'Maximize',
-    periodePelaporan: 'Semester & Tahunan',
-    sumberData: 'Unit Pelaporan BP Batam / Biro Keuangan',
+    barisKonteks: 'Target WTP · 8x Berturut-turut (TA 2017–2024)',
+    jenisPeriode: 'Tahunan',
+    deltaVsTahunLalu: 'Konsisten 8 tahun berturut-turut',
+    sumberData: 'Biro Keuangan BP Batam',
+    datasetSatuData: 'Buku Satu Data Hal. 6 No. 27: Data Opini BPK Tahunan',
+    rumusPerhitungan:
+      'Kesesuaian penyusunan Laporan Keuangan BP Batam terhadap Standar Akuntansi Pemerintahan (SAP), kecukupan pengungkapan, efektivitas SPI, dan kepatuhan perundang-undangan.',
     dasarHukum:
       'UU No. 15/2004 tentang Pemeriksaan Pengelolaan dan Tanggung Jawab Keuangan Negara & Standar Akuntansi Pemerintahan (SAP).',
-    ringkasanPenjelasan:
-      'Kesesuaian penyusunan Laporan Keuangan BP Batam terhadap Standar Akuntansi Pemerintahan (SAP), kecukupan pengungkapan, efektivitas sistem pengendalian intern, dan kepatuhan perundang-undangan.',
-    formulaLengkap:
-      'Opini hasil pemeriksaan Badan Pemeriksa Keuangan (BPK) RI atas Laporan Keuangan BP Batam Audited yang diserahkan tepat waktu tanpa modifikasi opini (Unqualified Opinion).',
-    komponenPenyusun: [
-      { nama: 'Kesesuaian dengan SAP', bobot: 'Kriteria BPK', skor: 'Sesuai', keterangan: 'Penerapan SAP akrual penuh pada entitas BP Batam' },
-      { nama: 'Kecukupan Pengungkapan (CaLK)', bobot: 'Kriteria BPK', skor: 'Lengkap', keterangan: 'Rincian transaksi aset, piutang, dan PNBP informatif' },
-      { nama: 'Kepatuhan Regulasi Keuangan', bobot: 'Kriteria BPK', skor: 'Patuh', keterangan: 'Nihil temuan kerugian negara yang bersifat material' },
-      { nama: 'Efektivitas SPI Keuangan', bobot: 'Kriteria BPK', skor: 'Efektif', keterangan: 'Rekonsiliasi bank, persediaan, dan BMN berkala' },
+    komponenDrawer: [],
+    skalaPredikat: [
+      { kode: 'WTP', rentang: 'Nilai Terbaik', predikat: 'Wajar Tanpa Pengecualian', isTarget: true },
+      { kode: 'WDP', rentang: 'Modifikasi Tertentu', predikat: 'Wajar Dengan Pengecualian' },
+      { kode: 'TW', rentang: 'Penyimpangan Material', predikat: 'Tidak Wajar' },
+      { kode: 'TMP', rentang: 'Batasan Lingkup Pemeriksaan', predikat: 'Tidak Memberikan Pendapat (Disclaimer)' },
+    ],
+    kriteriaSapChecklist: [
+      {
+        id: 'sap-1',
+        kriteria: 'Kesesuaian Standar Akuntansi Pemerintahan (SAP)',
+        deskripsi: 'Penerapan standar akuntansi berbasis akrual penuh pada seluruh transaksi keuangan BP Batam.',
+        terpenuhi: true,
+      },
+      {
+        id: 'sap-2',
+        kriteria: 'Kecukupan Pengungkapan Informasi (CaLK)',
+        deskripsi: 'Catatan atas Laporan Keuangan memadai, transparan, dan lengkap menjelaskan pos pendapatan serta belanja.',
+        terpenuhi: true,
+      },
+      {
+        id: 'sap-3',
+        kriteria: 'Kepatuhan terhadap Peraturan Perundang-undangan',
+        deskripsi: 'Nihil temuan kerugian negara atau ketidakpatuhan perundang-undangan yang bersifat material.',
+        terpenuhi: true,
+      },
+      {
+        id: 'sap-4',
+        kriteria: 'Efektivitas Sistem Pengendalian Intern (SPI Keuangan)',
+        deskripsi: 'Pencegahan risiko fraud andal melalui rekonsiliasi kas, persediaan, dan BMN secara berkala.',
+        terpenuhi: true,
+      },
     ],
   },
 ];
 
-// 5 RINCIAN KEGIATAN ANGGARAN PERKIN A1 (HAL. 2 DOKUMEN PDF)
-export interface KegiatanAnggaranPerkinA1 {
+export const PERKIN_A1_KPIS = PERKIN_A1_IKP_LIST;
+
+// ============================================================================
+// 3. PAGU 5 KEGIATAN ANGGARAN DEPUTI A1 (DATA RESMI PERKIN 2025)
+// ============================================================================
+export interface KegiatanAnggaranItem {
   id: string;
-  no: number;
+  nomor: number;
   namaKegiatan: string;
-  paguAnggaran: number;
-  paguFormatted: string;
-  realisasiAnggaran: number;
+  namaSingkat: string;
+  paguAnggaran: number; // Rupiah
+  paguFormatted: string; // Misal Rp 114,34 M
+  realisasiAnggaran: number; // Data contoh realistis
   realisasiFormatted: string;
-  persentaseSerapan: number;
-  proporsiPagu: number; // persen terhadap Rp 725,15 M
-  unitPengampu: string;
-  deskripsi: string;
-  status: 'OPTIMAL' | 'ON_TRACK' | 'PERLU_PERCEPATAN';
+  persentaseRealisasi: number;
+  biroPengampu: string;
+  isDummy: boolean; // Tanda kecil "data contoh" sesuai aturan
 }
 
-export const KEGIATAN_ANGGARAN_PERKIN_A1: KegiatanAnggaranPerkinA1[] = [
+export const KEGIATAN_ANGGARAN_A1: KegiatanAnggaranItem[] = [
   {
-    id: 'keg-1-kerumahtanggaan',
-    no: 1,
-    namaKegiatan: 'Pelayanan Kerumahtanggaan Kesekretariatan dan Pengadaan Barang/Jasa',
+    id: 'keg-1',
+    nomor: 1,
+    namaKegiatan: 'Kerumahtanggaan, Kesekretariatan & Pengadaan Barang/Jasa',
+    namaSingkat: 'Pelayanan Kerumahtanggaan, Kesekretariatan & Pengadaan',
     paguAnggaran: 114344199000,
-    paguFormatted: 'Rp 114.344.199.000,-',
-    realisasiAnggaran: 39450000000,
-    realisasiFormatted: 'Rp 39.450.000.000,-',
-    persentaseSerapan: 34.5,
-    proporsiPagu: 15.77,
-    unitPengampu: 'Biro Umum & Unit Layanan Pengadaan (ULP)',
-    deskripsi: 'Fasilitasi operasional perkantoran, pemeliharaan sarana prasarana gedung Bida, utilitas kantor, dan tender pengadaan LPSE.',
-    status: 'ON_TRACK',
+    paguFormatted: 'Rp 114,34 M',
+    realisasiAnggaran: 42307353630,
+    realisasiFormatted: 'Rp 42,31 M',
+    persentaseRealisasi: 37.0,
+    biroPengampu: 'Biro Umum',
+    isDummy: true,
   },
   {
-    id: 'keg-2-keuangan',
-    no: 2,
-    namaKegiatan: 'Penyusunan Perencanaan Anggaran dan Pengelolaan Administrasi Keuangan',
+    id: 'keg-2',
+    nomor: 2,
+    namaKegiatan: 'Perencanaan Anggaran & Pengelolaan Administrasi Keuangan',
+    namaSingkat: 'Perencanaan Anggaran & Administrasi Keuangan',
     paguAnggaran: 7101918000,
-    paguFormatted: 'Rp 7.101.918.000,-',
-    realisasiAnggaran: 2680000000,
-    realisasiFormatted: 'Rp 2.680.000.000,-',
-    persentaseSerapan: 37.73,
-    proporsiPagu: 0.98,
-    unitPengampu: 'Biro Keuangan',
-    deskripsi: 'Penyusunan RBA, DIPA, LRA BLU, konsolidasi laporan keuangan SAP, penatausahaan kas dan penerimaan PNBP.',
-    status: 'OPTIMAL',
+    paguFormatted: 'Rp 7,10 M',
+    realisasiAnggaran: 3053824740,
+    realisasiFormatted: 'Rp 3,05 M',
+    persentaseRealisasi: 43.0,
+    biroPengampu: 'Biro Keuangan',
+    isDummy: true,
   },
   {
-    id: 'keg-3-sdm',
-    no: 3,
-    namaKegiatan: 'Pengelolaan dan Pelayanan Sumber Daya Manusia',
+    id: 'keg-3',
+    nomor: 3,
+    namaKegiatan: 'Pengelolaan & Pelayanan SDM',
+    namaSingkat: 'Pengelolaan & Pelayanan Sumber Daya Manusia',
     paguAnggaran: 590444268000,
-    paguFormatted: 'Rp 590.444.268.000,-',
-    realisasiAnggaran: 194850000000,
-    realisasiFormatted: 'Rp 194.850.000.000,-',
-    persentaseSerapan: 33.0,
-    proporsiPagu: 81.42,
-    unitPengampu: 'Biro Sumber Daya Manusia (BSDM)',
-    deskripsi: 'Belanja pegawai (gaji pokok, tunjangan kinerja, remunerasi BLU, lembur, asuransi pegawai) dan program diklat/kompetensi.',
-    status: 'ON_TRACK',
+    paguFormatted: 'Rp 590,44 M',
+    realisasiAnggaran: 212559936480,
+    realisasiFormatted: 'Rp 212,56 M',
+    persentaseRealisasi: 36.0,
+    biroPengampu: 'Biro SDM',
+    isDummy: true,
   },
   {
-    id: 'keg-4-hukum-organisasi',
-    no: 4,
-    namaKegiatan: 'Pelayanan Regulasi dan Pelayanan Hukum Serta Pelaksanaan Organisasi dan Tata Laksana',
+    id: 'keg-4',
+    nomor: 4,
+    namaKegiatan: 'Pelayanan Regulasi & Hukum serta Pelaksanaan Organisasi & Tata Laksana',
+    namaSingkat: 'Pelayanan Regulasi, Hukum & Tata Laksana',
     paguAnggaran: 7681392000,
-    paguFormatted: 'Rp 7.681.392.000,-',
-    realisasiAnggaran: 2840000000,
-    realisasiFormatted: 'Rp 2.840.000.000,-',
-    persentaseSerapan: 36.97,
-    proporsiPagu: 1.06,
-    unitPengampu: 'Biro Hukum & Biro OKMR',
-    deskripsi: 'Penyusunan regulasi Perka/Kepka, pendampingan hukum litigasi/non-litigasi, penataan struktur organisasi dan SOP.',
-    status: 'OPTIMAL',
+    paguFormatted: 'Rp 7,68 M',
+    realisasiAnggaran: 3226184640,
+    realisasiFormatted: 'Rp 3,23 M',
+    persentaseRealisasi: 42.0,
+    biroPengampu: 'Biro Hukum & OKMR',
+    isDummy: true,
   },
   {
-    id: 'keg-5-kebijakan-kinerja',
-    no: 5,
-    namaKegiatan: 'Penyusunan dan Penyelarasan Kebijakan, Pentarifan serta Manajemen Kinerja Organisasi',
+    id: 'keg-5',
+    nomor: 5,
+    namaKegiatan: 'Penyusunan & Penyelarasan Kebijakan, Pentarifan & Manajemen Kinerja Organisasi',
+    namaSingkat: 'Penyelarasan Kebijakan, Pentarifan & Kinerja',
     paguAnggaran: 5577198000,
-    paguFormatted: 'Rp 5.577.198.000,-',
-    realisasiAnggaran: 1830000000,
-    realisasiFormatted: 'Rp 1.830.000.000,-',
-    persentaseSerapan: 32.81,
-    proporsiPagu: 0.77,
-    unitPengampu: 'Biro OKMR & Pusat Harmonisasi Kebijakan',
-    deskripsi: 'Evaluasi akuntabilitas SAKIP, evaluasi tarif layanan badan usaha, perumusan perjanjian kinerja, dan indeks maturitas SPIP.',
-    status: 'ON_TRACK',
+    paguFormatted: 'Rp 5,58 M',
+    realisasiAnggaran: 2107840840,
+    realisasiFormatted: 'Rp 2,11 M',
+    persentaseRealisasi: 37.8,
+    biroPengampu: 'Biro OKMR',
+    isDummy: true,
   },
 ];
 
-// 3 UNIT KERJA UTAMA DI BAWAH PENGELOLAAN ADMINISTRASI & KEUANGAN
-export interface SatkerAdministrasiKeuangan {
+// Perhitungan Ringkasan Anggaran
+export const TOTAL_PAGU_A1 = 725148975000; // Rp 725,15 M
+export const TOTAL_REALISASI_A1 = KEGIATAN_ANGGARAN_A1.reduce((acc, curr) => acc + curr.realisasiAnggaran, 0);
+export const PERSENTASE_SERAPAN_A1 = Number(((TOTAL_REALISASI_A1 / TOTAL_PAGU_A1) * 100).toFixed(1)); // 36.3%
+
+// ============================================================================
+// 4. WIDGET "PERLU PERHATIAN" (MAKS 5 BARIS, URUT TINGKAT KEPARAHAN)
+// ============================================================================
+export interface PerluPerhatianItem {
   id: string;
-  kode: string;
-  nama: string;
-  singkatan: string;
-  pimpinan: string;
-  coreRole: string;
-  datasetCount: number;
-  pdfPages: string;
-  quickStats: {
-    label: string;
-    value: string;
-    subLabel: string;
-    trend?: string;
-  }[];
-  pillars: {
-    title: string;
-    badge: string;
-    metrics: { label: string; value: string; sub?: string }[];
-  }[];
-  operationalHighlights: string[];
+  keparahan: 'TINGGI' | 'SEDANG';
+  status: StatusKpi;
+  kalimat: string;
+  angka: string;
+  tagBiro: string;
 }
 
-export const SATKER_ADMINISTRASI_KEUANGAN_DATA: SatkerAdministrasiKeuangan[] = [
+export const DAFTAR_PERLU_PERHATIAN: PerluPerhatianItem[] = [
   {
-    id: 'biro-keuangan',
-    kode: 'BK',
-    nama: 'Biro Keuangan',
-    singkatan: 'BIRO KEUANGAN',
-    pimpinan: 'Kepala Biro Keuangan BP Batam',
-    coreRole: 'Pengelolaan perbendaharaan, penatausahaan PNBP, pelaksanaan belanja DIPA/BLU, likuiditas kas bank, dan pelaporan keuangan standar SAP.',
-    datasetCount: 28,
-    pdfPages: 'Buku Satu Data Hal. 2 - 6 (28 Dataset)',
-    quickStats: [
-      {
-        label: 'Realisasi PNBP BP Batam',
-        value: 'Rp 981,2 M',
-        subLabel: '40,1% dari Target Rp 2,45 T',
-        trend: '+6.8% YoY',
-      },
-      {
-        label: 'Serapan Belanja BLU',
-        value: 'Rp 945,0 M',
-        subLabel: '28,5% dari Pagu Rp 3,32 T',
-        trend: 'On Track',
-      },
-      {
-        label: 'Coverage Ratio (Fiskal)',
-        value: '0.86',
-        subLabel: 'Tingkat Kemandirian Finansial',
-        trend: 'Moderat',
-      },
-      {
-        label: 'Opini Laporan Keuangan',
-        value: 'WTP',
-        subLabel: '8 Tahun Berturut-turut BPK',
-        trend: 'Paripurna',
-      },
-    ],
-    pillars: [
-      {
-        title: 'Kemandirian Finansial & PNBP',
-        badge: 'Target Rp 2,45 T',
-        metrics: [
-          { label: 'Realisasi PNBP s.d Saat Ini', value: 'Rp 981,2 Miliar', sub: 'Target Rp 2.447,9 M (40,1%)' },
-          { label: 'Kontributor Terbesar', value: 'Pelabuhan & Pertanahan', sub: 'Mencakup 65,4% total penerimaan' },
-          { label: 'Kolektibilitas Piutang BLU', value: '91,4%', sub: 'Sesuai umur piutang lancar' },
-        ],
-      },
-      {
-        title: 'Pengendalian Belanja & Kas',
-        badge: 'Pagu Rp 3,32 T',
-        metrics: [
-          { label: 'Realisasi Belanja BLU', value: 'Rp 945,0 Miliar', sub: 'Pagu Rp 3.318,5 M (28,5%)' },
-          { label: 'Saldo Kas & Bank Real-Time', value: 'Rp 1,42 Triliun', sub: 'Tersimpan aman di Bank Himbara' },
-          { label: 'Nilai IKPA BP Batam', value: '96.25', sub: 'Kategori Sangat Baik (Kemenkeu)' },
-        ],
-      },
-      {
-        title: 'Tata Kelola Aset & Akuntansi SAP',
-        badge: 'Opini WTP BPK',
-        metrics: [
-          { label: 'Kepatuhan Standar SAP', value: '100% Sesuai', sub: 'LRA, LO, LPE, Neraca, LAK, CaLK' },
-          { label: 'Inventarisasi BMN di Neraca', value: 'Rp 18,4 Triliun', sub: 'Aset tanah, gedung, dan infrastruktur' },
-          { label: 'Rekonsiliasi Keuangan Bulanan', value: '100% Tuntas', sub: 'SLA perbendaharaan tepat waktu' },
-        ],
-      },
-    ],
-    operationalHighlights: [
-      'Penyusunan LRA BLU Semester I 2026 tuntas tepat waktu dengan serapan belanja Rp 945,0 M dan realisasi PNBP Rp 981,2 M.',
-      'Mempertahankan Opini WTP ke-8 kali berturut-turut dari BPK RI dengan catatan rekomendasi termitigasi.',
-      'Sistem informasi monitoring bank real-time terhubung langsung dengan rekening operasional dan giro BLU.',
-    ],
+    id: 'att-1',
+    keparahan: 'TINGGI',
+    status: 'PERLU_PERHATIAN',
+    kalimat: 'Piutang macet > 2 tahun memerlukan percepatan penyelesaian bersama KPKNL',
+    angka: 'Rp 48,20 M',
+    tagBiro: 'Biro Keuangan',
   },
   {
-    id: 'biro-sdm',
-    kode: 'BSDM',
-    nama: 'Biro Sumber Daya Manusia',
-    singkatan: 'BIRO SDM',
-    pimpinan: 'Kepala Biro Sumber Daya Manusia BP Batam',
-    coreRole: 'Perencanaan formasi, pengembangan kompetensi talent pool, manajemen kinerja berbasis SKP, sistem remunerasi merit, dan kesejahteraan pegawai.',
-    datasetCount: 13,
-    pdfPages: 'Buku Satu Data Hal. 1 - 2 (13 Dataset)',
-    quickStats: [
-      {
-        label: 'Indeks Sistem Merit',
-        value: '342.5',
-        subLabel: 'Kategori IV Sangat Baik (Skala 400)',
-        trend: '+15.2 Poin',
-      },
-      {
-        label: 'Total Pegawai BP Batam',
-        value: '2.978 Org',
-        subLabel: 'Pria: 1.796 (60%) | Wanita: 1.182 (40%)',
-        trend: 'Stabil',
-      },
-      {
-        label: 'Kualifikasi S1 - S3',
-        value: '64.5%',
-        subLabel: '1.920 Pegawai Berpendidikan Tinggi',
-        trend: '+3.1% YoY',
-      },
-      {
-        label: 'Jam Pelatihan Pegawai (Diklat)',
-        value: '24.6 JP',
-        subLabel: 'Target Nasional Minimal 20 JP/Tahun',
-        trend: '123% Target',
-      },
-    ],
-    pillars: [
-      {
-        title: 'Penerapan Sistem Merit 8 Aspek',
-        badge: 'Skor 342.5 / 400',
-        metrics: [
-          { label: 'Kategori Hasil Evaluasi KASN', value: 'Kategori IV (Sangat Baik)', sub: 'Target Perkin: 280 (Kategori III)' },
-          { label: 'Talent Pool & 9-Box Matrix', value: 'Terimplementasi', sub: 'Pemetaan suksesi kepemimpinan' },
-          { label: 'Asesmen Kompetensi Terstruktur', value: '88.4% Pegawai', sub: 'Uji kompetensi manajerial & sosial' },
-        ],
-      },
-      {
-        title: 'Struktur & Demografi Pegawai',
-        badge: '2.978 Pegawai',
-        metrics: [
-          { label: 'Komposisi Gender', value: 'Pria 60.3% | Wanita 39.7%', sub: '1.796 Laki-laki vs 1.182 Perempuan' },
-          { label: 'Status Kepegawaian', value: 'PNS 35% | P2K/PPPK 42% | PTT 23%', sub: 'Transisi penataan honorer tuntas' },
-          { label: 'Pendidikan S2 / S3 Spesialis', value: '382 Orang (12.8%)', sub: 'Kader ahli dan medis RSBP' },
-        ],
-      },
-      {
-        title: 'Kesejahteraan, Gaji & Disiplin',
-        badge: '100% Tepat Waktu',
-        metrics: [
-          { label: 'Kenaikan Gaji Berkala (KGB)', value: '412 Pegawai / Thn', sub: 'Proses otomatis e-KGB' },
-          { label: 'Cakupan Asuransi & BPJS', value: '100% Terlindungi', sub: 'BPJS Kesehatan, Ketenagakerjaan & Jiwa' },
-          { label: 'Indeks Kepatuhan Disiplin ASN', value: '98.7%', sub: 'Presensi biometrik & e-Kinerja terpadu' },
-        ],
-      },
-    ],
-    operationalHighlights: [
-      'Indeks Sistem Merit melampaui target perjanjian kinerja (Realisasi 342.5 dari target 280 / Predikat Sangat Baik).',
-      'Peningkatan kompetensi pegawai mencapai rata-rata 24,6 Jam Pelajaran (JP) per pegawai melalui platform e-learning BidaLearn.',
-      'Sistem administrasi kenaikan gaji berkala (KGB) dan pemotongan pajak PPh 21 terintegrasi otomatis dengan perbankan penggajian.',
-    ],
+    id: 'att-2',
+    keparahan: 'SEDANG',
+    status: 'DALAM_PANTAUAN',
+    kalimat: 'Pengaduan layanan publik masih dalam proses penyelesaian (18 berkas)',
+    angka: '96,2% (450/468)',
+    tagBiro: 'Biro OKMR',
   },
   {
-    id: 'biro-organisasi',
-    kode: 'BOKMR',
-    nama: 'Biro Organisasi, Kepatuhan dan Manajemen Risiko',
-    singkatan: 'BIRO OKMR',
-    pimpinan: 'Kepala Biro Organisasi, Kepatuhan dan MR BP Batam',
-    coreRole: 'Pengawalan reformasi birokrasi, evaluasi SAKIP, maturitas SPIP, manajemen risiko indeks, standar pelayanan publik (PEKPPP/IKM), dan tata laksana organisasi.',
-    datasetCount: 18,
-    pdfPages: 'Buku Satu Data Hal. 38 - 40 (18 Dataset)',
-    quickStats: [
-      {
-        label: 'Nilai SAKIP BP Batam',
-        value: '82.68',
-        subLabel: 'Predikat A (Memuaskan)',
-        trend: '+1.45 Poin',
-      },
-      {
-        label: 'Indeks Maturitas SPIP',
-        value: '3.42',
-        subLabel: 'Level 3 Berkembang (Target: 3.2)',
-        trend: 'Optimal',
-      },
-      {
-        label: 'Indeks Pelayanan Publik (PEKPPP)',
-        value: '4.38',
-        subLabel: 'Skala 1-5 (Predikat Sangat Baik)',
-        trend: '+0.18',
-      },
-      {
-        label: 'Penyelesaian Pengaduan BU',
-        value: '96.15%',
-        subLabel: '125 dari 130 Pengaduan Tuntas',
-        trend: 'SLA < 48 Jam',
-      },
-    ],
-    pillars: [
-      {
-        title: 'Akuntabilitas Kinerja & SAKIP',
-        badge: 'Predikat A (82.68)',
-        metrics: [
-          { label: 'Perencanaan Kinerja (Bobot 30%)', value: '25.80 / 30', sub: 'Cascading IKU ke Perjanjian Kinerja' },
-          { label: 'Pengukuran Kinerja (Bobot 30%)', value: '24.90 / 30', sub: 'Monitoring triwulanan otomatis' },
-          { label: 'Pelaporan & Evaluasi Internal', value: '31.98 / 40', sub: 'LAKIP berkualitas & audit berkala' },
-        ],
-      },
-      {
-        title: 'Maturitas SPIP & Manajemen Risiko',
-        badge: 'Skor SPIP 3.42',
-        metrics: [
-          { label: 'Level Penyelenggaraan SPIP', value: 'Level 3 (Berkembang)', sub: 'Target Perkin: 3,2 (Terlampaui)' },
-          { label: 'Indeks Manajemen Risiko (MRI)', value: '3.65 (Managed)', sub: 'Piagam risiko 24 satker tervalidasi' },
-          { label: 'Mitigasi Risiko Strategis', value: '92.4% Terkendali', sub: 'Risiko fiskal, hukum & operasional' },
-        ],
-      },
-      {
-        title: 'Pelayanan Publik & Pengaduan',
-        badge: 'IKM 88.62 (Mutu A)',
-        metrics: [
-          { label: 'Indeks Kepuasan Masyarakat (IKM)', value: '88.62 (Sangat Baik)', sub: 'Survei terstandar PermenPAN 14/2017' },
-          { label: 'Tindak Lanjut Rekomendasi PPK BLU', value: '100% Selesai', sub: 'Pembina Teknis & Satuan Pengawas' },
-          { label: 'Modernisasi Pengelolaan BLU', value: '95.0% On Track', sub: 'Digitalisasi sistem layanan badan usaha' },
-        ],
-      },
-    ],
-    operationalHighlights: [
-      'Nilai SAKIP BP Batam meraih predikat A (82.68) dengan efektivitas anggaran berorientasi hasil yang terukur.',
-      'Indeks Maturitas SPIP 3.42 telah melampaui target dokumen Perkin A1 (target 3.2) dengan seluruh 24 unit menyusun piagam risiko.',
-      'Sistem pengaduan SP4N-LAPOR! dan aduan layanan badan usaha diselesaikan dengan tingkat ketuntasan 96,15% dalam waktu respon di bawah 48 jam.',
-    ],
+    id: 'att-3',
+    keparahan: 'SEDANG',
+    status: 'DALAM_PANTAUAN',
+    kalimat: 'Komponen pelayanan publik pada evaluasi RB memerlukan penguatan standar SLA',
+    angka: '74,7% skor',
+    tagBiro: 'Biro OKMR',
+  },
+  {
+    id: 'att-4',
+    keparahan: 'SEDANG',
+    status: 'DALAM_PANTAUAN',
+    kalimat: 'Aspek perlindungan & integrasi sistem informasi kepegawaian belum optimal',
+    angka: '75,0% skor',
+    tagBiro: 'Biro SDM',
+  },
+  {
+    id: 'att-5',
+    keparahan: 'SEDANG',
+    status: 'DALAM_PANTAUAN',
+    kalimat: 'Penilaian register risiko unit operasional memerlukan reviu triwulanan',
+    angka: '65,0% unsur',
+    tagBiro: 'Biro OKMR',
   },
 ];
 
-// FISCAL DATASET FOR CHART INSPIRATION (DERIVED FROM BIRO KEUANGAN SATU DATA & IMAGE REFERENCE)
-export interface FiscalSummaryRevenue {
-  sektor: string;
-  target: number;
-  realisasi: number;
-  persentase: number;
-  icon: string;
+// ============================================================================
+// 5. DATA MONITORING BIRO (5 SEGMEN: KEUANGAN, SDM, OKMR, UMUM, HUKUM)
+// ============================================================================
+export interface BiroKpiCard {
+  label: string;
+  nilai: string;
+  targetKonteks: string;
+  status: StatusKpi;
+  tooltipRumus: string;
 }
 
-export const FISCAL_REVENUE_SUMMARY_DATA: FiscalSummaryRevenue[] = [
-  { sektor: 'Pertanahan', target: 964300000000, realisasi: 428000000000, persentase: 44.38, icon: 'MapPin' },
-  { sektor: 'Pelabuhan Laut', target: 490200000000, realisasi: 212000000000, persentase: 43.25, icon: 'Ship' },
-  { sektor: 'Bandar Udara', target: 130500000000, realisasi: 121000000000, persentase: 92.72, icon: 'Plane' },
-  { sektor: 'SPAM Fasling', target: 575800000000, realisasi: 98000000000, persentase: 17.02, icon: 'Droplets' },
-  { sektor: 'Rumah Sakit (RSBP)', target: 178300000000, realisasi: 87000000000, persentase: 48.79, icon: 'Stethoscope' },
-  { sektor: 'Jasa Giro & Keuangan Lainnya', target: 108848530000, realisasi: 35200000000, persentase: 32.34, icon: 'Building2' },
-];
-
-export interface FiscalSummaryExpense {
-  unitKerja: string;
-  kodeUnit: string;
-  pagu: number;
-  serapan: number;
-  persentase: number;
-  kategori: 'Infrastruktur' | 'Operasional' | 'Administrasi' | 'Layanan Teknis';
-  status: 'OPTIMAL' | 'ON_TRACK' | 'PERLU_PERCEPATAN';
-}
-
-// 1. DETAIL SERAPAN BELANJA PER UNIT KERJA STRATEGIS BP BATAM
-export const FISCAL_EXPENSE_SUMMARY_DATA: FiscalSummaryExpense[] = [
+// ----------------------------------------------------------------------------
+// A. BIRO KEUANGAN
+// ----------------------------------------------------------------------------
+export const BIRO_KEUANGAN_KPIS: BiroKpiCard[] = [
   {
-    unitKerja: 'Direktorat Pembangunan Infrastruktur',
-    kodeUnit: 'DPI',
-    pagu: 1120500000000,
-    serapan: 318400000000,
-    persentase: 28.42,
-    kategori: 'Infrastruktur',
-    status: 'ON_TRACK',
+    label: 'Pendapatan vs Target',
+    nilai: 'Rp 2,49 T',
+    targetKonteks: 'Target Rp 2,05 T (121,5%)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Rincian/Rekap Target PNBP + Laporan Penerimaan Sumber Dana (Hal. 4 No. 8 & 14)',
   },
   {
-    unitKerja: 'Biro Sumber Daya Manusia (Belanja Pegawai/Gaji/Tukin)',
-    kodeUnit: 'BSDM',
-    pagu: 590444268000,
-    serapan: 194850000000,
-    persentase: 33.0,
-    kategori: 'Administrasi',
-    status: 'ON_TRACK',
+    label: 'Serapan Belanja',
+    nilai: '94,8%',
+    targetKonteks: 'Realisasi Rp 2,48 T / Pagu Rp 2,62 T',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Laporan Realisasi Anggaran: ANGGARAN, REALISASI, PERSENTASE (Hal. 4 No. 12)',
   },
   {
-    unitKerja: 'Direktorat Perencanaan Infrastruktur',
-    kodeUnit: 'DPI-R',
-    pagu: 245600000000,
-    serapan: 82100000000,
-    persentase: 33.43,
-    kategori: 'Infrastruktur',
-    status: 'OPTIMAL',
+    label: 'Indeks Pelaksanaan (IKPA)',
+    nilai: '96,25',
+    targetKonteks: 'Kategori Sangat Baik (Target ≥ 95,0)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Indeks Pelaksanaan Anggaran Kementerian Keuangan (Hal. 6 No. 25)',
   },
   {
-    unitKerja: 'Direktorat Kepelabuhanan',
-    kodeUnit: 'D-PEL',
-    pagu: 184200000000,
-    serapan: 58900000000,
-    persentase: 31.98,
-    kategori: 'Layanan Teknis',
-    status: 'ON_TRACK',
-  },
-  {
-    unitKerja: 'Biro Umum & Pengadaan Barang/Jasa (ULP)',
-    kodeUnit: 'B-UMUM',
-    pagu: 114344199000,
-    serapan: 39450000000,
-    persentase: 34.5,
-    kategori: 'Administrasi',
-    status: 'ON_TRACK',
-  },
-  {
-    unitKerja: 'Direktorat Pengelolaan Lahan',
-    kodeUnit: 'D-LAHAN',
-    pagu: 95800000000,
-    serapan: 34200000000,
-    persentase: 35.7,
-    kategori: 'Layanan Teknis',
-    status: 'OPTIMAL',
-  },
-  {
-    unitKerja: 'Rumah Sakit BP Batam (RSBP)',
-    kodeUnit: 'RSBP',
-    pagu: 142500000000,
-    serapan: 46800000000,
-    persentase: 32.84,
-    kategori: 'Layanan Teknis',
-    status: 'ON_TRACK',
-  },
-  {
-    unitKerja: 'Biro Keuangan & Tata Kelola Perbendaharaan',
-    kodeUnit: 'BK',
-    pagu: 20360508000,
-    serapan: 7350000000,
-    persentase: 36.1,
-    kategori: 'Administrasi',
-    status: 'OPTIMAL',
+    label: 'Saldo Kas & Bank',
+    nilai: 'Rp 1,42 T',
+    targetKonteks: 'Posisi Kas Operasional Real Time',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Laporan Saldo Bank Real Time: NILAI, TANGGAL REKAP (Hal. 4 No. 13)',
   },
 ];
 
-// 2. DETAIL SERAPAN 5 KEGIATAN PROGRAM PENGAMPU PERKIN A1 (DEPUTI 1)
-export const FISCAL_EXPENSE_PERKIN_UNITS: FiscalSummaryExpense[] = [
+export const TREN_TRIWULAN_KEUANGAN = [
+  { triwulan: 'TW1', belanja: 18.4, pendapatan: 26.2, target: 25.0 },
+  { triwulan: 'TW2', belanja: 46.2, pendapatan: 54.8, target: 50.0 },
+  { triwulan: 'TW3', belanja: 72.5, pendapatan: 83.1, target: 75.0 },
+  { triwulan: 'TW4', belanja: 94.8, pendapatan: 121.5, target: 100.0 },
+];
+
+export const SURPLUS_DEFISIT_PER_SATKER = [
+  { satker: 'Biro Keuangan', surplus: 142.5 },
+  { satker: 'BU Pelabuhan', surplus: 98.4 },
+  { satker: 'BU Bandara', surplus: 34.2 },
+  { satker: 'Dit. Pertanahan', surplus: 185.0 },
+  { satker: 'BU SPAM', surplus: 41.6 },
+  { satker: 'RSBP Batam', surplus: 12.4 },
+  { satker: 'Biro Umum', surplus: -58.2 },
+  { satker: 'Biro SDM', surplus: -124.6 },
+];
+
+export const AGING_PIUTANG_DATA = [
+  { umur: '< 3 Bulan (Lancar)', nilai: 142.8, persen: '54.5%' },
+  { umur: '3–12 Bulan (Kurang Lancar)', nilai: 48.5, persen: '18.5%' },
+  { umur: '1–2 Tahun (Diragukan)', nilai: 22.4, persen: '8.6%' },
+  { umur: '> 2 Tahun (Macet/KPKNL)', nilai: 48.2, persen: '18.4%' },
+];
+
+// ----------------------------------------------------------------------------
+// B. BIRO SDM
+// ----------------------------------------------------------------------------
+export const BIRO_SDM_KPIS: BiroKpiCard[] = [
   {
-    unitKerja: 'Pengelolaan dan Pelayanan SDM BP Batam',
-    kodeUnit: 'KEG-03',
-    pagu: 590444268000,
-    serapan: 194850000000,
-    persentase: 33.0,
-    kategori: 'Administrasi',
-    status: 'ON_TRACK',
+    label: 'Total Pegawai Aktif',
+    nilai: '2.978',
+    targetKonteks: 'PNS: 842 · P3K: 618 · PTT: 1.518',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Jumlah Pegawai berdasarkan Status Kepegawaian (Hal. 1 No. 8)',
   },
   {
-    unitKerja: 'Pelayanan Kerumahtanggaan & Pengadaan Barang/Jasa',
-    kodeUnit: 'KEG-01',
-    pagu: 114344199000,
-    serapan: 39450000000,
-    persentase: 34.5,
-    kategori: 'Administrasi',
-    status: 'ON_TRACK',
+    label: 'Pendidikan S1–S3',
+    nilai: '72,4%',
+    targetKonteks: '2.156 dari 2.978 Pegawai (Target ≥ 70%)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Jumlah Pegawai berdasarkan Pendidikan (Hal. 1 No. 9)',
   },
   {
-    unitKerja: 'Pelayanan Regulasi, Hukum & Tata Laksana',
-    kodeUnit: 'KEG-04',
-    pagu: 7681392000,
-    serapan: 2840000000,
-    persentase: 36.97,
-    kategori: 'Administrasi',
-    status: 'OPTIMAL',
+    label: 'Pengembangan Kompetensi',
+    nilai: '92,6%',
+    targetKonteks: '2.758 Pegawai Mengikuti Diklat/Uji',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Persentase Pegawai Mengikuti Program Pengembangan Kompetensi (Hal. 2 No. 13)',
   },
   {
-    unitKerja: 'Penyusunan Perencanaan Anggaran & Administrasi Keuangan',
-    kodeUnit: 'KEG-02',
-    pagu: 7101918000,
-    serapan: 2680000000,
-    persentase: 37.73,
-    kategori: 'Administrasi',
-    status: 'OPTIMAL',
-  },
-  {
-    unitKerja: 'Penyusunan Kebijakan, Pentarifan & Manajemen Kinerja',
-    kodeUnit: 'KEG-05',
-    pagu: 5577198000,
-    serapan: 1830000000,
-    persentase: 32.81,
-    kategori: 'Administrasi',
-    status: 'ON_TRACK',
+    label: 'KGB Tepat Waktu',
+    nilai: '100%',
+    targetKonteks: '642 Berkas KGB Selesai Tepat Waktu',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Kenaikan Gaji Berkala Pegawai BP Batam per Bulan (Hal. 1 No. 1)',
   },
 ];
 
-// 3. DETAIL LENGKAP 8 ASPEK SISTEM MERIT KASN BP BATAM (SKOR: 342.5 / 400 - KATEGORI IV SANGAT BAIK)
-export interface AspekSistemMeritDetail {
-  no: number;
-  kode: string;
-  namaAspek: string;
-  bobotPersen: number;
-  nilaiMaks: number;
-  nilaiAspek: number;
-  indeksAspek: number; // Skala 0.0 - 1.0 (nilaiAspek / nilaiMaks)
-  capaianPersen: number;
-  predikat: 'Sangat Baik' | 'Baik' | 'Cukup';
-  deskripsi: string;
-  indikatorKunci: string[];
-  regulasiAcuan: string;
-}
+export const KOMPOSISI_STATUS_SDM = [
+  { kategori: 'Pegawai Tetap (PNS)', jumlah: 842 },
+  { kategori: 'Pegawai Pemerintah (P3K)', jumlah: 618 },
+  { kategori: 'Pegawai Tidak Tetap (PTT)', jumlah: 1518 },
+];
 
-export const ASPEK_SISTEM_MERIT_DETAIL: AspekSistemMeritDetail[] = [
+export const KOMPOSISI_PENDIDIKAN_SDM = [
+  { kategori: 'S3 (Doktor)', jumlah: 24 },
+  { kategori: 'S2 (Magister)', jumlah: 412 },
+  { kategori: 'S1 / D4 (Sarjana)', jumlah: 1720 },
+  { kategori: 'D3 / Diploma', jumlah: 422 },
+  { kategori: 'SMA / SMK', jumlah: 400 },
+];
+
+export const KOMPOSISI_GENDER_SDM = [
+  { kategori: 'Laki-laki', jumlah: 1788 },
+  { kategori: 'Perempuan', jumlah: 1190 },
+];
+
+export const PENGEMBANGAN_SDM_JALUR = [
+  { jalur: 'Diklat Teknis & Manajerial', peserta: 1420 },
+  { jalur: 'Workshop & Seminar', peserta: 976 },
+  { jalur: 'Ujian Dinas/Prajab (UDPI)', peserta: 312 },
+  { jalur: 'Tugas Belajar (Tubel)', peserta: 48 },
+];
+
+// ----------------------------------------------------------------------------
+// C. BIRO OKMR
+// ----------------------------------------------------------------------------
+export const BIRO_OKMR_KPIS: BiroKpiCard[] = [
   {
-    no: 1,
-    kode: 'ASPEK-1',
-    namaAspek: 'Perencanaan Kebutuhan ASN',
-    bobotPersen: 10,
-    nilaiMaks: 40,
-    nilaiAspek: 36.0,
-    indeksAspek: 0.90,
-    capaianPersen: 90.0,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penyusunan peta jabatan 5 tahunan, Analisis Beban Kerja (ABK), dan proyeksi kebutuhan formasi berbasis e-Formasi SIASN BKN.',
-    indikatorKunci: [
-      'Peta jabatan 5 tahunan tervalidasi MenPAN-RB & BKN',
-      'Kesesuaian formasi dengan kualifikasi jabatan 94.2%',
-      'Proyeksi suksesi pensiun dan restrukturisasi organisasi akurat',
-    ],
-    regulasiAcuan: 'PermenPAN-RB No. 1/2020 & Perka BKN No. 9/2022',
+    label: 'Nilai SAKIP BP Batam',
+    nilai: '83,50',
+    targetKonteks: 'Tingkat Akuntabilitas Kinerja: A (Target 82)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (Hal. 38 No. 2)',
   },
   {
-    no: 2,
-    kode: 'ASPEK-2',
-    namaAspek: 'Pengadaan ASN',
-    bobotPersen: 10,
-    nilaiMaks: 40,
-    nilaiAspek: 35.0,
-    indeksAspek: 0.875,
-    capaianPersen: 87.5,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Pelaksanaan seleksi CASN, PPPK, dan tenaga profesional yang transparan, kompetitif, serta bebas KKN menggunakan CAT BKN.',
-    indikatorKunci: [
-      '100% seleksi CPNS & PPPK menggunakan Computer Assisted Test (CAT)',
-      'Kanal sanggah dan transparansi nilai live-score real-time',
-      'Nihil temuan sanggahan maladministrasi dari Ombudsman/Inspektorat',
-    ],
-    regulasiAcuan: 'PermenPAN-RB No. 27/2021 & Peraturan BKN No. 2/2021',
+    label: 'Indeks Layanan Publik',
+    nilai: '4,38',
+    targetKonteks: 'Skala 5,0 (Sangat Baik / PEKPPP)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Pemantauan dan Evaluasi Kinerja Penyelenggaraan Pelayanan Publik (Hal. 40 No. 15-16)',
   },
   {
-    no: 3,
-    kode: 'ASPEK-3',
-    namaAspek: 'Pengembangan Karier & Talent Pool',
-    bobotPersen: 30,
-    nilaiMaks: 120,
-    nilaiAspek: 102.0,
-    indeksAspek: 0.85,
-    capaianPersen: 85.0,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penerapan Manajemen Talenta berbasis 9-Box Matrix, pemetaan suksesi kepemimpinan, dan pemenuhan minimal 20 JP diklat tahunan.',
-    indikatorKunci: [
-      'Penerapan 9-Box Grid Talent Matrix pada seluruh level struktural',
-      'Rata-rata pelatihan 24.6 JP per pegawai (123% dari target nasional 20 JP)',
-      'Program tugas belajar dan beasiswa peningkatan kompetensi terstruktur',
-    ],
-    regulasiAcuan: 'PermenPAN-RB No. 3/2020 tentang Manajemen Talenta ASN',
+    label: 'Pengaduan Terselesaikan',
+    nilai: '96,2%',
+    targetKonteks: '450 dari 468 Pengaduan Tuntas',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Monitoring dan Evaluasi Pengaduan Masyarakat Terhadap Layanan (Hal. 39 No. 10)',
   },
   {
-    no: 4,
-    kode: 'ASPEK-4',
-    namaAspek: 'Promosi dan Mutasi',
-    bobotPersen: 10,
-    nilaiMaks: 40,
-    nilaiAspek: 34.0,
-    indeksAspek: 0.85,
-    capaianPersen: 85.0,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Pengisian Jabatan Pimpinan Tinggi (JPT) melalui seleksi terbuka dan rotasi/mutasi berbasis uji kompetensi objektif.',
-    indikatorKunci: [
-      'Uji kompetensi manajerial, teknis, dan sosio-kultural tersertifikasi',
-      'Pola rotasi/mutasi teratur interval 2-5 tahun untuk cegah kejenuhan',
-      'Pengisian JPT Pratama melalui Seleksi Terbuka rekomendasi KASN',
-    ],
-    regulasiAcuan: 'PP No. 11/2017 & PermenPAN-RB No. 15/2019',
-  },
-  {
-    no: 5,
-    kode: 'ASPEK-5',
-    namaAspek: 'Manajemen Kinerja',
-    bobotPersen: 20,
-    nilaiMaks: 80,
-    nilaiAspek: 68.5,
-    indeksAspek: 0.856,
-    capaianPersen: 85.63,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penyelarasan target Sasaran Kinerja Pegawai (SKP) dengan Indikator Kinerja Utama (IKU) instansi, dialog kinerja, dan evaluasi periodik.',
-    indikatorKunci: [
-      'Cascading perjanjian kinerja pimpinan ke SKP seluruh staf (100%)',
-      'Evaluasi kinerja berkala triwulanan dan pendokumentasian bukti',
-      'Bimbingan kinerja dan dialog periodik atasan-bawahan aktif',
-    ],
-    regulasiAcuan: 'PermenPAN-RB No. 6/2022 tentang Pengelolaan Kinerja ASN',
-  },
-  {
-    no: 6,
-    kode: 'ASPEK-6',
-    namaAspek: 'Penggajian, Penghargaan, dan Disiplin',
-    bobotPersen: 10,
-    nilaiMaks: 40,
-    nilaiAspek: 33.5,
-    indeksAspek: 0.838,
-    capaianPersen: 83.75,
-    predikat: 'Baik',
-    deskripsi: 'Pemberian tunjangan kinerja/remunerasi berdasarkan capaian kinerja riil, penghargaan pengabdian, dan penegakan kode etik.',
-    indikatorKunci: [
-      'Remunerasi BLU terhubung langsung dengan capaian logbook harian',
-      'Pemberian tanda kehormatan Satyalancana Karya Satya tepat waktu',
-      'Penegakan disiplin ASN & proses sidang kode etik objektif terukur',
-    ],
-    regulasiAcuan: 'PP No. 94/2021 tentang Disiplin Pegawai Negeri Sipil',
-  },
-  {
-    no: 7,
-    kode: 'ASPEK-7',
-    namaAspek: 'Perlindungan dan Pelayanan',
-    bobotPersen: 4,
-    nilaiMaks: 16,
-    nilaiAspek: 14.5,
-    indeksAspek: 0.906,
-    capaianPersen: 90.63,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penyediaan jaminan kesehatan, asuransi kecelakaan kerja/kematian, perlindungan hukum tugas dinas, dan layanan konseling psikologi.',
-    indikatorKunci: [
-      'Cakupan 100% kepesertaan BPJS Kesehatan & Ketenagakerjaan',
-      'Pemberian advokasi hukum dinas bagi pegawai dalam tugas kedinasan',
-      'Pemeriksaan kesehatan berkala (Medical Check Up) & santunan duka',
-    ],
-    regulasiAcuan: 'UU No. 20/2023 tentang Aparatur Sipil Negara & PP 70/2015',
-  },
-  {
-    no: 8,
-    kode: 'ASPEK-8',
-    namaAspek: 'Sistem Informasi Kepegawaian',
-    bobotPersen: 6,
-    nilaiMaks: 24,
-    nilaiAspek: 19.0,
-    indeksAspek: 0.792,
-    capaianPersen: 79.17,
-    predikat: 'Baik',
-    deskripsi: 'Pemanfaatan SIMPEG terintegrasi SIASN & MyASN BKN, presensi biometrik digital, kenaikan pangkat otomatis, dan e-KGB.',
-    indikatorKunci: [
-      'Integrasi data SIMPEG BP Batam dengan layanan SIASN BKN',
-      'Presensi biometrik mobile dengan geolokasi valid dan anti-spoofing',
-      'Digitalisasi 96% arsip naskah kepegawaian (e-Dossier paperless)',
-    ],
-    regulasiAcuan: 'Perpres No. 95/2018 tentang SPBE & Perka BKN No. 18/2020',
+    label: 'Rekomendasi Monev Selesai',
+    nilai: '91,4%',
+    targetKonteks: 'Tindak Lanjut PPK BLU & BPK RI',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Persentase Penyelesaian Rekomendasi Hasil Monev PPK BLU & BPK RI (Hal. 39 No. 6)',
   },
 ];
 
-// REFORMASI BIROKRASI (8 AREA PERUBAHAN & INDEKS REFORMASI BIROKRASI)
-export interface ReformasiBirokrasiAreaItem {
-  no: number;
-  namaKomponen: string;
-  singkatan: string;
-  bobot: number; // %
-  target: number;
-  nilai: number; // Nilai Indeks
-  capaianPersen: number;
-  indeks: number; // 0.0 - 1.0
-  predikat: string;
-  deskripsi: string;
-  subKomponenRingkas: string;
-}
+export const PENGADUAN_PER_UNIT = [
+  { unit: 'PTSP Pelayanan', selesai: 164, proses: 6, diterima: 170 },
+  { unit: 'Dit. Pertanahan', selesai: 122, proses: 5, diterima: 127 },
+  { unit: 'BU SPAM', selesai: 86, proses: 4, diterima: 90 },
+  { unit: 'BU Pelabuhan', selesai: 48, proses: 2, diterima: 50 },
+  { unit: 'RSBP Batam', selesai: 30, proses: 1, diterima: 31 },
+];
 
-export const REFORMASI_BIROKRASI_8_AREA_DETAIL: ReformasiBirokrasiAreaItem[] = [
+export const MANAJEMEN_RISIKO_PER_UNIT = [
+  { unit: 'Biro Keuangan', indeks: 3.82, target: 3.5 },
+  { unit: 'Biro SDM', indeks: 3.68, target: 3.5 },
+  { unit: 'Biro Umum', indeks: 3.54, target: 3.5 },
+  { unit: 'Biro Hukum', indeks: 3.6, target: 3.5 },
+  { unit: 'Biro OKMR', indeks: 3.88, target: 3.5 },
+  { unit: 'Pusat PDSI', indeks: 3.42, target: 3.5 },
+];
+
+// ----------------------------------------------------------------------------
+// D. BIRO UMUM
+// ----------------------------------------------------------------------------
+export const BIRO_UMUM_KPIS: BiroKpiCard[] = [
   {
-    no: 1,
-    namaKomponen: 'Manajemen Perubahan',
-    singkatan: 'Manajemen Perubahan',
-    bobot: 5.0,
-    target: 4.0,
-    nilai: 4.15,
-    capaianPersen: 83.0,
-    indeks: 0.83,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Pembangunan Zona Integritas (WBK/WBBM), pembentukan Tim Reformasi Birokrasi terpadu, Road Map RB BP Batam, dan internalisasi Core Values ASN BerAKHLAK.',
-    subKomponenRingkas: 'Tim RB (1.70) • Pembangunan ZI Menuju WBK (1.25) • Budaya BerAKHLAK (1.20)',
+    label: 'Keterbukaan Informasi',
+    nilai: '89,4',
+    targetKonteks: 'Predikat Informatif (Target ≥ 85)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Indeks Keterbukaan Informasi Publik (Hal. 46 No. 27)',
   },
   {
-    no: 2,
-    namaKomponen: 'Deregulasi & Simplifikasi Kebijakan',
-    singkatan: 'Deregulasi Kebijakan',
-    bobot: 5.0,
-    target: 3.8,
-    nilai: 4.10,
-    capaianPersen: 82.0,
-    indeks: 0.82,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penataan regulasi internal, harmonisasi peraturan perundang-undangan (Perka/Kepka), debirokratisasi perizinan investasi, dan kemudahan berusaha di KPBPB Batam.',
-    subKomponenRingkas: 'Harmonisasi Perka (2.10) • Deregulasi Perizinan Investasi KEK (2.00)',
+    label: 'Indeks Pengelolaan Aset',
+    nilai: '3,74',
+    targetKonteks: 'Skala 4,00 (Kategori Baik)',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Nilai Indeks Pengelolaan Aset dan BMN (Hal. 46 No. 25)',
   },
   {
-    no: 3,
-    namaKomponen: 'Penataan dan Penguatan Organisasi (Kelembagaan)',
-    singkatan: 'Kelembagaan Organisasi',
-    bobot: 6.0,
-    target: 4.6,
-    nilai: 4.95,
-    capaianPersen: 82.5,
-    indeks: 0.825,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Evaluasi kelembagaan mandiri & MenPAN-RB, penataan struktur organisasi agile dan proporsional, serta penguatan tata kelola 4 badan usaha komersial.',
-    subKomponenRingkas: 'Kematangan Struktur (2.50) • SOTK Proporsional & Unit Bisnis BLU (2.45)',
+    label: 'Pelayanan Keprotokolan',
+    nilai: '98,5%',
+    targetKonteks: '196 Acara Kedinasan Tepat Waktu',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Persentase Pelaksanaan Pelayanan Keprotokolan (Hal. 46 No. 26)',
   },
   {
-    no: 4,
-    namaKomponen: 'Penataan Tata Laksana (Proses Bisnis & SPBE)',
-    singkatan: 'Tata Laksana & SPBE',
-    bobot: 7.0,
-    target: 5.5,
-    nilai: 5.82,
-    capaianPersen: 83.14,
-    indeks: 0.831,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penyusunan Peta Proses Bisnis terintegrasi, digitalisasi SOP administrasi perkantoran, dan implementasi Arsitektur Sistem Pemerintahan Berbasis Elektronik (SPBE).',
-    subKomponenRingkas: 'Peta Probis & SOP Digital (2.92) • Arsitektur SPBE & Integrasi TIK (2.90)',
-  },
-  {
-    no: 5,
-    namaKomponen: 'Penataan Sistem Manajemen SDM Aparatur',
-    singkatan: 'Manajemen SDM Merit',
-    bobot: 10.0,
-    target: 8.0,
-    nilai: 8.56,
-    capaianPersen: 85.6,
-    indeks: 0.856,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penerapan Sistem Merit Kategori IV (342.5 Poin), manajemen talenta pegawai berbasis merit, penilaian SKP terukur, dan program pengembangan kompetensi berkelanjutan.',
-    subKomponenRingkas: 'Sistem Merit & Talent Pool (4.35) • Kinerja SKP & Diklat Pegawai (4.21)',
-  },
-  {
-    no: 6,
-    namaKomponen: 'Penguatan Akuntabilitas Kinerja',
-    singkatan: 'Akuntabilitas SAKIP',
-    bobot: 10.0,
-    target: 8.0,
-    nilai: 8.27,
-    capaianPersen: 82.7,
-    indeks: 0.827,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Penerapan SAKIP menyeluruh (Nilai SAKIP 82.68 Predikat A), cascading sasaran Perkin hingga level individu, serta efektivitas alokasi anggaran berbasis hasil.',
-    subKomponenRingkas: 'Kualitas Dokumen Renja & Perkin (4.15) • Pengukuran, Evaluasi & LAKIP (4.12)',
-  },
-  {
-    no: 7,
-    namaKomponen: 'Penguatan Pengawasan Intern',
-    singkatan: 'Pengawasan & SPIP',
-    bobot: 10.0,
-    target: 8.0,
-    nilai: 8.42,
-    capaianPersen: 84.2,
-    indeks: 0.842,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Maturitas SPIP Terintegrasi (3.42 Level 3), tingkat kepatuhan LHKPN 100%, Whistleblowing System (WBS), pengendalian gratifikasi, dan Manajemen Risiko Indeks (MRI 3.35).',
-    subKomponenRingkas: 'Maturitas SPIP & Manajemen Risiko (4.22) • Kepatuhan LHKPN & WBS (4.20)',
-  },
-  {
-    no: 8,
-    namaKomponen: 'Peningkatan Kualitas Pelayanan Publik',
-    singkatan: 'Pelayanan Publik & PEKPPP',
-    bobot: 10.0,
-    target: 8.5,
-    nilai: 8.87,
-    capaianPersen: 88.7,
-    indeks: 0.887,
-    predikat: 'Sangat Baik',
-    deskripsi: 'Pemantauan Evaluasi Kinerja Penyelenggara Pelayanan Publik (PEKPPP 4.38 Kategori A), Survei Kepuasan Masyarakat (SKM 88.94), dan tindak lanjut aduan SP4N LAPOR 96.2%.',
-    subKomponenRingkas: 'Standar Pelayanan MPP/PTSP & PEKPPP (4.50) • SKM & Penanganan Aduan (4.37)',
+    label: 'Permohonan Info Publik',
+    nilai: '124',
+    targetKonteks: '100% Berkas Permohonan Terlayani',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Daftar Permohonan Informasi Publik (Hal. 44 No. 11)',
   },
 ];
 
-// INDEKS MATURITAS SPIP (5 UNSUR / KOMPONEN PENILAIAN BPKP)
-export interface MaturitasSpipUnsurItem {
-  no: number;
-  namaKomponen: string;
-  singkatan: string;
-  bobot: number; // %
-  target: number;
-  skor: number; // Skor langsung (1.00 - 5.00)
-  skorTerbobot: number;
-  capaianPersen: number;
-  level: string;
-  fokusArea: string;
-  subUnsurRingkas: string;
-}
+export const PENGADAAN_SISTEM_DATA = [
+  { kanal: 'SIRUP (Rencana Umum)', transaksi: 485, nilaiMiliar: 342.5 },
+  { kanal: 'E-Katalog', transaksi: 312, nilaiMiliar: 184.2 },
+  { kanal: 'E-Tendering', transaksi: 88, nilaiMiliar: 112.6 },
+  { kanal: 'Toko Daring', transaksi: 214, nilaiMiliar: 28.4 },
+  { kanal: 'E-Kontrak', transaksi: 165, nilaiMiliar: 198.0 },
+];
 
-export const MATURITAS_SPIP_5_UNSUR_DETAIL: MaturitasSpipUnsurItem[] = [
+// ----------------------------------------------------------------------------
+// E. BIRO HUKUM
+// ----------------------------------------------------------------------------
+export const BIRO_HUKUM_KPIS: BiroKpiCard[] = [
   {
-    no: 1,
-    namaKomponen: 'Lingkungan Pengendalian',
-    singkatan: 'Lingkungan Pengendalian',
-    bobot: 30.0,
-    target: 3.20,
-    skor: 3.48,
-    skorTerbobot: 1.04,
-    capaianPersen: 108.8,
-    level: 'Level 3 (Terdefinisi)',
-    fokusArea: 'Penegakan integritas, kode etik pegawai, komitmen kompetensi sumber daya manusia, kepemimpinan kondusif, dan struktur organisasi akuntabel.',
-    subUnsurRingkas: 'Integritas & Etika (3.52) • Komitmen Kompetensi (3.46) • Pendelegasian Wewenang (3.45)',
+    label: 'Penanganan Perkara',
+    nilai: '88,9%',
+    targetKonteks: '24 dari 27 Perkara Selesai / Incracht',
+    status: 'DALAM_PANTAUAN',
+    tooltipRumus: 'Persentase Penanganan Perkara yang Diselesaikan (Hal. 2 No. 9)',
   },
   {
-    no: 2,
-    namaKomponen: 'Penilaian Risiko',
-    singkatan: 'Penilaian Risiko',
-    bobot: 20.0,
-    target: 3.20,
-    skor: 3.35,
-    skorTerbobot: 0.67,
-    capaianPersen: 104.7,
-    level: 'Level 3 (Terdefinisi)',
-    fokusArea: 'Identifikasi risiko strategis & operasional unit kerja, piagam register risiko 24 satker, serta mitigasi risiko fraud dan korupsi.',
-    subUnsurRingkas: 'Risiko Strategis Organisasi (3.38) • Analisis Fraud & Mitigasi Pengendalian (3.32)',
+    label: 'Permasalahan Hukum',
+    nilai: '94,2%',
+    targetKonteks: 'Pelayanan Non-Litigasi Tuntas Tepat Waktu',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Persentase Pelayanan dan Penanganan Permasalahan Hukum (Hal. 2 No. 10)',
   },
   {
-    no: 3,
-    namaKomponen: 'Kegiatan Pengendalian',
-    singkatan: 'Kegiatan Pengendalian',
-    bobot: 25.0,
-    target: 3.20,
-    skor: 3.44,
-    skorTerbobot: 0.86,
-    capaianPersen: 107.5,
-    level: 'Level 3 (Terdefinisi)',
-    fokusArea: 'Reviu kinerja pimpinan, pengendalian sistem informasi & otorisasi transaksi, pemisahan fungsi tugas, dan pengamanan aset fisik BMN.',
-    subUnsurRingkas: 'Reviu Supervisi Atasan (3.46) • Pengendalian Sistem TIK (3.42) • Pemisahan Fungsi Keuangan (3.43)',
-  },
-  {
-    no: 4,
-    namaKomponen: 'Informasi dan Komunikasi',
-    singkatan: 'Informasi & Komunikasi',
-    bobot: 10.0,
-    target: 3.20,
-    skor: 3.38,
-    skorTerbobot: 0.34,
-    capaianPersen: 105.6,
-    level: 'Level 3 (Terdefinisi)',
-    fokusArea: 'Ketersediaan saluran whistleblowing system (WBS), keterbukaan informasi publik (PPID), koordinasi lintas satker, dan transparansi laporan berkala.',
-    subUnsurRingkas: 'Kanal WBS & Pengaduan (3.40) • Keterbukaan Informasi & Integrasi Lintas Satker (3.36)',
-  },
-  {
-    no: 5,
-    namaKomponen: 'Pemantauan Pengendalian Intern',
-    singkatan: 'Pemantauan Pengendalian',
-    bobot: 15.0,
-    target: 3.20,
-    skor: 3.46,
-    skorTerbobot: 0.52,
-    capaianPersen: 108.1,
-    level: 'Level 3 (Terdefinisi)',
-    fokusArea: 'Pemantauan berkelanjutan, evaluasi terpisah oleh Satuan Pengawas Intern (SPI), dan percepatan penyelesaian rekomendasi tindak lanjut temuan BPK RI.',
-    subUnsurRingkas: 'Pemantauan Berkelanjutan & Audit SPI (3.48) • Tindak Lanjut Temuan BPK/BPKP (3.44)',
+    label: 'Rancangan Regulasi',
+    nilai: '86',
+    targetKonteks: '18 Perka · 68 Keputusan Kepala BP',
+    status: 'TERCAPAI',
+    tooltipRumus: 'Daftar Rancangan Peraturan & Keputusan BP Batam (Hal. 2 No. 5-7)',
   },
 ];
 
-// 4. DATA DETAIL STATISTIK KARYAWAN BERDASARKAN STATUS KEPEGAWAIAN (BUKU SATU DATA HAL. 1-2)
-export interface PegawaiStatusStat {
-  id: string;
-  statusPegawai: string;
-  kodeStatus: string;
-  jumlah: number;
-  persentase: number;
-  warna: string;
-  deskripsi: string;
-  komposisiGender: { pria: number; wanita: number };
-}
-
-export const PEGAWAI_STATUS_DETAIL_DATA: PegawaiStatusStat[] = [
-  {
-    id: 'pns',
-    statusPegawai: 'Pegawai Negeri Sipil (PNS)',
-    kodeStatus: 'PNS',
-    jumlah: 1042,
-    persentase: 34.99,
-    warna: '#2563EB',
-    deskripsi: 'Aparatur Sipil Negara tetap berdasarkan penetapan NIP BKN RI dan SK Kepala BP Batam.',
-    komposisiGender: { pria: 618, wanita: 424 },
-  },
-  {
-    id: 'p2k',
-    statusPegawai: 'Pegawai Tetap BP Batam (P2K)',
-    kodeStatus: 'P2K',
-    jumlah: 872,
-    persentase: 29.28,
-    warna: '#0D9488',
-    deskripsi: 'Pegawai berstatus tetap non-PNS berdasarkan SK Kepala BP Batam dengan hak pensiun & remunerasi.',
-    komposisiGender: { pria: 532, wanita: 340 },
-  },
-  {
-    id: 'pppk',
-    statusPegawai: 'PPPK (P3K)',
-    kodeStatus: 'PPPK',
-    jumlah: 485,
-    persentase: 16.29,
-    warna: '#7C3AED',
-    deskripsi: 'Pegawai Pemerintah dengan Perjanjian Kerja formasi fungsional, guru, dan teknis spesialis.',
-    komposisiGender: { pria: 279, wanita: 206 },
-  },
-  {
-    id: 'ptt',
-    statusPegawai: 'Pegawai Tidak Tetap (PTT)',
-    kodeStatus: 'PTT',
-    jumlah: 396,
-    persentase: 13.30,
-    warna: '#EA580C',
-    deskripsi: 'Pegawai kontrak pendukung kelancaran operasional, keamanan, dan administrasi perkantoran.',
-    komposisiGender: { pria: 262, wanita: 134 },
-  },
-  {
-    id: 'profesional',
-    statusPegawai: 'Tenaga Profesional / Kontrak Khusus',
-    kodeStatus: 'PROF',
-    jumlah: 183,
-    persentase: 6.14,
-    warna: '#D97706',
-    deskripsi: 'Spesialis medis dokter RSBP, konsultan ahli maritim, analis pelabuhan laut, IT architect & hukum.',
-    komposisiGender: { pria: 105, wanita: 78 },
-  },
+export const PERKARA_PER_BULAN_DATA = [
+  { bulan: 'Jan', perkara: 2 },
+  { bulan: 'Feb', perkara: 3 },
+  { bulan: 'Mar', perkara: 2 },
+  { bulan: 'Apr', perkara: 4 },
+  { bulan: 'Mei', perkara: 1 },
+  { bulan: 'Jun', perkara: 3 },
+  { bulan: 'Jul', perkara: 2 },
+  { bulan: 'Agu', perkara: 3 },
+  { bulan: 'Sep', perkara: 2 },
+  { bulan: 'Okt', perkara: 2 },
+  { bulan: 'Nov', perkara: 2 },
+  { bulan: 'Des', perkara: 1 },
 ];
-
-// 5. DATA DETAIL STATISTIK KARYAWAN BERDASARKAN JENJANG PENDIDIKAN
-export interface PegawaiPendidikanStat {
-  id: string;
-  jenjang: string;
-  kategoriTingkat: 'Pendidikan Tinggi (S1-S3)' | 'Vokasi (Diploma)' | 'Pendidikan Menengah/Dasar';
-  jumlah: number;
-  persentase: number;
-  warna: string;
-  jabatanDominan: string;
-}
-
-export const PEGAWAI_PENDIDIKAN_DETAIL_DATA: PegawaiPendidikanStat[] = [
-  {
-    id: 's3',
-    jenjang: 'S3 (Doktor)',
-    kategoriTingkat: 'Pendidikan Tinggi (S1-S3)',
-    jumlah: 24,
-    persentase: 0.81,
-    warna: '#4338CA',
-    jabatanDominan: 'Pimpinan Tinggi Madya/Pratama, Ahli Utama, Dokter Spesialis Konsultan',
-  },
-  {
-    id: 's2',
-    jenjang: 'S2 (Magister)',
-    kategoriTingkat: 'Pendidikan Tinggi (S1-S3)',
-    jumlah: 312,
-    persentase: 10.48,
-    warna: '#2563EB',
-    jabatanDominan: 'Administrator, Pengawas, Dokter Spesialis, Analis Kebijakan Ahli Madya',
-  },
-  {
-    id: 's1',
-    jenjang: 'S1 / D4 (Sarjana)',
-    kategoriTingkat: 'Pendidikan Tinggi (S1-S3)',
-    jumlah: 1584,
-    persentase: 53.19,
-    warna: '#0284C7',
-    jabatanDominan: 'Pranata Komputer, Pengelola Pengadaan, Penata Kelola, Medis Umum, Analis Keuangan',
-  },
-  {
-    id: 'd3',
-    jenjang: 'D3 (Diploma)',
-    kategoriTingkat: 'Vokasi (Diploma)',
-    jumlah: 428,
-    persentase: 14.37,
-    warna: '#0D9488',
-    jabatanDominan: 'Perawat Terampil, Teknisi Infrastruktur, Pengelola Arsip, Operator Pelabuhan',
-  },
-  {
-    id: 'sma',
-    jenjang: 'SMA / SMK',
-    kategoriTingkat: 'Pendidikan Menengah/Dasar',
-    jumlah: 562,
-    persentase: 18.87,
-    warna: '#F59E0B',
-    jabatanDominan: 'Petugas Pengamanan (Ditpam), Pengadministrasi Umum, Petugas Lapangan Pemeliharaan',
-  },
-  {
-    id: 'smp_sd',
-    jenjang: 'SMP / SD',
-    kategoriTingkat: 'Pendidikan Menengah/Dasar',
-    jumlah: 68,
-    persentase: 2.28,
-    warna: '#94A3B8',
-    jabatanDominan: 'Petugas Kebersihan Gedung, Juru Mudi, Caraka & Peramu Bhakti',
-  },
-];
-
-// 6. MATRIKS SILANG (CROSS-TABULATION): DISTRIBUSI STATUS KEPEGAWAIAN VS JENJANG PENDIDIKAN
-export interface MatriksStatusPendidikan {
-  statusId: string;
-  statusNama: string;
-  kode: string;
-  totalPegawai: number;
-  s3: number;
-  s2: number;
-  s1_d4: number;
-  d3: number;
-  sma_smk: number;
-  smp_sd: number;
-  persenSarjanaPlus: number; // (S1 + S2 + S3) / Total
-}
-
-export const MATRIKS_STATUS_PENDIDIKAN_DATA: MatriksStatusPendidikan[] = [
-  {
-    statusId: 'pns',
-    statusNama: 'Pegawai Negeri Sipil (PNS)',
-    kode: 'PNS',
-    totalPegawai: 1042,
-    s3: 18,
-    s2: 196,
-    s1_d4: 614,
-    d3: 132,
-    sma_smk: 78,
-    smp_sd: 4,
-    persenSarjanaPlus: 79.46,
-  },
-  {
-    statusId: 'p2k',
-    statusNama: 'Pegawai Tetap BP Batam (P2K)',
-    kode: 'P2K',
-    totalPegawai: 872,
-    s3: 4,
-    s2: 74,
-    s1_d4: 486,
-    d3: 148,
-    sma_smk: 142,
-    smp_sd: 18,
-    persenSarjanaPlus: 64.68,
-  },
-  {
-    statusId: 'pppk',
-    statusNama: 'PPPK (P3K)',
-    kode: 'PPPK',
-    totalPegawai: 485,
-    s3: 0,
-    s2: 24,
-    s1_d4: 312,
-    d3: 94,
-    sma_smk: 55,
-    smp_sd: 0,
-    persenSarjanaPlus: 69.28,
-  },
-  {
-    statusId: 'ptt',
-    statusNama: 'Pegawai Tidak Tetap (PTT)',
-    kode: 'PTT',
-    totalPegawai: 396,
-    s3: 0,
-    s2: 6,
-    s1_d4: 98,
-    d3: 42,
-    sma_smk: 216,
-    smp_sd: 34,
-    persenSarjanaPlus: 26.26,
-  },
-  {
-    statusId: 'profesional',
-    statusNama: 'Tenaga Profesional / Kontrak Khusus',
-    kode: 'PROF',
-    totalPegawai: 183,
-    s3: 2,
-    s2: 12,
-    s1_d4: 74,
-    d3: 12,
-    sma_smk: 71,
-    smp_sd: 12,
-    persenSarjanaPlus: 48.09,
-  },
-];
-

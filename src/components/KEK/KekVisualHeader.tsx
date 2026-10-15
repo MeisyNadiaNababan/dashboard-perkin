@@ -88,7 +88,7 @@ export const KekVisualHeader: React.FC<KekVisualHeaderProps> = ({
         {/* Visualization Name Badge */}
         <span className="text-[10.5px] font-bold px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-900 border border-indigo-200 font-mono inline-flex items-center gap-1.5 shadow-2xs shrink-0">
           {visualIcon || <BarChart3 className="w-3.5 h-3.5 text-indigo-600" />}
-          <span>🏷️ Nama Visualisasi: {visualName}</span>
+          <span>Nama Visualisasi: {visualName}</span>
         </span>
 
         {/* Attributes Label & Tags */}

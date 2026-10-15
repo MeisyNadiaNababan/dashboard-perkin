@@ -75,7 +75,7 @@ export const PtspSektorBerusahaSection: React.FC<PtspSektorBerusahaSectionProps>
               POIN #11 • DATASET 9
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 font-mono">
-              🏷️ Visualisasi: Dual Axis Bar &amp; Line Trend Chart (Permohonan vs Terbit) serta Tabel Rasio
+              Visualisasi: Dual Axis Bar &amp; Line Trend Chart (Permohonan vs Terbit) serta Tabel Rasio
             </span>
           </div>
           <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mt-0.5">

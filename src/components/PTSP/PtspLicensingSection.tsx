@@ -308,7 +308,7 @@ export const PtspLicensingSection: React.FC<PtspLicensingSectionProps> = ({
         {/* Executive Insight Box for Licensing */}
         <div className="p-3.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs text-slate-700 leading-relaxed shadow-2xs mt-3">
           <span className="font-bold text-[#002B49] flex items-center gap-1.5 mb-1 text-xs">
-            <span>💡</span> Executive Insight &amp; Analisis Kinerja Perizinan Berusaha OSS RBA:
+            <span></span> Executive Insight &amp; Analisis Kinerja Perizinan Berusaha OSS RBA:
           </span>
           <p className="text-[11.5px] text-slate-600">
             Sebanyak <strong>13.820 permohonan izin</strong> telah diproses dengan tingkat kepatuhan SLA <strong>94,6%</strong>. Integrasi OSS RBA dengan sistem internal BP Batam memangkas waktu penerbitan untuk izin risiko rendah (62% dari total berkas) menjadi <strong>kurang dari 1 jam (terbit instan)</strong>. PMA mendominasi komitmen investasi sebesar 68,4% dengan penyerapan 17.890 tenaga kerja lokal Indonesia.

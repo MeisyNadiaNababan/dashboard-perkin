@@ -426,7 +426,7 @@ export const FiscalInsightsRow: React.FC<FiscalInsightsRowProps> = ({
         {/* Interpretasi Tata Kelola Subsidi Silang */}
         <div className="p-3 bg-slate-50 border border-slate-200/90 rounded-xl text-xs text-slate-700 leading-relaxed shadow-2xs">
           <span className="font-bold text-[#002B49] block mb-1">
-            💡 Prinsip Tata Kelola Subsidi Silang Anggaran BLU BP Batam:
+            <span className="font-bold text-slate-700">Prinsip Tata Kelola Subsidi Silang Anggaran BLU BP Batam:</span>
           </span>
           <p className="text-[11.5px] text-slate-600">
             Defisit pada unit kerja pembangunan infrastruktur publik (Rp -171,0 M) dan promosi fasilitas usaha (Rp -40,0 M) <strong>bukan merupakan kerugian operasional</strong>, melainkan investasi penyediaan fasilitas publik yang sepenuhnya disubsidi silang secara tertutup oleh surplus dari unit pengelola lahan industri (Rp +367,0 M) serta konsesi kebandarudaraan &amp; pelabuhan (Rp +240,2 M). Hal ini mencerminkan kemandirian fiskal BLU BP Batam yang tidak bergantung pada transfer APBN.

@@ -632,7 +632,7 @@ export const LaporanFinansialBlu4WayCard: React.FC<LaporanFinansialBlu4WayCardPr
       {/* Footer */}
       <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
         <span>
-          💡 <strong>Standar Akuntansi Pemerintah (SAP) Berbasis Akrual:</strong> LO, LPE, LAK, dan Neraca
+          <strong>Standar Akuntansi Pemerintah (SAP) Berbasis Akrual:</strong> LO, LPE, LAK, dan Neraca
           terhubung secara sistematis dengan jurnal penutup dan mutasi kas BLU.
         </span>
         <span className="text-slate-600 font-medium">Buku Satu Data BP Batam Hal. 2-3 Item 2, 4, 5, 6</span>
