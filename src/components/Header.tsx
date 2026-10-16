@@ -148,15 +148,9 @@ export const Header: React.FC<HeaderProps> = ({
         { id: 'satu_data', label: 'Katalog 46 Dataset (PDF)', icon: Database },
       ];
     } else if (activeUnitId === 'deputi-pelayanan-umum') {
-      return [
-        { id: 'kamus_rumus', label: 'Kamus Rumus Perkin A6', icon: FileCode2 },
-        { id: 'satu_data', label: 'Katalog 121 Dataset (PDF)', icon: Database },
-      ];
+      return [];
     } else if (activeUnitId === 'deputi-infrastruktur') {
-      return [
-        { id: 'kamus_rumus', label: 'Kamus Rumus Perkin A7', icon: FileCode2 },
-        { id: 'satu_data', label: 'Katalog 24 Dataset (PDF)', icon: Database },
-      ];
+      return [];
     } else if (activeUnitId === 'biro-keuangan') {
       return [
         { id: 'overview', label: 'Ikhtisar Eksekutif', icon: LayoutDashboard },
@@ -459,8 +453,13 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* 3. SUB-MENU SHEETS - DITIADAKAN UNTUK KEPALA BP, DEPUTI ADM KEUANGAN, DAN DEPUTI KEBIJAKAN STRATEGIS AGAR BERSIH */}
-      {activeUnitId !== 'kepala-bp' && activeUnitId !== 'deputi-administrasi-keuangan' && activeUnitId !== 'deputi-kebijakan-strategis' && (
+      {/* 3. SUB-MENU SHEETS - DITIADAKAN UNTUK KEPALA BP, DEPUTI ADM KEUANGAN, DEPUTI KEBIJAKAN STRATEGIS, DEPUTI PELAYANAN UMUM (A6), DAN DEPUTI INFRASTRUKTUR (A7) */}
+      {subMenus.length > 0 &&
+        activeUnitId !== 'kepala-bp' &&
+        activeUnitId !== 'deputi-administrasi-keuangan' &&
+        activeUnitId !== 'deputi-kebijakan-strategis' &&
+        activeUnitId !== 'deputi-pelayanan-umum' &&
+        activeUnitId !== 'deputi-infrastruktur' && (
         <div className="bg-white border-b border-slate-200 px-3 py-1.5 flex items-center gap-1 overflow-x-auto">
           <span className="text-[10px] font-bold uppercase text-slate-500 px-1.5 tracking-wider shrink-0 hidden md:inline font-mono">
             Sub Menu:

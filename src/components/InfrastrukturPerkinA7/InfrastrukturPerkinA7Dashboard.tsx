@@ -160,12 +160,7 @@ export const InfrastrukturPerkinA7Dashboard: React.FC<
       </div>
 
       {/* ============================================================== */}
-      {/* 2. NARASI AI STRATEGIS (MODEL DEP-A4 / DEP-A3)                 */}
-      {/* ============================================================== */}
-      <InfrastrukturPerkinA7NarasiAi />
-
-      {/* ============================================================== */}
-      {/* 3. DUA INDIKATOR KINERJA PROGRAM (IKP) + 4 KPI TURUNAN         */}
+      {/* 2. DUA INDIKATOR KINERJA PROGRAM (IKP) + 4 KPI TURUNAN         */}
       {/* ============================================================== */}
       <InfrastrukturPerkinA7KpiRow
         onOpenFormulaModal={handleOpenFormula}
@@ -174,7 +169,7 @@ export const InfrastrukturPerkinA7Dashboard: React.FC<
       />
 
       {/* ============================================================== */}
-      {/* 4. MODEL CAPAIAN 2 INDIKATOR SEPERTI DEP-A4                    */}
+      {/* 3. MODEL CAPAIAN 2 INDIKATOR SEPERTI DEP-A4                    */}
       {/* ============================================================== */}
       <InfrastrukturPerkinA7VisualCharts
         onOpenFormulaModal={handleOpenFormula}
@@ -182,7 +177,7 @@ export const InfrastrukturPerkinA7Dashboard: React.FC<
       />
 
       {/* ============================================================== */}
-      {/* 5. UNIT DEEP-DIVE CENTER • 3 UNIT KERJA PERKIN A.7             */}
+      {/* 4. UNIT DEEP-DIVE CENTER • 3 UNIT KERJA PERKIN A.7             */}
       {/* ============================================================== */}
       <InfrastrukturPerkinA7DeepDiveCenter
         selectedUnitId={selectedDeepDiveUnit}
@@ -190,6 +185,11 @@ export const InfrastrukturPerkinA7Dashboard: React.FC<
         onOpenFormulaModal={handleOpenFormula}
         onNavigateToFullDashboard={onSwitchUnit}
       />
+
+      {/* ============================================================== */}
+      {/* 5. NARASI AI STRATEGIS (MODEL DEP-A4 / DEP-A3)                 */}
+      {/* ============================================================== */}
+      <InfrastrukturPerkinA7NarasiAi />
 
       {/* ============================================================== */}
       {/* 6. KAMUS RUMUS & DEFINISI MODAL                                */}
