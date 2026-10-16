@@ -143,20 +143,19 @@ export const Header: React.FC<HeaderProps> = ({
       ];
     } else if (activeUnitId === 'deputi-bandara-pelabuhan') {
       return [
-        { id: 'ikhtisar', label: 'Ikhtisar 2 IKP & Realisasi', icon: LayoutDashboard },
-        { id: 'evaluasi_ikp', label: 'Capaian Evaluasi 3 IKP', icon: Award },
         { id: 'deep_dive', label: 'Unit Deep-Dive Center (3 Unit)', icon: Sparkles, isSpecial: true },
         { id: 'kamus_rumus', label: 'Kamus Rumus Perkin A5', icon: FileCode2 },
         { id: 'satu_data', label: 'Katalog 46 Dataset (PDF)', icon: Database },
       ];
     } else if (activeUnitId === 'deputi-pelayanan-umum') {
       return [
-        { id: 'ikhtisar', label: 'Ikhtisar 3 IKP Pelayanan Umum', icon: LayoutDashboard },
-        { id: 'finansial', label: 'Finansial & PNBP Control', icon: CreditCard },
-        { id: 'operasional', label: 'Kinerja 3 Satker Layanan', icon: TrendingUp },
-        { id: 'deep_dive', label: 'Unit Deep-Dive Center', icon: Sparkles, isSpecial: true },
-        { id: 'satu_data', label: 'Katalog 121 Dataset (PDF)', icon: Database },
         { id: 'kamus_rumus', label: 'Kamus Rumus Perkin A6', icon: FileCode2 },
+        { id: 'satu_data', label: 'Katalog 121 Dataset (PDF)', icon: Database },
+      ];
+    } else if (activeUnitId === 'deputi-infrastruktur') {
+      return [
+        { id: 'kamus_rumus', label: 'Kamus Rumus Perkin A7', icon: FileCode2 },
+        { id: 'satu_data', label: 'Katalog 24 Dataset (PDF)', icon: Database },
       ];
     } else if (activeUnitId === 'biro-keuangan') {
       return [
