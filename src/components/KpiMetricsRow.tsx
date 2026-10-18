@@ -191,16 +191,14 @@ export const KpiMetricsRow: React.FC<KpiMetricsRowProps> = ({ metrics, onSelectM
                 </div>
               </div>
 
-              {/* Bottom Row: Target / Summary text & Micro Bar Sparkline */}
+              {/* Bottom Row: Target / Summary text */}
               <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
                 <span className="text-[10.5px] text-slate-500 font-medium truncate">
                   {config.bottomText}
                 </span>
-
-                <MicroBarSparkline
-                  data={metric.sparkline}
-                  color={config.themeColor}
-                />
+                <span className="text-[10.5px] font-bold text-emerald-700 font-mono">
+                  {metric.badge}
+                </span>
               </div>
             </div>
           );

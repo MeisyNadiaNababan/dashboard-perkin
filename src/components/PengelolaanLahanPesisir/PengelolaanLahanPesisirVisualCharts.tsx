@@ -245,160 +245,159 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
 
           {/* TAB 1: IKP-1 DIT. PENGELOLAAN LAHAN */}
           {activeTab === 'ikp-1' && (
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
-              {/* KOLOM A (KARTU PERSIS REFERENSI GAMBAR USER): TABEL PERUSAHAAN SAMPEL */}
-              <div className="xl:col-span-7 bg-white rounded-xl border border-blue-200 p-3 shadow-2xs flex flex-col justify-between">
+            <div className="space-y-3">
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div>
-                  {/* Top Badges */}
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      IKP-1 &bull; DIT. PENGELOLAAN LAHAN
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                      124.25% Melampaui Target
-                    </span>
-                  </div>
-
-                  {/* Title & Subtitle */}
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
-                    Luas Lahan yang Dialokasikan untuk Investasi
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Luas Lahan yang Dialokasikan untuk Investasi (Halaman 6-8 Buku Satu Data)
                   </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Unit: Direktorat Pengelolaan Lahan BP Batam (Halaman 6-8)
-                  </p>
-
-                  {/* Metric Value & Target */}
-                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-blue-100">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-xl sm:text-2xl font-black font-mono text-blue-700">248.50</span>
-                      <span className="text-xs font-bold text-slate-600">Hektar</span>
-                    </div>
-                    <span className="text-[10.5px] text-slate-500">
-                      Target: <strong className="text-slate-800">200.00 Ha</strong> <span className="text-emerald-600 font-bold">(+48,50 Ha)</span>
-                    </span>
-                  </div>
-
-                  {/* Table Header */}
-                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
-                    <span>Daftar Alokasi Lahan Investasi:</span>
-                    <span className="text-[9.5px] font-normal text-slate-400">5 Perusahaan Sampel</span>
-                  </div>
-
-                  {/* Table */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-[10.5px] text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
-                          <th className="py-1 px-1.5">NAMA PERUSAHAAN</th>
-                          <th className="py-1 px-1.5">WILAYAH</th>
-                          <th className="py-1 px-1.5 text-right">LUAS (HA)</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700">
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Nongsa Digital Park</td>
-                          <td className="py-1 px-1.5 text-slate-500">SWP II Nongsa (KEK Digital)</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">58.20 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Kabil Citranusa</td>
-                          <td className="py-1 px-1.5 text-slate-500">SWP III Kabil (Industri Berat)</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">96.40 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Batam City Centre Propertindo</td>
-                          <td className="py-1 px-1.5 text-slate-500">SWP I Batam Centre (Komersial)</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">41.80 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Batam Island Hospital &amp; Wellness</td>
-                          <td className="py-1 px-1.5 text-slate-500">SWP V Sekupang (KEK Kesehatan)</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">31.50 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Batam Integrated Logistics</td>
-                          <td className="py-1 px-1.5 text-slate-500">SWP IV Batu Ampar (Depo Logistik)</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">20.60 Ha</td>
-                        </tr>
-                        <tr className="bg-blue-50/60 font-bold border-t border-blue-200">
-                          <td className="py-1 px-1.5 text-blue-900">Total Alokasi Investasi</td>
-                          <td className="py-1 px-1.5 text-[10px] text-blue-700">KPBPB Batam (Target: 200,00 Ha)</td>
-                          <td className="py-1 px-1.5 text-right font-mono text-blue-800">248.50 Ha</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
-
-                {/* Footer Button */}
-                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 font-mono">
+                    124,3% Melampaui Target
+                  </span>
                   <button
                     onClick={() => onOpenFormulaModal?.('ikp-1-lahan-investasi')}
-                    className="text-[10.5px] font-bold text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 cursor-pointer"
+                    className="text-[11px] font-medium text-blue-700 hover:text-blue-900 flex items-center gap-0.5 transition-colors cursor-pointer"
                   >
-                    <FileCode2 className="w-3.5 h-3.5" />
-                    <span>Lihat Manual &amp; Formula IKP-1 (Pengelolaan Lahan)</span>
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
 
-              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN SEPERTI DEP-A2 */}
-              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <h5 className="text-xs font-bold text-slate-800">
-                      Tren Historis Alokasi Lahan (2022 - 2026)
-                    </h5>
-                    <span className="text-[10px] font-mono font-bold text-blue-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
-                      Hektar
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-500 mb-2">
-                    Trajektori realisasi alokasi investasi riil vs target Perkin
-                  </p>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">248,50 Hektar</span>
+                  <span className="text-[9.5px] text-blue-700 block mt-0.5">124,3% Capaian</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin 2026</span>
+                  <span className="text-base font-bold text-slate-700">200,00 Hektar</span>
+                  <span className="text-[9.5px] text-emerald-600 block mt-0.5">+48,50 Ha Surplus</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Unit Pengampu</span>
+                  <span className="text-base font-bold text-slate-900">Dit. Pengelolaan Lahan</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">KPBPB Batam</span>
+                </div>
+              </div>
 
-                  <div className="h-44 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={LAHAN_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                        <YAxis domain={[140, 270]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                        <Tooltip
-                          formatter={(val: any, name: any) => [`${val} Ha`, name]}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                        <Legend wrapperStyle={{ fontSize: '10px' }} />
-                        <Line
-                          type="monotone"
-                          dataKey="target"
-                          name="Target Perkin"
-                          stroke="#94A3B8"
-                          strokeDasharray="4 4"
-                          strokeWidth={1.5}
-                          dot={{ r: 3 }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="skor"
-                          name="Realisasi Alokasi"
-                          stroke="#2563EB"
-                          strokeWidth={2.5}
-                          dot={{ r: 4, fill: '#2563EB' }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Side-by-Side Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5 items-start">
+                <div className="xl:col-span-7 bg-white rounded-xl border border-blue-200 p-3 shadow-2xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1.5">
+                      <span>Daftar Alokasi Lahan Investasi:</span>
+                      <span className="text-[9.5px] font-normal text-slate-400">5 Perusahaan Sampel</span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[10.5px] text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                            <th className="py-1 px-1.5">NAMA PERUSAHAAN</th>
+                            <th className="py-1 px-1.5">WILAYAH</th>
+                            <th className="py-1 px-1.5 text-right">LUAS (HA)</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-slate-700">
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Nongsa Digital Park</td>
+                            <td className="py-1 px-1.5 text-slate-500">SWP II Nongsa (KEK Digital)</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">58.20 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Kabil Citranusa</td>
+                            <td className="py-1 px-1.5 text-slate-500">SWP III Kabil (Industri Berat)</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">96.40 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Batam City Centre Propertindo</td>
+                            <td className="py-1 px-1.5 text-slate-500">SWP I Batam Centre (Komersial)</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">41.80 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Batam Island Hospital &amp; Wellness</td>
+                            <td className="py-1 px-1.5 text-slate-500">SWP V Sekupang (KEK Kesehatan)</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">31.50 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Batam Integrated Logistics</td>
+                            <td className="py-1 px-1.5 text-slate-500">SWP IV Batu Ampar (Depo Logistik)</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-blue-700">20.60 Ha</td>
+                          </tr>
+                          <tr className="bg-blue-50/60 font-bold border-t border-blue-200">
+                            <td className="py-1 px-1.5 text-blue-900">Total Alokasi Investasi</td>
+                            <td className="py-1 px-1.5 text-[10px] text-blue-700">KPBPB Batam (Target: 200,00 Ha)</td>
+                            <td className="py-1 px-1.5 text-right font-mono text-blue-800">248.50 Ha</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
-                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                    <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
-                    <span className="text-xs font-black text-emerald-600">+48,5 Ha (+24,3%)</span>
+                {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+                <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <h5 className="text-xs font-bold text-slate-800">
+                        Tren Historis Alokasi Lahan (2022 - 2026)
+                      </h5>
+                      <span className="text-[10px] font-mono font-bold text-blue-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                        Hektar
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-2">
+                      Trajektori realisasi alokasi investasi riil vs target Perkin
+                    </p>
+
+                    <div className="h-36 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={LAHAN_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                          <YAxis domain={[140, 270]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                          <Tooltip
+                            formatter={(val: any, name: any) => [`${val} Ha`, name]}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                          <Legend wrapperStyle={{ fontSize: '10px' }} />
+                          <Line
+                            type="monotone"
+                            dataKey="target"
+                            name="Target Perkin"
+                            stroke="#94A3B8"
+                            strokeDasharray="4 4"
+                            strokeWidth={1.5}
+                            dot={{ r: 3 }}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="skor"
+                            name="Realisasi Alokasi"
+                            stroke="#2563EB"
+                            strokeWidth={2.5}
+                            dot={{ r: 4, fill: '#2563EB' }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                    <span className="text-[9px] text-slate-500 block">Komitmen Investasi</span>
-                    <span className="text-xs font-black text-blue-700">Rp 18,42 Triliun</span>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                      <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
+                      <span className="text-xs font-black text-emerald-600">+48,5 Ha (+24,3%)</span>
+                    </div>
+                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                      <span className="text-[9px] text-slate-500 block">Komitmen Investasi</span>
+                      <span className="text-xs font-black text-blue-700">Rp 18,42 Triliun</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -407,160 +406,159 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
 
           {/* TAB 2: IKP-2 DIT. PESISIR & REKLAMASI */}
           {activeTab === 'ikp-2' && (
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
-              {/* KOLOM A: TABEL PERUSAHAAN SAMPEL PERSIS GAMBAR USER */}
-              <div className="xl:col-span-7 bg-white rounded-xl border border-cyan-200 p-3 shadow-2xs flex flex-col justify-between">
+            <div className="space-y-3">
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div>
-                  {/* Top Badges */}
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200 flex items-center gap-1">
-                      <Anchor className="w-3 h-3 text-cyan-700" />
-                      IKP-2 &bull; DIT. PESISIR &amp; REKLAMASI
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                      108.53% Tercapai Sangat Baik
-                    </span>
-                  </div>
-
-                  {/* Title & Subtitle */}
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
-                    Luas Izin Kawasan Pesisir &amp; Izin Reklamasi Investasi
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Luas Izin Kawasan Pesisir &amp; Izin Reklamasi Investasi (Hal. 13-14)
                   </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Unit: Dit. Pengelolaan Kawasan Pesisir dan Reklamasi (Hal. 13-14)
-                  </p>
-
-                  {/* Metric Value & Target */}
-                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-cyan-100">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-xl sm:text-2xl font-black font-mono text-cyan-700">162.80</span>
-                      <span className="text-xs font-bold text-slate-600">Hektar</span>
-                    </div>
-                    <span className="text-[10.5px] text-slate-500">
-                      Target: <strong className="text-slate-800">150.00 Ha</strong> <span className="text-emerald-600 font-bold">(+12,80 Ha)</span>
-                    </span>
-                  </div>
-
-                  {/* Table Header */}
-                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
-                    <span>Daftar Izin Pesisir &amp; Reklamasi (PKKPRL):</span>
-                    <span className="text-[9.5px] font-normal text-slate-400">5 Perusahaan Sampel</span>
-                  </div>
-
-                  {/* Table */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-[10.5px] text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
-                          <th className="py-1 px-1.5">NAMA PERUSAHAAN</th>
-                          <th className="py-1 px-1.5">WILAYAH</th>
-                          <th className="py-1 px-1.5 text-right">LUAS (HA)</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700">
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Kabil Indonusa Maritim</td>
-                          <td className="py-1 px-1.5 text-slate-500">Kabil &amp; Pesisir Timur</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">56.20 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Tanjung Sauh Port Development</td>
-                          <td className="py-1 px-1.5 text-slate-500">Tanjung Sauh</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">44.80 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Sambau Luxury Marina &amp; Resort</td>
-                          <td className="py-1 px-1.5 text-slate-500">Nongsa &amp; Sambau (Pesisir Utara)</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">32.50 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Sekupang Shipyard Nusantara</td>
-                          <td className="py-1 px-1.5 text-slate-500">Batam Barat &amp; Sekupang</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">19.40 Ha</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">PT Galang Bahari Nusantara</td>
-                          <td className="py-1 px-1.5 text-slate-500">Galang &amp; Sekitarnya</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">9.90 Ha</td>
-                        </tr>
-                        <tr className="bg-cyan-50/60 font-bold border-t border-cyan-200">
-                          <td className="py-1 px-1.5 text-cyan-950">Total Izin Pesisir &amp; Reklamasi</td>
-                          <td className="py-1 px-1.5 text-[10px] text-cyan-800">Ruang Laut KPBPB (Target: 150,00 Ha)</td>
-                          <td className="py-1 px-1.5 text-right font-mono text-cyan-900">162.80 Ha</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
-
-                {/* Footer Button */}
-                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-100 font-mono">
+                    108,5% Tercapai Sangat Baik
+                  </span>
                   <button
                     onClick={() => onOpenFormulaModal?.('ikp-2-pesisir-reklamasi')}
-                    className="text-[10.5px] font-bold text-cyan-700 hover:text-cyan-900 inline-flex items-center gap-1 cursor-pointer"
+                    className="text-[11px] font-medium text-cyan-700 hover:text-cyan-900 flex items-center gap-0.5 transition-colors cursor-pointer"
                   >
-                    <FileCode2 className="w-3.5 h-3.5" />
-                    <span>Lihat Manual &amp; Formula IKP-2 (Pesisir &amp; Reklamasi)</span>
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
 
-              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
-              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <h5 className="text-xs font-bold text-slate-800">
-                      Tren Historis Izin Pesisir (2022 - 2026)
-                    </h5>
-                    <span className="text-[10px] font-mono font-bold text-cyan-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
-                      Hektar
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-500 mb-2">
-                    Kinerja penerbitan izin pemanfaatan perairan &amp; reklamasi
-                  </p>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">162,80 Hektar</span>
+                  <span className="text-[9.5px] text-cyan-700 block mt-0.5">108,5% Capaian</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin 2026</span>
+                  <span className="text-base font-bold text-slate-700">150,00 Hektar</span>
+                  <span className="text-[9.5px] text-emerald-600 block mt-0.5">+12,80 Ha Surplus</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Unit Pengampu</span>
+                  <span className="text-base font-bold text-slate-900">Dit. Pesisir &amp; Reklamasi</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">Ruang Laut KPBPB</span>
+                </div>
+              </div>
 
-                  <div className="h-44 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PESISIR_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                        <YAxis domain={[100, 180]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                        <Tooltip
-                          formatter={(val: any, name: any) => [`${val} Ha`, name]}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                        <Legend wrapperStyle={{ fontSize: '10px' }} />
-                        <Line
-                          type="monotone"
-                          dataKey="target"
-                          name="Target Perkin"
-                          stroke="#94A3B8"
-                          strokeDasharray="4 4"
-                          strokeWidth={1.5}
-                          dot={{ r: 3 }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="skor"
-                          name="Realisasi Izin"
-                          stroke="#0891B2"
-                          strokeWidth={2.5}
-                          dot={{ r: 4, fill: '#0891B2' }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Side-by-Side Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5 items-start">
+                <div className="xl:col-span-7 bg-white rounded-xl border border-cyan-200 p-3 shadow-2xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1.5">
+                      <span>Daftar Izin Pesisir &amp; Reklamasi (PKKPRL):</span>
+                      <span className="text-[9.5px] font-normal text-slate-400">5 Perusahaan Sampel</span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[10.5px] text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                            <th className="py-1 px-1.5">NAMA PERUSAHAAN</th>
+                            <th className="py-1 px-1.5">WILAYAH</th>
+                            <th className="py-1 px-1.5 text-right">LUAS (HA)</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-slate-700">
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Kabil Indonusa Maritim</td>
+                            <td className="py-1 px-1.5 text-slate-500">Kabil &amp; Pesisir Timur</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">56.20 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Tanjung Sauh Port Development</td>
+                            <td className="py-1 px-1.5 text-slate-500">Tanjung Sauh</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">44.80 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Sambau Luxury Marina &amp; Resort</td>
+                            <td className="py-1 px-1.5 text-slate-500">Nongsa &amp; Sambau (Pesisir Utara)</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">32.50 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Sekupang Shipyard Nusantara</td>
+                            <td className="py-1 px-1.5 text-slate-500">Batam Barat &amp; Sekupang</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">19.40 Ha</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">PT Galang Bahari Nusantara</td>
+                            <td className="py-1 px-1.5 text-slate-500">Galang &amp; Sekitarnya</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-cyan-700">9.90 Ha</td>
+                          </tr>
+                          <tr className="bg-cyan-50/60 font-bold border-t border-cyan-200">
+                            <td className="py-1 px-1.5 text-cyan-950">Total Izin Pesisir &amp; Reklamasi</td>
+                            <td className="py-1 px-1.5 text-[10px] text-cyan-800">Ruang Laut KPBPB (Target: 150,00 Ha)</td>
+                            <td className="py-1 px-1.5 text-right font-mono text-cyan-900">162.80 Ha</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
-                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                    <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
-                    <span className="text-xs font-black text-cyan-700">+12,8 Ha (+8,5%)</span>
+                {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+                <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <h5 className="text-xs font-bold text-slate-800">
+                        Tren Historis Izin Pesisir (2022 - 2026)
+                      </h5>
+                      <span className="text-[10px] font-mono font-bold text-cyan-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                        Hektar
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-2">
+                      Kinerja penerbitan izin pemanfaatan perairan &amp; reklamasi
+                    </p>
+
+                    <div className="h-36 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={PESISIR_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                          <YAxis domain={[100, 180]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                          <Tooltip
+                            formatter={(val: any, name: any) => [`${val} Ha`, name]}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                          <Legend wrapperStyle={{ fontSize: '10px' }} />
+                          <Line
+                            type="monotone"
+                            dataKey="target"
+                            name="Target Perkin"
+                            stroke="#94A3B8"
+                            strokeDasharray="4 4"
+                            strokeWidth={1.5}
+                            dot={{ r: 3 }}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="skor"
+                            name="Realisasi Izin"
+                            stroke="#0891B2"
+                            strokeWidth={2.5}
+                            dot={{ r: 4, fill: '#0891B2' }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                    <span className="text-[9px] text-slate-500 block">Kepatuhan Zonasi</span>
-                    <span className="text-xs font-black text-emerald-600">100% Nir-Konflik</span>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                      <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
+                      <span className="text-xs font-black text-cyan-700">+12,8 Ha (+8,5%)</span>
+                    </div>
+                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                      <span className="text-[9px] text-slate-500 block">Kepatuhan Zonasi</span>
+                      <span className="text-xs font-black text-emerald-600">100% Nir-Konflik</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -569,161 +567,160 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
 
           {/* TAB 3: IKP-3 DIT. PENGENDALIAN PENGELOLAAN LAHAN */}
           {activeTab === 'ikp-3' && (
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
-              {/* KOLOM A: TABEL KOMPONEN PENGAWASAN PERSIS GAMBAR USER */}
-              <div className="xl:col-span-7 bg-white rounded-xl border border-emerald-200 p-3 shadow-2xs flex flex-col justify-between">
+            <div className="space-y-3">
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div>
-                  {/* Top Badges */}
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-emerald-700" />
-                      IKP-3 &bull; DIT. PENGENDALIAN PENGELOLAAN LAHAN
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                      117.25% Kepatuhan Tinggi
-                    </span>
-                  </div>
-
-                  {/* Title & Subtitle */}
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
-                    Persentase Keberhasilan Pengawasan dan Pengendalian
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Persentase Keberhasilan Pengawasan dan Pengendalian Lahan (Hal. 11)
                   </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Unit: Dit. Pengendalian Pengelolaan Lahan, Pesisir dan Reklamasi (Hal. 11)
-                  </p>
-
-                  {/* Metric Value & Target */}
-                  <div className="flex items-baseline justify-between mt-2 mb-2 pb-2 border-b border-emerald-100">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-xl sm:text-2xl font-black font-mono text-emerald-700">93.80</span>
-                      <span className="text-xs font-bold text-slate-600">% Realisasi</span>
-                    </div>
-                    <span className="text-[10.5px] text-slate-500">
-                      Target: <strong className="text-slate-800">80.00%</strong> <span className="text-emerald-600 font-bold">(+13,80%)</span>
-                    </span>
-                  </div>
-
-                  {/* Table Header */}
-                  <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1">
-                    <span>Tabel Komponen Pengawasan &amp; Penertiban:</span>
-                    <span className="text-[9.5px] font-normal text-slate-400">4 Sub-Sektor</span>
-                  </div>
-
-                  {/* Table */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-[10px] text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
-                          <th className="py-1 px-1.5">KOMPONEN PENGAWASAN</th>
-                          <th className="py-1 px-1.5 text-center">BOBOT</th>
-                          <th className="py-1 px-1.5 text-center">OBJEK (REALISASI/TARGET)</th>
-                          <th className="py-1 px-1.5 text-right">POIN CAPAIAN</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700">
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">Pengawasan Kesesuaian Pemanfaatan Lahan (5 SWP)</td>
-                          <td className="py-1 px-1.5 text-center font-mono">35%</td>
-                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">174 / 180</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">33.83</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">Penertiban Lahan Mangkrak (SP-1 s.d SP-3 &amp; Rekuperasi)</td>
-                          <td className="py-1 px-1.5 text-center font-mono">25%</td>
-                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">86 / 90</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">23.89</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">Pengawasan Sempadan Pesisir &amp; Reklamasi Non-Izin</td>
-                          <td className="py-1 px-1.5 text-center font-mono">20%</td>
-                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">75 / 80</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">18.75</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1 px-1.5 font-medium">Rekomendasi Teknis Pembaruan &amp; Tindak Lanjut BAPL</td>
-                          <td className="py-1 px-1.5 text-center font-mono">20%</td>
-                          <td className="py-1 px-1.5 text-center font-mono text-slate-600">87 / 100</td>
-                          <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">17.40</td>
-                        </tr>
-                        <tr className="bg-emerald-50/60 font-bold border-t border-emerald-200">
-                          <td className="py-1 px-1.5 text-emerald-950">Total Realisasi Pengawasan</td>
-                          <td className="py-1 px-1.5 text-center font-mono">100%</td>
-                          <td className="py-1 px-1.5 text-center font-mono text-emerald-800">422 / 450</td>
-                          <td className="py-1 px-1.5 text-right font-mono text-emerald-800">93.80% (Tgt 80%)</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
-
-                {/* Footer Button */}
-                <div className="pt-2 border-t border-slate-100 mt-2 text-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-100 font-mono">
+                    117,3% Kepatuhan Tinggi
+                  </span>
                   <button
                     onClick={() => onOpenFormulaModal?.('ikp-3-pengawasan-pengendalian')}
-                    className="text-[10.5px] font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1 cursor-pointer"
+                    className="text-[11px] font-medium text-emerald-700 hover:text-emerald-900 flex items-center gap-0.5 transition-colors cursor-pointer"
                   >
-                    <FileCode2 className="w-3.5 h-3.5" />
-                    <span>Lihat Manual &amp; Formula IKP-3 (Pengendalian Lahan)</span>
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
 
-              {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
-              <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <h5 className="text-xs font-bold text-slate-800">
-                      Tren Keberhasilan Pengawasan (2022 - 2026)
-                    </h5>
-                    <span className="text-[10px] font-mono font-bold text-emerald-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
-                      Persentase (%)
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-500 mb-2">
-                    Persentase kepatuhan pemanfaatan lahan dan ruang laut
-                  </p>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">93,80%</span>
+                  <span className="text-[9.5px] text-emerald-700 block mt-0.5">117,3% Capaian</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin 2026</span>
+                  <span className="text-base font-bold text-slate-700">80,00%</span>
+                  <span className="text-[9.5px] text-emerald-600 block mt-0.5">+13,80% Melampaui Target</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Unit Pengampu</span>
+                  <span className="text-base font-bold text-slate-900">Dit. Pengendalian Lahan</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">422/450 Objek Terawasi</span>
+                </div>
+              </div>
 
-                  <div className="h-44 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PENGAWASAN_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                        <YAxis domain={[65, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                        <Tooltip
-                          formatter={(val: any, name: any) => [`${val}%`, name]}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                        <Legend wrapperStyle={{ fontSize: '10px' }} />
-                        <Line
-                          type="monotone"
-                          dataKey="target"
-                          name="Target Perkin"
-                          stroke="#94A3B8"
-                          strokeDasharray="4 4"
-                          strokeWidth={1.5}
-                          dot={{ r: 3 }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="skor"
-                          name="Realisasi Pengawasan"
-                          stroke="#059669"
-                          strokeWidth={2.5}
-                          dot={{ r: 4, fill: '#059669' }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Side-by-Side Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-3.5 items-start">
+                <div className="xl:col-span-7 bg-white rounded-xl border border-emerald-200 p-3 shadow-2xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-700 mb-1.5">
+                      <span>Tabel Komponen Pengawasan &amp; Penertiban:</span>
+                      <span className="text-[9.5px] font-normal text-slate-400">4 Sub-Sektor</span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[10px] text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
+                            <th className="py-1 px-1.5">KOMPONEN PENGAWASAN</th>
+                            <th className="py-1 px-1.5 text-center">BOBOT</th>
+                            <th className="py-1 px-1.5 text-center">OBJEK (REALISASI/TARGET)</th>
+                            <th className="py-1 px-1.5 text-right">POIN CAPAIAN</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-slate-700">
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">Pengawasan Kesesuaian Pemanfaatan Lahan (5 SWP)</td>
+                            <td className="py-1 px-1.5 text-center font-mono">35%</td>
+                            <td className="py-1 px-1.5 text-center font-mono text-slate-600">174 / 180</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">33.83</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">Penertiban Lahan Mangkrak (SP-1 s.d SP-3 &amp; Rekuperasi)</td>
+                            <td className="py-1 px-1.5 text-center font-mono">25%</td>
+                            <td className="py-1 px-1.5 text-center font-mono text-slate-600">86 / 90</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">23.89</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">Pengawasan Sempadan Pesisir &amp; Reklamasi Non-Izin</td>
+                            <td className="py-1 px-1.5 text-center font-mono">20%</td>
+                            <td className="py-1 px-1.5 text-center font-mono text-slate-600">75 / 80</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">18.75</td>
+                          </tr>
+                          <tr>
+                            <td className="py-1 px-1.5 font-medium">Rekomendasi Teknis Pembaruan &amp; Tindak Lanjut BAPL</td>
+                            <td className="py-1 px-1.5 text-center font-mono">20%</td>
+                            <td className="py-1 px-1.5 text-center font-mono text-slate-600">87 / 100</td>
+                            <td className="py-1 px-1.5 text-right font-mono font-bold text-emerald-700">17.40</td>
+                          </tr>
+                          <tr className="bg-emerald-50/60 font-bold border-t border-emerald-200">
+                            <td className="py-1 px-1.5 text-emerald-950">Total Realisasi Pengawasan</td>
+                            <td className="py-1 px-1.5 text-center font-mono">100%</td>
+                            <td className="py-1 px-1.5 text-center font-mono text-emerald-800">422 / 450</td>
+                            <td className="py-1 px-1.5 text-right font-mono text-emerald-800">93.80% (Tgt 80%)</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
-                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                    <span className="text-[9px] text-slate-500 block">Objek Terawasi</span>
-                    <span className="text-xs font-black text-emerald-700">422 dari 450 Lokasi</span>
+                {/* KOLOM B: GRAFIK TREN MULTI-TAHUN */}
+                <div className="xl:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/80 p-3 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <h5 className="text-xs font-bold text-slate-800">
+                        Tren Keberhasilan Pengawasan (2022 - 2026)
+                      </h5>
+                      <span className="text-[10px] font-mono font-bold text-emerald-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                        Persentase (%)
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-2">
+                      Persentase kepatuhan pemanfaatan lahan dan ruang laut
+                    </p>
+
+                    <div className="h-36 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={PENGAWASAN_TREND_ANNUAL} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                          <YAxis domain={[65, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
+                          <Tooltip
+                            formatter={(val: any, name: any) => [`${val}%`, name]}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                          <Legend wrapperStyle={{ fontSize: '10px' }} />
+                          <Line
+                            type="monotone"
+                            dataKey="target"
+                            name="Target Perkin"
+                            stroke="#94A3B8"
+                            strokeDasharray="4 4"
+                            strokeWidth={1.5}
+                            dot={{ r: 3 }}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="skor"
+                            name="Realisasi Pengawasan"
+                            stroke="#059669"
+                            strokeWidth={2.5}
+                            dot={{ r: 4, fill: '#059669' }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                  <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                    <span className="text-[9px] text-slate-500 block">Lahan Diselamatkan</span>
-                    <span className="text-xs font-black text-blue-700">94,6 Ha (SP1-Cabut)</span>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
+                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                      <span className="text-[9px] text-slate-500 block">Objek Terawasi</span>
+                      <span className="text-xs font-black text-emerald-700">422 dari 450 Lokasi</span>
+                    </div>
+                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
+                      <span className="text-[9px] text-slate-500 block">Lahan Diselamatkan</span>
+                      <span className="text-xs font-black text-blue-700">94,6 Ha (SP1-Cabut)</span>
+                    </div>
                   </div>
                 </div>
               </div>

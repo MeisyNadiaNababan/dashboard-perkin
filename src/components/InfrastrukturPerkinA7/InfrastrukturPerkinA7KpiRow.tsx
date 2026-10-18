@@ -16,11 +16,6 @@ import {
   Building2,
   Flame,
 } from 'lucide-react';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-} from 'recharts';
 import { PERKIN_A7_KPIS, PERKIN_A7_METADATA } from './perkinA7Data';
 
 interface InfrastrukturPerkinA7KpiRowProps {
@@ -29,39 +24,6 @@ interface InfrastrukturPerkinA7KpiRowProps {
   selectedKpiId?: string | null;
   selectedQuarter?: string;
 }
-
-// Mini Sparkline Data for 4 Primary Cards
-const SPARKLINE_IKP1 = [
-  { val: 88.5 },
-  { val: 89.2 },
-  { val: 90.4 },
-  { val: 91.2 },
-  { val: 92.4 },
-];
-
-const SPARKLINE_IKP2 = [
-  { val: 5.2 },
-  { val: 5.8 },
-  { val: 6.4 },
-  { val: 7.1 },
-  { val: 7.45 },
-];
-
-const SPARKLINE_ANGGARAN = [
-  { val: 180 },
-  { val: 320 },
-  { val: 490 },
-  { val: 610 },
-  { val: 682.4 },
-];
-
-const SPARKLINE_JALAN = [
-  { val: 87.2 },
-  { val: 88.5 },
-  { val: 89.9 },
-  { val: 90.8 },
-  { val: 91.4 },
-];
 
 export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowProps> = ({
   onOpenFormulaModal,
@@ -74,256 +36,128 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS PERTAMA: 4 KARTU KPI UTAMA EKSEKUTIF DENGAN SPARKLINES    */}
+      {/* 1. BARIS PERTAMA: 4 KARTU KPI UTAMA EKSEKUTIF (POLOS KOTAK TANPA GARIS) */}
       {/* ================================================================== */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {/* KARTU 1: IKP 1 - PENYELENGGARAAN INFRASTRUKTUR */}
         <div
-          onClick={() => onSelectUnit?.('dit-pembangunan-infrastruktur')}
-          className={`bg-white rounded-xl p-3 border transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between cursor-pointer border-blue-200/90 hover:border-blue-400 group ${
-            selectedKpiId === ikp1.id ? 'ring-2 ring-blue-500 border-blue-400 bg-blue-50/15' : ''
-          }`}
+          onClick={() => {
+            onOpenFormulaModal(ikp1.id);
+            onSelectUnit?.('dit-pembangunan-infrastruktur');
+          }}
+          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
+          title="Buka detail IKP 1 Penyelenggaraan Infrastruktur"
         >
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-black font-mono bg-blue-50 text-blue-700 border border-blue-200/70">
-                IKP 01 &bull; PERKIN A7
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
+                <HardHat className="w-3.5 h-3.5 text-cyan-200" />
+                IKP 1 &bull; Pembangunan Fisik
               </span>
-              <div className="flex items-center gap-1">
-                <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-200">
-                  92,40% Capaian
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenFormulaModal(ikp1.id);
-                  }}
-                  className="p-1 text-slate-400 hover:text-blue-600 rounded hover:bg-slate-100 transition-colors cursor-pointer"
-                  title="Lihat Manual Rumus & Atribut Satu Data"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                </button>
+              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
+                <HardHat className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
 
-            <div className="text-[10px] text-slate-500 font-medium truncate mb-0.5">
-              Konsolidasi 3 Dit: Pembangunan, Perencanaan &amp; Ditpam
+            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
+              92,40%
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-blue-100/90">Target: 100% Rencana</span>
+              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
+                92,4% Tercapai
+              </span>
             </div>
-
-            <h3 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2 min-h-[32px] group-hover:text-blue-700 transition-colors">
-              {ikp1.name}
-            </h3>
-
-            {/* Sparkline & Target vs Realisasi */}
-            <div className="mt-2 grid grid-cols-12 gap-1 items-end bg-slate-50/80 p-2 rounded-lg border border-slate-100">
-              <div className="col-span-7 space-y-0.5">
-                <div className="text-[9px] uppercase font-bold text-slate-500">
-                  Target: <span className="font-mono text-slate-800 font-black">100%</span>
-                </div>
-                <div className="text-sm sm:text-base font-black font-mono text-slate-900 tracking-tight">
-                  92,40% <span className="text-[10px] font-bold text-emerald-600">YTD</span>
-                </div>
-              </div>
-              <div className="col-span-5 h-8">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={SPARKLINE_IKP1}>
-                    <defs>
-                      <linearGradient id="gradIkp1" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="val" stroke="#2563EB" strokeWidth={1.8} fill="url(#gradIkp1)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-            <span className="text-slate-500 font-medium truncate">14 Paket Strategis BP Batam</span>
-            <span className="font-bold text-blue-700">On Track</span>
           </div>
         </div>
 
         {/* KARTU 2: IKP 2 - NILAI REALISASI PNBP */}
         <div
-          onClick={() => onSelectUnit?.('dit-pembangunan-infrastruktur')}
-          className={`bg-white rounded-xl p-3 border transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between cursor-pointer border-cyan-200/90 hover:border-cyan-400 group ${
-            selectedKpiId === ikp2.id ? 'ring-2 ring-cyan-500 border-cyan-400 bg-cyan-50/15' : ''
-          }`}
+          onClick={() => {
+            onOpenFormulaModal(ikp2.id);
+            onSelectUnit?.('dit-pembangunan-infrastruktur');
+          }}
+          className="bg-gradient-to-br from-emerald-50/90 via-teal-50/60 to-emerald-50/30 border border-emerald-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Buka detail IKP 2 Nilai Realisasi PNBP"
         >
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-black font-mono bg-cyan-50 text-cyan-800 border border-cyan-200/70">
-                IKP 02 &bull; PERKIN A7
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-emerald-800 flex items-center gap-1.5">
+                <Coins className="w-3.5 h-3.5 text-emerald-700" />
+                IKP 2 &bull; Penerimaan PNBP
               </span>
-              <div className="flex items-center gap-1">
-                <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded-full border bg-cyan-50 text-cyan-800 border-cyan-200">
-                  109,22% Capaian
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenFormulaModal(ikp2.id);
-                  }}
-                  className="p-1 text-slate-400 hover:text-cyan-600 rounded hover:bg-slate-100 transition-colors cursor-pointer"
-                  title="Lihat Manual Rumus & Atribut Satu Data"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                </button>
+              <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+                <Coins className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
 
-            <div className="text-[10px] text-slate-500 font-medium truncate mb-0.5">
-              Dit. Pembangunan: Subdit ROW Utilitas &amp; RTH
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              Rp 7,45 M
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-slate-500 font-medium">Target: Rp 6,82 M</span>
+              <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                109,2% Tercapai
+              </span>
             </div>
-
-            <h3 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2 min-h-[32px] group-hover:text-cyan-700 transition-colors">
-              {ikp2.name}
-            </h3>
-
-            {/* Sparkline & Target vs Realisasi */}
-            <div className="mt-2 grid grid-cols-12 gap-1 items-end bg-slate-50/80 p-2 rounded-lg border border-slate-100">
-              <div className="col-span-7 space-y-0.5">
-                <div className="text-[9px] uppercase font-bold text-slate-500">
-                  Target: <span className="font-mono text-slate-800 font-black">Rp 6,821 M</span>
-                </div>
-                <div className="text-sm sm:text-base font-black font-mono text-cyan-800 tracking-tight">
-                  Rp 7,450 M <span className="text-[10px] font-bold text-emerald-600">+629 Jt</span>
-                </div>
-              </div>
-              <div className="col-span-5 h-8">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={SPARKLINE_IKP2}>
-                    <defs>
-                      <linearGradient id="gradIkp2" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#0891B2" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#0891B2" stopOpacity={0.0} />
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="val" stroke="#0891B2" strokeWidth={1.8} fill="url(#gradIkp2)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-            <span className="text-slate-500 font-medium truncate">ROW FO/Gas: 5,25 M &bull; RTH: 2,20 M</span>
-            <span className="font-bold text-emerald-600">Surplus</span>
           </div>
         </div>
 
         {/* KARTU 3: PAGU & SERAPAN BELANJA MODAL INFRASTRUKTUR */}
         <div
           onClick={() => onSelectUnit?.('dit-pembangunan-infrastruktur')}
-          className="bg-white rounded-xl p-3 border transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between cursor-pointer border-slate-200/90 hover:border-slate-400 group"
+          className="bg-gradient-to-br from-amber-50/90 via-yellow-50/50 to-amber-50/30 border border-amber-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Belanja Modal Fisik Pembangunan & Perencanaan"
         >
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-black font-mono bg-purple-50 text-purple-700 border border-purple-200/70">
-                BELANJA MODAL
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-amber-800 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5 text-amber-700" />
+                Belanja Modal Fisik
               </span>
-              <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded-full border bg-purple-50 text-purple-800 border-purple-200">
-                84,38% Serapan
-              </span>
-            </div>
-
-            <div className="text-[10px] text-slate-500 font-medium truncate mb-0.5">
-              DIPA BP Batam TA 2025 (Pembangunan &amp; Perencanaan)
-            </div>
-
-            <h3 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2 min-h-[32px] group-hover:text-purple-700 transition-colors">
-              Pagu &amp; Serapan Belanja Fisik Infrastruktur
-            </h3>
-
-            {/* Sparkline & Target vs Realisasi */}
-            <div className="mt-2 grid grid-cols-12 gap-1 items-end bg-slate-50/80 p-2 rounded-lg border border-slate-100">
-              <div className="col-span-7 space-y-0.5">
-                <div className="text-[9px] uppercase font-bold text-slate-500">
-                  Pagu: <span className="font-mono text-slate-800 font-black">Rp 808,71 M</span>
-                </div>
-                <div className="text-sm sm:text-base font-black font-mono text-purple-800 tracking-tight">
-                  Rp 682,43 M <span className="text-[9.5px] text-slate-500 font-normal">Real</span>
-                </div>
-              </div>
-              <div className="col-span-5 h-8">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={SPARKLINE_ANGGARAN}>
-                    <defs>
-                      <linearGradient id="gradAnggaran" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#7C3AED" stopOpacity={0.0} />
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="val" stroke="#7C3AED" strokeWidth={1.8} fill="url(#gradAnggaran)" />
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shadow-xs">
+                <Building2 className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
-          </div>
 
-          <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-            <span className="text-slate-500 font-medium truncate">Pembangunan: 602,8 M &bull; DED: 53,5 M</span>
-            <span className="font-bold text-purple-700">Tepat Waktu</span>
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              Rp 682,4 M
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-slate-500 font-medium">Pagu: Rp 842,5 M</span>
+              <span className="font-bold text-amber-800 bg-white/90 border border-amber-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                81,0% Serapan
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* KARTU 4: KEMANTAPAN JARINGAN JALAN BP BATAM */}
+        {/* KARTU 4: KEMANTAPAN JARINGAN JALAN & PAKET STRATEGIS */}
         <div
           onClick={() => onSelectUnit?.('dit-pembangunan-infrastruktur')}
-          className="bg-white rounded-xl p-3 border transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between cursor-pointer border-slate-200/90 hover:border-slate-400 group"
+          className="bg-gradient-to-br from-purple-50/90 via-violet-50/50 to-purple-50/30 border border-purple-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Paket Strategis & Kelaikan Jalan"
         >
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-black font-mono bg-emerald-50 text-emerald-700 border border-emerald-200/70">
-                DATASET 03 &bull; SPASIAL
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-semibold text-purple-800 flex items-center gap-1.5">
+                <Route className="w-3.5 h-3.5 text-indigo-700" />
+                Paket Strategis &amp; Jalan
               </span>
-              <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-200">
-                91,40% Mantap
-              </span>
-            </div>
-
-            <div className="text-[10px] text-slate-500 font-medium truncate mb-0.5">
-              Dit. Pembangunan: Jaringan Jalan Eksisting (Hal. 48)
-            </div>
-
-            <h3 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2 min-h-[32px] group-hover:text-emerald-700 transition-colors">
-              Kemantapan Ruas Jaringan Jalan BP Batam
-            </h3>
-
-            {/* Sparkline & Target vs Realisasi */}
-            <div className="mt-2 grid grid-cols-12 gap-1 items-end bg-slate-50/80 p-2 rounded-lg border border-slate-100">
-              <div className="col-span-7 space-y-0.5">
-                <div className="text-[9px] uppercase font-bold text-slate-500">
-                  Total Ruas: <span className="font-mono text-slate-800 font-black">542,8 Km</span>
-                </div>
-                <div className="text-sm sm:text-base font-black font-mono text-emerald-800 tracking-tight">
-                  496,1 Km <span className="text-[9.5px] text-emerald-700 font-bold">Mantap</span>
-                </div>
-              </div>
-              <div className="col-span-5 h-8">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={SPARKLINE_JALAN}>
-                    <defs>
-                      <linearGradient id="gradJalan" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#059669" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="val" stroke="#059669" strokeWidth={1.8} fill="url(#gradJalan)" />
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold shadow-xs">
+                <Route className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
-          </div>
 
-          <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-            <span className="text-slate-500 font-medium truncate">Arteri 184 Km &bull; Kolektor 198 Km</span>
-            <span className="font-bold text-emerald-700">Prima</span>
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              14 Paket / 91,4%
+            </span>
+            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
+              <span className="text-slate-500 font-medium">542,8 Km Jalan</span>
+              <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                Mantap Prima
+              </span>
+            </div>
           </div>
         </div>
       </div>

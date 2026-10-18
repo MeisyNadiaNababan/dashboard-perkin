@@ -86,20 +86,6 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-white/15">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP1} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp1A5" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#FFFFFF" strokeWidth={1.5} fill="url(#sparkIkp1A5)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* IKP 2: Realisasi PNBP Bandara & Kepelabuhanan */}
@@ -132,20 +118,6 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
                 {ikp2.achievement.toFixed(1)}% Melampaui
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-sky-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP2} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp2A5" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0284C7" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#0284C7" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#0284C7" strokeWidth={1.5} fill="url(#sparkIkp2A5)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
 
@@ -180,20 +152,6 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-amber-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP3} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp3A5" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#D97706" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#D97706" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#D97706" strokeWidth={1.5} fill="url(#sparkIkp3A5)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* KONSOLIDASI TOTAL PNBP DEP-A5 (3 SATKER) */}
@@ -226,20 +184,6 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
                 108,6% Melampaui
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-emerald-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_TOTAL} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkTotalA5" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#059669" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#059669" strokeWidth={1.5} fill="url(#sparkTotalA5)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
       </div>

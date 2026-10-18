@@ -217,21 +217,6 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
                 </span>
               </div>
             </div>
-
-            {/* Mini Sparkline White on Blue */}
-            <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-white/15">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={SPARKLINE_INVESTASI} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="sparkInvWhite" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.0}/>
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="v" stroke="#FFFFFF" strokeWidth={1.5} fill="url(#sparkInvWhite)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
           </div>
 
           {/* KPI 2: Indeks Kepuasan Masyarakat (IKM) - SOFT MINT / PASTEL GREEN */}
@@ -256,21 +241,6 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
                   100,5% Tercapai
                 </span>
               </div>
-            </div>
-
-            {/* Mini Sparkline */}
-            <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-emerald-200/50">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={SPARKLINE_IKM} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="sparkIkm" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#059669" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#059669" stopOpacity={0.0}/>
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="v" stroke="#059669" strokeWidth={1.5} fill="url(#sparkIkm)" />
-                </AreaChart>
-              </ResponsiveContainer>
             </div>
           </div>
 
@@ -297,21 +267,6 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
                 </span>
               </div>
             </div>
-
-            {/* Mini Sparkline */}
-            <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-amber-200/50">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={SPARKLINE_PNBP} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="sparkPnbp" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#D97706" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#D97706" stopOpacity={0.0}/>
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="v" stroke="#D97706" strokeWidth={1.5} fill="url(#sparkPnbp)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
           </div>
 
           {/* KPI 4: Indeks Reformasi Birokrasi - SOFT PASTEL PURPLE / LAVENDER */}
@@ -336,21 +291,6 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
                   101,7% Tercapai
                 </span>
               </div>
-            </div>
-
-            {/* Mini Sparkline */}
-            <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-purple-200/50">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={SPARKLINE_RB} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="sparkRb" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#4F46E5" stopOpacity={0.0}/>
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="v" stroke="#4F46E5" strokeWidth={1.5} fill="url(#sparkRb)" />
-                </AreaChart>
-              </ResponsiveContainer>
             </div>
           </div>
         </div>

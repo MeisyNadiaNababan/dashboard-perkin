@@ -345,125 +345,115 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
               </div>
 
-              {/* Tabel Rincian Komponen */}
-              <div className="overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px]">
-                    <tr>
-                      <th className="py-2 px-3">Komponen Investasi</th>
-                      <th className="py-2 px-2 text-right">Target</th>
-                      <th className="py-2 px-2 text-right">Realisasi</th>
-                      <th className="py-2 px-2 text-right">Capaian</th>
-                      <th className="py-2 px-3 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {INVESTASI_KOMPONEN_TABLE.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-2 px-3 font-medium text-slate-800">{row.komponen}</td>
-                        <td className="py-2 px-2 text-right text-slate-500">{row.target}</td>
-                        <td className="py-2 px-2 text-right font-semibold text-slate-900">{row.realisasi}</td>
-                        <td className="py-2 px-2 text-right font-bold text-slate-900">{row.persen.toFixed(1)}%</td>
-                        <td className="py-2 px-3 text-center">
-                          <span
-                            className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                              row.status === 'Tercapai'
-                                ? 'bg-emerald-50 text-emerald-700'
-                                : row.status === 'On Track'
-                                ? 'bg-blue-50 text-blue-700'
-                                : 'bg-amber-50 text-amber-700'
-                            }`}
-                          >
-                            {row.status}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px]">
+                      <tr>
+                        <th className="py-2 px-3">Komponen Investasi</th>
+                        <th className="py-2 px-2 text-right">Target</th>
+                        <th className="py-2 px-2 text-right">Realisasi</th>
+                        <th className="py-2 px-2 text-right">Capaian</th>
+                        <th className="py-2 px-3 text-center">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Charts: Donut PMA vs PMDN & Area Trend Bulanan */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-                <div className="sm:col-span-5 bg-slate-50/60 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
-                    <span>Komposisi PMA vs PMDN</span>
-                    <span className="text-[10px] text-slate-500">Nilai (Rp T)</span>
-                  </div>
-                  <div className="h-28 flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={INVESTASI_DONUT_PMA_PMDN}
-                          innerRadius={28}
-                          outerRadius={44}
-                          paddingAngle={3}
-                          dataKey="value"
-                        >
-                          {INVESTASI_DONUT_PMA_PMDN.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          formatter={(val: any) => [`Rp ${val} Triliun`, 'Realisasi']}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="space-y-1 text-[11px] text-slate-600 pt-1 border-t border-slate-200/50">
-                    <div className="flex justify-between">
-                      <span className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-blue-600" /> PMA (Asing)
-                      </span>
-                      <span className="font-semibold text-slate-900">Rp 42,10 T (77,0%)</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-sky-600" /> PMDN (Domestik)
-                      </span>
-                      <span className="font-semibold text-slate-900">Rp 12,58 T (23,0%)</span>
-                    </div>
-                  </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {INVESTASI_KOMPONEN_TABLE.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-2 px-3 font-medium text-slate-800">{row.komponen}</td>
+                          <td className="py-2 px-2 text-right text-slate-500">{row.target}</td>
+                          <td className="py-2 px-2 text-right font-semibold text-slate-900">{row.realisasi}</td>
+                          <td className="py-2 px-2 text-right font-bold text-slate-900">{row.persen.toFixed(1)}%</td>
+                          <td className="py-2 px-3 text-center">
+                            <span
+                              className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                row.status === 'Tercapai'
+                                  ? 'bg-emerald-50 text-emerald-700'
+                                  : row.status === 'On Track'
+                                  ? 'bg-blue-50 text-blue-700'
+                                  : 'bg-amber-50 text-amber-700'
+                              }`}
+                            >
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
-                <div className="sm:col-span-7 bg-slate-50/60 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
-                    <span>Tren Realisasi Kumulatif Bulanan (Rp T)</span>
-                    <span className="text-[10px] font-semibold text-blue-600">+14,2% YoY</span>
+                {/* Charts: Donut PMA vs PMDN & Area Trend Bulanan */}
+                <div className="lg:col-span-5 space-y-2.5">
+                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
+                      <span>Komposisi PMA vs PMDN</span>
+                      <span className="text-[10px] text-slate-500">Nilai (Rp T)</span>
+                    </div>
+                    <div className="h-24 flex items-center justify-center">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={INVESTASI_DONUT_PMA_PMDN}
+                            innerRadius={24}
+                            outerRadius={40}
+                            paddingAngle={3}
+                            dataKey="value"
+                          >
+                            {INVESTASI_DONUT_PMA_PMDN.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            formatter={(val: any) => [`Rp ${val} Triliun`, 'Realisasi']}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="space-y-0.5 text-[10.5px] text-slate-600 pt-1 border-t border-slate-200/50">
+                      <div className="flex justify-between">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-blue-600" /> PMA (Asing)
+                        </span>
+                        <span className="font-semibold text-slate-900">Rp 42,10 T (77,0%)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-sky-600" /> PMDN (Domestik)
+                        </span>
+                        <span className="font-semibold text-slate-900">Rp 12,58 T (23,0%)</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="h-32 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={INVESTASI_TREND_BULANAN} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="invGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#2563EB" stopOpacity={0.35}/>
-                            <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="bln" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} domain={[0, 60]} />
-                        <Tooltip
-                          formatter={(val: any) => [`Rp ${val} Triliun`, 'Realisasi Kumulatif']}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                        <Area type="monotone" dataKey="total" stroke="#2563EB" strokeWidth={2.5} fill="url(#invGradient)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
 
-              {/* Kotak Insight Singkat */}
-              <div className="bg-blue-50/60 border border-blue-100 rounded-xl p-3 text-xs text-slate-700 flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-blue-900 block font-semibold mb-0.5">Insight Kinerja Investasi:</strong>
-                  <p className="text-slate-600 leading-relaxed">
-                    Penyebab utama gap pada PMDN (69,9%) adalah perizinan lingkungan amdal lintas kementerian.
-                    <strong> Rekomendasi Tindakan:</strong> Percepat asistensi izin OSS di Mal Pelayanan Publik Digital dan fasilitasi sindikasi pembiayaan perbankan BUMN untuk ekspansi tenant KEK Nongsa &amp; BAT.
-                  </p>
+                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
+                      <span>Tren Realisasi Kumulatif Bulanan</span>
+                      <span className="text-[10px] font-semibold text-blue-600">+14,2% YoY</span>
+                    </div>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={INVESTASI_TREND_BULANAN} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="invGradient" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#2563EB" stopOpacity={0.35}/>
+                              <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="bln" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} domain={[0, 60]} />
+                          <Tooltip
+                            formatter={(val: any) => [`Rp ${val} Triliun`, 'Realisasi Kumulatif']}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                          <Area type="monotone" dataKey="total" stroke="#2563EB" strokeWidth={2} fill="url(#invGradient)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -514,73 +504,66 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
               </div>
 
-              {/* Tabel Rincian Komponen */}
-              <div className="overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px]">
-                    <tr>
-                      <th className="py-2 px-3">Lokus Survei Layanan</th>
-                      <th className="py-2 px-2 text-right">Target</th>
-                      <th className="py-2 px-2 text-right">Skor IKM</th>
-                      <th className="py-2 px-2 text-center">Mutu</th>
-                      <th className="py-2 px-2 text-right">Capaian</th>
-                      <th className="py-2 px-3 text-center">Predikat</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {IKM_LOKUS_TABLE.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-2 px-3 font-medium text-slate-800">{row.lokus}</td>
-                        <td className="py-2 px-2 text-right text-slate-500">{row.target.toFixed(1)}</td>
-                        <td className="py-2 px-2 text-right font-bold text-slate-900">{row.skor.toFixed(2)}</td>
-                        <td className="py-2 px-2 text-center">
-                          <span
-                            className={`inline-block font-bold px-2 py-0.5 rounded text-[10px] ${
-                              row.mutu === 'A' ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-blue-700'
-                            }`}
-                          >
-                            {row.mutu}
-                          </span>
-                        </td>
-                        <td className="py-2 px-2 text-right font-semibold text-slate-900">{row.capaian.toFixed(1)}%</td>
-                        <td className="py-2 px-3 text-center text-slate-600 text-[11px]">{row.predikat}</td>
+              {/* Tabel Rincian & Chart dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px]">
+                      <tr>
+                        <th className="py-2 px-3">Lokus Survei Layanan</th>
+                        <th className="py-2 px-2 text-right">Target</th>
+                        <th className="py-2 px-2 text-right">Skor IKM</th>
+                        <th className="py-2 px-2 text-center">Mutu</th>
+                        <th className="py-2 px-2 text-right">Capaian</th>
+                        <th className="py-2 px-3 text-center">Predikat</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Chart: Bar Chart Perbandingan Antar Lokus */}
-              <div className="bg-slate-50/60 p-3.5 rounded-xl border border-slate-100">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
-                  <span>Perbandingan Skor Kepuasan Antar Lokus vs Garis Target (88,0)</span>
-                  <span className="text-[10px] font-normal text-slate-500">Survei Triwulan I &amp; II</span>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {IKM_LOKUS_TABLE.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-2 px-3 font-medium text-slate-800">{row.lokus}</td>
+                          <td className="py-2 px-2 text-right text-slate-500">{row.target.toFixed(1)}</td>
+                          <td className="py-2 px-2 text-right font-bold text-slate-900">{row.skor.toFixed(2)}</td>
+                          <td className="py-2 px-2 text-center">
+                            <span
+                              className={`inline-block font-bold px-2 py-0.5 rounded text-[10px] ${
+                                row.mutu === 'A' ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-blue-700'
+                              }`}
+                            >
+                              {row.mutu}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 text-right font-semibold text-slate-900">{row.capaian.toFixed(1)}%</td>
+                          <td className="py-2 px-3 text-center text-slate-600 text-[11px]">{row.predikat}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="h-36 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={IKM_BAR_COMPARISON} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
-                      <YAxis domain={[84, 92]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip
-                        formatter={(val: any) => [`${val} Poin`, 'Skor IKM']}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="skor" fill="#2563EB" radius={[6, 6, 0, 0]} barSize={28} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
 
-              {/* Kotak Insight Singkat */}
-              <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-3 text-xs text-slate-700 flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-emerald-900 block font-semibold mb-0.5">Insight Kinerja Pelayanan:</strong>
-                  <p className="text-slate-600 leading-relaxed">
-                    Layanan pertanahan (87,24 / Mutu B) dan SPAM (87,88 / Mutu B) berada tipis di bawah target 88,0 karena waktu tunggu antrean loket fisik dan resolusi kebocoran pipa.
-                    <strong> Rekomendasi Tindakan:</strong> Terapkan sistem antrean booking online via WhatsApp MPP dan bentuk Tim Reaksi Cepat (TRC) keluhan air 24 jam di Batu Aji &amp; Bengkong.
-                  </p>
+                {/* Chart: Bar Chart Perbandingan Antar Lokus */}
+                <div className="lg:col-span-5 bg-slate-50/60 p-3 rounded-xl border border-slate-100 flex flex-col justify-between">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
+                    <span>Skor Kepuasan Antar Lokus vs Target (88,0)</span>
+                    <span className="text-[10px] font-normal text-slate-500">TW I &amp; II</span>
+                  </div>
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={IKM_BAR_COMPARISON} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[84, 92]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip
+                          formatter={(val: any) => [`${val} Poin`, 'Skor IKM']}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Bar dataKey="skor" fill="#2563EB" radius={[4, 4, 0, 0]} barSize={22} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Seluruh lokus mencapai predikat Baik hingga Sangat Baik
+                  </span>
                 </div>
               </div>
             </div>
@@ -631,121 +614,111 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
               </div>
 
-              {/* Tabel Rincian 10 Unit Penghasil */}
-              <div className="overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-56 overflow-y-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="sticky top-0 bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px] z-10">
-                    <tr>
-                      <th className="py-2 px-2.5 text-center">No</th>
-                      <th className="py-2 px-3">Unit Kerja / Badan Usaha</th>
-                      <th className="py-2 px-2 text-right">Target (Juta Rp)</th>
-                      <th className="py-2 px-2 text-right">Realisasi (Juta Rp)</th>
-                      <th className="py-2 px-2 text-right">Capaian</th>
-                      <th className="py-2 px-2.5 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {PNBP_10_UNIT_TABLE.map((row) => (
-                      <tr key={row.no} className="hover:bg-slate-50/50">
-                        <td className="py-1.5 px-2.5 text-center text-slate-400 font-mono text-[11px]">{row.no}</td>
-                        <td className="py-1.5 px-3 font-medium text-slate-800">{row.unit}</td>
-                        <td className="py-1.5 px-2 text-right text-slate-500">
-                          {row.targetJuta.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
-                        </td>
-                        <td className="py-1.5 px-2 text-right font-semibold text-slate-900">
-                          {row.realisasiJuta.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
-                        </td>
-                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.capaian.toFixed(1)}%</td>
-                        <td className="py-1.5 px-2.5 text-center">
-                          <span
-                            className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                              row.status === 'On Track' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'
-                            }`}
-                          >
-                            {row.status}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-72 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="sticky top-0 bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px] z-10">
+                      <tr>
+                        <th className="py-2 px-2.5 text-center">No</th>
+                        <th className="py-2 px-3">Unit Kerja / Badan Usaha</th>
+                        <th className="py-2 px-2 text-right">Target (Juta Rp)</th>
+                        <th className="py-2 px-2 text-right">Realisasi (Juta Rp)</th>
+                        <th className="py-2 px-2 text-right">Capaian</th>
+                        <th className="py-2 px-2.5 text-center">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Charts: Donut Kontribusi per Unit & Horizontal Bar Peringkat */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-                <div className="sm:col-span-5 bg-slate-50/60 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
-                    <span>Porsi Kontribusi Pendapatan</span>
-                    <span className="text-[10px] text-slate-500">Total Rp 1,89 T</span>
-                  </div>
-                  <div className="h-28 flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={PNBP_DONUT_CONTRIBUTION}
-                          innerRadius={28}
-                          outerRadius={44}
-                          paddingAngle={2}
-                          dataKey="value"
-                        >
-                          {PNBP_DONUT_CONTRIBUTION.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          formatter={(val: any) => [`Rp ${val} Miliar`, 'Realisasi']}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="space-y-0.5 text-[10.5px] text-slate-600 pt-1 border-t border-slate-200/50">
-                    <div className="flex justify-between">
-                      <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-800" /> UWT Lahan</span>
-                      <span className="font-semibold text-slate-900">39,5% (Rp 748,2 M)</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-600" /> BU SPAM Air</span>
-                      <span className="font-semibold text-slate-900">31,3% (Rp 592,6 M)</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-500" /> Pelabuhan</span>
-                      <span className="font-semibold text-slate-900">20,2% (Rp 382,4 M)</span>
-                    </div>
-                  </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {PNBP_10_UNIT_TABLE.map((row) => (
+                        <tr key={row.no} className="hover:bg-slate-50/50">
+                          <td className="py-1.5 px-2.5 text-center text-slate-400 font-mono text-[11px]">{row.no}</td>
+                          <td className="py-1.5 px-3 font-medium text-slate-800">{row.unit}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-500">
+                            {row.targetJuta.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                          </td>
+                          <td className="py-1.5 px-2 text-right font-semibold text-slate-900">
+                            {row.realisasiJuta.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                          </td>
+                          <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.capaian.toFixed(1)}%</td>
+                          <td className="py-1.5 px-2.5 text-center">
+                            <span
+                              className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                row.status === 'On Track' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'
+                              }`}
+                            >
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
-                <div className="sm:col-span-7 bg-slate-50/60 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
-                    <span>Peringkat Capaian PNBP (%) 10 Unit</span>
-                    <span className="text-[10px] text-slate-500">Target 100%</span>
+                {/* Charts: Donut Kontribusi per Unit & Horizontal Bar Peringkat */}
+                <div className="lg:col-span-5 space-y-2.5">
+                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
+                      <span>Porsi Kontribusi Pendapatan</span>
+                      <span className="text-[10px] text-slate-500">Total Rp 1,89 T</span>
+                    </div>
+                    <div className="h-24 flex items-center justify-center">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={PNBP_DONUT_CONTRIBUTION}
+                            innerRadius={24}
+                            outerRadius={40}
+                            paddingAngle={2}
+                            dataKey="value"
+                          >
+                            {PNBP_DONUT_CONTRIBUTION.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            formatter={(val: any) => [`Rp ${val} Miliar`, 'Realisasi']}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="space-y-0.5 text-[10px] text-slate-600 pt-1 border-t border-slate-200/50">
+                      <div className="flex justify-between">
+                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-800" /> UWT Lahan</span>
+                        <span className="font-semibold text-slate-900">39,5% (Rp 748,2 M)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-600" /> BU SPAM Air</span>
+                        <span className="font-semibold text-slate-900">31,3% (Rp 592,6 M)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-500" /> Pelabuhan</span>
+                        <span className="font-semibold text-slate-900">20,2% (Rp 382,4 M)</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="h-36 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={PNBP_RANKING_BARS} layout="vertical" margin={{ top: 2, right: 15, left: 35, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
-                        <XAxis type="number" domain={[70, 85]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis dataKey="name" type="category" tick={{ fontSize: 9, fill: '#334155', fontWeight: 600 }} axisLine={false} tickLine={false} />
-                        <Tooltip
-                          formatter={(val: any) => [`${val}%`, 'Capaian terhadap Target']}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                        <Bar dataKey="capaian" fill="#2563EB" radius={[0, 4, 4, 0]} barSize={7} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
 
-              {/* Kotak Insight Singkat */}
-              <div className="bg-amber-50/60 border border-amber-100 rounded-xl p-3 text-xs text-slate-700 flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-amber-900 block font-semibold mb-0.5">Insight Kinerja PNBP:</strong>
-                  <p className="text-slate-600 leading-relaxed">
-                    BU SPAM (75,3%) dan Pertanahan (77,6%) memiliki piutang berjalan yang belum jatuh tempo pada tagihan curah industri &amp; UWT angsuran.
-                    <strong> Rekomendasi Tindakan:</strong> Optimalisasi payment gateway virtual account perbankan dan program insentif pelunasan UWT sebelum cut-off Desember 2026.
-                  </p>
+                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
+                      <span>Peringkat Capaian PNBP (%) 10 Unit</span>
+                      <span className="text-[10px] text-slate-500">Target 100%</span>
+                    </div>
+                    <div className="h-32 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={PNBP_RANKING_BARS} layout="vertical" margin={{ top: 2, right: 15, left: 25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
+                          <XAxis type="number" domain={[70, 85]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis dataKey="name" type="category" tick={{ fontSize: 8.5, fill: '#334155', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            formatter={(val: any) => [`${val}%`, 'Capaian']}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                          <Bar dataKey="capaian" fill="#2563EB" radius={[0, 4, 4, 0]} barSize={6} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -796,92 +769,80 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
               </div>
 
-              {/* Tabel Rincian Komponen 8 Area Perubahan */}
-              <div className="overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-52 overflow-y-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="sticky top-0 bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px] z-10">
-                    <tr>
-                      <th className="py-2 px-3">Area Perubahan RB</th>
-                      <th className="py-2 px-2 text-center">Bobot</th>
-                      <th className="py-2 px-2 text-right">Target</th>
-                      <th className="py-2 px-2 text-right">Skor</th>
-                      <th className="py-2 px-2 text-right">Capaian</th>
-                      <th className="py-2 px-3 text-center">Predikat</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {RB_8_AREA_TABLE.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-1.5 px-3 font-medium text-slate-800">{row.area}</td>
-                        <td className="py-1.5 px-2 text-center text-slate-500">{row.bobot}</td>
-                        <td className="py-1.5 px-2 text-right text-slate-500">{row.target.toFixed(2)}</td>
-                        <td className="py-1.5 px-2 text-right font-semibold text-slate-900">{row.skor.toFixed(2)}</td>
-                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.capaian}</td>
-                        <td className="py-1.5 px-3 text-center">
-                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">
-                            {row.predikat}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-72 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="sticky top-0 bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px] z-10">
+                      <tr>
+                        <th className="py-2 px-3">Area Perubahan RB</th>
+                        <th className="py-2 px-2 text-center">Bobot</th>
+                        <th className="py-2 px-2 text-right">Target</th>
+                        <th className="py-2 px-2 text-right">Skor</th>
+                        <th className="py-2 px-2 text-right">Capaian</th>
+                        <th className="py-2 px-3 text-center">Predikat</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {RB_8_AREA_TABLE.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1.5 px-3 font-medium text-slate-800">{row.area}</td>
+                          <td className="py-1.5 px-2 text-center text-slate-500">{row.bobot}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-500">{row.target.toFixed(2)}</td>
+                          <td className="py-1.5 px-2 text-right font-semibold text-slate-900">{row.skor.toFixed(2)}</td>
+                          <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.capaian}</td>
+                          <td className="py-1.5 px-3 text-center">
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">
+                              {row.predikat}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-              {/* Charts: Gauge Predikat RB & Line Tren Skor Antar Periode */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-                {/* Gauge Predikat Visual */}
-                <div className="sm:col-span-5 bg-slate-50/60 p-3.5 rounded-xl border border-slate-100 text-center">
-                  <span className="text-xs font-bold text-slate-800 block mb-1">Gauge Predikat RB</span>
-                  <div className="relative inline-flex flex-col items-center justify-center my-2">
-                    <div className="w-28 h-28 rounded-full border-8 border-slate-200 border-t-emerald-500 border-r-emerald-500 border-b-blue-500 flex items-center justify-center">
-                      <div className="text-center">
-                        <span className="text-2xl font-extrabold text-slate-900 block leading-none">81,35</span>
-                        <span className="text-[10px] font-bold text-emerald-600 block mt-1">PREDIKAT A</span>
+                {/* Charts: Gauge Predikat RB & Line Tren Skor Antar Periode */}
+                <div className="lg:col-span-5 space-y-2.5">
+                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100 text-center">
+                    <span className="text-xs font-bold text-slate-800 block mb-1">Gauge Predikat RB</span>
+                    <div className="relative inline-flex flex-col items-center justify-center my-1">
+                      <div className="w-20 h-20 rounded-full border-4 border-slate-200 border-t-emerald-500 border-r-emerald-500 border-b-blue-500 flex items-center justify-center">
+                        <div className="text-center">
+                          <span className="text-lg font-extrabold text-slate-900 block leading-none">81,35</span>
+                          <span className="text-[9px] font-bold text-emerald-600 block mt-0.5">PREDIKAT A</span>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex justify-between text-[9px] text-slate-500 px-2 pt-0.5 border-t border-slate-200/50">
+                      <span>D (&lt;30)</span>
+                      <span>BB (70-80)</span>
+                      <span className="font-bold text-emerald-600">A (80-90)</span>
+                      <span>AA (&gt;90)</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-500 px-2 pt-1 border-t border-slate-200/50">
-                    <span>D (&lt;30)</span>
-                    <span>BB (70-80)</span>
-                    <span className="font-bold text-emerald-600">A (80-90)</span>
-                    <span>AA (&gt;90)</span>
-                  </div>
-                </div>
 
-                {/* Line Chart Tren Skor RB */}
-                <div className="sm:col-span-7 bg-slate-50/60 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
-                    <span>Tren Perkembangan Skor RB (2021 - 2026)</span>
-                    <span className="text-[10px] font-semibold text-emerald-600">+9,6% Kenaikan</span>
+                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
+                      <span>Tren Perkembangan Skor RB</span>
+                      <span className="text-[10px] font-semibold text-emerald-600">+9,6% Kenaikan</span>
+                    </div>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={RB_TREND_TAHUNAN} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[70, 85]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            formatter={(val: any) => [`${val} Poin`, 'Skor Indeks RB']}
+                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                          />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#059669" strokeWidth={2} dot={{ r: 2.5, fill: '#059669' }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                  <div className="h-32 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={RB_TREND_TAHUNAN} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[70, 85]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip
-                          formatter={(val: any) => [`${val} Poin`, 'Skor Indeks RB']}
-                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                        />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
-                        <Line type="monotone" dataKey="skor" stroke="#059669" strokeWidth={2.5} dot={{ r: 3, fill: '#059669' }} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-
-              {/* Kotak Insight Singkat */}
-              <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-3 text-xs text-slate-700 flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-emerald-900 block font-semibold mb-0.5">Insight Kinerja Reformasi Birokrasi:</strong>
-                  <p className="text-slate-600 leading-relaxed">
-                    BP Batam berhasil melampaui target Perkin 80 (BB) dengan capaian 81,35 (Predikat A Memuaskan) dan mempertahankan opini WTP 8 tahun berturut-turut.
-                    <strong> Rekomendasi Tindakan:</strong> Fokus pematangan integrasi Satu Data BP Batam (SPBE Level 4) dan percepatan deregulasi regulasi pertanahan untuk mengejar predikat AA (&gt;90).
-                  </p>
                 </div>
               </div>
             </div>

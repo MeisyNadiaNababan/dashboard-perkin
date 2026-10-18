@@ -83,20 +83,6 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-white/15">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP1} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp1A3" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#FFFFFF" strokeWidth={1.5} fill="url(#sparkIkp1A3)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* IKP 2: Luas Izin Pengelolaan Kawasan Pesisir & Reklamasi - DIT. PESISIR & REKLAMASI */}
@@ -130,20 +116,6 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-cyan-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP2} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp2A3" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0891B2" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#0891B2" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#0891B2" strokeWidth={1.5} fill="url(#sparkIkp2A3)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* IKP 3: Keberhasilan Pengawasan & Pengendalian Lahan - DIT. PENGENDALIAN */}
@@ -176,20 +148,6 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
                 {ikpPengendalian.capaianPersen.toFixed(1)}% Optimal
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-emerald-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP3} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp3A3" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#059669" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#059669" strokeWidth={1.5} fill="url(#sparkIkp3A3)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
       </div>

@@ -224,16 +224,11 @@ export const InvestasiKpiRow: React.FC<InvestasiKpiRowProps> = ({
                 </div>
               </div>
 
-              {/* Bottom Row: Calculation notes & Micro Bar Sparkline */}
+              {/* Bottom Row: Calculation notes */}
               <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
                 <span className="text-[11px] text-slate-500 font-medium truncate">
                   {item.bottomText}
                 </span>
-
-                <MicroBarSparkline
-                  data={item.sparkline}
-                  color={item.themeColor}
-                />
               </div>
             </div>
           );

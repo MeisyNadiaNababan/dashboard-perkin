@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   Award,
   ChevronRight,
-  Sparkles,
 } from 'lucide-react';
 import {
   RadarChart,
@@ -237,14 +236,6 @@ export const KebijakanStrategisVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Insight Khusus IKP 1 */}
-              <div className="bg-sky-50/70 border border-sky-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-sky-700 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-sky-950 font-bold">Insight Strategis IPPN:</strong> Penyelarasan Renstra 2025-2029 terhadap prioritas nasional meraih nilai 95,0 (poin 28,50). Alokasi RKA DIPA dan 5 masterplan wilayah memperkuat kepatuhan evaluasi SE Menteri PPN/Bappenas.
-                </p>
-              </div>
-
               {/* 3 Kartu Ringkas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
@@ -346,14 +337,6 @@ export const KebijakanStrategisVisualCharts: React.FC<
                     <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
-              </div>
-
-              {/* Insight Khusus IKP 2 */}
-              <div className="bg-blue-50/70 border border-blue-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-blue-700 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-blue-950 font-bold">Insight Strategis IKK:</strong> Agenda Setting (skor 74,0) dan Formulasi Kebijakan (skor 72,5) melampaui standar LAN RI. 42 Perka/Kepka berhasil disinkronkan 100% selaras dengan PP 41/2021.
-                </p>
               </div>
 
               {/* 3 Kartu Ringkas */}
@@ -459,14 +442,6 @@ export const KebijakanStrategisVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Insight Khusus IKP 3 */}
-              <div className="bg-indigo-50/70 border border-indigo-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-700 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-indigo-950 font-bold">Insight Strategis SPBE:</strong> Kebijakan Internal (4,45) dan Layanan Administrasi Pemerintahan (4,30) mencapai Level 4 Terpadu. 48 aplikasi aktif terintegrasi Satu Data dan TTE tersertifikasi BSrE.
-                </p>
-              </div>
-
               {/* 3 Kartu Ringkas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
@@ -568,14 +543,6 @@ export const KebijakanStrategisVisualCharts: React.FC<
                     <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
-              </div>
-
-              {/* Insight Khusus IKP 4 */}
-              <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-emerald-950 font-bold">Insight Strategis IKM PTSP:</strong> Mutu A (Sangat Baik) diraih dengan skor 88,42. Unsur biaya/tarif (92,1) dan perilaku pelaksana (91,2) tertinggi. Percepatan izin berusaha memangkas lead time rata-rata ke 2,1 hari kerja.
-                </p>
               </div>
 
               {/* 3 Kartu Ringkas */}

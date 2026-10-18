@@ -88,20 +88,6 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-white/15">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP1} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp1A6" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#FFFFFF" strokeWidth={1.5} fill="url(#sparkIkp1A6)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* IKP 2: Rasio PNBP BU terhadap PNBP BP Batam */}
@@ -134,20 +120,6 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
                 {ikp2.persenCapaian.toFixed(1)}% Tercapai
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-sky-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP2} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp2A6" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0284C7" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#0284C7" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#0284C7" strokeWidth={1.5} fill="url(#sparkIkp2A6)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
 
@@ -182,20 +154,6 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-emerald-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP3} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp3A6" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#059669" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#059669" strokeWidth={1.5} fill="url(#sparkIkp3A6)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* KONSOLIDASI TOTAL PNBP 2 BADAN USAHA */}
@@ -228,20 +186,6 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
                 104,7% Surplus Rp 11,9 M
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-2 pt-0.5 border-t border-indigo-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_TOTAL} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkTotalA6" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#4F46E5" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#4F46E5" strokeWidth={1.5} fill="url(#sparkTotalA6)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
       </div>

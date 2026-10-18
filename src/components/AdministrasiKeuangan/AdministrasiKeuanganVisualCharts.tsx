@@ -284,14 +284,6 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Insight Khusus IKP 1 */}
-              <div className="bg-blue-50/70 border border-blue-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-blue-900 font-bold">Insight Strategis RB:</strong> Penataan Tata Laksana SPBE (12,80) dan Manajemen SDM (12,65) menjadi pengungkit skor tertinggi. Akselerasi evaluasi kelembagaan agile di 24 satker berpotensi menaikkan indeks ke predikat A (&gt;80,00).
-                </p>
-              </div>
-
               {/* 3 Kartu Ringkas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
@@ -311,69 +303,71 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Tabel Rincian 8 Area Perubahan */}
-              <div className="overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-36 overflow-y-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
-                    <tr>
-                      <th className="py-1.5 px-2.5">Area Perubahan RB</th>
-                      <th className="py-1.5 px-2 text-right">Bobot</th>
-                      <th className="py-1.5 px-2 text-right">Nilai</th>
-                      <th className="py-1.5 px-2.5 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {RB_8_AREA_TABLE_DATA.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.komponen}</td>
-                        <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}%</td>
-                        <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.nilai.toFixed(2)}</td>
-                        <td className="py-1 px-2.5 text-center">
-                          <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
-                            {row.status}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-60 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Area Perubahan RB</th>
+                        <th className="py-1.5 px-2 text-right">Bobot</th>
+                        <th className="py-1.5 px-2 text-right">Nilai</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Visualisasi Grafis Tren & Komparasi (Persis Model Kepala BP) */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center pt-1 border-t border-slate-100">
-                <div className="sm:col-span-6 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60">
-                  <span className="text-[10.5px] font-bold text-slate-800 block mb-1">
-                    Tren Skor Indeks RB (2021 - 2026)
-                  </span>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={RB_TREND_TAHUNAN} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[65, 85]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor RB']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
-                        <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {RB_8_AREA_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.komponen}</td>
+                          <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}%</td>
+                          <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.nilai.toFixed(2)}</td>
+                          <td className="py-1 px-2.5 text-center">
+                            <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
-                <div className="sm:col-span-6 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60">
-                  <span className="text-[10.5px] font-bold text-slate-800 block mb-1">
-                    Capaian Nilai vs Bobot 8 Area
-                  </span>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={RB_8_AREA_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="komponen" tick={false} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'nilai' ? 'Realisasi' : 'Bobot']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                        <Bar dataKey="bobot" fill="#CBD5E1" barSize={8} radius={[2, 2, 0, 0]} />
-                        <Bar dataKey="nilai" fill="#3B82F6" barSize={8} radius={[2, 2, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
+                {/* Visualisasi Grafis Tren & Komparasi */}
+                <div className="lg:col-span-5 space-y-2">
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                      Tren Skor Indeks RB (2021 - 2026)
+                    </span>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={RB_TREND_TAHUNAN} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[65, 85]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor RB']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                      Capaian Nilai vs Bobot 8 Area
+                    </span>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={RB_8_AREA_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="komponen" tick={false} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'nilai' ? 'Realisasi' : 'Bobot']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Bar dataKey="bobot" fill="#CBD5E1" barSize={7} radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="nilai" fill="#3B82F6" barSize={7} radius={[2, 2, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -405,14 +399,6 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Insight Khusus IKP 2 */}
-              <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-emerald-900 font-bold">Insight Strategis Sistem Merit:</strong> Skor 342,5 melampaui target Kategori IV (Sangat Baik). Pengembangan Karier (71,5/80) dan Pengadaan (23/24) menunjukkan integritas tinggi. Fokus peningkatan selanjutnya adalah integrasi modul SIMPEG Satu Data ASN.
-                </p>
-              </div>
-
               {/* 3 Kartu Ringkas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
@@ -432,92 +418,90 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Tabel Rincian 8 Aspek Sistem Merit */}
-              <div className="overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-36 overflow-y-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
-                    <tr>
-                      <th className="py-1.5 px-2.5">Aspek Penilaian Merit</th>
-                      <th className="py-1.5 px-2 text-right">Maks</th>
-                      <th className="py-1.5 px-2 text-right">Skor</th>
-                      <th className="py-1.5 px-2 text-right">%</th>
-                      <th className="py-1.5 px-2.5 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {MERIT_8_ASPEK_TABLE_DATA.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.aspek}</td>
-                        <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobotMax}</td>
-                        <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.skor.toFixed(1)}</td>
-                        <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.persen.toFixed(0)}%</td>
-                        <td className="py-1 px-2.5 text-center">
-                          <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
-                            {row.status}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-60 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Aspek Penilaian Merit</th>
+                        <th className="py-1.5 px-2 text-right">Maks</th>
+                        <th className="py-1.5 px-2 text-right">Skor</th>
+                        <th className="py-1.5 px-2 text-right">%</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Visualisasi Grafis: Bar Chart 8 Aspek & Tren Skor Sistem Merit */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center pt-1 border-t border-slate-100">
-                <div className="sm:col-span-7 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60">
-                  <span className="text-[10.5px] font-bold text-slate-800 block mb-1">
-                    Capaian Skor 8 Aspek Sistem Merit (Realisasi vs Maks)
-                  </span>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={MERIT_8_ASPEK_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="aspek" tick={false} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip formatter={(v: any, name: any) => [`${v} Poin`, name === 'skor' ? 'Realisasi' : 'Bobot Maksimal']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                        <Bar dataKey="bobotMax" fill="#CBD5E1" barSize={8} radius={[2, 2, 0, 0]} />
-                        <Bar dataKey="skor" fill="#10B981" barSize={8} radius={[2, 2, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {MERIT_8_ASPEK_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.aspek}</td>
+                          <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobotMax}</td>
+                          <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.skor.toFixed(1)}</td>
+                          <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.persen.toFixed(0)}%</td>
+                          <td className="py-1 px-2.5 text-center">
+                            <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
-                <div className="sm:col-span-5 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10.5px] font-bold text-slate-800 truncate">
-                      Tren Skor Sistem Merit
+                {/* Visualisasi Grafis: Bar Chart 8 Aspek & Tren Skor Sistem Merit */}
+                <div className="lg:col-span-5 space-y-2">
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                      Capaian Skor 8 Aspek Sistem Merit
                     </span>
-                    <span className="text-[9.5px] font-bold text-emerald-700 font-mono shrink-0">
-                      342,5 / IV
-                    </span>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={MERIT_8_ASPEK_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="aspek" tick={false} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`${v} Poin`, name === 'skor' ? 'Realisasi' : 'Bobot Maksimal']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Bar dataKey="bobotMax" fill="#CBD5E1" barSize={7} radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="skor" fill="#10B981" barSize={7} radius={[2, 2, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={MERIT_TREND_ANNUAL_DATA} margin={{ top: 5, right: 8, left: -24, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="meritTrendGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[250, 360]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip
-                          formatter={(v: any, _name: any, item: any) => [
-                            `${v} Poin (${item?.payload?.kategori || ''})`,
-                            'Skor Sistem Merit',
-                          ]}
-                          contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
-                        />
-                        <ReferenceLine y={280} stroke="#94A3B8" strokeDasharray="3 3" label={{ value: 'Target 280', fontSize: 7, fill: '#64748B' }} />
-                        <Area type="monotone" dataKey="skor" stroke="#10B981" strokeWidth={2} fill="url(#meritTrendGrad)" dot={{ r: 2.5, fill: '#10B981' }} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex items-center justify-between text-[8.5px] text-slate-500 pt-1 border-t border-slate-200/50 mt-0.5">
-                    <span>Naik +74,5 Poin sejak 2022</span>
-                    <span className="font-semibold text-emerald-700">Kategori IV Sangat Baik</span>
+
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold text-slate-800 truncate">
+                        Tren Skor Sistem Merit
+                      </span>
+                      <span className="text-[9px] font-bold text-emerald-700 font-mono shrink-0">
+                        342,5 / IV
+                      </span>
+                    </div>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={MERIT_TREND_ANNUAL_DATA} margin={{ top: 5, right: 8, left: -24, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="meritTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
+                              <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[250, 360]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            formatter={(v: any, _name: any, item: any) => [
+                              `${v} Poin (${item?.payload?.kategori || ''})`,
+                              'Skor Sistem Merit',
+                            ]}
+                            contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
+                          />
+                          <ReferenceLine y={280} stroke="#94A3B8" strokeDasharray="3 3" label={{ value: 'Target 280', fontSize: 7, fill: '#64748B' }} />
+                          <Area type="monotone" dataKey="skor" stroke="#10B981" strokeWidth={2} fill="url(#meritTrendGrad)" dot={{ r: 2.5, fill: '#10B981' }} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -549,14 +533,6 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Insight Khusus IKP 3 */}
-              <div className="bg-amber-50/70 border border-amber-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-amber-900 font-bold">Insight Strategis SPIP:</strong> Skor 3,42 menetapkan BP Batam pada Level 3 (Terdefinisi). Lingkungan Pengendalian (3,50) dan Kegiatan Pengendalian (3,45) berjalan efektif. Langkah mitigasi risiko perlu didokumentasikan berkala pada register risiko unit operasional.
-                </p>
-              </div>
-
               {/* 3 Kartu Ringkas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
@@ -576,52 +552,57 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Tabel Rincian 5 Unsur SPIP */}
-              <div className="overflow-x-auto rounded-lg border border-slate-200/70 bg-white">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px]">
-                    <tr>
-                      <th className="py-1.5 px-2.5">Unsur Pengendalian Intern</th>
-                      <th className="py-1.5 px-2 text-right">Bobot</th>
-                      <th className="py-1.5 px-2 text-right">Standar L3</th>
-                      <th className="py-1.5 px-2 text-right">Skor Aktual</th>
-                      <th className="py-1.5 px-2.5 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {SPIP_5_UNSUR_TABLE_DATA.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-1.5 px-2.5 font-medium text-slate-800 text-[11px]">{row.unsur}</td>
-                        <td className="py-1.5 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}</td>
-                        <td className="py-1.5 px-2 text-right text-slate-500 text-[10.5px]">{row.standarL3.toFixed(2)}</td>
-                        <td className="py-1.5 px-2 text-right font-bold text-slate-900 text-[11px]">{row.skor.toFixed(2)}</td>
-                        <td className="py-1.5 px-2.5 text-center">
-                          <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
-                            {row.status}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px]">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Unsur Pengendalian Intern</th>
+                        <th className="py-1.5 px-2 text-right">Bobot</th>
+                        <th className="py-1.5 px-2 text-right">Standar L3</th>
+                        <th className="py-1.5 px-2 text-right">Skor Aktual</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {SPIP_5_UNSUR_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1.5 px-2.5 font-medium text-slate-800 text-[11px]">{row.unsur}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-500 text-[10.5px]">{row.standarL3.toFixed(2)}</td>
+                          <td className="py-1.5 px-2 text-right font-bold text-slate-900 text-[11px]">{row.skor.toFixed(2)}</td>
+                          <td className="py-1.5 px-2.5 text-center">
+                            <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-              {/* Visualisasi Grafis Bar Chart 5 Unsur SPIP vs Standar */}
-              <div className="bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60 pt-1">
-                <span className="text-[10.5px] font-bold text-slate-800 block mb-1">
-                  Komparasi 5 Unsur SPIP terhadap Standar Level 3 Terdefinisi (3,00)
-                </span>
-                <div className="h-28 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={SPIP_5_UNSUR_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="unsur" tick={{ fontSize: 8, fill: '#475569' }} axisLine={false} tickLine={false} />
-                      <YAxis domain={[2.5, 4.0]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'skor' ? 'Skor Aktual' : 'Standar Level 3']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                      <Bar dataKey="standarL3" fill="#CBD5E1" barSize={14} radius={[2, 2, 0, 0]} />
-                      <Bar dataKey="skor" fill="#F59E0B" barSize={14} radius={[2, 2, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                {/* Visualisasi Grafis Bar Chart 5 Unsur SPIP vs Standar */}
+                <div className="lg:col-span-5 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60 flex flex-col justify-between">
+                  <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                    Komparasi 5 Unsur SPIP vs Standar Level 3 (3,00)
+                  </span>
+                  <div className="h-32 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={SPIP_5_UNSUR_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="unsur" tick={{ fontSize: 7.5, fill: '#475569' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[2.5, 4.0]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'skor' ? 'Skor Aktual' : 'Standar Level 3']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                        <Bar dataKey="standarL3" fill="#CBD5E1" barSize={10} radius={[2, 2, 0, 0]} />
+                        <Bar dataKey="skor" fill="#F59E0B" barSize={10} radius={[2, 2, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Seluruh unsur melampaui ambang batas Level 3 Terdefinisi
+                  </span>
                 </div>
               </div>
             </div>
@@ -652,14 +633,6 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Insight Khusus IKP 4 */}
-              <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-lg p-2.5 flex items-start gap-2 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] text-slate-700 leading-relaxed">
-                  <strong className="text-emerald-900 font-bold">Insight Strategis Opini BPK:</strong> BP Batam sukses mempertahankan predikat Opini Wajar Tanpa Pengecualian (WTP) selama 8 tahun berturut-turut. Tingkat penyelesaian rekomendasi tindak lanjut hasil pemeriksaan (TLHP) BPK RI telah mencapai 93,9% (139 dari 148 rekomendasi tuntas).
-                </p>
-              </div>
-
               {/* 3 Kartu Ringkas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
@@ -679,50 +652,55 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 </div>
               </div>
 
-              {/* Tabel Rincian 4 Kriteria Penilaian BPK */}
-              <div className="overflow-x-auto rounded-lg border border-slate-200/70 bg-white">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px]">
-                    <tr>
-                      <th className="py-1.5 px-2.5">Kriteria Penilaian BPK</th>
-                      <th className="py-1.5 px-2">Dasar Standar</th>
-                      <th className="py-1.5 px-2">Hasil Evaluasi</th>
-                      <th className="py-1.5 px-2.5 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {OPINI_BPK_TABLE_DATA.map((row, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50">
-                        <td className="py-1.5 px-2.5 font-medium text-slate-800 text-[11px]">{row.kriteria}</td>
-                        <td className="py-1.5 px-2 text-slate-500 text-[10.5px]">{row.dasar}</td>
-                        <td className="py-1.5 px-2 font-semibold text-slate-900 text-[11px]">{row.hasil}</td>
-                        <td className="py-1.5 px-2.5 text-center">
-                          <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
-                            {row.status}
-                          </span>
-                        </td>
+              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px]">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Kriteria Penilaian BPK</th>
+                        <th className="py-1.5 px-2">Dasar Standar</th>
+                        <th className="py-1.5 px-2">Hasil Evaluasi</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Visualisasi Grafis Tren Tindak Lanjut & Rekam Jejak 8 Tahun WTP */}
-              <div className="bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60 pt-1">
-                <div className="flex items-center justify-between mb-1 text-[10.5px] font-bold text-slate-800">
-                  <span>Rekam Jejak 8 Tahun WTP &amp; Tingkat Tindak Lanjut TLHP BPK RI</span>
-                  <span className="text-emerald-700 font-semibold">93,9% Tuntas</span>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {OPINI_BPK_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1.5 px-2.5 font-medium text-slate-800 text-[11px]">{row.kriteria}</td>
+                          <td className="py-1.5 px-2 text-slate-500 text-[10.5px]">{row.dasar}</td>
+                          <td className="py-1.5 px-2 font-semibold text-slate-900 text-[11px]">{row.hasil}</td>
+                          <td className="py-1.5 px-2.5 text-center">
+                            <span className="inline-block px-1.5 py-0.2 rounded text-[9.5px] font-semibold bg-emerald-50 text-emerald-700">
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="h-28 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={OPINI_BPK_HISTORY} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="thn" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis domain={[85, 100]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip formatter={(v: any) => [`${v}% Tuntas (Opini WTP)`, 'Tindak Lanjut']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                      <Line type="monotone" dataKey="skorTindakLanjut" stroke="#10B981" strokeWidth={2.5} dot={{ r: 3, fill: '#10B981' }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+
+                {/* Visualisasi Grafis Tren Tindak Lanjut & Rekam Jejak 8 Tahun WTP */}
+                <div className="lg:col-span-5 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60 flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-1 text-[10px] font-bold text-slate-800">
+                    <span>Rekam Jejak 8 Tahun WTP &amp; TLHP BPK</span>
+                    <span className="text-emerald-700 font-semibold">93,9% Tuntas</span>
+                  </div>
+                  <div className="h-32 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={OPINI_BPK_HISTORY} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="thn" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[85, 100]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(v: any) => [`${v}% Tuntas (Opini WTP)`, 'Tindak Lanjut']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                        <Line type="monotone" dataKey="skorTindakLanjut" stroke="#10B981" strokeWidth={2.5} dot={{ r: 3, fill: '#10B981' }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Predikat WTP beruntun dan 139 rekomendasi selesai
+                  </span>
                 </div>
               </div>
             </div>

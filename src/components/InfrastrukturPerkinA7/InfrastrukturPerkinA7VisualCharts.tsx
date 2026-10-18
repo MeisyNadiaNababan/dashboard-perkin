@@ -217,95 +217,124 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
           {/* TAB 1: IKP 1 - PENYELENGGARAAN INFRASTRUKTUR */}
           {activeTab === 'ikp-1' && (
             <div className="space-y-3">
-              {/* Detailed Specification Table */}
-              <div className="overflow-x-auto rounded-lg border border-slate-200">
-                <table className="w-full text-left border-collapse text-[11px]">
-                  <tbody>
-                    <tr className="border-b border-slate-100 bg-slate-50/50">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500 w-1/4">Indikator Kinerja</td>
-                      <td className="py-1.5 px-3 font-bold text-slate-900">{ikp1.name}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Unit Pengampu</td>
-                      <td className="py-1.5 px-3 text-slate-800">
-                        Dit. Pembangunan (92,4%), Dit. Perencanaan (95,2%), Dit. Pengamanan Aset (89,6%)
-                      </td>
-                    </tr>
-                    <tr className="border-b border-slate-100 bg-slate-50/50">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Target vs Realisasi</td>
-                      <td className="py-1.5 px-3 font-mono font-bold text-slate-900">
-                        Target: <span className="text-slate-700">100%</span> &bull; Realisasi:{' '}
-                        <span className="text-blue-700">92,40%</span> &bull; Capaian:{' '}
-                        <span className="text-emerald-700 font-black">92,40% (Tercapai Sesuai Rencana)</span>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Metode &amp; Formula</td>
-                      <td className="py-1.5 px-3 font-mono text-slate-700 flex items-center justify-between">
-                        <span>% Capaian = (Capaian Dit. Pembangunan + Dit. Perencanaan + Dit. Ditpam) / 3</span>
-                        <button
-                          type="button"
-                          onClick={() => onOpenFormulaModal(ikp1.id)}
-                          className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-bold hover:bg-blue-100 transition-colors cursor-pointer text-[10px]"
-                        >
-                          Lihat Formula
-                        </button>
-                      </td>
-                    </tr>
-                    <tr className="bg-slate-50/50">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Dataset Satu Data</td>
-                      <td className="py-1.5 px-3 font-mono text-sky-800 text-[10.5px]">
-                        Dit. Pembangunan Data No. 4 &amp; 6 (Hal. 49-51) &bull; Dit. Perencanaan Data No. 1-9 (Hal. 53)
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Multi-Year Trend Chart (2022 - 2026) */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-800">
-                    Tren Realisasi Penyelenggaraan Infrastruktur Fisik 2022 - 2026
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Penyelenggaraan Infrastruktur Kawasan Batam (14 Paket Fisik)
+                  </h4>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 font-mono">
+                    92,4% Sesuai Rencana
                   </span>
-                  <span className="text-[10px] text-slate-500 font-mono">Satuan: Persen (%)</span>
-                </div>
-                <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={INFRASTRUKTUR_TREND_ANNUAL} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 10 }} />
-                      <YAxis domain={[80, 105]} tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v}%`} />
-                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toFixed(1)}%`, name]} />
-                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                      <Line
-                        type="monotone"
-                        dataKey="target"
-                        name="Target Perkin (100%)"
-                        stroke="#94A3B8"
-                        strokeDasharray="4 4"
-                        strokeWidth={1.5}
-                        dot={false}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="realisasi"
-                        name="Realisasi Fisik Lapangan"
-                        stroke="#2563EB"
-                        strokeWidth={2.5}
-                        dot={{ r: 4, fill: '#2563EB' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <button
+                    onClick={() => onOpenFormulaModal(ikp1.id)}
+                    className="text-[11px] font-medium text-blue-700 hover:text-blue-900 flex items-center gap-0.5 transition-colors cursor-pointer"
+                  >
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
 
-              {/* Quick Insight Footnote */}
-              <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100 text-[11px] text-blue-900 flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Catatan Evaluasi:</strong> Dari 14 paket proyek konstruksi strategis, 12 paket (85,7%) berjalan tepat waktu (ahead &amp; on schedule), termasuk Flyover Sei Ladi dan Pelebaran Jalan Sudirman 5 lajur. 1 paket dalam percepatan (Dermaga Batu Ampar Tahap 2).
-                </span>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">92,40%</span>
+                  <span className="text-[9.5px] text-blue-700 block mt-0.5">14 Paket Strategis</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin 2026</span>
+                  <span className="text-base font-bold text-slate-700">100,00%</span>
+                  <span className="text-[9.5px] text-emerald-600 block mt-0.5">Sesuai Rencana DIPA</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Unit Pengampu</span>
+                  <span className="text-base font-bold text-slate-900">Dit. Pembangunan</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">Pagu Rp 842,5 M</span>
+                </div>
+              </div>
+
+              {/* Tabel Rincian & Tren Grafik dalam 1 Baris (Side-by-Side Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                  <table className="w-full text-left border-collapse text-[11px]">
+                    <tbody>
+                      <tr className="border-b border-slate-100 bg-slate-50/50">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500 w-1/3">Indikator Kinerja</td>
+                        <td className="py-1.5 px-3 font-bold text-slate-900">{ikp1.name}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Unit Pengampu</td>
+                        <td className="py-1.5 px-3 text-slate-800">
+                          Dit. Pembangunan (92,4%), Dit. Perencanaan (95,2%), Dit. Ditpam (89,6%)
+                        </td>
+                      </tr>
+                      <tr className="border-b border-slate-100 bg-slate-50/50">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Target vs Realisasi</td>
+                        <td className="py-1.5 px-3 font-mono font-bold text-slate-900">
+                          Target: <span className="text-slate-700">100%</span> &bull; Realisasi:{' '}
+                          <span className="text-blue-700">92,40%</span> &bull; Status:{' '}
+                          <span className="text-emerald-700 font-bold">On Schedule</span>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Metode &amp; Formula</td>
+                        <td className="py-1.5 px-3 font-mono text-slate-700">
+                          % Capaian = (Capaian Pembangunan + Perencanaan + Ditpam) / 3
+                        </td>
+                      </tr>
+                      <tr className="bg-slate-50/50">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Dataset Satu Data</td>
+                        <td className="py-1.5 px-3 font-mono text-sky-800 text-[10.5px]">
+                          Dit. Pembangunan No. 4 &amp; 6 &bull; Dit. Perencanaan No. 1-9 (Hal. 49-53)
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Multi-Year Trend Chart (2022 - 2026) */}
+                <div className="lg:col-span-5 bg-slate-50/70 p-2.5 rounded-lg border border-slate-100 flex flex-col justify-between">
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="font-bold text-slate-800 text-[10.5px]">
+                      Tren Realisasi Fisik (2022 - 2026)
+                    </span>
+                    <span className="text-[9.5px] text-blue-600 font-mono font-bold">Satuan: %</span>
+                  </div>
+                  <div className="h-36 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={INFRASTRUKTUR_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[80, 105]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(v: any, name: any) => [`${Number(v).toFixed(1)}%`, name]} contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          name="Target (100%)"
+                          stroke="#94A3B8"
+                          strokeDasharray="3 3"
+                          strokeWidth={1.5}
+                          dot={false}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="realisasi"
+                          name="Realisasi Fisik"
+                          stroke="#2563EB"
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: '#2563EB' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Progres 14 paket proyek konstruksi rata-rata 92,40%
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -313,88 +342,124 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
           {/* TAB 2: IKP 2 - NILAI REALISASI PNBP */}
           {activeTab === 'ikp-2' && (
             <div className="space-y-3">
-              {/* Detailed Specification Table */}
-              <div className="overflow-x-auto rounded-lg border border-slate-200">
-                <table className="w-full text-left border-collapse text-[11px]">
-                  <tbody>
-                    <tr className="border-b border-slate-100 bg-slate-50/50">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500 w-1/4">Indikator Kinerja</td>
-                      <td className="py-1.5 px-3 font-bold text-slate-900">{ikp2.name}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Unit Pengampu</td>
-                      <td className="py-1.5 px-3 text-slate-800">
-                        Direktorat Pembangunan Infrastruktur (Subdit ROW Utilitas &amp; Subdit ROW Penghijauan)
-                      </td>
-                    </tr>
-                    <tr className="border-b border-slate-100 bg-slate-50/50">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Target vs Realisasi</td>
-                      <td className="py-1.5 px-3 font-mono font-bold text-slate-900">
-                        Target: <span className="text-slate-700">Rp 6,821 Miliar</span> &bull; Realisasi:{' '}
-                        <span className="text-cyan-700">Rp 7,450 Miliar</span> &bull; Capaian:{' '}
-                        <span className="text-emerald-700 font-black">109,22% (Surplus +Rp 629 Juta)</span>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Rincian Komponen</td>
-                      <td className="py-1.5 px-3 text-slate-700">
-                        ROW Utilitas Kabel FO &amp; Pipa (Rp 5,25 M / 70,5%) &bull; ROW Penghijauan &amp; RTH (Rp 2,20 M / 29,5%)
-                      </td>
-                    </tr>
-                    <tr className="bg-slate-50/50">
-                      <td className="py-1.5 px-3 font-semibold text-slate-500">Dataset Satu Data</td>
-                      <td className="py-1.5 px-3 font-mono text-cyan-800 text-[10.5px]">
-                        Dataset No. 1 (ROW Utilitas) &amp; Dataset No. 2 (ROW Penghijauan) Hal. 48 Buku Satu Data
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Multi-Year Trend Chart (2022 - 2026) */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-800">
-                    Tren Realisasi Penerimaan PNBP ROW Infrastruktur 2022 - 2026
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Nilai Realisasi Penerimaan PNBP ROW Utilitas &amp; Penghijauan
+                  </h4>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-100 font-mono">
+                    109,2% Surplus Target
                   </span>
-                  <span className="text-[10px] text-slate-500 font-mono">Satuan: Rp Miliar</span>
-                </div>
-                <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={PNBP_TREND_ANNUAL} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 10 }} />
-                      <YAxis domain={[4.0, 9.0]} tick={{ fontSize: 9.5 }} tickFormatter={(v) => `Rp ${v}M`} />
-                      <Tooltip formatter={(v: any, name: any) => [`Rp ${Number(v).toFixed(2)} Miliar`, name]} />
-                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                      <Line
-                        type="monotone"
-                        dataKey="target"
-                        name="Target DIPA"
-                        stroke="#94A3B8"
-                        strokeDasharray="4 4"
-                        strokeWidth={1.5}
-                        dot={false}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="realisasi"
-                        name="Realisasi PNBP"
-                        stroke="#0891B2"
-                        strokeWidth={2.5}
-                        dot={{ r: 4, fill: '#0891B2' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <button
+                    onClick={() => onOpenFormulaModal(ikp2.id)}
+                    className="text-[11px] font-medium text-cyan-700 hover:text-cyan-900 flex items-center gap-0.5 transition-colors cursor-pointer"
+                  >
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
 
-              {/* Quick Insight Footnote */}
-              <div className="p-2.5 rounded-lg bg-cyan-50/60 border border-cyan-100 text-[11px] text-cyan-900 flex items-start gap-2">
-                <Award className="w-4 h-4 text-cyan-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Capaian Gemilang:</strong> Surplus PNBP +Rp 629 Juta didorong lonjakan permohonan galian kabel fiber optik operator telekomunikasi di Batam Center serta pipa gas industri Kabil &amp; Sekupang.
-                </span>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">Rp 7,45 Miliar</span>
+                  <span className="text-[9.5px] text-cyan-700 block mt-0.5">109,2% Capaian</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin 2026</span>
+                  <span className="text-base font-bold text-slate-700">Rp 6,82 Miliar</span>
+                  <span className="text-[9.5px] text-emerald-600 block mt-0.5">+Rp 629 Juta Surplus</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Unit Pengampu</span>
+                  <span className="text-base font-bold text-slate-900">Dit. Pembangunan</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">Subdit ROW Utilitas</span>
+                </div>
+              </div>
+
+              {/* Tabel Rincian & Charts dalam 1 Baris (Side-by-Side Persis Model Deputi A2) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                  <table className="w-full text-left border-collapse text-[11px]">
+                    <tbody>
+                      <tr className="border-b border-slate-100 bg-slate-50/50">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500 w-1/3">Indikator Kinerja</td>
+                        <td className="py-1.5 px-3 font-bold text-slate-900">{ikp2.name}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Unit Pengampu</td>
+                        <td className="py-1.5 px-3 text-slate-800">
+                          Dit. Pembangunan Infrastruktur (Subdit ROW Utilitas &amp; ROW Penghijauan)
+                        </td>
+                      </tr>
+                      <tr className="border-b border-slate-100 bg-slate-50/50">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Target vs Realisasi</td>
+                        <td className="py-1.5 px-3 font-mono font-bold text-slate-900">
+                          Target: <span className="text-slate-700">Rp 6,821 M</span> &bull; Realisasi:{' '}
+                          <span className="text-cyan-700">Rp 7,450 M</span> &bull; Status:{' '}
+                          <span className="text-emerald-700 font-bold">Surplus +Rp 629 Jt</span>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Rincian Komponen</td>
+                        <td className="py-1.5 px-3 text-slate-700">
+                          ROW Kabel FO &amp; Pipa (Rp 5,25 M / 70,5%) &bull; ROW Penghijauan &amp; RTH (Rp 2,20 M / 29,5%)
+                        </td>
+                      </tr>
+                      <tr className="bg-slate-50/50">
+                        <td className="py-1.5 px-3 font-semibold text-slate-500">Dataset Satu Data</td>
+                        <td className="py-1.5 px-3 font-mono text-cyan-800 text-[10.5px]">
+                          Dataset No. 1 (ROW Utilitas) &amp; Dataset No. 2 (ROW Penghijauan) Hal. 48 Buku Satu Data
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Multi-Year Trend Chart (2022 - 2026) */}
+                <div className="lg:col-span-5 bg-slate-50/70 p-2.5 rounded-lg border border-slate-100 flex flex-col justify-between">
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="font-bold text-slate-800 text-[10.5px]">
+                      Tren PNBP ROW (2022 - 2026)
+                    </span>
+                    <span className="text-[9.5px] text-cyan-700 font-mono font-bold">Satuan: Rp M</span>
+                  </div>
+                  <div className="h-36 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={PNBP_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[4.0, 9.0]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(v: any, name: any) => [`Rp ${Number(v).toFixed(2)} Miliar`, name]} contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          name="Target DIPA"
+                          stroke="#94A3B8"
+                          strokeDasharray="3 3"
+                          strokeWidth={1.5}
+                          dot={false}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="realisasi"
+                          name="Realisasi PNBP"
+                          stroke="#0891B2"
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: '#0891B2' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Penerimaan konsisten melampaui target penetapan DIPA
+                  </span>
+                </div>
               </div>
             </div>
           )}

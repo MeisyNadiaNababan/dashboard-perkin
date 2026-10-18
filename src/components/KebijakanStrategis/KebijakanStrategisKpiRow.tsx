@@ -84,20 +84,6 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-white/15">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP1} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp1A2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#FFFFFF" strokeWidth={1.5} fill="url(#sparkIkp1A2)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* IKP 2: Indeks Kualitas Kebijakan (IKK) - HARMONISASI */}
@@ -123,20 +109,6 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
                 {ikpHarmonisasi.capaianPersen.toFixed(1)}% Melampaui
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-blue-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP2} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp2A2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563EB" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#2563EB" strokeWidth={1.5} fill="url(#sparkIkp2A2)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
 
@@ -164,20 +136,6 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               </span>
             </div>
           </div>
-
-          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-indigo-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP3} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp3A2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#4F46E5" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#4F46E5" strokeWidth={1.5} fill="url(#sparkIkp3A2)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* IKP 4: IKM Pengguna Layanan PTSP - PTSP */}
@@ -203,20 +161,6 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
                 {ikpPtsp.capaianPersen.toFixed(1)}% Sangat Baik
               </span>
             </div>
-          </div>
-
-          <div className="h-6 w-full mt-1.5 pt-0.5 border-t border-emerald-200/50">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={SPARKLINE_IKP4} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="sparkIkp4A2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#059669" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="v" stroke="#059669" strokeWidth={1.5} fill="url(#sparkIkp4A2)" />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
       </div>

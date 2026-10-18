@@ -197,16 +197,11 @@ export const KekKpiRow: React.FC<KekKpiRowProps> = ({
           </div>
         </div>
 
-        {/* Bottom Row: Target / Summary text & Micro Bar Sparkline */}
+        {/* Bottom Row: Target / Summary text */}
         <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
           <span className="text-[11px] text-slate-500 font-medium truncate">
             {item.bottomText}
           </span>
-
-          <MicroBarSparkline
-            data={item.sparkline}
-            color={item.themeColor}
-          />
         </div>
       </div>
     );

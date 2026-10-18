@@ -229,16 +229,14 @@ export const PdsiKpiRow: React.FC<PdsiKpiRowProps> = ({ onSelectMetric, onOpenKa
                 </div>
               </div>
 
-              {/* Bottom Row: Target Metric & Micro Bar Sparkline */}
+              {/* Bottom Row: Target Metric */}
               <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
                 <span className="text-[10.5px] text-slate-500 font-medium truncate">
                   {kpi.target}
                 </span>
-
-                <MicroBarSparkline
-                  data={kpi.sparkline}
-                  color={config.themeColor}
-                />
+                <span className="text-[10.5px] font-bold text-emerald-700 font-mono">
+                  {kpi.badge}
+                </span>
               </div>
             </div>
           );
