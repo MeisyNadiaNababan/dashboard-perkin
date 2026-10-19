@@ -101,7 +101,7 @@ export const KebijakanStrategisDashboard: React.FC<KebijakanStrategisDashboardPr
 
   return (
     <div
-      className="space-y-3.5 font-sans text-slate-800 pb-12 max-w-[1880px] mx-auto origin-top"
+      className="space-y-3.5 font-sans text-slate-800 pb-0 max-w-[1880px] mx-auto origin-top"
       style={{ zoom: '80%' }}
     >
       {/* ==================================================================== */}

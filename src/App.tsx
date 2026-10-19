@@ -245,7 +245,7 @@ export default function App() {
         />
 
         {/* Scrollable Main Dashboard Canvas */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 scroll-smooth">
+        <main className="flex-1 overflow-y-auto px-3 sm:px-4 lg:px-5 pt-3 sm:pt-4 lg:pt-5 pb-2 sm:pb-2 lg:pb-2 space-y-4 scroll-smooth">
           <div className="max-w-[1920px] mx-auto space-y-4">
 
             {/* VIEW ROUTING ACCORDING TO ACTIVE UNIT */}

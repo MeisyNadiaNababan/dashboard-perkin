@@ -104,7 +104,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
   };
 
   return (
-    <div className="w-full bg-[#F8FAFC] text-slate-800 font-sans antialiased min-h-screen space-y-3.5 pb-8">
+    <div className="w-full bg-[#F8FAFC] text-slate-800 font-sans antialiased space-y-3.5 pb-0">
       {/* ================================================================== */}
       {/* 1. TOP HEADER EKSEKUTIF (FULL-WIDTH, TANPA SIDEBAR)                */}
       {/* ================================================================== */}
@@ -330,38 +330,11 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
       </section>
 
       {/* ================================================================== */}
-      {/* 5. NARASI AI STRATEGIS (SESUAI REFERENSI SCREENSHOT PIMPINAN)      */}
+      {/* 5. NARASI AI STRATEGIS                                             */}
       {/* ================================================================== */}
       <section>
         <NarasiAiInsightBar />
       </section>
-
-      {/* ================================================================== */}
-      {/* 6. FOOTER RESMI EKSEKUTIF                                          */}
-      {/* ================================================================== */}
-      <footer className="pt-4 border-t border-slate-200/60 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-        <div className="flex items-center gap-2">
-          <Building2 className="w-4 h-4 text-slate-400" />
-          <span>Sistem Pemantauan Terpadu &bull; Badan Pengusahaan Kawasan Batam (KPBPB) TA 2026</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => onOpenManualModal('iks-1')}
-            className="hover:text-blue-600 transition-colors cursor-pointer font-medium"
-          >
-            Manual IKS
-          </button>
-          <span>&bull;</span>
-          <button
-            onClick={onNavigateToCrossUnitMatrix}
-            className="hover:text-blue-600 transition-colors cursor-pointer font-medium"
-          >
-            Matriks 24 Satker
-          </button>
-          <span>&bull;</span>
-          <span className="font-semibold text-slate-700">Perkin No. 1/SPJ/KA/1/2026</span>
-        </div>
-      </footer>
 
       {/* Satu Data Formula Modal */}
       <KonsolidasiSatuDataFormulaModal

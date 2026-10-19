@@ -14,7 +14,6 @@ import {
   Users,
   Flame,
   Building2,
-  BedDouble,
   DollarSign,
   Package,
   Layers,
@@ -160,13 +159,13 @@ const DITPAM_PENERTIBAN_MONTHLY = [
   { bulan: 'Des', penertibanRutin: 79, timTerpadu: 18, selesai: 94 },
 ];
 
-// Dataset #3: Distribusi Personel & Pos Pengamanan Ditpam (624 Personel)
+// Dataset #2 & #3: Sebaran Kekuatan Personel Ditpam per Pos Pengamanan
 const DITPAM_PERSONEL_SEBARAN = [
-  { pos: 'Patroli Daerah Tangkapan Air (DTA) & Waduk', personel: 185, share: 29.6, posko: '6 Pos Waduk' },
-  { pos: 'Pengamanan Objek Vital Bandara & Pelabuhan', personel: 162, share: 26.0, posko: '8 Terminal & Pos' },
-  { pos: 'Pengamanan Kantor Pusat, Gedung BIDA & IT Centre', personel: 124, share: 19.9, posko: 'Mako & Gedung BIDA' },
-  { pos: 'Patroli Hutan Lindung, Mangrove & Lahan Mangkrak', personel: 95, share: 15.2, posko: 'Pos Barelang & Sei Beduk' },
-  { pos: 'Unit Reaksi Cepat (URC) & Rescue Bencana', personel: 58, share: 9.3, posko: 'Posko Siaga 24 Jam' },
+  { pos: 'Pengamanan Objek Vital & Kawasan Industri', personel: 184, share: 29.5, posko: '12 Pos Kawasan' },
+  { pos: 'Patroli Waduk, DTA Air Baku & Hutan Lindung', personel: 142, share: 22.8, posko: '8 Pos DTA Waduk' },
+  { pos: 'Pengamanan Pelabuhan Internasional & Domestik', personel: 128, share: 20.5, posko: '6 Terminal Feri' },
+  { pos: 'Kawasan Bandara Internasional Hang Nadim', personel: 95, share: 15.2, posko: 'Avsec & Perimeter' },
+  { pos: 'Mako Utama, Penegakan & Unit Reaksi Cepat', personel: 75, share: 12.0, posko: 'Batam Centre' },
 ];
 
 // Dataset #5 & #6: Rekapitulasi Mitigasi Rescue & Bencana Alam
@@ -200,180 +199,154 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
   return (
     <div
       id="unit-deep-dive-section"
-      className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4.5 space-y-4 font-sans"
+      className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3.5 font-sans"
     >
       {/* ================================================================== */}
-      {/* 1. HEADER SECTION & UNIT TABS (PERSIS MODEL DASHBOARD DEP-A4 & A5) */}
+      {/* 1. HEADER SECTION & UNIT TABS (PERSIS MODEL DEP-A1)                 */}
       {/* ================================================================== */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-200">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-[#0A2540] to-blue-900 text-white flex items-center justify-center shadow-xs">
-            <Sparkles className="w-4.5 h-4.5 text-cyan-300 animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[9.5px] font-mono font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200 uppercase">
-                UNIT DEEP-DIVE MONITORING
-              </span>
-              <span className="text-xs text-slate-500 font-mono">
-                Buku Satu Data BP Batam (3 Unit Pengampu A6 &bull; 121 Dataset)
-              </span>
-            </div>
-            <h3 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              Unit Deep-Dive Center: Rumah Sakit, SPAM Fasling &amp; Pengamanan Aset
-            </h3>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div>
+          <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
+            Unit Deep-Dive Center: Rumah Sakit, SPAM Fasling &amp; Pengamanan Aset
+          </h3>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            Analisis granular 3 unit operasional pengampu Perkin DEP-A6 (BU Rumah Sakit, BU SPAM Fasling, Dit. Pengamanan Aset)
+          </p>
         </div>
 
-        {/* 3 Unit Selection Tabs - Persis DEP-A4, A5 & A3 */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl overflow-x-auto no-scrollbar text-xs">
+        {/* Tab Switcher */}
+        <div className="inline-flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80">
           <button
             type="button"
             onClick={() => onSelectUnit('bu-rumah-sakit')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeUnit === 'bu-rumah-sakit'
-                ? 'bg-white text-rose-700 shadow-2xs ring-1 ring-slate-200'
+                ? 'bg-rose-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Stethoscope className="w-3.5 h-3.5 text-rose-600" />
-            <span>BU Rumah Sakit (18 DS)</span>
+            <Stethoscope className="w-3.5 h-3.5" />
+            <span>BU Rumah Sakit</span>
           </button>
 
           <button
             type="button"
             onClick={() => onSelectUnit('bu-spam-fasling')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeUnit === 'bu-spam-fasling'
-                ? 'bg-white text-cyan-700 shadow-2xs ring-1 ring-slate-200'
+                ? 'bg-cyan-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Droplets className="w-3.5 h-3.5 text-cyan-600" />
-            <span>BU SPAM Fasling (91 DS)</span>
+            <Droplets className="w-3.5 h-3.5" />
+            <span>BU SPAM Fasling</span>
           </button>
 
           <button
             type="button"
             onClick={() => onSelectUnit('dit-pam-aset')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeUnit === 'dit-pam-aset'
-                ? 'bg-white text-amber-700 shadow-2xs ring-1 ring-slate-200'
+                ? 'bg-amber-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Shield className="w-3.5 h-3.5 text-amber-600" />
-            <span>Dit. Pengamanan Aset (12 DS)</span>
+            <Shield className="w-3.5 h-3.5" />
+            <span>Dit. Pengamanan Aset</span>
           </button>
         </div>
       </div>
 
       {/* ================================================================== */}
       {/* 2. TAB CONTENT: BU RUMAH SAKIT (RSBP BATAM) (18 DATASET SATU DATA) */}
-      {/* Semua Informasi Visualisasi Digabung Langsung Satu Tampilan        */}
+      {/* Setiap visualisasi langsung menampilkan KPI-nya di header (DEP-A1) */}
       {/* ================================================================== */}
       {activeUnit === 'bu-rumah-sakit' && (
         <div className="space-y-3.5">
-          {/* Top Quick Highlights Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">PNBP RSBP (DS 2)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 121,80 M</span>
-              <span className="text-[9.5px] text-emerald-700 font-bold">104,5% dari Target</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kunjungan Pasien (DS 5)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">142.350 Org</span>
-              <span className="text-[9.5px] text-slate-500">R.Jalan 104k &bull; R.Inap 24k</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Efisiensi BOR (DS 9)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">76,2% BOR</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">ALOS 4,2 Hari (Ideal)</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Layanan Unggulan (DS 6)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">28.450 Pasien</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">KEK Medis Sekupang</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Resep Obat (DS 17)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">84,5% Generik</span>
-              <span className="text-[9.5px] text-purple-700 font-semibold">Rasionalitas Terjaga</span>
-            </div>
-          </div>
-
           {/* DUAL VISUALISASI UTAMA: Tren Bulanan Kunjungan + Morbiditas Top 5 ICD-10 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 1: Tren Bulanan Kunjungan Pasien (Dataset #5) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <HeartPulse className="w-4 h-4 text-rose-600" />
-                    <span>Tren Bulanan Kunjungan Pasien RSBP (Dataset #5 Hal. 20 Satu Data)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Volume Pasien Rawat Jalan, Rawat Inap &amp; IGD (Jan s.d Des 2025)
-                  </p>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <HeartPulse className="w-4 h-4 text-rose-600" />
+                      <span>Tren Bulanan Kunjungan Pasien RSBP</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Volume Pasien Rawat Jalan, Rawat Inap &amp; IGD (Jan s.d Des 2025)
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      142.350 Org
+                    </span>
+                    <span className="text-[10px] text-rose-600 font-bold ml-1.5">
+                      (R.Jalan 104k &bull; R.Inap 24k)
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-rose-50 text-rose-800 border border-rose-200 px-2 py-0.5 rounded">
-                  RSBP Sekupang
-                </span>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={RSBP_MONTHLY_PATIENTS} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
-                    <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[0, 12000]} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[9000, 14000]} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                    <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Pasien`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar yAxisId="left" dataKey="rawatJalan" name="Rawat Jalan" fill="#E11D48" radius={[3, 3, 0, 0]} />
-                    <Bar yAxisId="left" dataKey="rawatInap" name="Rawat Inap" fill="#0284C7" radius={[3, 3, 0, 0]} />
-                    <Bar yAxisId="left" dataKey="igd" name="IGD 24 Jam" fill="#D97706" radius={[3, 3, 0, 0]} />
-                    <Line yAxisId="right" type="monotone" dataKey="total" name="Total Kunjungan" stroke="#4F46E5" strokeWidth={2} dot={{ r: 3 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={RSBP_MONTHLY_PATIENTS} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
+                      <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[0, 12000]} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[9000, 14000]} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Pasien`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar yAxisId="left" dataKey="rawatJalan" name="Rawat Jalan" fill="#E11D48" radius={[3, 3, 0, 0]} />
+                      <Bar yAxisId="left" dataKey="rawatInap" name="Rawat Inap" fill="#0284C7" radius={[3, 3, 0, 0]} />
+                      <Bar yAxisId="left" dataKey="igd" name="IGD 24 Jam" fill="#D97706" radius={[3, 3, 0, 0]} />
+                      <Line yAxisId="right" type="monotone" dataKey="total" name="Total Kunjungan" stroke="#4F46E5" strokeWidth={2} dot={{ r: 3 }} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Visual 2: Kasus Morbiditas Terbanyak ICD-10 (Dataset #4) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Activity className="w-4 h-4 text-rose-600" />
-                    <span>Top 5 Kasus Morbiditas ICD-10 (Dataset #4 Hal. 20)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Prevalensi Diagnosa Terbanyak Pasien Rumah Sakit BP Batam
-                  </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Activity className="w-4 h-4 text-rose-600" />
+                      <span>Top 5 Kasus Morbiditas ICD-10</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Prevalensi Diagnosa Terbanyak Pasien Rumah Sakit BP Batam
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      84,5% Generik
+                    </span>
+                    <span className="text-[10px] text-purple-600 font-bold ml-1.5">
+                      (Rasionalitas Terjaga)
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-1.5 pt-1">
-                {RSBP_TOP_MORBIDITAS.map((m, idx) => (
-                  <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                    <div className="min-w-0 pr-2">
-                      <div className="font-bold text-slate-800 truncate">{m.namaPenyakit}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        Kode ICD: {m.kodeIcd} &bull; {m.kasus.toLocaleString('id-ID')} Kasus
+                <div className="space-y-1.5 pt-1">
+                  {RSBP_TOP_MORBIDITAS.map((m, idx) => (
+                    <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+                      <div className="min-w-0 pr-2">
+                        <div className="font-bold text-slate-800 truncate">{m.namaPenyakit}</div>
+                        <div className="text-[10px] text-slate-500 font-mono">
+                          Kode ICD: {m.kodeIcd} &bull; {m.kasus.toLocaleString('id-ID')} Kasus
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="font-mono font-black text-rose-700 text-xs bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                          {m.porsi}
+                        </span>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-mono font-black text-rose-700 text-xs bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                        {m.porsi}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -381,14 +354,26 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
           {/* DUAL VISUALISASI KEDUA: Layanan Unggulan KEK Medis & Efisiensi Operasional */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 3: Layanan Unggulan KEK Kesehatan Sekupang (Dataset #6) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Award className="w-4 h-4 text-blue-600" />
-                <span>Kunjungan Pasien Layanan Unggulan KEK Kesehatan (Dataset #6)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Pangsa Pasien &amp; Kontribusi Pendapatan Layanan Spesialisasi Unggulan RSBP
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Award className="w-4 h-4 text-blue-600" />
+                    <span>Layanan Unggulan KEK Medis Sekupang</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-500">
+                    Pangsa Pasien &amp; Kontribusi Pendapatan Layanan Spesialisasi Unggulan RSBP
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                    28.450 Pasien
+                  </span>
+                  <span className="text-[10px] text-blue-600 font-bold ml-1.5">
+                    (76,2% BOR &bull; ALOS 4,2 Hari)
+                  </span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {RSBP_LAYANAN_UNGGULAN.map((u, idx) => (
@@ -411,27 +396,25 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
             </div>
 
             {/* Visual 4: Daftar Tenant Fasilitas RSBP (Dataset #14) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
                     <Building2 className="w-4 h-4 text-emerald-600" />
-                    <span>Daftar Penyewa Fasilitas &amp; Tenant Medis (Dataset #14 Hal. 21)</span>
-                  </h4>
+                    <span>Penyewa Fasilitas &amp; Tenant Medis</span>
+                  </h3>
                   <p className="text-[10px] text-slate-500">
                     Penerimaan Sewa Komersial Penunjang Pelayanan Rumah Sakit
                   </p>
                 </div>
-                {onNavigateToFullDashboard && (
-                  <button
-                    type="button"
-                    onClick={() => onNavigateToFullDashboard('rumah-sakit')}
-                    className="text-xs text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Dashboard RSBP</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                )}
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                    Rp 121,80 M
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                    (104,5% Target PNBP)
+                  </span>
+                </div>
               </div>
 
               <div className="overflow-x-auto">
@@ -463,103 +446,91 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
 
       {/* ================================================================== */}
       {/* 3. TAB CONTENT: BU SPAM, FASILITAS DAN LINGKUNGAN (91 DATASET)     */}
-      {/* Semua Informasi Visualisasi Digabung Langsung Satu Tampilan        */}
+      {/* Setiap visualisasi langsung menampilkan KPI-nya di header (DEP-A1) */}
       {/* ================================================================== */}
       {activeUnit === 'bu-spam-fasling' && (
         <div className="space-y-3.5">
-          {/* Top Quick Highlights Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">PNBP SPAM Fasling (DS 8-10)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 142,50 M</span>
-              <span className="text-[9.5px] text-cyan-700 font-bold">102,4% dari Target</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Produksi Air WTP (DS 2)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">3.420 L/dtk</span>
-              <span className="text-[9.5px] text-slate-500">Kapasitas 3.660 L/dtk</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Daya Tampung 6 Waduk (DS 37)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">184,8 Juta m³</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">Ketahanan 12-16 Bulan</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Limbah B3 KPLI (DS 54 &amp; 55)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">14.850 Ton</span>
-              <span className="text-[9.5px] text-amber-700 font-semibold">99,2% Terolah Sesuai Baku</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Okupansi Rusunawa (DS 25)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">91,5% Terisi</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">32 Twin Block (3.072 Unit)</span>
-            </div>
-          </div>
-
           {/* DUAL VISUALISASI UTAMA: Kapasitas WTP + Komposisi Sumber Pendapatan */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 1: Kapasitas vs Produksi 6 WTP / IPA (Dataset #2 Hal. 28) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Droplets className="w-4 h-4 text-cyan-600" />
-                    <span>Kapasitas Desain vs Produksi Riil 6 WTP Batam (Dataset #2 Hal. 28)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Instalasi Pengolahan Air (IPA) Bersih dalam Liter per Detik (L/s)
-                  </p>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Droplets className="w-4 h-4 text-cyan-600" />
+                      <span>Kapasitas Desain vs Produksi Riil 6 WTP Batam</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Instalasi Pengolahan Air (IPA) Bersih dalam Liter per Detik (L/s)
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      3.420 L/dtk
+                    </span>
+                    <span className="text-[10px] text-cyan-700 font-bold ml-1.5">
+                      (Utilisasi 93,4% &bull; Kapasitas 3.660 L/s)
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-cyan-50 text-cyan-800 border border-cyan-200 px-2 py-0.5 rounded">
-                  SPAM Batam
-                </span>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={SPAM_WTP_CAPACITY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="wtp" tick={{ fontSize: 9.5 }} />
-                    <YAxis tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v} L/s`} />
-                    <Tooltip formatter={(v: any, name: any) => [`${v} L/detik`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar dataKey="kapasitas" name="Kapasitas Desain" fill="#94A3B8" radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="produksi" name="Produksi Aktual" fill="#0284C7" radius={[3, 3, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={SPAM_WTP_CAPACITY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="wtp" tick={{ fontSize: 9.5 }} />
+                      <YAxis tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v} L/s`} />
+                      <Tooltip formatter={(v: any, name: any) => [`${v} L/detik`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar dataKey="kapasitas" name="Kapasitas Desain" fill="#94A3B8" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="produksi" name="Produksi Aktual" fill="#0284C7" radius={[3, 3, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Visual 2: Komposisi Pendapatan SPAM Fasling (Dataset #8, 9, 10 Hal. 28) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <DollarSign className="w-4 h-4 text-cyan-600" />
-                <span>Komposisi Sumber Pendapatan PNBP (Dataset #8, #9, #10)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Penerimaan Air Curah, Limbah B3 KPLI, Rusunawa &amp; Destinasi Wisata
-              </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <DollarSign className="w-4 h-4 text-cyan-600" />
+                      <span>Komposisi Sumber Pendapatan PNBP</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Penerimaan Air Curah, Limbah B3 KPLI, Rusunawa &amp; Wisata
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      Rp 142,50 M
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                      (102,4% Capaian Target)
+                    </span>
+                  </div>
+                </div>
 
-              <div className="space-y-1.5 pt-1">
-                {SPAM_REVENUE_KOMPOSISI.map((r, idx) => (
-                  <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                    <div className="min-w-0 pr-2">
-                      <div className="font-bold text-slate-800 truncate">{r.sumber}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        Target Rp {r.targetM} M &bull; Realisasi Rp {r.realisasiM} M
+                <div className="space-y-1.5 pt-1">
+                  {SPAM_REVENUE_KOMPOSISI.map((r, idx) => (
+                    <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+                      <div className="min-w-0 pr-2">
+                        <div className="font-bold text-slate-800 truncate">{r.sumber}</div>
+                        <div className="text-[10px] text-slate-500 font-mono">
+                          Target Rp {r.targetM} M &bull; Realisasi Rp {r.realisasiM} M
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="font-mono font-black text-cyan-700 text-xs bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200">
+                          {r.share}%
+                        </span>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-mono font-black text-cyan-700 text-xs bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200">
-                        {r.share}%
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -567,14 +538,26 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
           {/* DUAL VISUALISASI KEDUA: Waduk Air Baku & Monitoring DMZ */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 3: Ketahanan 6 Waduk Air Baku (Dataset #37 Hal. 31) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Droplets className="w-4 h-4 text-blue-600" />
-                <span>Ketahanan &amp; Daya Tampung 6 Waduk Air Baku (Dataset #37)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Kapasitas Waduk (Juta m³), Luas Daerah Genangan, dan Ketahanan Pasokan
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Droplets className="w-4 h-4 text-blue-600" />
+                    <span>Ketahanan &amp; Daya Tampung 6 Waduk Air Baku</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-500">
+                    Kapasitas Waduk (Juta m³), Luas Genangan, dan Ketahanan Pasokan
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                    184,8 Juta m³
+                  </span>
+                  <span className="text-[10px] text-blue-600 font-bold ml-1.5">
+                    (Ketahanan 12-16 Bulan)
+                  </span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {SPAM_WADUK_STATUS.map((w, idx) => (
@@ -596,14 +579,26 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
             </div>
 
             {/* Visual 4: Monitoring Tekanan JDU & NRW per Zona DMZ (Dataset #41, 68, 70) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Activity className="w-4 h-4 text-cyan-600" />
-                <span>Tekanan JDU &amp; Pengendalian NRW per Zona DMZ (Dataset #41, #68, #70)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Tekanan Jaringan Distribusi Utama (bar) dan Rasio Kehilangan Air (NRW %)
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Activity className="w-4 h-4 text-cyan-600" />
+                    <span>Tekanan JDU &amp; Pengendalian NRW Zona DMZ</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-500">
+                    Tekanan Jaringan Distribusi Utama (bar) dan Rasio Kehilangan Air (NRW %)
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                    1,52 Bar
+                  </span>
+                  <span className="text-[10px] text-amber-600 font-bold ml-1.5">
+                    (Rerata NRW 23,3% &bull; 14.850 Ton B3)
+                  </span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {SPAM_DMZ_MONITORING.map((d, idx) => (
@@ -628,11 +623,27 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
           </div>
 
           {/* Table: Pemanfaatan Rusunawa Pekerja (32 Twin Block) */}
-          <div className="bg-slate-50/80 rounded-xl border border-slate-200 p-3 space-y-2">
-            <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5 text-blue-600" />
-              <span>Rekapitulasi Okupansi Rumah Susun Sederhana Sewa (Rusunawa) Pekerja BP Batam (Dataset #25 Hal. 30)</span>
-            </h4>
+          <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+            <div className="flex items-center justify-between mb-1.5">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Okupansi Rumah Susun Sederhana Sewa (Rusunawa) Pekerja</span>
+                </h3>
+                <p className="text-[10px] text-slate-500">
+                  Rekapitulasi 32 Twin Block di Mukakuning, Batu Ampar, Sekupang, dan Kabil
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                  91,5% Terisi
+                </span>
+                <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                  (2.817 dari 3.072 Unit)
+                </span>
+              </div>
+            </div>
+
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -644,9 +655,9 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
                     <th className="py-1.5 px-2 text-right">PNBP / Bulan</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200/60">
+                <tbody className="divide-y divide-slate-100">
                   {SPAM_RUSUN_DATA.map((r, i) => (
-                    <tr key={i} className="hover:bg-white/80">
+                    <tr key={i} className="hover:bg-slate-50/80">
                       <td className="py-1.5 px-2 font-semibold text-slate-800">{r.lokasi}</td>
                       <td className="py-1.5 px-2 text-right font-mono text-slate-600">{r.unit} Unit</td>
                       <td className="py-1.5 px-2 text-right font-mono font-bold text-cyan-700">{r.terisi} Unit</td>
@@ -663,105 +674,93 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
 
       {/* ================================================================== */}
       {/* 4. TAB CONTENT: DIREKTORAT PENGAMANAN ASET & KAWASAN (12 DATASET)   */}
-      {/* Semua Informasi Visualisasi Digabung Langsung Satu Tampilan        */}
+      {/* Setiap visualisasi langsung menampilkan KPI-nya di header (DEP-A1) */}
       {/* ================================================================== */}
       {activeUnit === 'dit-pam-aset' && (
         <div className="space-y-3.5">
-          {/* Top Quick Highlights Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Response Time SLA</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">11,8 Menit</span>
-              <span className="text-[9.5px] text-emerald-700 font-bold">Standar Maks 15 Menit</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kegiatan Penertiban (DS 1 &amp; 9)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">874 Kasus</span>
-              <span className="text-[9.5px] text-slate-500">Bangunan Liar &amp; Hutan</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kekuatan Personel (DS 2 &amp; 3)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">624 Personel</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">148 Sertifikasi Khusus</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Proteksi Kebakaran (DS 4)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">312 Obvit</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">Inspeksi Berkala Tuntas</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Pengamanan Aksi (DS 7)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">28 Aksi Damai</span>
-              <span className="text-[9.5px] text-purple-700 font-semibold">100% Kondusif &amp; Tertib</span>
-            </div>
-          </div>
-
           {/* DUAL VISUALISASI UTAMA: Tren Bulanan Penertiban + Distribusi Personel */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 1: Tren Bulanan Penertiban Rutin vs Tim Terpadu (Dataset #1 & #9) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-amber-600" />
-                    <span>Tren Penertiban Bangunan Liar &amp; Penggarap Hutan (Dataset #1 &amp; #9 Hal. 17-19)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Penertiban Rutin Ditpam &amp; Operasi Gabungan Tim Terpadu Kota Batam
-                  </p>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Shield className="w-4 h-4 text-amber-600" />
+                      <span>Tren Penertiban Bangli &amp; Penggarap Hutan</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Penertiban Rutin Ditpam &amp; Operasi Gabungan Tim Terpadu Kota Batam
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      874 Kasus
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                      (100% Tuntas Ditertibkan)
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded">
-                  Ditpam BP Batam
-                </span>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={DITPAM_PENERTIBAN_MONTHLY} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
-                    <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[0, 100]} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[0, 30]} />
-                    <Tooltip formatter={(v: any, name: any) => [`${v} Kegiatan`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar yAxisId="left" dataKey="penertibanRutin" name="Penertiban Rutin Ditpam" fill="#D97706" radius={[3, 3, 0, 0]} />
-                    <Bar yAxisId="right" dataKey="timTerpadu" name="Operasi Tim Terpadu" fill="#0284C7" radius={[3, 3, 0, 0]} />
-                    <Line yAxisId="left" type="monotone" dataKey="selesai" name="Tuntas Diselesaikan" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={DITPAM_PENERTIBAN_MONTHLY} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
+                      <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[0, 100]} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[0, 30]} />
+                      <Tooltip formatter={(v: any, name: any) => [`${v} Kegiatan`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar yAxisId="left" dataKey="penertibanRutin" name="Penertiban Rutin Ditpam" fill="#D97706" radius={[3, 3, 0, 0]} />
+                      <Bar yAxisId="right" dataKey="timTerpadu" name="Operasi Tim Terpadu" fill="#0284C7" radius={[3, 3, 0, 0]} />
+                      <Line yAxisId="left" type="monotone" dataKey="selesai" name="Tuntas Diselesaikan" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Visual 2: Distribusi Penempatan Personel Pengamanan (Dataset #3) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-amber-600" />
-                <span>Distribusi Kekuatan 624 Personel Ditpam (Dataset #3 Hal. 18)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Alokasi Pos Pengamanan Objek Vital, Waduk &amp; Hutan Lindung
-              </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Users className="w-4 h-4 text-amber-600" />
+                      <span>Distribusi Kekuatan Personel Ditpam</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Alokasi Pos Objek Vital, Waduk &amp; Hutan Lindung
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      624 Personel
+                    </span>
+                    <span className="text-[10px] text-blue-600 font-bold ml-1.5">
+                      (148 Bersertifikasi Khusus)
+                    </span>
+                  </div>
+                </div>
 
-              <div className="space-y-1.5 pt-1">
-                {DITPAM_PERSONEL_SEBARAN.map((p, idx) => (
-                  <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                    <div className="min-w-0 pr-2">
-                      <div className="font-bold text-slate-800 truncate">{p.pos}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        {p.personel} Personel &bull; {p.posko}
+                <div className="space-y-1.5 pt-1">
+                  {DITPAM_PERSONEL_SEBARAN.map((p, idx) => (
+                    <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+                      <div className="min-w-0 pr-2">
+                        <div className="font-bold text-slate-800 truncate">{p.pos}</div>
+                        <div className="text-[10px] text-slate-500 font-mono">
+                          {p.personel} Personel &bull; {p.posko}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="font-mono font-black text-amber-700 text-xs bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                          {p.share}%
+                        </span>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-mono font-black text-amber-700 text-xs bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                        {p.share}%
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -769,14 +768,26 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
           {/* DUAL VISUALISASI KEDUA: Rescue Bencana & Pengamanan Unjuk Rasa */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 3: Mitigasi Rescue & Bencana Alam (Dataset #5 & #6) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Flame className="w-4 h-4 text-rose-600" />
-                <span>Mitigasi, Rescue &amp; Bencana Alam (Dataset #5 &amp; #6 Hal. 18)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Penanganan Pohon Tumbang, Longsor, Banjir &amp; Karhutla
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Flame className="w-4 h-4 text-rose-600" />
+                    <span>Mitigasi, Rescue &amp; Bencana Alam</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-500">
+                    Penanganan Pohon Tumbang, Longsor, Banjir &amp; Karhutla
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                    11,8 Menit SLA
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                    (Standar Maks 15 Menit &bull; 312 Obvit)
+                  </span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {DITPAM_RESCUE_DATA.map((r, idx) => (
@@ -798,27 +809,25 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
             </div>
 
             {/* Visual 4: Pengamanan Aksi Unjuk Rasa (Dataset #7) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>Pengamanan Unjuk Rasa &amp; Objek Vital (Dataset #7 Hal. 18)</span>
-                  </h4>
+                    <span>Pengamanan Unjuk Rasa &amp; Objek Vital</span>
+                  </h3>
                   <p className="text-[10px] text-slate-500">
                     28 Giat Aksi Damai &bull; 100% Kondusif Tanpa Kerusakan Aset BP Batam
                   </p>
                 </div>
-                {onNavigateToFullDashboard && (
-                  <button
-                    type="button"
-                    onClick={() => onNavigateToFullDashboard('pengamanan-aset')}
-                    className="text-xs text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Dashboard Ditpam</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                )}
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                    28 Aksi Damai
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                    (100% Kondusif &amp; Tertib)
+                  </span>
+                </div>
               </div>
 
               <div className="space-y-1.5 pt-1">

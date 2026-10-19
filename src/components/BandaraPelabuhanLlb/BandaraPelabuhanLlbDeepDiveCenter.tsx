@@ -204,175 +204,141 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
   return (
     <div
       id="bandara-pelabuhan-deep-dive-section"
-      className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4.5 space-y-4 font-sans"
+      className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3.5 font-sans"
     >
       {/* ================================================================== */}
-      {/* 1. HEADER SECTION & UNIT TABS (PERSIS MODEL DASHBOARD DEP-A4)      */}
+      {/* 1. HEADER SECTION & UNIT TABS (PERSIS MODEL DEP-A1)                 */}
       {/* ================================================================== */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-200">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-[#0A2540] to-blue-900 text-white flex items-center justify-center shadow-xs">
-            <Sparkles className="w-4.5 h-4.5 text-cyan-300 animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[9.5px] font-mono font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200 uppercase">
-                UNIT DEEP-DIVE MONITORING
-              </span>
-              <span className="text-xs text-slate-500 font-mono">
-                Buku Satu Data BP Batam (3 Unit Pengampu A5 &bull; 46 Dataset)
-              </span>
-            </div>
-            <h3 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              Unit Deep-Dive Center: Bandara, Pelabuhan &amp; Lalu Lintas Barang
-            </h3>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div>
+          <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
+            Unit Deep-Dive Center: Bandara, Pelabuhan &amp; Lalu Lintas Barang
+          </h3>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            Analisis granular 3 unit operasional pengampu Perkin DEP-A5 (Dit. Kawasan Bandara, Dit. Kepelabuhanan, Dit. Lalu Lintas Barang)
+          </p>
         </div>
 
-        {/* 3 Unit Selection Tabs - Persis DEP-A4 & DEP-A3 */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl overflow-x-auto no-scrollbar text-xs">
+        {/* 3 Unit Selection Tabs - Persis DEP-A1 */}
+        <div className="inline-flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80">
           <button
             type="button"
             onClick={() => onSelectUnit('dit-bandara')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeUnit === 'dit-bandara'
-                ? 'bg-white text-emerald-700 shadow-2xs ring-1 ring-slate-200'
+                ? 'bg-emerald-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Plane className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Dit. Kawasan Bandara (12 DS)</span>
+            <Plane className="w-3.5 h-3.5" />
+            <span>Dit. Kawasan Bandara</span>
           </button>
 
           <button
             type="button"
             onClick={() => onSelectUnit('dit-pelabuhan')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeUnit === 'dit-pelabuhan'
-                ? 'bg-white text-blue-700 shadow-2xs ring-1 ring-slate-200'
+                ? 'bg-blue-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Anchor className="w-3.5 h-3.5 text-blue-600" />
-            <span>Dit. Kepelabuhanan (25 DS)</span>
+            <Anchor className="w-3.5 h-3.5" />
+            <span>Dit. Kepelabuhanan</span>
           </button>
 
           <button
             type="button"
             onClick={() => onSelectUnit('dit-lalu-lintas-barang')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeUnit === 'dit-lalu-lintas-barang'
-                ? 'bg-white text-amber-700 shadow-2xs ring-1 ring-slate-200'
+                ? 'bg-amber-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Truck className="w-3.5 h-3.5 text-amber-600" />
-            <span>Dit. Lalu Lintas Barang (9 DS)</span>
+            <Truck className="w-3.5 h-3.5" />
+            <span>Dit. Lalu Lintas Barang</span>
           </button>
         </div>
       </div>
 
       {/* ================================================================== */}
       {/* 2. TAB CONTENT: DIREKTORAT KAWASAN BANDARA (HAL. 11-12 SATU DATA)  */}
-      {/* Semua Informasi Visualisasi Digabung Langsung Satu Tampilan        */}
+      {/* Setiap visualisasi langsung menampilkan KPI-nya di header          */}
       {/* ================================================================== */}
       {activeUnit === 'dit-bandara' && (
         <div className="space-y-3.5">
-          {/* Top Quick Highlights Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">PNBP Bandara (DS 1)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 124,50 M</span>
-              <span className="text-[9.5px] text-emerald-700 font-bold">107,0% dari Target</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Pergerakan Pesawat (DS 2)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">34.250 Flight</span>
-              <span className="text-[9.5px] text-slate-500">Avg 94 Pergerakan/Hari</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Arus Penumpang (DS 2)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">4.120.500 Pax</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">Hang Nadim (BTH)</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kargo EMPU (DS 5)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">42.150 Ton</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">+6,8% YoY Growth</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Rute &amp; OTP (DS 9)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">24 Rute / 89,4%</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">On-Time Performance</span>
-            </div>
-          </div>
-
           {/* DUAL VISUALISASI UTAMA: Tren Bulanan Arus + Komposisi Kargo EMPU */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 1: Tren Bulanan Arus Penumpang & Flights (Dataset #2) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Plane className="w-4 h-4 text-emerald-600" />
-                    <span>Tren Bulanan Arus Penumpang &amp; Pergerakan Pesawat (Dataset #2)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Volume Penumpang (Pax) &amp; Frekuensi Penerbangan Hang Nadim Jan - Des 2025
-                  </p>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Plane className="w-4 h-4 text-emerald-600" />
+                      <span>Tren Arus Penumpang &amp; Pergerakan Pesawat</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Volume Penumpang (Pax) &amp; Frekuensi Penerbangan Hang Nadim Jan - Des 2025
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">4.120.500 Pax</span>
+                    <span className="text-[10px] text-blue-600 font-bold ml-1.5">(34.250 Flight)</span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded">
-                  Hang Nadim Airport
-                </span>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={BANDARA_MONTHLY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
-                    <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[2000, 3500]} />
-                    <Tooltip formatter={(v: any, name: any) => [Number(v).toLocaleString('id-ID'), name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar yAxisId="left" dataKey="penumpang" name="Penumpang (Pax)" fill="#059669" radius={[4, 4, 0, 0]} />
-                    <Line yAxisId="right" type="monotone" dataKey="flights" name="Pergerakan Pesawat" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={BANDARA_MONTHLY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
+                      <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[2000, 3500]} />
+                      <Tooltip formatter={(v: any, name: any) => [Number(v).toLocaleString('id-ID'), name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar yAxisId="left" dataKey="penumpang" name="Penumpang (Pax)" fill="#059669" radius={[4, 4, 0, 0]} />
+                      <Line yAxisId="right" type="monotone" dataKey="flights" name="Pergerakan Pesawat" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Visual 2: Komposisi Muatan Udara & Kargo EMPU per Destinasi (Dataset #5) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Package className="w-4 h-4 text-emerald-600" />
-                    <span>Ekspedisi Muatan Udara (EMPU) per Rute Hub (Dataset #5)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Total 42.150 Ton: Kargo Reguler, Bagasi Penumpang, dan Pos Udara
-                  </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Package className="w-4 h-4 text-emerald-600" />
+                      <span>Ekspedisi Muatan Udara (EMPU)</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Total Kargo Reguler, Bagasi Penumpang, dan Pos Udara
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">42.150 Ton</span>
+                    <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(+6,8% YoY)</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={KARGO_EMPU_DESTINASI} layout="vertical" margin={{ top: 5, right: 15, left: 35, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
-                    <XAxis type="number" tick={{ fontSize: 9 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k Ton`} />
-                    <YAxis type="category" dataKey="tujuan" tick={{ fontSize: 8.5 }} width={110} />
-                    <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Ton`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} />
-                    <Bar dataKey="kargoReguler" name="Kargo Reguler" fill="#0284C7" stackId="a" />
-                    <Bar dataKey="bagasi" name="Bagasi" fill="#059669" stackId="a" />
-                    <Bar dataKey="pos" name="Pos Udara" fill="#D97706" stackId="a" radius={[0, 4, 4, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={KARGO_EMPU_DESTINASI} layout="vertical" margin={{ top: 5, right: 15, left: 35, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
+                      <XAxis type="number" tick={{ fontSize: 9 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k Ton`} />
+                      <YAxis type="category" dataKey="tujuan" tick={{ fontSize: 8.5 }} width={110} />
+                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Ton`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} />
+                      <Bar dataKey="kargoReguler" name="Kargo Reguler" fill="#0284C7" stackId="a" />
+                      <Bar dataKey="bagasi" name="Bagasi" fill="#059669" stackId="a" />
+                      <Bar dataKey="pos" name="Pos Udara" fill="#D97706" stackId="a" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
@@ -380,14 +346,22 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
           {/* DUAL VISUALISASI KEDUA: Operator Maskapai & Pemanfaatan Fasilitas Bandara */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 3: Operator Maskapai & Pangsa Pergerakan (Dataset #10) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-blue-600" />
-                <span>Pangsa Pasar Operator Maskapai Penerbangan (Dataset #10)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Distribusi 34.250 Pergerakan Pesawat dan Kapasitas Penumpang Hang Nadim
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    <span>Pangsa Pasar Operator Maskapai</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Distribusi 34.250 Pergerakan Pesawat dan Kapasitas Penumpang
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">89,4% OTP</span>
+                  <span className="text-[10px] text-blue-600 font-bold ml-1.5">(24 Rute)</span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {OPERATOR_MASKAPAI_SHARE.map((op, idx) => (
@@ -410,14 +384,22 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
             </div>
 
             {/* Visual 4: Pendapatan Pemanfaatan Aset Bandara (Dataset #6 & #7) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <DollarSign className="w-4 h-4 text-emerald-600" />
-                <span>Pemanfaatan Aset &amp; Fasilitas Komersial Bandara (Dataset #6 &amp; #7)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Penerimaan PNBP Sisi Udara (Aero) vs Sisi Darat &amp; Ruang Usaha Komersial (Non-Aero)
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <DollarSign className="w-4 h-4 text-emerald-600" />
+                    <span>Pemanfaatan Aset &amp; Fasilitas Komersial</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Penerimaan PNBP Sisi Udara (Aero) vs Sisi Darat &amp; Komersial
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">Rp 124,50 M</span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(107,0% Target)</span>
+                </div>
+              </div>
 
               <div className="h-48 w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -436,22 +418,25 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
           </div>
 
           {/* Monitoring Table: Jadwal & Rute Penerbangan Langsung (Dataset #9) */}
-          <div className="bg-slate-50/80 rounded-xl border border-slate-200 p-3 space-y-2">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <Compass className="w-3.5 h-3.5 text-blue-600" />
-                <span>Pemantauan Rute Penerbangan Langsung Unggulan (Dataset #9 Hal. 12 Satu Data)</span>
-              </h4>
-              {onNavigateToFullDashboard && (
-                <button
-                  type="button"
-                  onClick={() => onNavigateToFullDashboard('pengelolaan-bandara')}
-                  className="text-xs text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 cursor-pointer"
-                >
-                  <span>Buka Dashboard Satker Bandara</span>
-                  <ExternalLink className="w-3 h-3" />
-                </button>
-              )}
+          <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+            <div className="flex items-center justify-between mb-1.5">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <Compass className="w-4 h-4 text-blue-600" />
+                  <span>Pemantauan Rute Penerbangan Langsung Unggulan</span>
+                </h3>
+                <p className="text-[10px] text-slate-500">
+                  Jadwal, Frekuensi dan Keterisian Kursi (Load Factor) Rute Domestik &amp; Internasional
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                  82,4%
+                </span>
+                <span className="text-[10px] text-emerald-600 font-bold ml-1.5">
+                  (Avg Load Factor &bull; 5 Rute)
+                </span>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -484,105 +469,81 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
 
       {/* ================================================================== */}
       {/* 3. TAB CONTENT: DIREKTORAT PENGELOLAAN KEPELABUHANAN (25 DATASET)   */}
-      {/* Semua Informasi Visualisasi Digabung Langsung Satu Tampilan        */}
+      {/* Setiap visualisasi langsung menampilkan KPI-nya di header          */}
       {/* ================================================================== */}
       {activeUnit === 'dit-pelabuhan' && (
         <div className="space-y-3.5">
-          {/* Top Quick Highlights Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">PNBP Pelabuhan (DS 3)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 250,40 M</span>
-              <span className="text-[9.5px] text-blue-700 font-bold">107,4% dari Target</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kunjungan Kapal (DS 5 &amp; 7)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">18.420 Call</span>
-              <span className="text-[9.5px] text-slate-500">Tonase 38,4 Juta GT</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Throughput Peti Kemas (DS 23)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">628.400 TEUs</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">Terminal Batu Ampar</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Penumpang Laut (DS 25)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">8.420.000 Org</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">5 Terminal Feri</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Utilisasi Dermaga (DS 4)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">68,5% BOR</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">Kapasitas Aman &amp; Efisien</span>
-            </div>
-          </div>
-
           {/* DUAL VISUALISASI UTAMA: Tren Kunjungan Kapal + Throughput Peti Kemas Batu Ampar */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 1: Tren Bulanan Kunjungan Kapal (Dataset #5 & #7) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Anchor className="w-4 h-4 text-blue-600" />
-                    <span>Tren Arus Kunjungan Kapal Barang vs Penumpang (Dataset #5 &amp; #7)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Jumlah Call Kapal Barang, Kapal Penumpang &amp; Tonase Gross Tonnage (Juta GT)
-                  </p>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Anchor className="w-4 h-4 text-blue-600" />
+                      <span>Tren Kunjungan Kapal Barang vs Penumpang</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Call Kapal Barang, Kapal Penumpang &amp; Tonase Gross Tonnage (Juta GT)
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">18.420 Call</span>
+                    <span className="text-[10px] text-blue-600 font-bold ml-1.5">(38,4 Juta GT)</span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded">
-                  Pelabuhan Batam
-                </span>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={PELABUHAN_MONTHLY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
-                    <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[500, 1100]} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[2.5, 4.0]} tickFormatter={(v) => `${v}M`} />
-                    <Tooltip formatter={(v: any, name: any) => [name.includes('Tonase') ? `${v} Juta GT` : `${v} Call`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar yAxisId="left" dataKey="kapalBarang" name="Kapal Barang" fill="#2563EB" radius={[4, 4, 0, 0]} />
-                    <Bar yAxisId="left" dataKey="kapalPenumpang" name="Kapal Penumpang" fill="#0284C7" radius={[4, 4, 0, 0]} />
-                    <Line yAxisId="right" type="monotone" dataKey="gtTotalJuta" name="Tonase Total (Juta GT)" stroke="#D97706" strokeWidth={2} dot={{ r: 3 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={PELABUHAN_MONTHLY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
+                      <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[500, 1100]} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[2.5, 4.0]} tickFormatter={(v) => `${v}M`} />
+                      <Tooltip formatter={(v: any, name: any) => [name.includes('Tonase') ? `${v} Juta GT` : `${v} Call`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar yAxisId="left" dataKey="kapalBarang" name="Kapal Barang" fill="#2563EB" radius={[4, 4, 0, 0]} />
+                      <Bar yAxisId="left" dataKey="kapalPenumpang" name="Kapal Penumpang" fill="#0284C7" radius={[4, 4, 0, 0]} />
+                      <Line yAxisId="right" type="monotone" dataKey="gtTotalJuta" name="Tonase Total (Juta GT)" stroke="#D97706" strokeWidth={2} dot={{ r: 3 }} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Visual 2: Throughput Peti Kemas Batu Ampar (Dataset #23) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Package className="w-4 h-4 text-blue-600" />
-                    <span>Throughput Peti Kemas Terminal Batu Ampar (Dataset #23)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Volume Bongkar vs Muat Peti Kemas (TEUs) Triwulanan
-                  </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Package className="w-4 h-4 text-blue-600" />
+                      <span>Throughput Peti Kemas Batu Ampar</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Volume Bongkar vs Muat Peti Kemas (TEUs) Triwulanan
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">628.400 TEUs</span>
+                    <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(STS Crane Aktif)</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={PETI_KEMAS_THROUGHPUT} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="triwulan" tick={{ fontSize: 9.5 }} />
-                    <YAxis tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                    <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} TEUs`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar dataKey="bongkar" name="Bongkar (TEUs)" fill="#2563EB" radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="muat" name="Muat (TEUs)" fill="#059669" radius={[3, 3, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={PETI_KEMAS_THROUGHPUT} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="triwulan" tick={{ fontSize: 9.5 }} />
+                      <YAxis tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} TEUs`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar dataKey="bongkar" name="Bongkar (TEUs)" fill="#2563EB" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="muat" name="Muat (TEUs)" fill="#059669" radius={[3, 3, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
@@ -590,14 +551,22 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
           {/* DUAL VISUALISASI KEDUA: Arus Penumpang Feri & Profil Dermaga Pelabuhan */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 3: Arus Penumpang 5 Terminal Feri (Dataset #25) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-blue-600" />
-                <span>Arus Penumpang Pelabuhan Domestik &amp; Internasional (Dataset #25)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Total 8,42 Juta Penumpang di 5 Terminal Feri Internasional &amp; Domestik Batam
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    <span>Arus Penumpang 5 Terminal Feri</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Arus Penumpang Domestik vs Internasional di Seluruh Terminal Feri Batam
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">8,42 Juta Org</span>
+                  <span className="text-[10px] text-blue-600 font-bold ml-1.5">(5 Terminal)</span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {ARUS_PENUMPANG_TERMINAL.map((t, idx) => (
@@ -618,14 +587,22 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
             </div>
 
             {/* Visual 4: Profil & Spesifikasi Dermaga (Dataset #4) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Profil Fasilitas Dermaga &amp; Kedalaman Draft (Dataset #4 Hal. 15 Satu Data)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Spesifikasi Panjang, Draft MLWS, dan Tingkat Okupansi (BOR) Dermaga
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>Utilisasi &amp; Kapasitas Dermaga</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Spesifikasi Panjang, Draft MLWS, dan Tingkat Okupansi (BOR) Dermaga
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">Rp 250,40 M</span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(107,4% Target &bull; 68,5% BOR)</span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {PROFIL_DERMAGA_PELABUHAN.map((d, idx) => (
@@ -651,105 +628,81 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
 
       {/* ================================================================== */}
       {/* 4. TAB CONTENT: DIREKTORAT LALU LINTAS BARANG (9 DATASET)           */}
-      {/* Semua Informasi Visualisasi Digabung Langsung Satu Tampilan        */}
+      {/* Setiap visualisasi langsung menampilkan KPI-nya di header          */}
       {/* ================================================================== */}
       {activeUnit === 'dit-lalu-lintas-barang' && (
         <div className="space-y-3.5">
-          {/* Top Quick Highlights Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">PNBP Layanan LLB (DS 3)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 2,48 M</span>
-              <span className="text-[9.5px] text-amber-700 font-bold">112,7% dari Target</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Total Izin Terbit (DS 3, 6, 7)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">14.280 Dokumen</span>
-              <span className="text-[9.5px] text-slate-500">Pemasukan &amp; Pengeluaran</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kepatuhan SLA (DS 8 &amp; 9)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">96,8% Tepat Waktu</span>
-              <span className="text-[9.5px] text-emerald-700 font-semibold">Rata-rata 1,8 Jam Kerja</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Kuota Barang Konsumsi (DS 2)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">98,2% Realisasi</span>
-              <span className="text-[9.5px] text-blue-700 font-semibold">Stabilitas Pangan Batam</span>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
-              <span className="text-[10px] text-slate-700 font-bold block">Izin Usaha Kawasan (DS 4 &amp; 5)</span>
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">1.420 BU Aktif</span>
-              <span className="text-[9.5px] text-slate-500">KBLI Industri &amp; Dagang</span>
-            </div>
-          </div>
-
           {/* DUAL VISUALISASI UTAMA: Tren Bulanan Perizinan + Realisasi Kuota Barang Konsumsi */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 1: Tren Bulanan Perizinan Pemasukan vs Pengeluaran (Dataset #6 & #7) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Truck className="w-4 h-4 text-amber-600" />
-                    <span>Tren Bulanan Perizinan Pemasukan vs Pengeluaran Barang (Dataset #6 &amp; #7)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Jumlah Dokumen Layanan Perizinan Masuk/Keluar KPBPB Batam &amp; Tingkat Kepatuhan SLA
-                  </p>
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Truck className="w-4 h-4 text-amber-600" />
+                      <span>Tren Perizinan Pemasukan vs Pengeluaran</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Dokumen Layanan Perizinan Masuk/Keluar KPBPB Batam &amp; SLA
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">14.280 Dokumen</span>
+                    <span className="text-[10px] text-amber-600 font-bold ml-1.5">(96,8% On-Time)</span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded">
-                  Dit. LLB
-                </span>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={PERIZINAN_LLB_MONTHLY} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
-                    <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[300, 900]} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[94, 100]} tickFormatter={(v) => `${v}%`} />
-                    <Tooltip formatter={(v: any, name: any) => [name.includes('SLA') ? `${v}%` : `${v} Dokumen`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                    <Bar yAxisId="left" dataKey="pemasukan" name="Izin Pemasukan" fill="#D97706" radius={[4, 4, 0, 0]} />
-                    <Bar yAxisId="left" dataKey="pengeluaran" name="Izin Pengeluaran" fill="#0284C7" radius={[4, 4, 0, 0]} />
-                    <Line yAxisId="right" type="monotone" dataKey="slaPersen" name="SLA On-Time (%)" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={PERIZINAN_LLB_MONTHLY} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                      <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
+                      <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[300, 900]} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[94, 100]} tickFormatter={(v) => `${v}%`} />
+                      <Tooltip formatter={(v: any, name: any) => [name.includes('SLA') ? `${v}%` : `${v} Dokumen`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                      <Bar yAxisId="left" dataKey="pemasukan" name="Izin Pemasukan" fill="#D97706" radius={[4, 4, 0, 0]} />
+                      <Bar yAxisId="left" dataKey="pengeluaran" name="Izin Pengeluaran" fill="#0284C7" radius={[4, 4, 0, 0]} />
+                      <Line yAxisId="right" type="monotone" dataKey="slaPersen" name="SLA On-Time (%)" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Visual 2: Realisasi Kuota Induk Barang Konsumsi (Dataset #2) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Package className="w-4 h-4 text-amber-600" />
-                    <span>Realisasi Kuota Induk Barang Konsumsi (Dataset #2 Hal. 8)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Alokasi Kuota vs Realisasi Pemasukan Komoditas Pokok Masyarakat Batam (Ton)
-                  </p>
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <Package className="w-4 h-4 text-amber-600" />
+                      <span>Realisasi Kuota Barang Konsumsi</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Alokasi Kuota vs Realisasi Pemasukan Komoditas Pokok Batam
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">98,2% Realisasi</span>
+                    <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(Tercukupi)</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={KUOTA_BARANG_KONSUMSI} layout="vertical" margin={{ top: 5, right: 15, left: 35, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
-                    <XAxis type="number" tick={{ fontSize: 9 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                    <YAxis type="category" dataKey="komoditas" tick={{ fontSize: 8.5 }} width={120} />
-                    <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Ton`, name]} />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} />
-                    <Bar dataKey="kuotaTon" name="Alokasi Kuota" fill="#94A3B8" />
-                    <Bar dataKey="realisasiTon" name="Realisasi Masuk" fill="#D97706" radius={[0, 4, 4, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="h-56 w-full pt-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={KUOTA_BARANG_KONSUMSI} layout="vertical" margin={{ top: 5, right: 15, left: 35, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
+                      <XAxis type="number" tick={{ fontSize: 9 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                      <YAxis type="category" dataKey="komoditas" tick={{ fontSize: 8.5 }} width={120} />
+                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Ton`, name]} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} />
+                      <Bar dataKey="kuotaTon" name="Alokasi Kuota" fill="#94A3B8" />
+                      <Bar dataKey="realisasiTon" name="Realisasi Masuk" fill="#D97706" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
@@ -757,14 +710,22 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
           {/* DUAL VISUALISASI KEDUA: Sebaran KBLI Industri & Kecepatan Waktu Layanan SLA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* Visual 3: Sebaran KBLI Industri & Usaha Kawasan (Dataset #5) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Activity className="w-4 h-4 text-amber-600" />
-                <span>Sebaran KBLI Perusahaan Berizin Usaha Kawasan (Dataset #5)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                1.420 Perusahaan Penerima Izin Usaha Kawasan Perdagangan Bebas
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Activity className="w-4 h-4 text-amber-600" />
+                    <span>Sebaran KBLI Perusahaan Kawasan</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    1.420 Perusahaan Penerima Izin Usaha Kawasan Bebas
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">1.420 BU Aktif</span>
+                  <span className="text-[10px] text-blue-600 font-bold ml-1.5">(KBLI Industri &amp; Dagang)</span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {SEBARAN_KBLI_INDUSTRI.map((k, idx) => (
@@ -787,14 +748,22 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
             </div>
 
             {/* Visual 4: Efektivitas Layanan SLA Perizinan (Dataset #8 & #9) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs space-y-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-emerald-600" />
-                <span>Efektivitas Waktu Layanan SLA Perizinan (Dataset #8 &amp; #9)</span>
-              </h4>
-              <p className="text-[10px] text-slate-500">
-                Waktu Penyelesaian Aktual vs Standar Regulasi Maksimal (Jam)
-              </p>
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-emerald-600" />
+                    <span>Efektivitas Waktu Layanan SLA Perizinan</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-500">
+                    Waktu Penyelesaian Aktual vs Standar Regulasi Maksimal
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">Rp 2,48 M</span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(112,7% Target &bull; 1,8 Jam)</span>
+                </div>
+              </div>
 
               <div className="space-y-1.5 pt-1">
                 {SLA_LAYANAN_LLB.map((s, idx) => (

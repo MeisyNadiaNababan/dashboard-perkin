@@ -124,15 +124,6 @@ const PNBP_10_UNIT_TABLE = [
   { no: 10, unit: 'BU SPAM, Fasilitas dan Lingkungan', targetJuta: 786541.31, realisasiJuta: 592616.50, capaian: 75.34, status: 'Waspada' },
 ];
 
-const PNBP_DONUT_CONTRIBUTION = [
-  { name: 'UWT Lahan', value: 748.21, percent: '39,5%', color: '#1E40AF' },
-  { name: 'BU SPAM Air', value: 592.62, percent: '31,3%', color: '#2563EB' },
-  { name: 'Kepelabuhanan', value: 382.40, percent: '20,2%', color: '#38BDF8' },
-  { name: 'Bandara', value: 106.82, percent: '5,6%', color: '#0D9488' },
-  { name: 'Biro Keuangan', value: 38.45, percent: '2,0%', color: '#F59E0B' },
-  { name: 'Lainnya (5 Satker)', value: 23.95, percent: '1,4%', color: '#94A3B8' },
-];
-
 const PNBP_RANKING_BARS = [
   { name: 'Biro Keuangan', capaian: 82.30 },
   { name: 'Bandara', capaian: 81.87 },
@@ -655,69 +646,30 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                   </table>
                 </div>
 
-                {/* Charts: Donut Kontribusi per Unit & Horizontal Bar Peringkat */}
-                <div className="lg:col-span-5 space-y-2.5">
-                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
-                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
-                      <span>Porsi Kontribusi Pendapatan</span>
-                      <span className="text-[10px] text-slate-500">Total Rp 1,89 T</span>
-                    </div>
-                    <div className="h-24 flex items-center justify-center">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={PNBP_DONUT_CONTRIBUTION}
-                            innerRadius={24}
-                            outerRadius={40}
-                            paddingAngle={2}
-                            dataKey="value"
-                          >
-                            {PNBP_DONUT_CONTRIBUTION.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip
-                            formatter={(val: any) => [`Rp ${val} Miliar`, 'Realisasi']}
-                            contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="space-y-0.5 text-[10px] text-slate-600 pt-1 border-t border-slate-200/50">
-                      <div className="flex justify-between">
-                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-800" /> UWT Lahan</span>
-                        <span className="font-semibold text-slate-900">39,5% (Rp 748,2 M)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-600" /> BU SPAM Air</span>
-                        <span className="font-semibold text-slate-900">31,3% (Rp 592,6 M)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-500" /> Pelabuhan</span>
-                        <span className="font-semibold text-slate-900">20,2% (Rp 382,4 M)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
-                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
+                {/* Chart: Horizontal Bar Peringkat Capaian PNBP 10 Unit */}
+                <div className="lg:col-span-5">
+                  <div className="bg-slate-50/60 p-3 rounded-xl border border-slate-100 flex flex-col justify-between">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
                       <span>Peringkat Capaian PNBP (%) 10 Unit</span>
-                      <span className="text-[10px] text-slate-500">Target 100%</span>
+                      <span className="text-[10px] text-slate-500 font-medium">Target 100% &bull; YTD 2026</span>
                     </div>
-                    <div className="h-32 w-full">
+                    <div className="h-64 w-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={PNBP_RANKING_BARS} layout="vertical" margin={{ top: 2, right: 15, left: 25, bottom: 0 }}>
+                        <BarChart data={PNBP_RANKING_BARS} layout="vertical" margin={{ top: 4, right: 15, left: 35, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
-                          <XAxis type="number" domain={[70, 85]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                          <YAxis dataKey="name" type="category" tick={{ fontSize: 8.5, fill: '#334155', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                          <XAxis type="number" domain={[70, 85]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis dataKey="name" type="category" tick={{ fontSize: 9, fill: '#334155', fontWeight: 600 }} axisLine={false} tickLine={false} />
                           <Tooltip
                             formatter={(val: any) => [`${val}%`, 'Capaian']}
                             contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
                           />
-                          <Bar dataKey="capaian" fill="#2563EB" radius={[0, 4, 4, 0]} barSize={6} />
+                          <Bar dataKey="capaian" fill="#2563EB" radius={[0, 4, 4, 0]} barSize={10} />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
+                    <span className="text-[9.5px] text-slate-500 text-center block mt-1.5">
+                      Seluruh 10 satker penghasil mencapai rata-rata serapan &gt;75% (On Track)
+                    </span>
                   </div>
                 </div>
               </div>

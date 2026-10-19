@@ -150,7 +150,7 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
 
   return (
     <div
-      className="space-y-4 pb-4 font-sans text-slate-800 origin-top"
+      className="space-y-4 pb-0 font-sans text-slate-800 origin-top"
       style={{ zoom: '80%' }}
     >
       {/* 1. OFFICIAL LETTERHEAD & PERKIN HEADER (HANYA DI TAB NASKAH PERKIN AGAR COMMAND CENTER BERSIH) */}
@@ -180,7 +180,7 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
       {/* VIEW: EXECUTIVE COMMAND CENTER (FLAGSHIP INTEGRATED VIEW)          */}
       {/* ------------------------------------------------------------------ */}
       {activeTab === 'ikhtisar' && (
-        <div className="space-y-6">
+        <div className="space-y-3.5">
           <ExecutiveCommandCenterView
             filterState={filterState}
             onSelectIksDetail={handleSelectIks}
