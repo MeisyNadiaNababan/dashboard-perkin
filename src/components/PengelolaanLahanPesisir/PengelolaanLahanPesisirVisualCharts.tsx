@@ -388,17 +388,6 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
                       </ResponsiveContainer>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 mt-1">
-                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                      <span className="text-[9px] text-slate-500 block">Surplus Capaian</span>
-                      <span className="text-xs font-black text-emerald-600">+48,5 Ha (+24,3%)</span>
-                    </div>
-                    <div className="bg-white p-1.5 rounded border border-slate-200 text-center">
-                      <span className="text-[9px] text-slate-500 block">Komitmen Investasi</span>
-                      <span className="text-xs font-black text-blue-700">Rp 18,42 Triliun</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

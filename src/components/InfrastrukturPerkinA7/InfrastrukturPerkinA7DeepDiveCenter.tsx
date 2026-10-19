@@ -366,32 +366,32 @@ export const InfrastrukturPerkinA7DeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* Top 5 Highlight Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">14 Paket Proyek (DS 4 &amp; 6)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">14 Paket Proyek (DS 4 &amp; 6)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 742,8 M</span>
               <span className="text-[9.5px] text-blue-700 font-bold">Realisasi Rp 602,8 M (81,2%)</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Kurva S Fisik Kumulatif</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kurva S Fisik Kumulatif</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">86,5% Lapangan</span>
               <span className="text-[9.5px] text-slate-500">Target 88,0% &bull; On Track</span>
             </div>
 
-            <div className="bg-cyan-50/70 border border-cyan-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-cyan-800 font-bold block">PNBP ROW Utilitas/RTH (DS 1)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">PNBP ROW Utilitas/RTH (DS 1)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 7,45 M</span>
               <span className="text-[9.5px] text-emerald-700 font-bold">109,22% (+629 Jt Surplus)</span>
             </div>
 
-            <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-purple-800 font-bold block">Kemantapan Jalan (DS 3)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kemantapan Jalan (DS 3)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">91,4% Mantap</span>
               <span className="text-[9.5px] text-purple-700 font-semibold">496,1 Km dari 542,8 Km</span>
             </div>
 
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-amber-800 font-bold block">Cut &amp; Fill BSW (DS 5)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Cut &amp; Fill BSW (DS 5)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">280 Hektar</span>
               <span className="text-[9.5px] text-amber-700 font-semibold">Rempang, Kabil, Sekupang</span>
             </div>
@@ -538,32 +538,32 @@ export const InfrastrukturPerkinA7DeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* Top 5 Highlight Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-purple-800 font-bold block">43 Paket DED (DS 1-6)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">43 Paket DED (DS 1-6)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">6 Sektor</span>
               <span className="text-[9.5px] text-purple-700 font-bold">100% Kesiapan Tender</span>
             </div>
 
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">Pagu DED Konsultansi</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Pagu DED Konsultansi</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 53,68 M</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">Realisasi Rp 53,55 M (84,1%)</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Estimasi Capex Fisik</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Estimasi Capex Fisik</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 1,42 T</span>
               <span className="text-[9.5px] text-emerald-700 font-bold">Readiness Criteria Proyek</span>
             </div>
 
-            <div className="bg-cyan-50/70 border border-cyan-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-cyan-800 font-bold block">Durasi Rerata DED</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Durasi Rerata DED</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">5,5 Bulan</span>
               <span className="text-[9.5px] text-cyan-700 font-semibold">Target Standar &lt; 6 Bulan</span>
             </div>
 
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-amber-800 font-bold block">Pemanfaatan DED (DS 7-9)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Pemanfaatan DED (DS 7-9)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">92,5% Terpakai</span>
               <span className="text-[9.5px] text-amber-700 font-semibold">Tender Konstruksi Sukses</span>
             </div>
@@ -709,32 +709,32 @@ export const InfrastrukturPerkinA7DeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* Top 5 Highlight Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-amber-800 font-bold block">Penertiban Bangli (DS 1 &amp; 9)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Penertiban Bangli (DS 1 &amp; 9)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">1.030 Unit</span>
               <span className="text-[9.5px] text-amber-700 font-bold">42 Giat Tim Terpadu</span>
             </div>
 
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">Personel Ditpam (DS 2 &amp; 3)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Personel Ditpam (DS 2 &amp; 3)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">524 Personel</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">186 Bersertifikasi Khusus</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Pengamanan Obvitnas (DS 10)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Pengamanan Obvitnas (DS 10)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">48 Kawasan</span>
               <span className="text-[9.5px] text-emerald-700 font-bold">100% Kondusif Terjaga</span>
             </div>
 
-            <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-purple-800 font-bold block">Proteksi Hutan &amp; DTA (DS 11)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Proteksi Hutan &amp; DTA (DS 11)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">142 Hektar</span>
               <span className="text-[9.5px] text-purple-700 font-semibold">Waduk Duriangkang/M.Kuning</span>
             </div>
 
-            <div className="bg-cyan-50/70 border border-cyan-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-cyan-800 font-bold block">Pengamanan Unjuk Rasa (DS 7)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Pengamanan Unjuk Rasa (DS 7)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">18 Aksi Damai</span>
               <span className="text-[9.5px] text-cyan-700 font-semibold">0 Insiden Kerusakan Aset</span>
             </div>

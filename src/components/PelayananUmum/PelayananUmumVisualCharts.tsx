@@ -246,7 +246,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
           {activeTab === 'ikp-1' && (
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-rose-50/70 border border-rose-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-rose-800 font-bold block uppercase">BU Rumah Sakit (RSBP Batam)</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">+4,55%</span>
@@ -255,7 +255,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                   <span className="text-[10px] text-slate-500">Realisasi Rp 121,80 M vs Rp 116,50 M Tahun Lalu</span>
                 </div>
 
-                <div className="bg-cyan-50/70 border border-cyan-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-cyan-800 font-bold block uppercase">BU SPAM, Fasilitas &amp; Lingkungan</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">+2,37%</span>
@@ -332,7 +332,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
           {activeTab === 'ikp-2' && (
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-sky-50/70 border border-sky-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-sky-800 font-bold block uppercase">Rasio Kontribusi BU RSBP</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">0,33</span>
@@ -341,7 +341,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                   <span className="text-[10px] text-slate-500">Target Rasio 0,31 &bull; Realisasi Rp 121,80 M</span>
                 </div>
 
-                <div className="bg-cyan-50/70 border border-cyan-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-cyan-800 font-bold block uppercase">Rasio Kontribusi BU SPAM Fasling</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">0,38</span>
@@ -418,7 +418,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
           {activeTab === 'ikp-3' && (
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-emerald-800 font-bold block uppercase">IKM BU Rumah Sakit (RSBP)</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">88,92</span>
@@ -427,7 +427,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                   <span className="text-[10px] text-slate-500">Target 88,31 &bull; 1.250 Responden Rawat Inap &amp; Jalan</span>
                 </div>
 
-                <div className="bg-teal-50/70 border border-teal-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-teal-800 font-bold block uppercase">IKM BU SPAM, Fasilitas &amp; Lingkungan</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">88,40</span>

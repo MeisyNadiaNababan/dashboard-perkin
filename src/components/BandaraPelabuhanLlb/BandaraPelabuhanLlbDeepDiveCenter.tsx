@@ -286,20 +286,20 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-emerald-700 font-bold">107,0% dari Target</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Pergerakan Pesawat (DS 2)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Pergerakan Pesawat (DS 2)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">34.250 Flight</span>
               <span className="text-[9.5px] text-slate-500">Avg 94 Pergerakan/Hari</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Arus Penumpang (DS 2)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Arus Penumpang (DS 2)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">4.120.500 Pax</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">Hang Nadim (BTH)</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Kargo EMPU (DS 5)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kargo EMPU (DS 5)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">42.150 Ton</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">+6,8% YoY Growth</span>
             </div>
@@ -496,20 +496,20 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-blue-700 font-bold">107,4% dari Target</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Kunjungan Kapal (DS 5 &amp; 7)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kunjungan Kapal (DS 5 &amp; 7)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">18.420 Call</span>
               <span className="text-[9.5px] text-slate-500">Tonase 38,4 Juta GT</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Throughput Peti Kemas (DS 23)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Throughput Peti Kemas (DS 23)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">628.400 TEUs</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">Terminal Batu Ampar</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Penumpang Laut (DS 25)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Penumpang Laut (DS 25)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">8.420.000 Org</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">5 Terminal Feri</span>
             </div>
@@ -663,8 +663,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-amber-700 font-bold">112,7% dari Target</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Total Izin Terbit (DS 3, 6, 7)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Total Izin Terbit (DS 3, 6, 7)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">14.280 Dokumen</span>
               <span className="text-[9.5px] text-slate-500">Pemasukan &amp; Pengeluaran</span>
             </div>
@@ -675,14 +675,14 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-emerald-700 font-semibold">Rata-rata 1,8 Jam Kerja</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Kuota Barang Konsumsi (DS 2)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kuota Barang Konsumsi (DS 2)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">98,2% Realisasi</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">Stabilitas Pangan Batam</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Izin Usaha Kawasan (DS 4 &amp; 5)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Izin Usaha Kawasan (DS 4 &amp; 5)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">1.420 BU Aktif</span>
               <span className="text-[9.5px] text-slate-500">KBLI Industri &amp; Dagang</span>
             </div>

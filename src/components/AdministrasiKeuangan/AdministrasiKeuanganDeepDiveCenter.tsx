@@ -382,8 +382,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* GRID 1: DUA KARTU UTAMA (ROW 1) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* CARD 1: Surplus/Defisit per Unit Kerja - SOFT BLUE TINT */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-blue-50/70 via-sky-50/30 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 1: Surplus/Defisit per Unit Kerja - PURE WHITE */}
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h3 className="text-xs sm:text-sm font-bold text-slate-900">
@@ -426,8 +426,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 2: LIKUIDITAS KAS & BANK BLU (TREEMAP 5 BANK REKENING OPERASIONAL) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-cyan-50/70 via-sky-50/40 to-white rounded-xl border border-cyan-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 2: LIKUIDITAS KAS & BANK BLU (TREEMAP 5 BANK REKENING OPERASIONAL) - PURE WHITE */}
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h3 className="text-xs sm:text-sm font-bold text-slate-900">
@@ -467,9 +467,9 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                   </ResponsiveContainer>
                 </div>
 
-                <div className="pt-1.5 mt-0.5 border-t border-cyan-100/80 flex items-center justify-between text-[9px] text-slate-500">
+                <div className="pt-1.5 mt-0.5 border-t border-slate-100 flex items-center justify-between text-[9px] text-slate-500">
                   <span>Mandiri &bull; BRI &bull; BNI &bull; BRKS &bull; BTN</span>
-                  <span className="font-semibold text-cyan-700">5 Bank BLU Resmi</span>
+                  <span className="font-semibold text-slate-700">5 Bank BLU Resmi</span>
                 </div>
               </div>
             </div>
@@ -477,8 +477,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
 
           {/* GRID 2: TIGA KARTU MENENGAH (ROW 2) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            {/* CARD 3: Komparasi Target vs Realisasi Sumber Dana PNBP - SOFT BLUE TINT */}
-            <div className="bg-gradient-to-br from-blue-50/70 via-slate-50/40 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 3: Komparasi Target vs Realisasi Sumber Dana PNBP - PURE WHITE */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-xs font-bold text-slate-900">
@@ -517,8 +517,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 4: REKAPITULASI PIUTANG TAK TERTAGIH (AGING DURATION) - SOFT ROSE TINT */}
-            <div className="bg-gradient-to-br from-rose-50/70 via-orange-50/30 to-white rounded-xl border border-rose-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 4: REKAPITULASI PIUTANG TAK TERTAGIH (AGING DURATION) - PURE WHITE */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1.5">
@@ -527,10 +527,10 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     </h3>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-sm sm:text-base font-black text-rose-900 leading-none">
+                    <span className="text-sm sm:text-base font-black text-slate-900 leading-none">
                       Rp 164,17 M
                     </span>
-                    <span className="text-[10px] text-rose-600 font-medium ml-1">
+                    <span className="text-[10px] text-slate-500 font-medium ml-1">
                       (134 Faktur)
                     </span>
                   </div>
@@ -550,7 +550,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                       onClick={() => setPiutangViewMode('chart')}
                       className={`px-1.5 py-0.5 rounded text-[9.5px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
                         piutangViewMode === 'chart'
-                          ? 'bg-rose-600 text-white shadow-2xs'
+                          ? 'bg-slate-900 text-white shadow-2xs'
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                       title="Tampilan Grafik Batang Aging"
@@ -562,7 +562,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                       onClick={() => setPiutangViewMode('table')}
                       className={`px-1.5 py-0.5 rounded text-[9.5px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
                         piutangViewMode === 'table'
-                          ? 'bg-rose-600 text-white shadow-2xs'
+                          ? 'bg-slate-900 text-white shadow-2xs'
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                       title="Tampilan Rincian Durasi Piutang"
@@ -601,7 +601,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     {DATA_PIUTANG_TAK_TERTAGIH.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-1 bg-white/80 rounded border border-slate-100 hover:bg-rose-50/50 transition-colors"
+                        className="flex items-center justify-between p-1 bg-white/80 rounded border border-slate-100 hover:bg-slate-50 transition-colors"
                       >
                         <div className="flex items-center gap-1.5 truncate">
                           <span
@@ -631,8 +631,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 )}
               </div>
 
-              <div className="pt-1.5 mt-1 border-t border-rose-200/50 flex items-center justify-between text-[9px] text-slate-600">
-                <span className="text-rose-700 font-semibold truncate">
+              <div className="pt-1.5 mt-1 border-t border-slate-100 flex items-center justify-between text-[9px] text-slate-600">
+                <span className="text-slate-700 font-semibold truncate">
                   Macet &gt;1 Thn: Rp 44,75 M (Penyerahan PUPN)
                 </span>
                 <span className="text-slate-500 font-mono shrink-0">
@@ -641,8 +641,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 5: Serapan Belanja Satker Perkin A1 - SOFT EMERALD TINT */}
-            <div className="bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 5: Serapan Belanja Satker Perkin A1 - PURE WHITE */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h3 className="text-xs font-bold text-slate-900">
@@ -696,9 +696,9 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             {/* CARD 1: Kualifikasi Pendidikan SDM - WHITE CARD */}
             <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-blue-100">
+                <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold">
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
                       <GraduationCap className="w-4 h-4" />
                     </div>
                     <div>
@@ -745,7 +745,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
 
                   <div className="sm:col-span-7 space-y-1.5">
                     {DATA_PENDIDIKAN_DONUT.map((b, idx) => (
-                      <div key={idx} className="group hover:bg-blue-50/60 p-1 rounded transition-colors">
+                      <div key={idx} className="group hover:bg-slate-50 p-1 rounded transition-colors">
                         <div className="flex items-center justify-between text-[10.5px] mb-0.5">
                           <span className="flex items-center gap-1.5 text-slate-700 font-medium truncate">
                             <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: b.color }} />
@@ -768,7 +768,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-2 mt-2 border-t border-blue-100 flex items-center justify-between text-[10px] text-slate-600">
+              <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-600">
                 <span className="font-medium text-blue-800">
                   S1/D4: 1.584 Org (53,2%) &bull; S2/S3: 336 Org (11,3%)
                 </span>
@@ -779,9 +779,9 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             {/* CARD 2: Status Kepegawaian & Gender - WHITE CARD */}
             <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100">
+                <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold">
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
                       <Users className="w-4 h-4" />
                     </div>
                     <div>
@@ -795,7 +795,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                   </div>
                   <div className="text-right shrink-0">
                     <span className="text-base sm:text-lg font-black text-slate-900 leading-none">60,3% : 39,7%</span>
-                    <span className="text-[10px] text-emerald-700 font-medium block">Pria : Wanita (1.796 : 1.182)</span>
+                    <span className="text-[10px] text-slate-600 font-medium block">Pria : Wanita (1.796 : 1.182)</span>
                   </div>
                 </div>
 
@@ -827,8 +827,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-2 mt-2 border-t border-emerald-100 flex items-center justify-between text-[10px] text-slate-600">
-                <span className="font-medium text-emerald-800">
+              <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-600">
+                <span className="font-medium text-slate-700">
                   PNS: 1.042 (35,0%) &bull; P2K Tetap: 872 (29,3%) &bull; PPPK: 485 (16,3%)
                 </span>
                 <span className="text-slate-500">Dataset #7 &amp; #8 Buku Satu Data</span>
@@ -850,9 +850,9 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             {/* CARD 1: NILAI SISTEM AKUNTABILITAS KINERJA INSTANSI PEMERINTAH (SAKIP) - WHITE CARD */}
             <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-indigo-100">
+                <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold">
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
                       <Activity className="w-4 h-4" />
                     </div>
                     <div>
@@ -865,7 +865,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-indigo-950 leading-none">82,68</span>
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none">82,68</span>
                     <span className="text-[10px] text-emerald-600 font-bold block">Predikat A (Memuaskan)</span>
                   </div>
                 </div>
@@ -873,7 +873,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 {/* SAKIP 4 Components Progress */}
                 <div className="space-y-2 mt-2">
                   {DATA_SAKIP_KOMPONEN.map((k, idx) => (
-                    <div key={idx} className="group hover:bg-indigo-50/50 p-1 rounded transition-colors">
+                    <div key={idx} className="group hover:bg-slate-50 p-1 rounded transition-colors">
                       <div className="flex items-center justify-between text-[10px] mb-0.5">
                         <span className="font-semibold text-slate-800 truncate max-w-[200px]">
                           {k.komponen}
@@ -882,7 +882,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                           <span className="text-slate-500">
                             {k.nilai.toFixed(2)} / {k.bobot.toFixed(0)} Poin
                           </span>
-                          <span className="font-bold text-indigo-700 bg-white border border-indigo-200 px-1 py-0.2 rounded">
+                          <span className="font-bold text-slate-800 bg-white border border-slate-200 px-1 py-0.2 rounded">
                             {k.persen.toFixed(1)}% (Predikat {k.tingkat})
                           </span>
                         </div>
@@ -899,8 +899,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-2 mt-2 border-t border-indigo-100 flex items-center justify-between text-[9.5px] text-slate-600">
-                <span className="text-indigo-800 font-semibold">
+              <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] text-slate-600">
+                <span className="text-slate-700 font-semibold">
                   Akumulasi Bobot 100% &bull; Sangat Akuntabel
                 </span>
                 <span className="text-slate-500">Dataset #2 Buku Satu Data</span>
@@ -910,9 +910,9 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             {/* CARD 2: INDEKS MANAJEMEN RISIKO (MRI) - WHITE CARD */}
             <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100">
+                <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold">
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
                       <Target className="w-4 h-4" />
                     </div>
                     <div>
@@ -925,7 +925,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-emerald-950 leading-none">3,65 / 5,00</span>
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none">3,65 / 5,00</span>
                     <span className="text-[10px] text-emerald-700 font-bold block">Tingkat 3 (Managed / Terkelola)</span>
                   </div>
                 </div>
@@ -943,7 +943,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                       onClick={() => setMriViewMode('periode')}
                       className={`px-1.5 py-0.5 rounded text-[9.5px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
                         mriViewMode === 'periode'
-                          ? 'bg-emerald-600 text-white shadow-2xs'
+                          ? 'bg-slate-900 text-white shadow-2xs'
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
@@ -954,7 +954,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                       onClick={() => setMriViewMode('piagam')}
                       className={`px-1.5 py-0.5 rounded text-[9.5px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
                         mriViewMode === 'piagam'
-                          ? 'bg-emerald-600 text-white shadow-2xs'
+                          ? 'bg-slate-900 text-white shadow-2xs'
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
@@ -994,7 +994,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     {DATA_PIAGAM_RISIKO_UNIT.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-1.5 bg-white/80 rounded border border-slate-100 hover:bg-emerald-50/50 transition-colors"
+                        className="flex items-center justify-between p-1.5 bg-white/80 rounded border border-slate-100 hover:bg-slate-50 transition-colors"
                       >
                         <div className="truncate pr-2">
                           <span className="font-semibold text-slate-800 block truncate">{item.unit}</span>
@@ -1014,8 +1014,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 )}
               </div>
 
-              <div className="pt-2 mt-2 border-t border-emerald-100 flex items-center justify-between text-[9.5px] text-slate-600">
-                <span className="text-emerald-800 font-semibold">
+              <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] text-slate-600">
+                <span className="text-slate-700 font-semibold">
                   Tahun 2025/2026: 3,65 (Naik dari 2,90 pada 2022)
                 </span>
                 <span className="text-slate-500">Dataset #18 Buku Satu Data</span>
@@ -1033,7 +1033,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     Evaluasi Pelayanan Publik (PEKPPP)
                   </h3>
                   <div className="text-right shrink-0">
-                    <span className="text-base font-black text-emerald-900 leading-none">4,38 / 5,00</span>
+                    <span className="text-base font-black text-slate-900 leading-none">4,38 / 5,00</span>
                     <span className="text-[10px] text-emerald-700 font-medium ml-1.5">(Kategori A-)</span>
                   </div>
                 </div>
@@ -1067,7 +1067,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-1.5 border-t border-emerald-200/50 flex items-center justify-between text-[9px] text-emerald-800">
+              <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between text-[9px] text-slate-600">
                 <span>PTSP Batam: 4.62 (Pelayanan Prima A)</span>
                 <span className="font-semibold">Dataset #15 &amp; #16</span>
               </div>
@@ -1081,8 +1081,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     Hasil Survei Kepuasan (SKM)
                   </h3>
                   <div className="text-right shrink-0">
-                    <span className="text-base font-black text-amber-900 leading-none">88,62%</span>
-                    <span className="text-[10px] text-amber-700 font-medium ml-1.5">(Mutu Layanan A)</span>
+                    <span className="text-base font-black text-slate-900 leading-none">88,62%</span>
+                    <span className="text-[10px] text-slate-600 font-medium ml-1.5">(Mutu Layanan A)</span>
                   </div>
                 </div>
 
@@ -1101,7 +1101,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                         </span>
                         <div className="flex items-center gap-1.5 shrink-0 font-mono text-[9px]">
                           <span className="text-slate-600 font-semibold">{item.nilai.toFixed(2)}</span>
-                          <span className="font-bold text-amber-800 bg-white border border-amber-200 px-1 py-0.2 rounded">
+                          <span className="font-bold text-slate-800 bg-white border border-slate-200 px-1 py-0.2 rounded">
                             {item.persentase.toFixed(1)}%
                           </span>
                         </div>
@@ -1120,7 +1120,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-1.5 mt-1 border-t border-amber-200/50 flex items-center justify-between text-[9px] text-amber-800">
+              <div className="pt-1.5 mt-1 border-t border-slate-100 flex items-center justify-between text-[9px] text-slate-600">
                 <span>Tertinggi: Dit. PTSP (3,68 / 92,0%)</span>
                 <span className="font-semibold">Dataset #10 &amp; #11</span>
               </div>
@@ -1134,8 +1134,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                     Pengaduan Layanan Badan Usaha
                   </h3>
                   <div className="text-right shrink-0">
-                    <span className="text-sm sm:text-base font-black text-violet-900 leading-none">96,1%</span>
-                    <span className="text-[10px] text-violet-700 font-medium ml-1">(440/458 Tuntas)</span>
+                    <span className="text-sm sm:text-base font-black text-slate-900 leading-none">96,1%</span>
+                    <span className="text-[10px] text-slate-600 font-medium ml-1">(440/458 Tuntas)</span>
                   </div>
                 </div>
 
@@ -1143,8 +1143,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                   <span className="flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-xs bg-slate-300" /> Diterima
                   </span>
-                  <span className="flex items-center gap-1 font-semibold text-violet-600">
-                    <span className="w-1.5 h-1.5 rounded-xs bg-violet-600" /> Selesai
+                  <span className="flex items-center gap-1 font-semibold text-slate-700">
+                    <span className="w-1.5 h-1.5 rounded-xs bg-slate-700" /> Selesai
                   </span>
                   <span className="ml-auto text-[9px] text-slate-500">
                     Rerata SLA: 1.5 Hari
@@ -1165,24 +1165,24 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
                         contentStyle={{ fontSize: '10px', borderRadius: '8px' }}
                       />
                       <Bar dataKey="diterima" fill="#CBD5E1" radius={[2, 2, 0, 0]} barSize={8} />
-                      <Bar dataKey="selesai" fill="#7C3AED" radius={[2, 2, 0, 0]} barSize={8} />
+                      <Bar dataKey="selesai" fill="#475569" radius={[2, 2, 0, 0]} barSize={8} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              <div className="pt-1.5 mt-1 border-t border-violet-200/50 flex items-center justify-between text-[9px] text-violet-800">
+              <div className="pt-1.5 mt-1 border-t border-slate-100 flex items-center justify-between text-[9px] text-slate-600">
                 <span>Kanal: SP4N-LAPOR! &bull; Hotline BU</span>
-                <span className="font-semibold text-violet-700">18 Aduan Diproses</span>
+                <span className="font-semibold text-slate-700">18 Aduan Diproses</span>
               </div>
             </div>
           </div>
 
           {/* ROW 3: MATURITAS 5 UNSUR SPIP & PENGENDALIAN INTERN - WHITE CARD */}
           <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-2 border-b border-cyan-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-2 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-cyan-600 text-white flex items-center justify-center font-bold">
+                <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
@@ -1202,7 +1202,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
 
             <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5 pt-1">
               {DATA_SPIP_DONUT.map((s, idx) => (
-                <div key={idx} className="bg-white/80 p-2 rounded-lg border border-cyan-100/80 shadow-2xs">
+                <div key={idx} className="bg-white p-2 rounded-lg border border-slate-200/80 shadow-2xs">
                   <div className="flex items-center justify-between text-[10px] text-slate-600 mb-1">
                     <span className="font-semibold truncate">{s.short}</span>
                     <span className="text-slate-400 font-mono">{s.persen}%</span>

@@ -249,7 +249,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
             <div className="space-y-3">
               {/* Highlight Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                <div className="bg-blue-50/70 border border-blue-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-blue-700 font-bold block uppercase">Lokus Bandara Hang Nadim</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-lg font-black text-slate-900 font-mono">87,80</span>
@@ -258,7 +258,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                   <span className="text-[10px] text-slate-500">Dit. Kawasan Bandara &bull; Target: 86,00</span>
                 </div>
 
-                <div className="bg-sky-50/70 border border-sky-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-sky-700 font-bold block uppercase">Lokus Kepelabuhanan</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-lg font-black text-slate-900 font-mono">88,20</span>
@@ -267,7 +267,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                   <span className="text-[10px] text-slate-500">Dit. Kepelabuhanan &bull; Target: 86,30</span>
                 </div>
 
-                <div className="bg-amber-50/70 border border-amber-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-amber-700 font-bold block uppercase">Lokus Lalu Lintas Barang</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-lg font-black text-slate-900 font-mono">89,35</span>
@@ -353,7 +353,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
           {activeTab === 'ikp-2' && (
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-emerald-800 font-bold block uppercase">Dit. Kawasan Bandara (Hang Nadim)</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">Rp 312,45 M</span>
@@ -362,7 +362,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                   <span className="text-[10px] text-slate-500">Target Rp 285,00 M &bull; Surplus Rp 27,45 Miliar (55,2% Share)</span>
                 </div>
 
-                <div className="bg-blue-50/70 border border-blue-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-blue-800 font-bold block uppercase">Dit. Pengelolaan Kepelabuhanan</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">Rp 250,40 M</span>
@@ -439,7 +439,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
           {activeTab === 'ikp-3' && (
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-amber-50/70 border border-amber-200/80 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-amber-800 font-bold block uppercase">Dit. Lalu Lintas Barang (Realisasi PNBP)</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">Rp 2,48 M</span>
@@ -448,7 +448,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                   <span className="text-[10px] text-slate-500">Target Rp 2,20 M &bull; Surplus Rp 0,28 Miliar dari perizinan &amp; dokumen LLB</span>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
                   <span className="text-[10px] text-slate-600 font-bold block uppercase">Kepatuhan Waktu Layanan SLA</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">96,8%</span>

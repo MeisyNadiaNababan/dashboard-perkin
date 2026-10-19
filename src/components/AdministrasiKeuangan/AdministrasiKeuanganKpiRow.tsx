@@ -4,21 +4,10 @@ import {
   ShieldCheck,
   ShieldAlert,
   Award,
-  Clock,
   Activity,
-  CheckCircle2,
   TrendingUp,
   Target,
-  FileText,
-  FileCheck,
-  Scale,
-  Sparkles,
 } from 'lucide-react';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-} from 'recharts';
 import { PERKIN_A1_KPIS } from './administrasiKeuanganData';
 
 interface AdministrasiKeuanganKpiRowProps {
@@ -27,19 +16,6 @@ interface AdministrasiKeuanganKpiRowProps {
   onSelectUnit?: (unitId: string) => void;
 }
 
-// Sparkline Mock Data for 4 IKPs
-const SPARKLINE_IKP1 = [
-  { v: 72 }, { v: 74 }, { v: 76 }, { v: 75 }, { v: 77 }, { v: 78.45 },
-];
-const SPARKLINE_IKP2 = [
-  { v: 290 }, { v: 310 }, { v: 315 }, { v: 330 }, { v: 338 }, { v: 342.5 },
-];
-const SPARKLINE_IKP3 = [
-  { v: 3.1 }, { v: 3.18 }, { v: 3.25 }, { v: 3.32 }, { v: 3.38 }, { v: 3.42 },
-];
-const SPARKLINE_IKP4 = [
-  { v: 100 }, { v: 100 }, { v: 100 }, { v: 100 }, { v: 100 }, { v: 100 },
-];
 
 export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProps> = ({
   onOpenFormulaModal,
@@ -162,222 +138,115 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
       </div>
 
       {/* ================================================================== */}
-      {/* 2. BARIS KEDUA: 8 KARTU KPI OPERASIONAL ULTRA-SLIM                   */}
-      {/* Sesuai instruksi: kartu kpi tambahan & lainnya berwarna putih       */}
+      {/* 2. BARIS KEDUA: 4 KARTU KPI OPERASIONAL PILIHAN DI BAWAH UTAMA       */}
+      {/* 4 KPI paling esensial untuk monitoring Deputi A1: IKPA, Serapan,    */}
+      {/* IP ASN, dan Indeks Manajemen Risiko (MRI)                           */}
       {/* ================================================================== */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-        {/* KPI 1: INDEKS MANAJEMEN RISIKO (MRI) - WHITE CARD */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        {/* KPI 1: INDEKS KINERJA PELAKSANAAN ANGGARAN (IKPA) - BIRO KEUANGAN */}
+        <div
+          onClick={() => onSelectUnit?.('biro-keuangan')}
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-3 py-2.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Indeks Kinerja Pelaksanaan Anggaran (IKPA) Kementerian Keuangan"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1.5">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
+                <TrendingUp className="w-3 h-3 text-blue-600" />
+              </span>
+              Indeks Pelaksanaan (IKPA)
+            </span>
+            <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full text-[9.5px] shrink-0">
+              Sangat Baik
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+              96,25 / 100
+            </span>
+            <span className="text-[10px] text-slate-500 font-medium truncate">
+              Target ≥ 95,00 &bull; Kemenkeu RI
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 2: REALISASI SERAPAN BELANJA SATKER - BIRO KEUANGAN */}
+        <div
+          onClick={() => onSelectUnit?.('biro-keuangan')}
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-3 py-2.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Realisasi Belanja & Serapan Anggaran Satker Perkin A1"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1.5">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
+                <Activity className="w-3 h-3 text-emerald-600" />
+              </span>
+              Serapan Belanja Satker
+            </span>
+            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.5 rounded-full text-[9.5px] shrink-0">
+              94,8% Realisasi
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+              Rp 2,48 T
+            </span>
+            <span className="text-[10px] text-slate-500 font-medium truncate">
+              Pagu Rp 2,62 T &bull; Efisiensi 94,4%
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 3: INDEKS PROFESIONALITAS ASN (IP ASN) - BIRO SDM */}
+        <div
+          onClick={() => onSelectUnit?.('biro-sdm')}
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-3 py-2.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Indeks Profesionalitas ASN (IP ASN) & Layanan Kepegawaian"
+        >
+          <div className="flex items-center justify-between gap-1 mb-1.5">
+            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
+                <Users className="w-3 h-3 text-indigo-600" />
+              </span>
+              Indeks Profesionalitas ASN
+            </span>
+            <span className="font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded-full text-[9.5px] shrink-0">
+              Kategori Tinggi
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-1">
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+              84,60 / 100
+            </span>
+            <span className="text-[10px] text-slate-500 font-medium truncate">
+              Target 80,00 &bull; 98,7% Layanan
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 4: INDEKS MANAJEMEN RISIKO (MRI) - BIRO OKMR */}
         <div
           onClick={() => onSelectUnit?.('biro-organisasi')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Indeks Manajemen Risiko (MRI) BP Batam (Dataset #18)"
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-3 py-2.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          title="Indeks Manajemen Risiko (MRI) BP Batam & Pengendalian Intern SPIP"
         >
-          <div className="flex items-center justify-between gap-1 mb-1">
+          <div className="flex items-center justify-between gap-1 mb-1.5">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <Target className="w-2.5 h-2.5" />
+              <span className="w-5 h-5 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
+                <Target className="w-3 h-3 text-purple-600" />
               </span>
               Indeks Manajemen Risiko
             </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
+            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.5 rounded-full text-[9.5px] shrink-0">
               Tingkat 3 Managed
             </span>
           </div>
           <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
               3,65 / 5,00
             </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
+            <span className="text-[10px] text-slate-500 font-medium truncate">
               Target 3,25 &bull; 94,2% Mitigasi
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 2: PENYELESAIAN MODERNISASI PENGELOLAAN BLU - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-keuangan')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Persentase Penyelesaian Modernisasi Pengelolaan BLU (Dataset #7)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <Sparkles className="w-2.5 h-2.5" />
-              </span>
-              Modernisasi BLU
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Sesuai Target
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              93,2% Tuntas
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Integrasi BIOS &amp; Cash Hub
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 3: KEPATUHAN STANDAR OPERASIONAL PROSEDUR (SOP) & PROBIS - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-organisasi')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Kepatuhan SOP dan Proses Bisnis Terstandarisasi SPBE (Dataset #1)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <FileCheck className="w-2.5 h-2.5" />
-              </span>
-              Kepatuhan SOP &amp; Probis
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Level 3 SPBE
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              94,9% Patuh
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              486 dari 512 SOP Aktif
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 4: KETEPATAN LAYANAN PEGAWAI (KGB & PANGKAT) - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-sdm')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Ketepatan Waktu Kenaikan Gaji Berkala & Pangkat Pegawai (Dataset #4 & #5)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <Clock className="w-2.5 h-2.5" />
-              </span>
-              Ketepatan Layanan ASN
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Nol Sanggah
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              98,7% Tepat Waktu
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              742 ASN Otomasi SIASN
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 5: REKOMENDASI PENGAWASAN BLU (DEWAS & SPI) - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-organisasi')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Tindak Lanjut Rekomendasi Pengawasan Dewas & SPI BLU (Dataset #6)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <Scale className="w-2.5 h-2.5" />
-              </span>
-              Pengawasan BLU
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Dewas &amp; SPI
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              95,8% Tuntas
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              448/467 Rekomendasi Selesai
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 6: KESESUAIAN BEBAN KERJA (ANJAB/ABK) - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-sdm')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Kesesuaian Analisa Jabatan dan Beban Kerja (Dataset #13)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <Users className="w-2.5 h-2.5" />
-              </span>
-              Formasi Anjab / ABK
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Peta Optimal
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              92,4% Sesuai
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Rerata Beban Kerja 110,5%
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 7: PEMENUHAN KONTRAK KINERJA IKU SATKER - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-organisasi')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Pemenuhan Kontrak Kinerja IKU Satker Triwulanan (Dataset #5)"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <TrendingUp className="w-2.5 h-2.5" />
-              </span>
-              Kontrak Kinerja IKU
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Melampaui
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              102,1% Tercapai
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Evaluasi Seluruh Satker A1
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 8: INDEKS REFORMASI KEBIJAKAN (IRK) PUBLIK - WHITE CARD */}
-        <div
-          onClick={() => onSelectUnit?.('biro-organisasi')}
-          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Indeks Reformasi Kebijakan Publik & Kualitas Regulasi Perka BP Batam"
-        >
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
-                <FileText className="w-2.5 h-2.5" />
-              </span>
-              Reformasi Kebijakan (IRK)
-            </span>
-            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
-              Kategori A
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between gap-1">
-            <span className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              84,75 / 100
-            </span>
-            <span className="text-[9.5px] text-slate-500 font-medium truncate">
-              Harmonisasi Regulasi Perka
             </span>
           </div>
         </div>

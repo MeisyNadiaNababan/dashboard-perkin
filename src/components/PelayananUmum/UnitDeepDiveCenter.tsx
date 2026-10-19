@@ -276,32 +276,32 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
         <div className="space-y-3.5">
           {/* Top Quick Highlights Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-rose-50/70 border border-rose-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-rose-800 font-bold block">PNBP RSBP (DS 2)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">PNBP RSBP (DS 2)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 121,80 M</span>
               <span className="text-[9.5px] text-emerald-700 font-bold">104,5% dari Target</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Kunjungan Pasien (DS 5)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kunjungan Pasien (DS 5)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">142.350 Org</span>
               <span className="text-[9.5px] text-slate-500">R.Jalan 104k &bull; R.Inap 24k</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Efisiensi BOR (DS 9)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Efisiensi BOR (DS 9)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">76,2% BOR</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">ALOS 4,2 Hari (Ideal)</span>
             </div>
 
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">Layanan Unggulan (DS 6)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Layanan Unggulan (DS 6)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">28.450 Pasien</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">KEK Medis Sekupang</span>
             </div>
 
-            <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-purple-800 font-bold block">Resep Obat (DS 17)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Resep Obat (DS 17)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">84,5% Generik</span>
               <span className="text-[9.5px] text-purple-700 font-semibold">Rasionalitas Terjaga</span>
             </div>
@@ -469,32 +469,32 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
         <div className="space-y-3.5">
           {/* Top Quick Highlights Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-cyan-50/70 border border-cyan-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-cyan-800 font-bold block">PNBP SPAM Fasling (DS 8-10)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">PNBP SPAM Fasling (DS 8-10)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 142,50 M</span>
               <span className="text-[9.5px] text-cyan-700 font-bold">102,4% dari Target</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Produksi Air WTP (DS 2)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Produksi Air WTP (DS 2)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">3.420 L/dtk</span>
               <span className="text-[9.5px] text-slate-500">Kapasitas 3.660 L/dtk</span>
             </div>
 
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">Daya Tampung 6 Waduk (DS 37)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Daya Tampung 6 Waduk (DS 37)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">184,8 Juta m³</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">Ketahanan 12-16 Bulan</span>
             </div>
 
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-amber-800 font-bold block">Limbah B3 KPLI (DS 54 &amp; 55)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Limbah B3 KPLI (DS 54 &amp; 55)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">14.850 Ton</span>
               <span className="text-[9.5px] text-amber-700 font-semibold">99,2% Terolah Sesuai Baku</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Okupansi Rusunawa (DS 25)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Okupansi Rusunawa (DS 25)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">91,5% Terisi</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">32 Twin Block (3.072 Unit)</span>
             </div>
@@ -669,32 +669,32 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
         <div className="space-y-3.5">
           {/* Top Quick Highlights Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-amber-800 font-bold block">Response Time SLA</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Response Time SLA</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">11,8 Menit</span>
               <span className="text-[9.5px] text-emerald-700 font-bold">Standar Maks 15 Menit</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-              <span className="text-[10px] text-slate-600 font-bold block">Kegiatan Penertiban (DS 1 &amp; 9)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kegiatan Penertiban (DS 1 &amp; 9)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">874 Kasus</span>
               <span className="text-[9.5px] text-slate-500">Bangunan Liar &amp; Hutan</span>
             </div>
 
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">Kekuatan Personel (DS 2 &amp; 3)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kekuatan Personel (DS 2 &amp; 3)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">624 Personel</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">148 Sertifikasi Khusus</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Proteksi Kebakaran (DS 4)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Proteksi Kebakaran (DS 4)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">312 Obvit</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">Inspeksi Berkala Tuntas</span>
             </div>
 
-            <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-purple-800 font-bold block">Pengamanan Aksi (DS 7)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Pengamanan Aksi (DS 7)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">28 Aksi Damai</span>
               <span className="text-[9.5px] text-purple-700 font-semibold">100% Kondusif &amp; Tertib</span>
             </div>

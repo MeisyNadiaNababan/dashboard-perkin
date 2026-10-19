@@ -332,7 +332,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
           {/* ROW 1: DUA KARTU UTAMA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 1: LAPORAN TARGET PENERIMAAN PNBP BERDASARKAN JENIS PENERIMAAN & TOTAL (DATASET #12) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -348,7 +348,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                   </div>
 
                   {/* TOTAL PNBP BANNER */}
-                  <div className="text-right shrink-0 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
+                  <div className="text-right shrink-0 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs">
                     <span className="text-[9.5px] text-slate-500 font-bold block uppercase tracking-wider">Total Realisasi</span>
                     <span className="text-sm sm:text-base font-black text-blue-700 font-mono">
                       Rp {TOTAL_PNBP_LAHAN.totalRealisasiIdr.toFixed(2)} M
@@ -402,17 +402,17 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
               </div>
 
               {/* Rincian Tabel Atribut */}
-              <div className="pt-2 border-t border-blue-100 mt-1 overflow-x-auto">
+              <div className="pt-2 border-t border-slate-100 mt-1 overflow-x-auto">
                 <table className="w-full text-[10px] text-left border-collapse">
                   <thead>
-                    <tr className="text-slate-500 font-bold border-b border-blue-200/60">
+                    <tr className="text-slate-500 font-bold border-b border-slate-200">
                       <th className="py-0.5">JENIS PENERIMAAN</th>
                       <th className="py-0.5 text-right">ANGGARAN PNBP</th>
                       <th className="py-0.5 text-right">REALISASI</th>
                       <th className="py-0.5 text-right">CAPAIAN (%)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-blue-50 text-slate-700">
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
                     {PNBP_JENIS_PENERIMAAN_DATA.map((row, idx) => (
                       <tr key={idx}>
                         <td className="py-1 font-medium">{row.jenisPenerimaan}</td>
@@ -421,7 +421,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                         <td className="py-1 text-right font-mono font-bold text-emerald-600">{row.capaianPersen.toFixed(1)}%</td>
                       </tr>
                     ))}
-                    <tr className="font-black bg-blue-100/50 text-blue-900 border-t border-blue-200">
+                    <tr className="font-black bg-slate-50 text-slate-800 border-t border-slate-200">
                       <td className="py-1">TOTAL ANGGARAN &amp; REALISASI PNBP</td>
                       <td className="py-1 text-right font-mono">Rp {TOTAL_PNBP_LAHAN.totalAnggaranIdr.toFixed(1)} M</td>
                       <td className="py-1 text-right font-mono">Rp {TOTAL_PNBP_LAHAN.totalRealisasiIdr.toFixed(1)} M</td>
@@ -433,7 +433,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
             </div>
 
             {/* CARD 2: REKAPITULASI BERDASARKAN JENIS PEMOHON (DATASET #1 S.D #14) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-indigo-50/70 via-sky-50/30 to-white rounded-xl border border-indigo-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -543,15 +543,15 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                 </div>
 
                 <div className="space-y-2 mt-2">
-                  <div className="p-2 rounded-lg bg-blue-50/70 border border-blue-100 flex justify-between items-center text-xs">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
                     <span className="text-slate-600 font-medium">Realisasi Alokasi Riil:</span>
                     <span className="font-black font-mono text-blue-800 text-sm">248,50 Ha (Target 200 Ha)</span>
                   </div>
-                  <div className="p-2 rounded-lg bg-emerald-50/70 border border-emerald-100 flex justify-between items-center text-xs">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
                     <span className="text-slate-600 font-medium">Persetujuan Berkas Investasi:</span>
                     <span className="font-black font-mono text-emerald-800 text-sm">384 dari 456 Berkas</span>
                   </div>
-                  <div className="p-2 rounded-lg bg-indigo-50/70 border border-indigo-100 flex justify-between items-center text-xs">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
                     <span className="text-slate-600 font-medium">SLA Waktu Layanan:</span>
                     <span className="font-black font-mono text-indigo-800 text-sm">2,4 Hari (SOP 4 Hari)</span>
                   </div>
@@ -576,7 +576,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
           {/* ROW 1: DUA KARTU UTAMA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 1: LUAS IZIN INVESTASI PESISIR & REKLAMASI PER WILAYAH (DATASET #4) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-cyan-50/70 via-teal-50/30 to-white rounded-xl border border-cyan-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -631,7 +631,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-cyan-100 flex items-center justify-between text-[11px] text-slate-600">
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
                 <span className="text-slate-500">
                   Total Izin Terbit Resmi: <strong>48 Dokumen PKKPRL</strong>
                 </span>
@@ -640,7 +640,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
             </div>
 
             {/* CARD 2: KINERJA PERIZINAN TEPAT WAKTU (DATASET #3 HAL. 14) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-teal-50/70 via-cyan-50/30 to-white rounded-xl border border-teal-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -759,7 +759,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
 
                 <div className="space-y-2 mt-2">
                   {IZIN_PESISIR_INVESTASI_DATA.slice(0, 3).map((item, idx) => (
-                    <div key={idx} className="p-2 rounded-lg bg-cyan-50/70 border border-cyan-100 text-xs">
+                    <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 text-xs">
                       <div className="flex justify-between items-center font-bold text-slate-900">
                         <span className="truncate">{item.namaPerusahaan}</span>
                         <span className="font-mono text-cyan-800 shrink-0">{item.luasHa} Ha</span>
@@ -790,7 +790,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
           {/* ROW 1: DUA KARTU UTAMA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 1: CAPAIAN TRIWULANAN 4 INDIKATOR KINERJA PENGENDALIAN (HAL. 11) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -844,7 +844,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-emerald-100 flex items-center justify-between text-[11px] text-slate-600">
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
                 <span className="text-slate-500">
                   Target Triwulanan: <strong>80% s.d 90%</strong>
                 </span>
@@ -853,7 +853,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
             </div>
 
             {/* CARD 2: REKAPITULASI PENERTIBAN LAHAN MANGKRAK & REKUPERASI ASET (DATASET #2) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-teal-50/70 via-emerald-50/30 to-white rounded-xl border border-teal-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -975,15 +975,15 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                 </div>
 
                 <div className="space-y-2 mt-2">
-                  <div className="p-2 rounded-lg bg-emerald-50/70 border border-emerald-100 flex justify-between items-center text-xs">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
                     <span className="text-slate-600 font-medium">Lahan Mangkrak Dicabut:</span>
                     <span className="font-black font-mono text-emerald-800 text-xs">94,6 Ha Kembali ke BP</span>
                   </div>
-                  <div className="p-2 rounded-lg bg-teal-50/70 border border-teal-100 flex justify-between items-center text-xs">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
                     <span className="text-slate-600 font-medium">Investor Re-Komitmen:</span>
                     <span className="font-black font-mono text-teal-800 text-xs">221,8 Ha Lanjut Bangun</span>
                   </div>
-                  <div className="p-2 rounded-lg bg-blue-50/70 border border-blue-100 flex justify-between items-center text-xs">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
                     <span className="text-slate-600 font-medium">Penyelesaian Sengketa:</span>
                     <span className="font-black font-mono text-blue-800 text-xs">182 / 192 Tuntas (94,8%)</span>
                   </div>
