@@ -50,122 +50,122 @@ interface IksCardTheme {
 
 const IKS_THEMES: Record<string, IksCardTheme> = {
   'iks-1': {
-    borderTop: 'border-t-[#0A2540]',
-    iconBg: 'bg-slate-100',
-    iconBorder: 'border-slate-200',
-    iconColor: 'text-[#0A2540]',
-    titleHover: 'group-hover:text-[#0A2540]',
+    borderTop: 'border-t-blue-600',
+    iconBg: 'bg-blue-50',
+    iconBorder: 'border-blue-200',
+    iconColor: 'text-blue-600',
+    titleHover: 'group-hover:text-blue-600',
     kicker: 'IKS 1 \u2022 INVESTASI KPBPB',
-    kickerBg: 'bg-slate-100',
-    kickerColor: 'text-slate-900',
-    kickerBorder: 'border-slate-300',
+    kickerBg: 'bg-blue-50',
+    kickerColor: 'text-blue-900',
+    kickerBorder: 'border-blue-200',
     title: 'Nilai Realisasi Investasi',
-    heroGradient: 'from-slate-50 to-white',
-    heroBorder: 'border-slate-200',
-    heroTitle: 'text-[#0A2540]',
+    heroGradient: 'from-blue-600 via-blue-600 to-indigo-700 text-white',
+    heroBorder: 'border-blue-500/40',
+    heroTitle: 'text-white',
     heroBadge: 'ON TRACK',
-    heroBadgeColor: 'bg-amber-100 text-amber-900 border border-amber-300',
+    heroBadgeColor: 'bg-white/20 text-white border border-white/30',
     ikpLabel: 'IKP #1: Realisasi Investasi KPBPB',
     bigValue: 'Rp 54,68 T',
     subValue: 'PMA & PMDN',
-    subValueColor: 'text-amber-800',
+    subValueColor: 'text-blue-100',
     targetFormatted: 'Rp 70 T',
-    barGradient: 'from-[#0A2540] to-amber-500',
+    barGradient: 'from-white to-blue-200',
     progressWidth: 78.1,
     realisasiFormatted: 'Rp 54,68 Triliun',
     capaianFormatted: '78.1% Target',
     statusBadge: '78.1% ON TRACK',
-    statusBadgeColor: 'text-amber-800 bg-amber-50 border-amber-300',
+    statusBadgeColor: 'text-blue-800 bg-blue-50 border-blue-200',
     footerStatus: 'Investasi Terkendali',
     footnote: 'Modal Tetap (KPU BC) + Modal Lancar (KPU BC & BPS)',
   },
   'iks-2': {
-    borderTop: 'border-t-[#0A2540]',
+    borderTop: 'border-t-slate-300',
     iconBg: 'bg-slate-100',
     iconBorder: 'border-slate-200',
-    iconColor: 'text-[#0A2540]',
-    titleHover: 'group-hover:text-[#0A2540]',
+    iconColor: 'text-slate-700',
+    titleHover: 'group-hover:text-slate-900',
     kicker: 'IKS 2 \u2022 PELAYANAN PUBLIK',
     kickerBg: 'bg-slate-100',
-    kickerColor: 'text-slate-900',
-    kickerBorder: 'border-slate-300',
+    kickerColor: 'text-slate-700',
+    kickerBorder: 'border-slate-200',
     title: 'Indeks Kepuasan Masyarakat (IKM)',
-    heroGradient: 'from-slate-50 to-white',
-    heroBorder: 'border-slate-200',
-    heroTitle: 'text-[#0A2540]',
+    heroGradient: 'from-blue-600 via-blue-600 to-indigo-700 text-white',
+    heroBorder: 'border-blue-500/40',
+    heroTitle: 'text-white',
     heroBadge: 'TERCAPAI',
-    heroBadgeColor: 'bg-amber-100 text-amber-900 border border-amber-300',
+    heroBadgeColor: 'bg-white/20 text-white border border-white/30',
     ikpLabel: 'IKP #2: Indeks Layanan & Kawasan',
     bigValue: '88.42',
     subValue: 'Mutu A (Sangat Baik)',
-    subValueColor: 'text-amber-800',
+    subValueColor: 'text-blue-100',
     targetFormatted: '88,00',
-    barGradient: 'from-[#0A2540] to-amber-500',
+    barGradient: 'from-white to-blue-200',
     progressWidth: 100,
     realisasiFormatted: '88.42 Poin (SKM)',
     capaianFormatted: '100.5% Target',
     statusBadge: '100.5% TERCAPAI',
-    statusBadgeColor: 'text-amber-800 bg-amber-50 border-amber-300',
+    statusBadgeColor: 'text-blue-800 bg-blue-50 border-blue-200',
     footerStatus: 'Pelayanan Prima (Mutu A)',
     footnote: 'Rerata Tertimbang 9 Unsur SKM pada 5 Lokus Pelayanan BP Batam',
   },
   'iks-3': {
-    borderTop: 'border-t-[#0A2540]',
-    iconBg: 'bg-slate-100',
-    iconBorder: 'border-slate-200',
-    iconColor: 'text-[#0A2540]',
-    titleHover: 'group-hover:text-[#0A2540]',
-    kicker: 'IKS 3 \u2022 PENDAPATAN BLU',
-    kickerBg: 'bg-slate-100',
-    kickerColor: 'text-slate-900',
-    kickerBorder: 'border-slate-300',
+    borderTop: 'border-t-blue-600',
+    iconBg: 'bg-blue-50',
+    iconBorder: 'border-blue-200',
+    iconColor: 'text-blue-600',
+    titleHover: 'group-hover:text-blue-600',
+    kicker: 'IKS 3 • PENDAPATAN BLU',
+    kickerBg: 'bg-blue-50',
+    kickerColor: 'text-blue-900',
+    kickerBorder: 'border-blue-200',
     title: 'Penerimaan PNBP BP Batam',
-    heroGradient: 'from-slate-50 to-white',
-    heroBorder: 'border-slate-200',
-    heroTitle: 'text-[#0A2540]',
+    heroGradient: 'from-blue-600 via-blue-600 to-indigo-700 text-white',
+    heroBorder: 'border-blue-500/40',
+    heroTitle: 'text-white',
     heroBadge: 'ON TRACK',
-    heroBadgeColor: 'bg-amber-100 text-amber-900 border border-amber-300',
+    heroBadgeColor: 'bg-white/20 text-white border border-white/30',
     ikpLabel: 'IKP #3: PNBP 10 Satker Penghasil',
     bigValue: 'Rp 1,89 T',
     subValue: '10 Satker BLU',
-    subValueColor: 'text-amber-800',
+    subValueColor: 'text-blue-100',
     targetFormatted: 'Rp 2,447 T',
-    barGradient: 'from-[#0A2540] to-amber-500',
+    barGradient: 'from-white to-blue-200',
     progressWidth: 77.3,
     realisasiFormatted: 'Rp 1.892,4 Miliar',
     capaianFormatted: '77.3% Target',
     statusBadge: '77.3% ON TRACK',
-    statusBadgeColor: 'text-amber-800 bg-amber-50 border-amber-300',
+    statusBadgeColor: 'text-blue-800 bg-blue-50 border-blue-200',
     footerStatus: 'Pendapatan BLU Sehat',
-    footnote: '\u03a3(Realisasi PNBP 2026 10 Unit Kerja Penghasil & Badan Usaha)',
+    footnote: 'Σ(Realisasi PNBP 2026 10 Unit Kerja Penghasil & Badan Usaha)',
   },
   'iks-4': {
-    borderTop: 'border-t-[#0A2540]',
-    iconBg: 'bg-slate-100',
-    iconBorder: 'border-slate-200',
-    iconColor: 'text-[#0A2540]',
-    titleHover: 'group-hover:text-[#0A2540]',
-    kicker: 'IKS 4 \u2022 TATA KELOLA & RB',
-    kickerBg: 'bg-slate-100',
-    kickerColor: 'text-slate-900',
-    kickerBorder: 'border-slate-300',
+    borderTop: 'border-t-blue-600',
+    iconBg: 'bg-blue-50',
+    iconBorder: 'border-blue-200',
+    iconColor: 'text-blue-600',
+    titleHover: 'group-hover:text-blue-600',
+    kicker: 'IKS 4 • TATA KELOLA & RB',
+    kickerBg: 'bg-blue-50',
+    kickerColor: 'text-blue-900',
+    kickerBorder: 'border-blue-200',
     title: 'Indeks Reformasi Birokrasi',
-    heroGradient: 'from-slate-50 to-white',
-    heroBorder: 'border-slate-200',
-    heroTitle: 'text-[#0A2540]',
+    heroGradient: 'from-blue-600 via-blue-600 to-indigo-700 text-white',
+    heroBorder: 'border-blue-500/40',
+    heroTitle: 'text-white',
     heroBadge: 'TERCAPAI',
-    heroBadgeColor: 'bg-amber-100 text-amber-900 border border-amber-300',
+    heroBadgeColor: 'bg-white/20 text-white border border-white/30',
     ikpLabel: 'IKP #4: RB General & Tematik',
     bigValue: '81.35',
     subValue: 'Predikat A (Memuaskan)',
-    subValueColor: 'text-amber-800',
+    subValueColor: 'text-blue-100',
     targetFormatted: '80 (BB)',
-    barGradient: 'from-[#0A2540] to-amber-500',
+    barGradient: 'from-white to-blue-200',
     progressWidth: 100,
     realisasiFormatted: '81.35 Poin (KemenPAN-RB)',
     capaianFormatted: '101.7% Target',
     statusBadge: '101.7% TERCAPAI',
-    statusBadgeColor: 'text-amber-800 bg-amber-50 border-amber-300',
+    statusBadgeColor: 'text-blue-800 bg-blue-50 border-blue-200',
     footerStatus: 'Akuntabel & SAKIP A',
     footnote: 'Verifikasi KemenPAN-RB atas Akuntabilitas & Reformasi Birokrasi',
   },
@@ -255,58 +255,63 @@ export const KepalaBpKpis: React.FC<KepalaBpKpisProps> = ({
                 </div>
 
                 {/* Primary IKP Card Block: KPI Utama Perkin (Identik Persis Model Deputi A1) */}
-                <div
-                  className={`bg-gradient-to-br ${theme.heroGradient} rounded-lg p-3 border ${theme.heroBorder} my-3`}
-                >
-                  <div className="text-[10.5px] font-bold text-blue-950 flex items-center justify-between">
-                    <span>{theme.ikpLabel}</span>
-                    <span
-                      className={`text-[10px] font-mono font-bold px-1.5 py-0.2 rounded ${theme.heroBadgeColor}`}
-                    >
-                      {theme.heroBadge}
-                    </span>
-                  </div>
-
-                  <div className="flex items-baseline justify-between mt-1.5">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900">
-                        {theme.bigValue}
-                      </span>
-                      <span className={`text-xs font-bold ${theme.subValueColor}`}>
-                        {theme.subValue}
-                      </span>
-                    </div>
-                    <div className="text-right text-xs">
-                      <span className="text-[10px] text-slate-500 block">Target Perkin:</span>
-                      <span className="font-bold font-mono text-slate-700">
-                        {theme.targetFormatted}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="w-full h-1.5 rounded-full bg-slate-200 mt-2 overflow-hidden">
+                {(() => {
+                  const isMain = iks.id === 'iks-1';
+                  return (
                     <div
-                      className={`h-full rounded-full bg-gradient-to-r ${theme.barGradient} transition-all duration-700`}
-                      style={{ width: `${Math.min(theme.progressWidth, 100)}%` }}
-                    />
-                  </div>
+                      className={`bg-gradient-to-br ${theme.heroGradient} rounded-lg p-3 border ${theme.heroBorder} my-3`}
+                    >
+                      <div className={`text-[10.5px] font-bold ${isMain ? 'text-blue-100' : 'text-slate-700'} flex items-center justify-between`}>
+                        <span>{theme.ikpLabel}</span>
+                        <span
+                          className={`text-[10px] font-mono font-bold px-1.5 py-0.2 rounded ${theme.heroBadgeColor}`}
+                        >
+                          {theme.heroBadge}
+                        </span>
+                      </div>
 
-                  {/* Realisasi vs Capaian Context */}
-                  <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mt-2">
-                    <span>
-                      Realisasi YTD: <strong className="text-slate-700">{theme.realisasiFormatted}</strong>
-                    </span>
-                    <span className="font-bold text-slate-800">
-                      {theme.capaianFormatted}
-                    </span>
-                  </div>
+                      <div className="flex items-baseline justify-between mt-1.5">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className={`text-2xl sm:text-3xl font-black font-mono tracking-tight ${isMain ? 'text-white' : 'text-slate-900'}`}>
+                            {theme.bigValue}
+                          </span>
+                          <span className={`text-xs font-bold ${theme.subValueColor}`}>
+                            {theme.subValue}
+                          </span>
+                        </div>
+                        <div className="text-right text-xs">
+                          <span className={`text-[10px] ${isMain ? 'text-blue-200' : 'text-slate-500'} block`}>Target Perkin:</span>
+                          <span className={`font-bold font-mono ${isMain ? 'text-white' : 'text-slate-700'}`}>
+                            {theme.targetFormatted}
+                          </span>
+                        </div>
+                      </div>
 
-                  {/* Brief Footnote / Regulatory Note */}
-                  <div className="text-[10px] text-slate-500 mt-2 leading-relaxed line-clamp-1 border-t border-slate-200/50 pt-1.5">
-                    {theme.footnote}
-                  </div>
-                </div>
+                      {/* Progress Bar */}
+                      <div className={`w-full h-1.5 rounded-full ${isMain ? 'bg-blue-950/40' : 'bg-slate-200'} mt-2 overflow-hidden`}>
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-r ${theme.barGradient} transition-all duration-700`}
+                          style={{ width: `${Math.min(theme.progressWidth, 100)}%` }}
+                        />
+                      </div>
+
+                      {/* Realisasi vs Capaian Context */}
+                      <div className={`flex items-center justify-between text-[10px] font-mono ${isMain ? 'text-blue-200' : 'text-slate-500'} mt-2`}>
+                        <span>
+                          Realisasi YTD: <strong className={isMain ? 'text-white' : 'text-slate-700'}>{theme.realisasiFormatted}</strong>
+                        </span>
+                        <span className={`font-bold ${isMain ? 'text-white' : 'text-slate-800'}`}>
+                          {theme.capaianFormatted}
+                        </span>
+                      </div>
+
+                      {/* Brief Footnote / Regulatory Note */}
+                      <div className={`text-[10px] ${isMain ? 'text-blue-100/80 border-blue-400/30' : 'text-slate-500 border-slate-200/50'} mt-2 leading-relaxed line-clamp-1 border-t pt-1.5`}>
+                        {theme.footnote}
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Sasaran Strategis */}
                 <div className="text-[10.5px] text-slate-600 line-clamp-2 px-0.5 font-medium leading-snug">

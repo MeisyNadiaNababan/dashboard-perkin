@@ -85,66 +85,66 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
           </div>
         </div>
 
-        {/* IKP 2: Luas Izin Pengelolaan Kawasan Pesisir & Reklamasi - DIT. PESISIR & REKLAMASI */}
+        {/* IKP 2: Luas Izin Pengelolaan Kawasan Pesisir & Reklamasi - BLUE CARD */}
         <div
           onClick={() => onOpenFormulaModal('ikp-2-pesisir-reklamasi')}
-          className="bg-gradient-to-br from-cyan-50/95 via-teal-50/60 to-cyan-50/30 border border-cyan-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
           title="Buka detail IKP 2 Luas Izin Pesisir & Reklamasi"
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-cyan-900 flex items-center gap-1.5">
-                <Anchor className="w-3.5 h-3.5 text-cyan-700" />
+              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
+                <Anchor className="w-3.5 h-3.5 text-cyan-200" />
                 IKP 2 &bull; Dit. Pesisir (Izin &amp; Reklamasi)
               </span>
-              <div className="w-6 h-6 rounded-full bg-cyan-600 text-white flex items-center justify-center font-bold shadow-xs">
+              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Anchor className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
 
             <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 162,8
               </span>
-              <span className="text-xs font-bold text-slate-600">Hektar</span>
+              <span className="text-xs font-bold text-blue-100">Hektar</span>
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-slate-500 font-medium">Target 150,0 Ha (Perkin 2026)</span>
-              <span className="font-bold text-cyan-800 bg-white/90 border border-cyan-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+              <span className="text-blue-100/90">Target 150,0 Ha (Perkin 2026)</span>
+              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
                 {ikpPesisir.capaianPersen.toFixed(1)}% Tercapai
               </span>
             </div>
           </div>
         </div>
 
-        {/* IKP 3: Keberhasilan Pengawasan & Pengendalian Lahan - DIT. PENGENDALIAN */}
+        {/* IKP 3: Keberhasilan Pengawasan & Pengendalian Lahan - BLUE CARD */}
         <div
           onClick={() => onOpenFormulaModal('ikp-3-pengawasan-pengendalian')}
-          className="bg-gradient-to-br from-emerald-50/95 via-teal-50/50 to-emerald-50/30 border border-emerald-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
           title="Buka detail IKP 3 Keberhasilan Pengawasan & Pengendalian Lahan"
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-emerald-900 flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-200" />
                 IKP 3 &bull; Dit. Pengendalian (Pengawasan)
               </span>
-              <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
 
             <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 89,40%
               </span>
-              <span className="text-xs font-bold text-slate-600">Keberhasilan</span>
+              <span className="text-xs font-bold text-blue-100">Keberhasilan</span>
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-slate-500 font-medium">Target 80,00% (Efektif)</span>
-              <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+              <span className="text-blue-100/90">Target 80,00% (Efektif)</span>
+              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
                 {ikpPengendalian.capaianPersen.toFixed(1)}% Optimal
               </span>
             </div>
@@ -154,24 +154,22 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
 
       {/* ================================================================== */}
       {/* 2. BARIS KEDUA: 4 KARTU KPI OPERASIONAL TAMBAHAN DI BAWAH UTAMA     */}
-      {/* (Format persis DEP-A2. Sesuai instruksi: Pendapatan PNBP Lahan TIDAK  */}
-      {/* ditampilkan di sini karena sudah ada di unit deep dive)             */}
       {/* ================================================================== */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-        {/* KPI 1: SLA KECEPATAN PENERBITAN IZIN PERTANAHAN (DIT. LAHAN) */}
+        {/* KPI 1: SLA KECEPATAN PENERBITAN IZIN PERTANAHAN - WHITE CARD */}
         <div
           onClick={() => onSelectUnit?.('dit-lahan')}
-          className="bg-gradient-to-br from-blue-50/80 via-indigo-50/40 to-white rounded-lg border border-blue-200/80 hover:border-blue-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
           title="Kecepatan Layanan & SLA Izin Pertanahan (Dit. Pengelolaan Lahan)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
+              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
                 <Clock className="w-2.5 h-2.5" />
               </span>
               SLA Layanan Lahan
             </span>
-            <span className="font-bold text-blue-800 bg-white/90 border border-blue-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
               96,2% Patuh
             </span>
           </div>
@@ -185,20 +183,20 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
           </div>
         </div>
 
-        {/* KPI 2: KESESUAIAN ZONASI LAUT & REKLAMASI / PKKPRL (DIT. PESISIR) */}
+        {/* KPI 2: KESESUAIAN ZONASI LAUT & REKLAMASI / PKKPRL - WHITE CARD */}
         <div
           onClick={() => onSelectUnit?.('dit-pesisir-reklamasi')}
-          className="bg-gradient-to-br from-cyan-50/80 via-teal-50/40 to-white rounded-lg border border-cyan-200/80 hover:border-cyan-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
           title="Kesesuaian Tata Ruang Laut & Zonasi PKKPRL (Dit. Pesisir & Reklamasi)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-cyan-600 text-white flex items-center justify-center font-bold shrink-0">
+              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
                 <Compass className="w-2.5 h-2.5" />
               </span>
               Kesesuaian RZWP3K
             </span>
-            <span className="font-bold text-cyan-800 bg-white/90 border border-cyan-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
               100% Selaras
             </span>
           </div>
@@ -212,20 +210,20 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
           </div>
         </div>
 
-        {/* KPI 3: EFEKTIVITAS PENANGANAN SENGKETA & PENEGAKAN REGULASI (DIT. PENGENDALIAN) */}
+        {/* KPI 3: EFEKTIVITAS PENANGANAN SENGKETA & PENEGAKAN REGULASI - WHITE CARD */}
         <div
           onClick={() => onSelectUnit?.('dit-pengendalian-lahan')}
-          className="bg-gradient-to-br from-emerald-50/80 via-teal-50/40 to-white rounded-lg border border-emerald-200/80 hover:border-emerald-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
           title="Efektivitas Penanganan Sengketa & Mediasi Pertanahan (Dit. Pengendalian Lahan)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0">
+              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
                 <Scale className="w-2.5 h-2.5" />
               </span>
               Penyelesaian Sengketa
             </span>
-            <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
               Target 90%
             </span>
           </div>
@@ -239,20 +237,20 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
           </div>
         </div>
 
-        {/* KPI 4: UTILISASI AREA SUB-WILAYAH PENGEMBANGAN (SWP) LAHAN PRODUKTIF (SATU DATA #15) */}
+        {/* KPI 4: UTILISASI AREA SUB-WILAYAH PENGEMBANGAN (SWP) LAHAN - WHITE CARD */}
         <div
           onClick={() => onSelectUnit?.('dit-lahan')}
-          className="bg-gradient-to-br from-indigo-50/80 via-slate-50/40 to-white rounded-lg border border-indigo-200/80 hover:border-indigo-400 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+          className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
           title="Rasio Utilisasi SWP Lahan Produktif (Buku Satu Data Lahan #15)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0">
+              <span className="w-4 h-4 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
                 <Layers className="w-2.5 h-2.5" />
               </span>
               Utilisasi SWP Lahan
             </span>
-            <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs shrink-0">
+            <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200/90 px-1.5 py-0.2 rounded-full text-[9.5px] shrink-0">
               Optimal
             </span>
           </div>

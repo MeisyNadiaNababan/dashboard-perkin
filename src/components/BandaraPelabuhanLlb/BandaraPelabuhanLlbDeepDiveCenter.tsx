@@ -280,8 +280,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* Top Quick Highlights Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">PNBP Bandara (DS 1)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">PNBP Bandara (DS 1)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 124,50 M</span>
               <span className="text-[9.5px] text-emerald-700 font-bold">107,0% dari Target</span>
             </div>
@@ -304,8 +304,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-emerald-700 font-semibold">+6,8% YoY Growth</span>
             </div>
 
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">Rute &amp; OTP (DS 9)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Rute &amp; OTP (DS 9)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">24 Rute / 89,4%</span>
               <span className="text-[9.5px] text-blue-700 font-semibold">On-Time Performance</span>
             </div>
@@ -490,8 +490,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* Top Quick Highlights Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-blue-800 font-bold block">PNBP Pelabuhan (DS 3)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">PNBP Pelabuhan (DS 3)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 250,40 M</span>
               <span className="text-[9.5px] text-blue-700 font-bold">107,4% dari Target</span>
             </div>
@@ -514,8 +514,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-blue-700 font-semibold">5 Terminal Feri</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Utilisasi Dermaga (DS 4)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Utilisasi Dermaga (DS 4)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">68,5% BOR</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">Kapasitas Aman &amp; Efisien</span>
             </div>
@@ -657,8 +657,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* Top Quick Highlights Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-amber-800 font-bold block">PNBP Layanan LLB (DS 3)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">PNBP Layanan LLB (DS 3)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">Rp 2,48 M</span>
               <span className="text-[9.5px] text-amber-700 font-bold">112,7% dari Target</span>
             </div>
@@ -669,8 +669,8 @@ export const BandaraPelabuhanLlbDeepDiveCenter: React.FC<
               <span className="text-[9.5px] text-slate-500">Pemasukan &amp; Pengeluaran</span>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5">
-              <span className="text-[10px] text-emerald-800 font-bold block">Kepatuhan SLA (DS 8 &amp; 9)</span>
+            <div className="bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs">
+              <span className="text-[10px] text-slate-700 font-bold block">Kepatuhan SLA (DS 8 &amp; 9)</span>
               <span className="text-base sm:text-lg font-black text-slate-900 font-mono block">96,8% Tepat Waktu</span>
               <span className="text-[9.5px] text-emerald-700 font-semibold">Rata-rata 1,8 Jam Kerja</span>
             </div>

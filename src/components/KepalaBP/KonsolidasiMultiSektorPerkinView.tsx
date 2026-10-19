@@ -546,7 +546,7 @@ export const KonsolidasiMultiSektorPerkinView: React.FC<KonsolidasiMultiSektorPe
                 {/* ============================================================== */}
                 <div
                   onClick={() => handleOpenFormulaModal(cfg.primaryKpiName)}
-                  className={`bg-gradient-to-br ${cfg.heroGradient} rounded-xl p-3.5 border ${cfg.heroBorder} my-3.5 shadow-2xs cursor-pointer group/hero hover:border-blue-400 hover:shadow-sm transition-all`}
+                  className="bg-white rounded-xl p-3.5 border border-slate-200/90 my-3.5 shadow-2xs cursor-pointer group/hero hover:border-blue-400 hover:shadow-xs transition-all"
                   title="Klik untuk membuka rincian Sumber Satu Data, Nomor Dataset, & Rumus Perhitungan"
                 >
                   <div className="text-xs font-bold text-slate-900 flex items-center justify-between">

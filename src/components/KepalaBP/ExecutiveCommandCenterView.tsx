@@ -219,75 +219,75 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
             </div>
           </div>
 
-          {/* KPI 2: Indeks Kepuasan Masyarakat (IKM) - SOFT MINT / PASTEL GREEN */}
+          {/* KPI 2: Indeks Kepuasan Masyarakat (IKM) - BLUE CARD */}
           <div
             onClick={() => onSelectIksDetail('iks-2')}
-            className="bg-gradient-to-br from-emerald-50/90 via-teal-50/60 to-emerald-50/30 border border-emerald-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+            className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-emerald-800">IKS 2 &bull; Kepuasan IKM</span>
-                <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+                <span className="text-[11px] font-semibold text-blue-100">IKS 2 &bull; Kepuasan IKM</span>
+                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <Smile className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
                 88,42
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-slate-500 font-medium">Target 88,00</span>
-                <span className="font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                <span className="text-blue-100/90">Target 88,00</span>
+                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
                   100,5% Tercapai
                 </span>
               </div>
             </div>
           </div>
 
-          {/* KPI 3: Realisasi Penerimaan PNBP - SOFT WARM AMBER / GOLD */}
+          {/* KPI 3: Realisasi Penerimaan PNBP - BLUE CARD */}
           <div
             onClick={() => onSelectIksDetail('iks-3')}
-            className="bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-50/30 border border-amber-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+            className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-amber-800">IKS 3 &bull; Penerimaan PNBP</span>
-                <div className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold shadow-xs">
+                <span className="text-[11px] font-semibold text-blue-100">IKS 3 &bull; Penerimaan PNBP</span>
+                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <DollarSign className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
                 Rp 1.892,4 M
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-slate-500 font-medium">Target Rp 2.447,8 M</span>
-                <span className="font-bold text-amber-800 bg-white/90 border border-amber-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                <span className="text-blue-100/90">Target Rp 2.447,8 M</span>
+                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
                   77,3% On Track
                 </span>
               </div>
             </div>
           </div>
 
-          {/* KPI 4: Indeks Reformasi Birokrasi - SOFT PASTEL PURPLE / LAVENDER */}
+          {/* KPI 4: Indeks Reformasi Birokrasi - BLUE CARD */}
           <div
             onClick={() => onSelectIksDetail('iks-4')}
-            className="bg-gradient-to-br from-purple-50/90 via-indigo-50/50 to-purple-50/30 border border-purple-200/80 rounded-xl p-3 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+            className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-purple-800">IKS 4 &bull; Reformasi Birokrasi</span>
-                <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold shadow-xs">
+                <span className="text-[11px] font-semibold text-blue-100">IKS 4 &bull; Reformasi Birokrasi</span>
+                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight block">
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
                 81,35 / A
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-slate-500 font-medium">Target 80,00</span>
-                <span className="font-bold text-indigo-800 bg-white/90 border border-indigo-200 px-1.5 py-0.2 rounded-full text-[9.5px] shadow-2xs">
+                <span className="text-blue-100/90">Target 80,00</span>
+                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
                   101,7% Tercapai
                 </span>
               </div>

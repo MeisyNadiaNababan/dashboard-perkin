@@ -693,8 +693,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
       {selectedUnitId === 'biro-sdm' && (
         <div className="space-y-3.5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
-            {/* CARD 1: Kualifikasi Pendidikan SDM - SOFT BLUE TINT */}
-            <div className="bg-gradient-to-br from-blue-50/70 via-sky-50/40 to-white rounded-xl border border-blue-200/70 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
+            {/* CARD 1: Kualifikasi Pendidikan SDM - WHITE CARD */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2 pb-2 border-b border-blue-100">
                   <div className="flex items-center gap-2">
@@ -776,8 +776,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 2: Status Kepegawaian & Gender - SOFT EMERALD/TEAL TINT */}
-            <div className="bg-gradient-to-br from-emerald-50/70 via-teal-50/40 to-white rounded-xl border border-emerald-200/70 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
+            {/* CARD 2: Status Kepegawaian & Gender - WHITE CARD */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100">
                   <div className="flex items-center gap-2">
@@ -847,8 +847,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
         <div className="space-y-3.5">
           {/* ROW 1: DUA PILAR STRATEGIS (SAKIP 82.68 A & MANAJEMEN RISIKO MRI 3.65) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* CARD 1: NILAI SISTEM AKUNTABILITAS KINERJA INSTANSI PEMERINTAH (SAKIP) - REQ #5 */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-indigo-50/80 via-blue-50/40 to-white rounded-xl border border-indigo-200/80 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 1: NILAI SISTEM AKUNTABILITAS KINERJA INSTANSI PEMERINTAH (SAKIP) - WHITE CARD */}
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2 pb-2 border-b border-indigo-100">
                   <div className="flex items-center gap-2">
@@ -907,8 +907,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 2: INDEKS MANAJEMEN RISIKO (MRI) DENGAN PERIODE PENILAIAN & SKOR - REQ #7 */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-emerald-50/80 via-teal-50/40 to-white rounded-xl border border-emerald-200/80 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 2: INDEKS MANAJEMEN RISIKO (MRI) - WHITE CARD */}
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100">
                   <div className="flex items-center gap-2">
@@ -1025,8 +1025,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
 
           {/* ROW 2: TIGA KARTU PELAYANAN & SATISFACTION (PEKPPP, SKM UNIT USAHA, PENGADUAN) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            {/* CARD 3: EVALUASI KINERJA PELAYANAN PUBLIK (PEKPPP) */}
-            <div className="bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 3: EVALUASI KINERJA PELAYANAN PUBLIK (PEKPPP) - WHITE CARD */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h3 className="text-xs sm:text-sm font-bold text-slate-900">
@@ -1073,8 +1073,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 4: REKAPITULASI HASIL SURVEI KEPUASAN (SKM) BERDASARKAN UNIT USAHA, NILAI & PERSENTASENYA - REQ #6 */}
-            <div className="bg-gradient-to-br from-amber-50/70 via-orange-50/30 to-white rounded-xl border border-amber-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 4: REKAPITULASI HASIL SURVEI KEPUASAN (SKM) - WHITE CARD */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h3 className="text-xs sm:text-sm font-bold text-slate-900">
@@ -1126,8 +1126,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
               </div>
             </div>
 
-            {/* CARD 5: MONITORING PENGELOLAAN PENGADUAN LAYANAN BADAN USAHA */}
-            <div className="bg-gradient-to-br from-violet-50/70 via-purple-50/30 to-white rounded-xl border border-violet-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            {/* CARD 5: MONITORING PENGELOLAAN PENGADUAN LAYANAN - WHITE CARD */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-xs font-bold text-slate-900">
@@ -1178,8 +1178,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             </div>
           </div>
 
-          {/* ROW 3: MATURITAS 5 UNSUR SPIP & PENGENDALIAN INTERN */}
-          <div className="bg-gradient-to-br from-cyan-50/70 via-sky-50/40 to-white rounded-xl border border-cyan-200/70 p-3.5 sm:p-4 shadow-2xs">
+          {/* ROW 3: MATURITAS 5 UNSUR SPIP & PENGENDALIAN INTERN - WHITE CARD */}
+          <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-2 border-b border-cyan-100">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-cyan-600 text-white flex items-center justify-center font-bold">

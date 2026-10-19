@@ -150,7 +150,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
           {/* ROW 1: DUA KARTU VISUAL UTAMA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 1: REKAPITULASI REKOMENDASI PERUBAHAN PERUNTUKAN LAHAN SETIAP TAHUN */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-sky-50/70 via-blue-50/30 to-white rounded-xl border border-sky-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
             </div>
 
             {/* CARD 2: MASTERPLAN JALAN (KLASIFIKASI, WILAYAH, SUB WILAYAH, PANJANG, LEBAR) */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -379,7 +379,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
           {/* ROW 1: DUA KARTU UTAMA (OKUPANSI RAK RUANGAN & KEPUASAN PELANGGAN DC) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 1: OKUPANSI RAK DATA CENTER (RUANGAN, RAK TERISI, RAK KOSONG) */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -457,7 +457,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
             </div>
 
             {/* CARD 2: DATA KEPUASAN PELANGGAN DATA CENTER (KATEGORI & PERSENTASE) */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -526,7 +526,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
           {/* ROW 2: DATA SERANGAN KEAMANAN IT & RINCIAN HELPDESK/FIBER OPTIK */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 3: DATA SERANGAN KEAMANAN IT (PERIODE, THREAT ACTIVITY, JUMLAH SERANGAN) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-rose-50/70 via-orange-50/30 to-white rounded-xl border border-rose-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -645,7 +645,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
           {/* ROW 1: DUA KARTU UTAMA (SLA PERIZINAN TEPAT WAKTU & MONITORING PENGADUAN) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* CARD 1: DATA PENYELESAIAN PERIZINAN YANG TEPAT WAKTU (SLA) */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -724,7 +724,7 @@ export const KebijakanStrategisDeepDiveCenter: React.FC<
             </div>
 
             {/* CARD 2: DATA MONITORING & EVALUASI PENGADUAN MASYARAKAT TERHADAP LAYANAN PTSP */}
-            <div className="lg:col-span-6 bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">

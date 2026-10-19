@@ -212,7 +212,7 @@ export const PtspKpiRow: React.FC<PtspKpiRowProps> = ({
                   {kpi.target}
                 </span>
                 <span className="text-[10.5px] font-bold text-emerald-700 font-mono">
-                  {kpi.badge}
+                  {kpi.statusBadge}
                 </span>
               </div>
             </div>

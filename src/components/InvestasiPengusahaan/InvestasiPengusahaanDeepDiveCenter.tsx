@@ -362,7 +362,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
           {/* BARIS 1: DUAL VISUALISASI UTAMA (MINAT SEKTOR PRIORITAS + TRAFIK WEB & TIKET INVESTASI) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* KARTU 1: PIPELINE MINAT INVESTASI PER SEKTOR (DATASET #14 & #1) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white rounded-xl border border-blue-200/80 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -462,7 +462,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
             </div>
 
             {/* KARTU 2: TRAFIK WEB INVEST IN BATAM & TIKET KONSULTASI (DATASET #10 & #9) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-sky-50/70 via-indigo-50/30 to-white rounded-xl border border-sky-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -639,7 +639,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
           {/* BARIS 1: REALISASI INVESTASI 3 KEK & SERAPAN TENAGA KERJA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* KARTU 1: REALISASI INVESTASI KEK PMA & PMDN (DATASET #1) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/80 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -723,7 +723,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
             </div>
 
             {/* KARTU 2: PROFIL PEMANFAATAN LAHAN & SERAPAN TENAGA KERJA (DATASET #2 & #6) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-teal-50/70 via-emerald-50/30 to-white rounded-xl border border-teal-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -819,7 +819,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
           {/* BARIS 1: EVALUASI PEMBINAAN TRIWULANAN & DISTRIBUSI KEPATUHAN SATKER */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
             {/* KARTU 1: TREN EVALUASI PEMBINAAN & PERBAIKAN KERJASAMA (DATASET #3 & #4) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-indigo-50/70 via-purple-50/30 to-white rounded-xl border border-indigo-200/80 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -896,7 +896,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
             </div>
 
             {/* KARTU 2: REKAPITULASI DOKUMEN PENGAWASAN PENGENDALIAN (DATASET #2) */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-purple-50/70 via-indigo-50/30 to-white rounded-xl border border-purple-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">

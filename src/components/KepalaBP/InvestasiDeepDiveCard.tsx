@@ -433,28 +433,28 @@ export const InvestasiDeepDiveCard: React.FC<InvestasiDeepDiveCardProps> = ({
         {activeSubTab === 'pma_pmdn' && (
           <div className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white">
-                <span className="text-xs font-bold text-blue-700 uppercase tracking-wider block mb-1">
+              <div className="p-4 rounded-xl border border-slate-200/90 bg-white shadow-2xs">
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-1">
                   Penanaman Modal Asing (PMA)
                 </span>
-                <div className="text-2xl font-black font-mono text-blue-900">
+                <div className="text-2xl font-black font-mono text-slate-900">
                   Rp 39,42 Triliun
                 </div>
                 <div className="mt-1 text-xs text-slate-600">
                   Porsi: <strong className="text-blue-700">72,1%</strong> dari total realisasi
                 </div>
-                <div className="mt-3 pt-3 border-t border-blue-100 space-y-1 text-xs text-slate-600">
+                <div className="mt-3 pt-3 border-t border-slate-100 space-y-1 text-xs text-slate-600">
                   <div>• Jumlah Proyek: <strong>1.140 Proyek</strong></div>
                   <div>• Top Negara Asal: Singapura, Taiwan, Jepang, AS, &amp; Tiongkok</div>
                   <div>• Penyerapan Tenaga Kerja: <strong>18.450 Orang</strong></div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white">
-                <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block mb-1">
+              <div className="p-4 rounded-xl border border-slate-200/90 bg-white shadow-2xs">
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-1">
                   Penanaman Modal Dalam Negeri (PMDN)
                 </span>
-                <div className="text-2xl font-black font-mono text-emerald-900">
+                <div className="text-2xl font-black font-mono text-slate-900">
                   Rp 15,26 Triliun
                 </div>
                 <div className="mt-1 text-xs text-slate-600">

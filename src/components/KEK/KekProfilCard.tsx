@@ -204,13 +204,13 @@ export const KekProfilCard: React.FC<KekProfilCardProps> = ({
 
       {/* SUMMARY BANNER: TOTAL NILAI INVESTASI KOMITMEN & LOKASI STRATEGIS */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <div className="p-3 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-xl border border-emerald-200">
-          <div className="flex items-center justify-between text-[11px] font-bold text-emerald-800 uppercase tracking-wider mb-1">
+        <div className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1">
             <span className="flex items-center gap-1.5">
-              <Coins className="w-3.5 h-3.5 text-emerald-600" />
+              <Coins className="w-3.5 h-3.5 text-blue-600" />
               Total Nilai Investasi Komitmen
             </span>
-            <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px]">
+            <span className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-mono text-[10px]">
               3 KEK
             </span>
           </div>
@@ -222,13 +222,13 @@ export const KekProfilCard: React.FC<KekProfilCardProps> = ({
           </div>
         </div>
 
-        <div className="p-3 bg-gradient-to-br from-sky-50 via-white to-sky-50/30 rounded-xl border border-sky-200">
-          <div className="flex items-center justify-between text-[11px] font-bold text-sky-800 uppercase tracking-wider mb-1">
+        <div className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1">
             <span className="flex items-center gap-1.5">
               <Maximize2 className="w-3.5 h-3.5 text-sky-600" />
               Total Luas Delineasi Kawasan
             </span>
-            <span className="px-1.5 py-0.2 rounded bg-sky-100 text-sky-800 font-mono text-[10px]">
+            <span className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-mono text-[10px]">
               Delineasi Resmi
             </span>
           </div>
@@ -240,13 +240,13 @@ export const KekProfilCard: React.FC<KekProfilCardProps> = ({
           </div>
         </div>
 
-        <div className="p-3 bg-gradient-to-br from-indigo-50 via-white to-indigo-50/30 rounded-xl border border-indigo-200">
-          <div className="flex items-center justify-between text-[11px] font-bold text-indigo-800 uppercase tracking-wider mb-1">
+        <div className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1">
             <span className="flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-indigo-600" />
               Target Penyerapan Tenaga Kerja
             </span>
-            <span className="px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800 font-mono text-[10px]">
+            <span className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-mono text-[10px]">
               Naker Target
             </span>
           </div>

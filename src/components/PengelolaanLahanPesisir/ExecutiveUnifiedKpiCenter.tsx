@@ -102,8 +102,8 @@ export const ExecutiveUnifiedKpiCenter: React.FC<ExecutiveUnifiedKpiCenterProps>
               </div>
 
               {/* Primary IKP Card Block */}
-              <div className="bg-gradient-to-br from-indigo-50/70 to-slate-50/90 rounded-lg p-3 border border-indigo-100/80 my-3">
-                <div className="text-[10.5px] font-bold text-indigo-950 flex items-center justify-between">
+              <div className="bg-white rounded-lg p-3 border border-slate-200/90 my-3 shadow-2xs">
+                <div className="text-[10.5px] font-bold text-slate-900 flex items-center justify-between">
                   <span>IKP #1: Luas Lahan Dialokasikan Investasi</span>
                   <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
                     MELAMPAUI TARGET
@@ -256,8 +256,8 @@ export const ExecutiveUnifiedKpiCenter: React.FC<ExecutiveUnifiedKpiCenterProps>
               </div>
 
               {/* Primary IKP Card Block */}
-              <div className="bg-gradient-to-br from-cyan-50/70 to-slate-50/90 rounded-lg p-3 border border-cyan-100/80 my-3">
-                <div className="text-[10.5px] font-bold text-cyan-950 flex items-center justify-between">
+              <div className="bg-white rounded-lg p-3 border border-slate-200/90 my-3 shadow-2xs">
+                <div className="text-[10.5px] font-bold text-slate-900 flex items-center justify-between">
                   <span>IKP #2: Luas Izin Pesisir &amp; Reklamasi</span>
                   <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
                     MELAMPAUI TARGET
@@ -410,8 +410,8 @@ export const ExecutiveUnifiedKpiCenter: React.FC<ExecutiveUnifiedKpiCenterProps>
               </div>
 
               {/* Primary IKP Card Block */}
-              <div className="bg-gradient-to-br from-emerald-50/70 to-slate-50/90 rounded-lg p-3 border border-emerald-100/80 my-3">
-                <div className="text-[10.5px] font-bold text-emerald-950 flex items-center justify-between">
+              <div className="bg-white rounded-lg p-3 border border-slate-200/90 my-3 shadow-2xs">
+                <div className="text-[10.5px] font-bold text-slate-900 flex items-center justify-between">
                   <span>IKP #3: Keberhasilan Pengawasan &amp; Pengendalian</span>
                   <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-100/70 px-1.5 py-0.2 rounded">
                     KEPATUHAN TINGGI

@@ -133,32 +133,32 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
 
 
       {/* ==================================================================== */}
-      {/* GRID 1: DUA KARTU UTAMA (VIBRANT ROYAL BLUE & SOFT CYAN TINT)        */}
+      {/* GRID 1: DUA KARTU UTAMA                                              */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-        {/* CARD 1: Logistik Maritim Terminal Batu Ampar - SIGNATURE VIBRANT ROYAL BLUE CARD */}
-        <div className="lg:col-span-7 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-blue-500/40 flex flex-col justify-between">
+        {/* CARD 1: Logistik Maritim Terminal Batu Ampar - WHITE CARD */}
+        <div className="lg:col-span-7 bg-white text-slate-800 rounded-xl p-3.5 sm:p-4 shadow-2xs border border-slate-200/90 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
                 Arus Petikemas Terminal Batu Ampar
               </h3>
               <div className="text-right shrink-0">
-                <span className="text-base sm:text-lg font-black text-white leading-none">612.400</span>
-                <span className="text-[10px] text-blue-200 font-medium ml-1.5">TEUs (94,2%)</span>
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none">612.400</span>
+                <span className="text-[10px] text-slate-500 font-medium ml-1.5">TEUs (94,2%)</span>
               </div>
             </div>
 
             {/* Legenda Ringkas */}
-            <div className="flex items-center gap-3 text-[10px] py-1 text-blue-100">
+            <div className="flex items-center gap-3 text-[10px] py-1 text-slate-600">
               <span className="flex items-center gap-1 font-medium">
-                <span className="w-2 h-2 rounded-xs bg-white" /> Ekspor 46%
+                <span className="w-2 h-2 rounded-xs bg-blue-600" /> Ekspor 46%
               </span>
               <span className="flex items-center gap-1 font-medium">
-                <span className="w-2 h-2 rounded-xs bg-sky-300" /> Impor 33%
+                <span className="w-2 h-2 rounded-xs bg-sky-500" /> Impor 33%
               </span>
               <span className="flex items-center gap-1 font-medium">
-                <span className="w-2 h-2 rounded-xs bg-purple-300" /> Domestik 21%
+                <span className="w-2 h-2 rounded-xs bg-purple-500" /> Domestik 21%
               </span>
             </div>
 
@@ -166,30 +166,30 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
             <div className="h-28 sm:h-32 w-full mt-1">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={DATA_LOGISTIK_BULANAN} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.15)" />
-                  <XAxis dataKey="bln" tick={{ fontSize: 9, fill: '#E0E7FF' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 8.5, fill: '#E0E7FF' }} axisLine={false} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="bln" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
                   <Tooltip
                     formatter={(val: any, name: any) => [`${val}.000 TEUs`, name === 'ekspor' ? 'Ekspor' : name === 'impor' ? 'Impor' : 'Domestik']}
-                    contentStyle={{ fontSize: '10.5px', borderRadius: '8px', border: '1px solid #3B82F6', backgroundColor: '#1E293B', color: '#fff' }}
+                    contentStyle={{ fontSize: '10.5px', borderRadius: '8px', border: '1px solid #E2E8F0', backgroundColor: '#FFFFFF', color: '#0F172A' }}
                   />
-                  <Bar dataKey="ekspor" stackId="a" fill="#FFFFFF" barSize={14} />
-                  <Bar dataKey="impor" stackId="a" fill="#7DD3FC" barSize={14} />
-                  <Bar dataKey="domestik" stackId="a" fill="#D8B4FE" radius={[3, 3, 0, 0]} barSize={14} />
+                  <Bar dataKey="ekspor" stackId="a" fill="#2563EB" barSize={14} />
+                  <Bar dataKey="impor" stackId="a" fill="#0EA5E9" barSize={14} />
+                  <Bar dataKey="domestik" stackId="a" fill="#A855F7" radius={[3, 3, 0, 0]} barSize={14} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        {/* CARD 2: Ketahanan 6 Waduk Air Baku (Segmented Donut) - SOFT CYAN / SKY TINT */}
-        <div className="lg:col-span-5 bg-gradient-to-br from-cyan-50/70 via-sky-50/40 to-white rounded-xl border border-cyan-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 2: Ketahanan 6 Waduk Air Baku (Segmented Donut) - WHITE CARD */}
+        <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                 Kapasitas 6 Waduk Air Baku
               </h3>
-              <span className="text-[10.5px] font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
+              <span className="text-[10.5px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
                 96,8% Siaga Aman
               </span>
             </div>
@@ -246,14 +246,14 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
       {/* GRID 2: TIGA KARTU VISUAL MENENGAH (LEBIH RINGKAS & PADAT)           */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        {/* CARD 3: Ketersediaan Lahan 7 SWP (Grouped Bar Chart) - SOFT BLUE TINT */}
-        <div className="bg-gradient-to-br from-blue-50/70 via-slate-50/40 to-white rounded-xl border border-blue-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 3: Ketersediaan Lahan 7 SWP (Grouped Bar Chart) - WHITE CARD */}
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-xs font-bold text-slate-900">
                 Lahan 7 SWP
               </h3>
-              <span className="text-[10px] font-bold text-blue-800 bg-white/90 border border-blue-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
+              <span className="text-[10px] font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
                 3.250 Ha Cadangan
               </span>
             </div>
@@ -285,14 +285,14 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
           </div>
         </div>
 
-        {/* CARD 4: Kurva S 14 Megaproyek Fisik (Double Line Spline) - SOFT INDIGO TINT */}
-        <div className="bg-gradient-to-br from-indigo-50/70 via-purple-50/30 to-white rounded-xl border border-indigo-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 4: Kurva S 14 Megaproyek Fisik (Double Line Spline) - WHITE CARD */}
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-xs font-bold text-slate-900">
                 Kurva S 14 Megaproyek
               </h3>
-              <span className="text-[10px] font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
+              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
                 Ahead +0,8%
               </span>
             </div>
@@ -324,8 +324,8 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
           </div>
         </div>
 
-        {/* CARD 5: Kinerja Serapan Belanja Multi-Unit (Pagu vs Realisasi) - SOFT EMERALD TINT */}
-        <div className="bg-gradient-to-br from-emerald-50/70 via-teal-50/30 to-white rounded-xl border border-emerald-200/70 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 5: Kinerja Serapan Belanja Multi-Unit (Pagu vs Realisasi) - WHITE CARD */}
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <h3 className="text-xs font-bold text-slate-900">
