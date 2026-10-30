@@ -126,7 +126,7 @@ export const InvestasiPengusahaanEvaluasiIkeSection: React.FC<
               Meningkatnya Kualitas Pelayanan Penanaman Modal di KPBPB Batam
             </h5>
             <span className="text-[10px] text-slate-500 font-mono block">
-              Unit: Direktorat Investasi (Sumber: KPU Bea Cukai, BPS &amp; Kemeninves/OSS)
+              Unit: Direktorat Promosi dan Fasilitasi Investasi (Sumber: KPU Bea Cukai, BPS &amp; Kemeninves/OSS)
             </span>
           </div>
 
@@ -242,7 +242,7 @@ export const InvestasiPengusahaanEvaluasiIkeSection: React.FC<
               Terlaksananya Kegiatan Promosi Dalam Maupun Luar Negeri
             </h5>
             <span className="text-[10px] text-slate-500 font-mono block">
-              Unit: Direktorat Investasi (Sumber: Log Promosi &amp; Dokumentasi Leads)
+              Unit: Direktorat Promosi dan Fasilitasi Investasi (Sumber: Log Promosi &amp; Dokumentasi Leads)
             </span>
           </div>
 
@@ -385,7 +385,7 @@ export const InvestasiPengusahaanEvaluasiIkeSection: React.FC<
               Persentase Kajian Pengembangan, Kerja Sama, Daya Saing &amp; KEK Berkelanjutan
             </h5>
             <span className="text-[10px] text-slate-500 font-mono block">
-              Unit: Direktorat Pengembangan KPBPBB dan KEK (20 Dokumen Kajian)
+              Unit: Direktorat Perencanaan dan Pengembangan Investasi (20 Dokumen Kajian)
             </span>
           </div>
 

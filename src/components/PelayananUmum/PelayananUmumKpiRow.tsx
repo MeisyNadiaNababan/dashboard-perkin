@@ -67,7 +67,7 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Percent className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 1 &bull; Peningkatan Kinerja BU</span>
+                <span className="truncate">Peningkatan Kinerja BU</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <CheckCircle2 className="w-3.5 h-3.5 text-white" />
@@ -82,10 +82,8 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: {ikp1.targetDisplay}</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikp1.persenCapaian.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target 100,0%</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 112,0% (+11,2%)</span>
             </div>
           </div>
         </div>
@@ -100,7 +98,7 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Scale className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 2 &bull; Rasio PNBP BU : BP Batam</span>
+                <span className="truncate">Rasio PNBP BU : BP Batam</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <Scale className="w-3.5 h-3.5 text-white" />
@@ -115,10 +113,8 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: {ikp2.targetDisplay}</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikp2.persenCapaian.toFixed(1)}% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target 68,0%</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 65,8% (+8,5%)</span>
             </div>
           </div>
         </div>
@@ -133,7 +129,7 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Award className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 3 &bull; Rata-rata IKM Layanan</span>
+                <span className="truncate">Rata-rata IKM Layanan</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <Award className="w-3.5 h-3.5 text-white" />
@@ -148,10 +144,8 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: {ikp3.targetDisplay}</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikp3.persenCapaian.toFixed(1)}% Sangat Baik
-              </span>
+              <span className="text-blue-100/90">Target 86,00</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 85,40 (+3,8%)</span>
             </div>
           </div>
         </div>
@@ -181,10 +175,8 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: Rp 252,40 M</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                104,7% Surplus Rp 11,9 M
-              </span>
+              <span className="text-blue-100/90">Target Rp 252,40 M</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 231,50 M (+14,2%)</span>
             </div>
           </div>
         </div>

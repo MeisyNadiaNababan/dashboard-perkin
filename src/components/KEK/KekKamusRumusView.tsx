@@ -210,7 +210,7 @@ export const KekKamusRumusView: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-600">
-              Menghitung efektivitas penyerapan modal investasi (PMA dan PMDN) terhadap target tahunan yang ditetapkan dalam Perjanjian Kinerja (Perkin) Direktorat Pengembangan KPBPBB dan KEK.
+              Menghitung efektivitas penyerapan modal investasi (PMA dan PMDN) terhadap target tahunan yang ditetapkan dalam Perjanjian Kinerja (Perkin) Direktorat Perencanaan dan Pengembangan Investasi.
             </p>
 
             <div className="p-3 bg-slate-900 text-emerald-300 font-mono text-xs rounded-lg overflow-x-auto shadow-inner">
@@ -252,7 +252,7 @@ export const KekKamusRumusView: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-600">
-              Formula resmi Perkin Direktorat Pengembangan KPBPBB dan KEK untuk mengukur persentase rekomendasi kebijakan dan telaahan analisis strategis yang diimplementasikan/ditindaklanjuti.
+              Formula resmi Perkin Direktorat Perencanaan dan Pengembangan Investasi untuk mengukur persentase rekomendasi kebijakan dan telaahan analisis strategis yang diimplementasikan/ditindaklanjuti.
             </p>
 
             <div className="p-3 bg-slate-900 text-rose-300 font-mono text-xs rounded-lg overflow-x-auto shadow-inner">

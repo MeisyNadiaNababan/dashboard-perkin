@@ -96,7 +96,7 @@ export const KepelabuhananDashboard: React.FC<KepelabuhananDashboardProps> = ({
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-sky-300 font-mono text-[10.5px] font-bold border border-blue-400/30 flex items-center gap-1.5">
                 <Ship className="w-3.5 h-3.5" />
-                Direktorat Pengelolaan Kepelabuhanan BP Batam
+                Badan Pengelolaan dan Pengusahaan Kepelabuhanan BP Batam
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-mono">
                 Buku Satu Data Hal. 14 - 17

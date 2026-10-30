@@ -62,7 +62,7 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-cyan-200" />
-                IKP 1 &bull; Dit. Lahan (Alokasi Investasi)
+                Dit. Lahan (Alokasi Investasi)
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <CheckCircle2 className="w-3.5 h-3.5 text-white" />
@@ -77,10 +77,8 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 200,0 Ha (Perkin 2026)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpLahan.capaianPersen.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target 200,0 Ha</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 215,2 Ha (+15,5%)</span>
             </div>
           </div>
         </div>
@@ -95,7 +93,7 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
                 <Anchor className="w-3.5 h-3.5 text-cyan-200" />
-                IKP 2 &bull; Dit. Pesisir (Izin &amp; Reklamasi)
+                Dit. Pesisir (Izin &amp; Reklamasi)
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Anchor className="w-3.5 h-3.5 text-white" />
@@ -110,10 +108,8 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 150,0 Ha (Perkin 2026)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpPesisir.capaianPersen.toFixed(1)}% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target 150,0 Ha</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 142,5 Ha (+14,2%)</span>
             </div>
           </div>
         </div>
@@ -128,7 +124,7 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-cyan-200" />
-                IKP 3 &bull; Dit. Pengendalian (Pengawasan)
+                Dit. Pengendalian (Pengawasan)
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-white" />
@@ -143,10 +139,8 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 80,00% (Efektif)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpPengendalian.capaianPersen.toFixed(1)}% Optimal
-              </span>
+              <span className="text-blue-100/90">Target 80,00%</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 82,10% (+8,9%)</span>
             </div>
           </div>
         </div>

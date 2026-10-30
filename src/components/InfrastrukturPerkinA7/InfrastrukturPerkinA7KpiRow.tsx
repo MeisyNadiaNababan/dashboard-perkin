@@ -52,7 +52,7 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
                 <HardHat className="w-3.5 h-3.5 text-cyan-200" />
-                IKP 1 &bull; Pembangunan Fisik
+                Pembangunan Fisik
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <HardHat className="w-3.5 h-3.5 text-white" />
@@ -63,15 +63,13 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
               92,40%
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: 100% Rencana</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                92,4% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target 100% Rencana</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 86,50% (+6,8%)</span>
             </div>
           </div>
         </div>
 
-        {/* KARTU 2: IKP 2 - NILAI REALISASI PNBP - BLUE CARD */}
+        {/* KARTU 2: NILAI REALISASI PNBP - BLUE CARD */}
         <div
           onClick={() => {
             onOpenFormulaModal(ikp2.id);
@@ -84,7 +82,7 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
                 <Coins className="w-3.5 h-3.5 text-cyan-200" />
-                IKP 2 &bull; Penerimaan PNBP
+                Penerimaan PNBP
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Coins className="w-3.5 h-3.5 text-white" />
@@ -95,10 +93,8 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
               Rp 7,45 M
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: Rp 6,82 M</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                109,2% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target Rp 6,82 M</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 6,40 M (+16,4%)</span>
             </div>
           </div>
         </div>
@@ -124,10 +120,8 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
               Rp 682,4 M
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Pagu: Rp 842,5 M</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                81,0% Serapan
-              </span>
+              <span className="text-blue-100/90">Pagu Rp 842,5 M</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 598,2 M (+14,1%)</span>
             </div>
           </div>
         </div>
@@ -153,10 +147,8 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
               14 Paket / 91,4%
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">542,8 Km Jalan</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                Mantap Prima
-              </span>
+              <span className="text-blue-100/90">Target 14 Paket</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 12 Paket (+16,7%)</span>
             </div>
           </div>
         </div>

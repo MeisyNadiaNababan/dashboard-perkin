@@ -142,7 +142,7 @@ export const InvestasiDashboard: React.FC<InvestasiDashboardProps> = ({
             </span>
           </div>
           <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight mt-1">
-            Dashboard Direktorat Investasi
+            Dashboard Direktorat Promosi dan Fasilitasi Investasi
           </h1>
           <p className="text-xs text-slate-500">
             Monitoring Realisasi PMA/PMDN (Dataset 13), Traffic Portal Invest In-Batam (Dataset 10), Minat Pameran (Dataset 14), dan Pipeline Infrastruktur (Dataset 6)

@@ -2554,7 +2554,7 @@ SUM([JUMLAH TERBIT]) / SUM([JUMLAH PERMOHONAN])`,
     executiveAction: 'Prioritaskan asistensi teknis pada sektor padat karya dan teknologi tinggi untuk menjamin kelancaran realisasi investasi.',
   },
 
-  // DIREKTORAT PENGEMBANGAN KPBPBB DAN KEK
+  // DIREKTORAT PERENCANAAN DAN PENGEMBANGAN INVESTASI
   kpi_kek_investasi: {
     id: 'kpi_kek_investasi',
     unit: 'dit-pengembangan-kek',
@@ -2599,7 +2599,7 @@ SUM([REALISASI INVESTASI]) / SUM([TARGET INVESTASI]) * 100`,
       target: '≥ 100,0%',
       warning: '85,0% - 99,9%',
       critical: '< 85,0%',
-      standardOrigin: 'Perjanjian Kinerja (Perkin) Direktorat Pengembangan KPBPBB dan KEK',
+      standardOrigin: 'Perjanjian Kinerja (Perkin) Direktorat Perencanaan dan Pengembangan Investasi',
     },
     executiveAction: 'Akselerasi fasilitasi perizinan BUPP dan kepabeanan untuk menjamin penyelesaian konstruksi Data Center dan fasilitas MRO pesawat on-schedule.',
   },
@@ -2800,7 +2800,7 @@ COUNT([NAMAPERIZINAN])`,
     executiveAction: 'Dorong penyelesaian telaahan ke-12 terkait insentif green data center agar capaian mencapai 100% sempurna sebelum akhir tahun anggaran.',
   },
 
-  // DIREKTORAT INVESTASI
+  // DIREKTORAT PROMOSI DAN FASILITASI INVESTASI
   kpi_investasi_realisasi: {
     id: 'kpi_investasi_realisasi',
     unit: 'dit-investasi',
@@ -2822,7 +2822,7 @@ COUNT([NAMAPERIZINAN])`,
     denominator: {
       label: 'Target Investasi Tahunan BP Batam',
       realValue: 'Rp 18.700.000.000.000 (Rp 18,70 T)',
-      source: 'Target Perjanjian Kinerja (Perkin) Direktorat Investasi',
+      source: 'Target Perjanjian Kinerja (Perkin) Direktorat Promosi dan Fasilitasi Investasi',
     },
     calculationResult: '(Rp 21,38 T / Rp 18,70 T) × 100% = 114,33%',
     tableauCalculatedField: '// [1. % Capaian Realisasi Investasi]\n(SUM([Realisasi Investasi]) / SUM([Target Investasi])) * 100',
@@ -2844,7 +2844,7 @@ COUNT([NAMAPERIZINAN])`,
       target: '≥ 100,0%',
       warning: '85,0% - 99,9%',
       critical: '< 85,0%',
-      standardOrigin: 'Target Renstra & Perjanjian Kinerja (Perkin) Direktorat Investasi BP Batam',
+      standardOrigin: 'Target Renstra & Perjanjian Kinerja (Perkin) Direktorat Promosi dan Fasilitasi Investasi BP Batam',
     },
     executiveAction: 'Akselerasi debottlenecking perizinan dan penyediaan infrastruktur pendukung untuk mempertahankan momentum realisasi di atas target.',
   },
@@ -2918,7 +2918,7 @@ COUNT([NAMAPERIZINAN])`,
     denominator: {
       label: 'Target Komitmen LoI Perkin',
       realValue: '12 Perusahaan Calon Investor',
-      source: 'Indikator Kinerja Program Promosi Direktorat Investasi',
+      source: 'Indikator Kinerja Program Promosi Direktorat Promosi dan Fasilitasi Investasi',
     },
     calculationResult: '16 Calon Investor (Nilai Potensi Rp 28.670 Miliar)',
     tableauCalculatedField: '// [3. Jumlah Minat Investasi]\nCOUNTD([Nama Perusahaan])',
@@ -4666,7 +4666,7 @@ export const KpiFormulaExplanationModal: React.FC<KpiFormulaExplanationModalProp
                     : detail.unit === 'ptsp'
                     ? 'Pusat Pelayanan Terpadu Satu Pintu (PTSP)'
                     : detail.unit === 'dit-investasi'
-                    ? 'Direktorat Investasi'
+                    ? 'Direktorat Promosi dan Fasilitasi Investasi'
                     : detail.unit === 'dit-lalu-lintas-barang'
                     ? 'Direktorat Lalu Lintas Barang'
                     : detail.unit === 'dit-pelabuhan'
@@ -4675,7 +4675,7 @@ export const KpiFormulaExplanationModal: React.FC<KpiFormulaExplanationModalProp
                     ? 'Badan Usaha Rumah Sakit (RSBP Batam)'
                     : detail.unit === 'biro-hukum'
                     ? 'Biro Hukum BP Batam'
-                    : 'Direktorat Pengembangan KEK'}
+                    : 'Direktorat Perencanaan dan Pengembangan Investasi'}
                 </span>
                 <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-medium">
                   {detail.statusText}

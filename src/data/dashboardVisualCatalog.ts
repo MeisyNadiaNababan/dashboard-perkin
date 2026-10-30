@@ -477,12 +477,12 @@ export const DASHBOARD_VISUAL_CATALOG: VisualInfoItem[] = [
   },
 
   // =========================================================================
-  // 5. DIREKTORAT PENGEMBANGAN KPBPBB DAN KEK
+  // 5. DIREKTORAT PERENCANAAN DAN PENGEMBANGAN INVESTASI
   // =========================================================================
   {
     id: 'kek-1',
     unitId: 'dit-pengembangan-kek',
-    unitName: 'Direktorat Pengembangan KPBPBB dan KEK',
+    unitName: 'Direktorat Perencanaan dan Pengembangan Investasi',
     sectionTitle: 'Realisasi Investasi KEK: Penanaman Modal PMA vs PMDN',
     informasiName: 'Perbandingan Komposisi Asal Modal Investasi di 3 Kawasan KEK',
     datasetOrigin: 'Dataset No. 1: Nilai Realisasi Investasi KEK (Hal. 9)',
@@ -502,7 +502,7 @@ export const DASHBOARD_VISUAL_CATALOG: VisualInfoItem[] = [
   {
     id: 'kek-2',
     unitId: 'dit-pengembangan-kek',
-    unitName: 'Direktorat Pengembangan KPBPBB dan KEK',
+    unitName: 'Direktorat Perencanaan dan Pengembangan Investasi',
     sectionTitle: 'Peta Spasial Batas Wilayah KEK Batam',
     informasiName: 'Delineasi Zonasi dan Luas Hektar Kawasan Ekonomi Khusus',
     datasetOrigin: 'Dataset No. 6: Peta Kawasan Ekonomi Khusus (Hal. 10)',
@@ -521,12 +521,12 @@ export const DASHBOARD_VISUAL_CATALOG: VisualInfoItem[] = [
   },
 
   // =========================================================================
-  // 6. DIREKTORAT INVESTASI
+  // 6. DIREKTORAT PROMOSI DAN FASILITASI INVESTASI
   // =========================================================================
   {
     id: 'inv-1',
     unitId: 'dit-investasi',
-    unitName: 'Direktorat Investasi',
+    unitName: 'Direktorat Promosi dan Fasilitasi Investasi',
     sectionTitle: 'Peminat Sektor Investasi (Letter of Intent & Kunjungan)',
     informasiName: 'Minat Masuk Calon Investor Berdasarkan Klaster Industri',
     datasetOrigin: 'Dataset No. 14: Data Minat Investasi Dari Kunjungan (Hal. 48)',
@@ -569,12 +569,12 @@ export const DASHBOARD_VISUAL_CATALOG: VisualInfoItem[] = [
   },
 
   // =========================================================================
-  // 8. DIREKTORAT PENGELOLAAN KEPELABUHANAN
+  // 8. BADAN PENGELOLAAN DAN PENGUSAHAAN KEPELABUHANAN
   // =========================================================================
   {
     id: 'pel-1',
     unitId: 'dit-pelabuhan',
-    unitName: 'Direktorat Pengelolaan Kepelabuhanan',
+    unitName: 'Badan Pengelolaan dan Pengusahaan Kepelabuhanan',
     sectionTitle: 'Arus Kunjungan Kapal Barang & Penumpang (Call & GT)',
     informasiName: 'Volume Kunjungan Kapal Niaga dan Kapal Feri Internasional',
     datasetOrigin: 'Dataset No. 5 & 7: Rekapitulasi Kunjungan Kapal (Hal. 15)',
@@ -594,7 +594,7 @@ export const DASHBOARD_VISUAL_CATALOG: VisualInfoItem[] = [
   {
     id: 'pel-2',
     unitId: 'dit-pelabuhan',
-    unitName: 'Direktorat Pengelolaan Kepelabuhanan',
+    unitName: 'Badan Pengelolaan dan Pengusahaan Kepelabuhanan',
     sectionTitle: 'Volume Bongkar Muat Peti Kemas Terminal Batu Ampar',
     informasiName: 'Throughput Peti Kemas (TEUs) Domestik & Transhipment Internasional',
     datasetOrigin: 'Dataset No. 23: Pelayanan Bongkar Muat Peti Kemas Batu Ampar (Hal. 17)',
@@ -705,12 +705,12 @@ export const DASHBOARD_VISUAL_CATALOG: VisualInfoItem[] = [
   },
 
   // =========================================================================
-  // 12. DIREKTORAT PENGELOLAAN KAWASAN BANDARA
+  // 12. BADAN PENGELOLAAN KAWASAN BANDAR UDARA
   // =========================================================================
   {
     id: 'bdr-1',
     unitId: 'dit-bandara',
-    unitName: 'Direktorat Pengelolaan Kawasan Bandara',
+    unitName: 'Badan Pengelolaan Kawasan Bandar Udara',
     sectionTitle: 'Pergerakan Pesawat & Penumpang Bandara Hang Nadim',
     informasiName: 'Trafik Take-Off / Landing dan Arus Penumpang Datang / Berangkat',
     datasetOrigin: 'Dataset No. 2 & 5: Daftar Arus Lalu Lintas Udara & EMPU (Hal. 11-12)',

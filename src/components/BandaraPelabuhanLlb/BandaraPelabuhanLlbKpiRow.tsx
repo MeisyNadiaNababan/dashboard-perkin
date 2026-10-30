@@ -65,7 +65,7 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Award className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 1 &bull; Rata-rata IKM Layanan</span>
+                <span className="truncate">Rata-rata IKM Layanan</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <CheckCircle2 className="w-3.5 h-3.5 text-white" />
@@ -80,10 +80,8 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: {ikp1.programTarget}</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikp1.achievement.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target 86,30</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 85,20 (+3,8%)</span>
             </div>
           </div>
         </div>
@@ -98,7 +96,7 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Plane className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 2 &bull; PNBP Bandara &amp; Pelabuhan</span>
+                <span className="truncate">PNBP Bandara &amp; Pelabuhan</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <Anchor className="w-3.5 h-3.5 text-white" />
@@ -113,10 +111,8 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: Rp 518,21 M</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikp2.achievement.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target Rp 518,21 M</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 498,40 M (+12,9%)</span>
             </div>
           </div>
         </div>
@@ -131,7 +127,7 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Truck className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 3 &bull; PNBP Lalu Lintas Barang</span>
+                <span className="truncate">PNBP Lalu Lintas Barang</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <Truck className="w-3.5 h-3.5 text-white" />
@@ -146,10 +142,8 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: Rp 2,20 M</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikp3.achievement.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target Rp 2,20 M</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 2,15 M (+15,3%)</span>
             </div>
           </div>
         </div>
@@ -179,10 +173,8 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: Rp 520,41 M</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                108,6% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target Rp 520,41 M</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 500,55 M (+12,9%)</span>
             </div>
           </div>
         </div>

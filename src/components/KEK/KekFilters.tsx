@@ -55,7 +55,7 @@ export const KekFilters: React.FC<KekFiltersProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-slate-500">
-              Direktorat Pengembangan KPBPBB dan KEK • Realisasi Investasi &amp; Perizinan
+              Direktorat Perencanaan dan Pengembangan Investasi • Realisasi Investasi &amp; Perizinan
             </p>
           </div>
         </div>

@@ -28,10 +28,11 @@ import { PerencanaanKpis } from './PerencanaanKpis';
 import { PerencanaanVisualisasiData } from './PerencanaanVisualisasiData';
 import { PerencanaanFormulaModal } from './PerencanaanFormulaModal';
 import { PerencanaanWordDocView } from './PerencanaanWordDocView';
+import { PerencanaanInfrastrukturVisualCharts } from '../InfrastrukturPerkinA7/PerencanaanInfrastrukturVisualCharts';
 
 export const PerencanaanInfrastrukturDashboard: React.FC = () => {
-  // Main Navigation Sub-tab
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'word-doc' | 'formula'>('dashboard');
+  // Main Navigation Sub-tab: default to official 8 visual charts
+  const [activeTab, setActiveTab] = useState<'visualisasi' | 'dashboard' | 'word-doc' | 'formula'>('visualisasi');
 
   // Filter State
   const [filters, setFilters] = useState<PerencanaanFilterState>({
@@ -152,6 +153,18 @@ export const PerencanaanInfrastrukturDashboard: React.FC = () => {
           {/* Navigation Action Buttons */}
           <div className="flex flex-wrap items-center gap-2">
             <button
+              onClick={() => setActiveTab('visualisasi')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
+                activeTab === 'visualisasi'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>Visualisasi Data (8 Grafik Resmi)</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('dashboard')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
                 activeTab === 'dashboard'
@@ -159,8 +172,8 @@ export const PerencanaanInfrastrukturDashboard: React.FC = () => {
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Dashboard Interaktif</span>
+              <Layers className="w-3.5 h-3.5" />
+              <span>Daftar Paket &amp; Filter Sektor</span>
             </button>
 
             <button
@@ -188,7 +201,9 @@ export const PerencanaanInfrastrukturDashboard: React.FC = () => {
 
       {/* Render View Based on Active Tab */}
       {activeTab === 'word-doc' ? (
-        <PerencanaanWordDocView onBack={() => setActiveTab('dashboard')} />
+        <PerencanaanWordDocView onBack={() => setActiveTab('visualisasi')} />
+      ) : activeTab === 'visualisasi' ? (
+        <PerencanaanInfrastrukturVisualCharts />
       ) : (
         <>
           {/* Filters Bar (User Request 8) */}
@@ -200,7 +215,7 @@ export const PerencanaanInfrastrukturDashboard: React.FC = () => {
             totalOriginalCount={SEMUA_PAKET_PERENCANAAN.length}
           />
 
-          {/* 2 Primary KPIs (User Request 1: Total Perencanaan Infrastruktur & Total Biaya DED Keseluruhan) */}
+          {/* 2 Primary KPIs */}
           <PerencanaanKpis
             kpis={dynamicKpis}
             selectedSektor={filters.sektor}
@@ -208,7 +223,7 @@ export const PerencanaanInfrastrukturDashboard: React.FC = () => {
             onOpenFormula={handleOpenFormulaModal}
           />
 
-          {/* Visualisasi Data Direktorat Perencanaan Infrastruktur (User Request 2: Mudah Dipahami) */}
+          {/* Visualisasi Data Direktorat Perencanaan Infrastruktur */}
           <PerencanaanVisualisasiData
             pakets={filteredPakets}
             selectedSektor={filters.sektor}

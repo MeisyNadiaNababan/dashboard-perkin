@@ -40,7 +40,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 1 &bull; Reformasi RB</span>
+              <span className="text-[11px] font-semibold text-blue-100">Reformasi RB</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-white" />
               </div>
@@ -51,9 +51,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
               <span className="text-blue-100/90">Target BB (75,00)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpRb.capaianPersen.toFixed(1)}% Tercapai
-              </span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 76,20 (+3,0%)</span>
             </div>
           </div>
         </div>
@@ -66,7 +64,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 2 &bull; Sistem Merit</span>
+              <span className="text-[11px] font-semibold text-blue-100">Sistem Merit</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Users className="w-3.5 h-3.5 text-white" />
               </div>
@@ -77,9 +75,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
               <span className="text-blue-100/90">Target 280 (Baik)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpMerit.capaianPersen.toFixed(1)}% Sangat Baik
-              </span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 326,0 (+5,1%)</span>
             </div>
           </div>
         </div>
@@ -92,7 +88,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 3 &bull; Maturitas SPIP</span>
+              <span className="text-[11px] font-semibold text-blue-100">Maturitas SPIP</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <ShieldAlert className="w-3.5 h-3.5 text-white" />
               </div>
@@ -103,9 +99,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
               <span className="text-blue-100/90">Target 3,20</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpSpip.capaianPersen.toFixed(1)}% Terdefinisi
-              </span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 3,18 (+7,5%)</span>
             </div>
           </div>
         </div>
@@ -118,7 +112,7 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 4 &bull; Opini BPK RI</span>
+              <span className="text-[11px] font-semibold text-blue-100">Opini BPK RI</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Award className="w-3.5 h-3.5 text-white" />
               </div>
@@ -128,10 +122,8 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
               WTP
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">8x Berturut-turut</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                100% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target WTP (SAP)</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: WTP (Konsisten 8x)</span>
             </div>
           </div>
         </div>

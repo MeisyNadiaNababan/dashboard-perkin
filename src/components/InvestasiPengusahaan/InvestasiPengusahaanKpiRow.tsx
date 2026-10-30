@@ -68,7 +68,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Briefcase className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 1 &bull; Dit. Investasi (Realisasi)</span>
+                <span className="truncate">Dir. Promosi &amp; Fasilitasi (Realisasi)</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <CheckCircle2 className="w-3.5 h-3.5 text-white" />
@@ -83,10 +83,8 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: Rp 60,00 T</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpInvestasi.capaianPersen.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target Rp 60,00 T</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: Rp 55,40 T (+15,2%)</span>
             </div>
           </div>
         </div>
@@ -101,7 +99,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Globe className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 2 &bull; Promosi (Minat Leads)</span>
+                <span className="truncate">Dir. Promosi &amp; Fasilitasi (Leads)</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <Globe className="w-3.5 h-3.5 text-white" />
@@ -116,10 +114,8 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: 200 Minat</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpPromosi.capaianPersen.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target 200 Minat</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 184 Minat (+18,5%)</span>
             </div>
           </div>
         </div>
@@ -134,7 +130,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <Building2 className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 3 &bull; Dit. KEK (Kajian KEK)</span>
+                <span className="truncate">Dir. Perencanaan &amp; Pengemb.</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <Award className="w-3.5 h-3.5 text-white" />
@@ -149,10 +145,8 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: 100%</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                100% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target 100%</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 95,0% (+5,3%)</span>
             </div>
           </div>
         </div>
@@ -167,7 +161,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
                 <ShieldCheck className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">IKP 4 &bull; Dit. Pengendalian BU</span>
+                <span className="truncate">Dir. Pengendalian Pengusahaan</span>
               </span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
                 <ShieldCheck className="w-3.5 h-3.5 text-white" />
@@ -182,10 +176,8 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
             </div>
 
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target: 100%</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                95,5% Optimal
-              </span>
+              <span className="text-blue-100/90">Target 90,00%</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 88,20% (+8,2%)</span>
             </div>
           </div>
         </div>
@@ -199,7 +191,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
         <div
           onClick={() => onSelectUnit?.('dit-investasi')}
           className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Rasio Investasi PMA vs PMDN (Dit. Investasi)"
+          title="Rasio Investasi PMA vs PMDN (Dir. Promosi dan Fasilitasi Investasi)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
@@ -226,7 +218,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
         <div
           onClick={() => onSelectUnit?.('dit-investasi')}
           className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Tingkat Kepatuhan Laporan LKPM Investor (Dit. Investasi)"
+          title="Tingkat Kepatuhan Laporan LKPM Investor (Dir. Promosi dan Fasilitasi Investasi)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
@@ -253,7 +245,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
         <div
           onClick={() => onSelectUnit?.('dit-pengembangan-kek')}
           className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Kecepatan Layanan Administrator KEK (Dit. KEK)"
+          title="Kecepatan Layanan Administrator KEK (Dir. Perencanaan dan Pengembangan Investasi)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
@@ -280,7 +272,7 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
         <div
           onClick={() => onSelectUnit?.('dit-pengendalian-usaha')}
           className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Kepatuhan PKS Kerja Sama Badan Usaha (Dit. Pengendalian Usaha)"
+          title="Kepatuhan PKS Kerja Sama Badan Usaha (Dir. Pengendalian Pengusahaan)"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">

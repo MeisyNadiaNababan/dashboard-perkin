@@ -417,7 +417,7 @@ export default function App() {
                 onOpenExportModal={() => setIsExportModalOpen(true)}
               />
             ) : activeUnitId === 'dit-pengembangan-kek' ? (
-              /* --- DIREKTORAT PENGEMBANGAN KPBPBB DAN KEK DASHBOARD --- */
+              /* --- DIREKTORAT PERENCANAAN DAN PENGEMBANGAN INVESTASI DASHBOARD --- */
               <KekDashboard
                 activeSubMenu={activeSheet}
                 onSelectSubMenu={handleSelectSheet}
@@ -428,7 +428,7 @@ export default function App() {
                 }}
               />
             ) : activeUnitId === 'dit-investasi' ? (
-              /* --- DIREKTORAT INVESTASI DASHBOARD --- */
+              /* --- DIREKTORAT PROMOSI DAN FASILITASI INVESTASI DASHBOARD --- */
               <InvestasiDashboard
                 activeSubMenu={activeSheet}
                 onSubMenuChange={handleSelectSheet}
@@ -497,7 +497,7 @@ export default function App() {
               /* --- DIREKTORAT PENGENDALIAN PENGUSAHAAN DASHBOARD --- */
               <PengendalianPengusahaanDashboard activeSubTab={activeSheet} />
             ) : activeUnitId === 'dit-bandara' ? (
-              /* --- DIREKTORAT PENGELOLAAN KAWASAN BANDARA DASHBOARD --- */
+              /* --- BADAN PENGELOLAAN KAWASAN BANDAR UDARA DASHBOARD --- */
               <PengelolaanBandaraDashboard />
             ) : activeUnitId === 'biro-organisasi' ? (
               /* --- BIRO ORGANISASI, KEPATUHAN DAN MANAJEMEN RISIKO (BOKMR) DASHBOARD --- */

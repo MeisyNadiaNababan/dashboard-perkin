@@ -201,7 +201,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">IKS 1 &bull; Investasi</span>
+                <span className="text-[11px] font-semibold text-blue-100">Investasi</span>
                 <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <TrendingUp className="w-3.5 h-3.5 text-white" />
                 </div>
@@ -212,9 +212,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
                 <span className="text-blue-100/90">Target Rp 70 T</span>
-                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                  78,1% On Track
-                </span>
+                <span className="text-blue-100/90 font-mono">vs 2025: Rp 49,2 T (+11,1%)</span>
               </div>
             </div>
           </div>
@@ -226,7 +224,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">IKS 2 &bull; Kepuasan IKM</span>
+                <span className="text-[11px] font-semibold text-blue-100">Kepuasan IKM</span>
                 <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <Smile className="w-3.5 h-3.5 text-white" />
                 </div>
@@ -237,9 +235,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
                 <span className="text-blue-100/90">Target 88,00</span>
-                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                  100,5% Tercapai
-                </span>
+                <span className="text-blue-100/90 font-mono">vs 2025: 86,10 (+2,7%)</span>
               </div>
             </div>
           </div>
@@ -251,7 +247,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">IKS 3 &bull; Penerimaan PNBP</span>
+                <span className="text-[11px] font-semibold text-blue-100">Penerimaan PNBP</span>
                 <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <DollarSign className="w-3.5 h-3.5 text-white" />
                 </div>
@@ -262,9 +258,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
                 <span className="text-blue-100/90">Target Rp 2.447,8 M</span>
-                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                  77,3% On Track
-                </span>
+                <span className="text-blue-100/90 font-mono">vs 2025: Rp 1.724,1 M (+9,8%)</span>
               </div>
             </div>
           </div>
@@ -276,7 +270,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">IKS 4 &bull; Reformasi Birokrasi</span>
+                <span className="text-[11px] font-semibold text-blue-100">Reformasi Birokrasi</span>
                 <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-white" />
                 </div>
@@ -287,9 +281,7 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
               </span>
               <div className="flex items-center justify-between text-[10.5px] mt-0.5">
                 <span className="text-blue-100/90">Target 80,00</span>
-                <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                  101,7% Tercapai
-                </span>
+                <span className="text-blue-100/90 font-mono">vs 2025: 78,40 (+3,8%)</span>
               </div>
             </div>
           </div>

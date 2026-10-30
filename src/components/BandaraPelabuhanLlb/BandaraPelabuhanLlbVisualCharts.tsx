@@ -10,7 +10,6 @@ import {
   HelpCircle,
   FileCode2,
   ChevronRight,
-  Layers,
   Sparkles,
   Users,
 } from 'lucide-react';
@@ -71,20 +70,11 @@ const PNBP_LLB_TREND_ANNUAL = [
   { tahun: '2026', skor: 2.8, target: 2.5 },
 ];
 
-// Tren Konsolidasi Sinergi 3 Satker DEP-A5
-const SINERGI_TREND_ANNUAL = [
-  { tahun: '2022', serapanPersen: 36.8, capaianIku: 98.6 },
-  { tahun: '2023', serapanPersen: 38.5, capaianIku: 101.2 },
-  { tahun: '2024', serapanPersen: 39.4, capaianIku: 103.5 },
-  { tahun: '2025', serapanPersen: 40.0, capaianIku: 107.94 },
-  { tahun: '2026', serapanPersen: 43.5, capaianIku: 109.8 },
-];
-
 export const BandaraPelabuhanLlbVisualCharts: React.FC<
   BandaraPelabuhanLlbVisualChartsProps
 > = ({ onOpenFormulaModal }) => {
-  // Tab state: ikp-1, ikp-2, ikp-3, matriks (Persis Model DEP-A4)
-  const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3' | 'matriks'>('ikp-1');
+  // Tab state: ikp-1, ikp-2, ikp-3
+  const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3'>('ikp-1');
 
   const ikp1 = PERKIN_A5_KPIS.find((k) => k.id === 'ikp-1-ikm-gabungan') || PERKIN_A5_KPIS[0];
   const ikp2 = PERKIN_A5_KPIS.find((k) => k.id === 'ikp-2-pnbp-bandara-pelabuhan') || PERKIN_A5_KPIS[1];
@@ -228,19 +218,6 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                 <Truck className="w-3.5 h-3.5" />
                 <span>IKP 3: PNBP LLB</span>
               </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('matriks')}
-                className={`px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                  activeTab === 'matriks'
-                    ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5" />
-                <span>Matriks Sinergi A5</span>
-              </button>
             </div>
           </div>
 
@@ -255,7 +232,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                     <span className="text-lg font-black text-slate-900 font-mono">87,80</span>
                     <span className="text-[10px] font-bold text-emerald-700">102,1% (Mutu A)</span>
                   </div>
-                  <span className="text-[10px] text-slate-500">Dit. Kawasan Bandara &bull; Target: 86,00</span>
+                  <span className="text-[10px] text-slate-500">BP Kawasan Bandar Udara &bull; Target: 86,00</span>
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
@@ -264,7 +241,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                     <span className="text-lg font-black text-slate-900 font-mono">88,20</span>
                     <span className="text-[10px] font-bold text-emerald-700">102,2% (Mutu A)</span>
                   </div>
-                  <span className="text-[10px] text-slate-500">Dit. Kepelabuhanan &bull; Target: 86,30</span>
+                  <span className="text-[10px] text-slate-500">BP &amp; Pengusahaan Kepelabuhanan &bull; Target: 86,30</span>
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
@@ -354,7 +331,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-emerald-800 font-bold block uppercase">Dit. Kawasan Bandara (Hang Nadim)</span>
+                  <span className="text-[10px] text-emerald-800 font-bold block uppercase">Badan Pengelolaan Kawasan Bandar Udara (Hang Nadim)</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">Rp 312,45 M</span>
                     <span className="text-xs font-bold text-emerald-700">109,63% Capaian</span>
@@ -363,7 +340,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-blue-800 font-bold block uppercase">Dit. Pengelolaan Kepelabuhanan</span>
+                  <span className="text-[10px] text-blue-800 font-bold block uppercase">Badan Pengelolaan dan Pengusahaan Kepelabuhanan</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
                     <span className="text-xl font-black text-slate-900 font-mono">Rp 250,40 M</span>
                     <span className="text-xs font-bold text-blue-700">107,37% Capaian</span>
@@ -389,14 +366,14 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">Dit. Kawasan Bandara</td>
+                        <td className="py-1.5 font-semibold text-slate-800">BP Kawasan Bandar Udara</td>
                         <td className="py-1.5 text-right font-mono">Rp 285,00</td>
                         <td className="py-1.5 text-right font-mono font-bold text-emerald-700">Rp 312,45</td>
                         <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">109,6%</td>
                         <td className="py-1.5 text-right text-emerald-600 font-bold text-[9.5px]">Melampaui</td>
                       </tr>
                       <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">Dit. Kepelabuhanan</td>
+                        <td className="py-1.5 font-semibold text-slate-800">BP &amp; Pengusahaan Kepelabuhanan</td>
                         <td className="py-1.5 text-right font-mono">Rp 233,21</td>
                         <td className="py-1.5 text-right font-mono font-bold text-blue-700">Rp 250,40</td>
                         <td className="py-1.5 text-right font-mono text-blue-700 font-bold">107,4%</td>
@@ -509,85 +486,6 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                         <Tooltip />
                         <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
                         <Line type="monotone" dataKey="skor" stroke="#D97706" strokeWidth={2} dot={{ r: 3 }} name="Realisasi" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: MATRIKS SINERGI DEP-A5 */}
-          {activeTab === 'matriks' && (
-            <div className="space-y-3">
-              <div className="bg-indigo-50/70 border border-indigo-200/80 rounded-lg p-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-indigo-900">
-                    Konsolidasi Anggaran Program &amp; Kinerja 3 Satker Pengampu Perkin A5
-                  </span>
-                  <span className="text-[10px] font-mono font-bold text-indigo-700 bg-white px-2 py-0.5 rounded border border-indigo-200">
-                    Pagu Total: Rp 59,51 Miliar
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-600 mt-0.5">
-                  Realisasi belanja operasional dan penyelenggaraan program TA 2025: Rp 23,80 Miliar (40,0% serapan anggaran per cut-off).
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                <div className="md:col-span-7 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <table className="w-full text-[10.5px]">
-                    <thead>
-                      <tr className="border-b border-slate-200 text-slate-500 text-left">
-                        <th className="py-1">Kegiatan Program</th>
-                        <th className="py-1 text-right">Pagu DIPA</th>
-                        <th className="py-1 text-right">Realisasi</th>
-                        <th className="py-1 text-right">Serapan</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">1. Kawasan Bandara Hang Nadim</td>
-                        <td className="py-1.5 text-right font-mono">Rp 11,43 M</td>
-                        <td className="py-1.5 text-right font-mono">Rp 4,57 M</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">40,0%</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">2. Kepelabuhanan Batam</td>
-                        <td className="py-1.5 text-right font-mono">Rp 46,29 M</td>
-                        <td className="py-1.5 text-right font-mono">Rp 18,52 M</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">40,0%</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">3. Pelayanan Lalu Lintas Barang</td>
-                        <td className="py-1.5 text-right font-mono">Rp 1,78 M</td>
-                        <td className="py-1.5 text-right font-mono">Rp 0,71 M</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">40,0%</td>
-                      </tr>
-                      <tr className="bg-indigo-50/50 font-bold">
-                        <td className="py-1.5 text-indigo-900">Total Program Perkin A5</td>
-                        <td className="py-1.5 text-right font-mono">Rp 59,51 M</td>
-                        <td className="py-1.5 text-right font-mono text-indigo-900">Rp 23,80 M</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-black">40,0%</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-slate-700">Tren Sinergi Serapan &amp; IKU (%)</span>
-                    <span className="text-[9px] font-mono text-slate-400">2022-2026</span>
-                  </div>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={SINERGI_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis tick={{ fontSize: 9 }} domain={[30, 115]} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="serapanPersen" stroke="#6366F1" strokeWidth={2} name="Serapan Pagu (%)" />
-                        <Line type="monotone" dataKey="capaianIku" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} name="Rata-rata IKU (%)" />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>

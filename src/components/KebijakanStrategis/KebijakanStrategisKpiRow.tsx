@@ -68,7 +68,7 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 1 &bull; Pusren (IPPN)</span>
+              <span className="text-[11px] font-semibold text-blue-100">Pusren (IPPN)</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Compass className="w-3.5 h-3.5 text-white" />
               </div>
@@ -78,10 +78,8 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               94,20 / 100
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 92,00 (Sangat Baik)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpPusren.capaianPersen.toFixed(1)}% Tercapai
-              </span>
+              <span className="text-blue-100/90">Target 92,00</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 89,50 (+5,3%)</span>
             </div>
           </div>
         </div>
@@ -94,7 +92,7 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 2 &bull; Harmonisasi (IKK)</span>
+              <span className="text-[11px] font-semibold text-blue-100">Harmonisasi (IKK)</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Scale className="w-3.5 h-3.5 text-white" />
               </div>
@@ -104,10 +102,8 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               71,80 / 100
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 65,00 (Cukup Baik)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpHarmonisasi.capaianPersen.toFixed(1)}% Melampaui
-              </span>
+              <span className="text-blue-100/90">Target 65,00</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 64,20 (+11,8%)</span>
             </div>
           </div>
         </div>
@@ -120,7 +116,7 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 3 &bull; SPBE (PDSI)</span>
+              <span className="text-[11px] font-semibold text-blue-100">SPBE (PDSI)</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-white" />
               </div>
@@ -130,10 +126,8 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               4,12 / Level 4
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 3,90 (Terpadu)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpPdsi.capaianPersen.toFixed(1)}% Optimal
-              </span>
+              <span className="text-blue-100/90">Target 3,90</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 3,78 (+9,0%)</span>
             </div>
           </div>
         </div>
@@ -146,7 +140,7 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
         >
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKP 4 &bull; IKM PTSP</span>
+              <span className="text-[11px] font-semibold text-blue-100">IKM PTSP</span>
               <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                 <Award className="w-3.5 h-3.5 text-white" />
               </div>
@@ -156,10 +150,8 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
               88,42 / Mutu A
             </span>
             <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 86,50 (Sangat Baik)</span>
-              <span className="font-bold text-white bg-white/20 px-1.5 py-0.2 rounded-full text-[9.5px] backdrop-blur-xs">
-                {ikpPtsp.capaianPersen.toFixed(1)}% Sangat Baik
-              </span>
+              <span className="text-blue-100/90">Target 86,50</span>
+              <span className="text-blue-100/90 font-mono">vs 2025: 85,90 (+2,9%)</span>
             </div>
           </div>
         </div>

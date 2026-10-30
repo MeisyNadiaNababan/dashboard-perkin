@@ -110,7 +110,7 @@ export const PengelolaanBandaraDashboard: React.FC = () => {
                 </span>
               </div>
               <h1 className="text-xl md:text-2xl font-black tracking-tight text-white">
-                Direktorat Pengelolaan Kawasan Bandara
+                Badan Pengelolaan Kawasan Bandar Udara
               </h1>
               <p className="text-xs md:text-sm text-sky-200/90 mt-1 max-w-3xl leading-relaxed">
                 Pusat Komando Eksekutif Lalu Lintas Udara Bandara Internasional Hang Nadim (BTH / WIDD): Monitoring Realisasi PNBP (DS #1), Arus Penerbangan & Penumpang (DS #2), Operator Maskapai (DS #10), Rute Langsung (DS #9) & EMPU Kargo (DS #5).

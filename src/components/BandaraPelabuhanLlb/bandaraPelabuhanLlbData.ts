@@ -56,7 +56,7 @@ export const PERKIN_A5_METADATA = {
       alokasiAnggaran: 11431766000, // Rp 11.431.766.000,-
       realisasiAnggaran: 4572706400,
       persentase: 40.0,
-      unitPengampu: 'Direktorat Pengelolaan Kawasan Bandara',
+      unitPengampu: 'Badan Pengelolaan Kawasan Bandar Udara',
       pnbpTarget: 116320000000,
       pnbpRealisasi: 124500000000,
       pnbpShare: 22.0,
@@ -69,7 +69,7 @@ export const PERKIN_A5_METADATA = {
       alokasiAnggaran: 46293348000, // Rp 46.293.348.000,-
       realisasiAnggaran: 18517339200,
       persentase: 40.0,
-      unitPengampu: 'Direktorat Pengelolaan Kepelabuhanan',
+      unitPengampu: 'Badan Pengelolaan dan Pengusahaan Kepelabuhanan',
       pnbpTarget: 401890000000,
       pnbpRealisasi: 438350000000,
       pnbpShare: 78.0,
@@ -109,8 +109,8 @@ export const PERKIN_A5_KPIS: PerkinA5Kpi[] = [
     consolidationPeriod: 'Take Last Known (Akumulasi Jan s.d. Des)',
     reportingPeriod: 'Tahunan',
     baseline2024: '84,10 (Mutu B - Baik)',
-    dataSource: 'Dit. Pengelolaan Kawasan Bandara, Dit. Pengelolaan Kepelabuhanan, Dit. Lalu Lintas Barang',
-    responsibleUnit: '3 Satker: Dit. Kawasan Bandara, Dit. Kepelabuhanan, Dit. Lalu Lintas Barang',
+    dataSource: 'Badan Pengelolaan Kawasan Bandar Udara, Badan Pengelolaan dan Pengusahaan Kepelabuhanan, Dit. Lalu Lintas Barang',
+    responsibleUnit: '3 Satker: BP Kawasan Bandar Udara, BP dan Pengusahaan Kepelabuhanan, Dit. Lalu Lintas Barang',
     legalBasis: 'PermenPAN-RB No. 14 Tahun 2017 tentang Pedoman Penyusunan Survei Kepuasan Masyarakat Unit Penyelenggara Pelayanan Publik',
     operationalDefinition:
       'Indeks Kepuasan Masyarakat (IKM) terhadap Pelayanan Publik adalah hasil pengukuran dari kegiatan survei kepuasan masyarakat berupa angka dengan skala 1 sampai dengan 100. Angka selanjutnya mempedomani ketentuan dalam PermenPAN-RB No. 14/2017: 25,00-64,99 (D / Tidak Baik), 65,00-76,60 (C / Kurang Baik), 76,61-88,30 (B / Baik), dan 88,31-100,00 (A / Sangat Baik). Pelaksanaan survei bekerjasama dengan lembaga survei independen yang memiliki kredibilitas dan reputasi.',
@@ -155,22 +155,22 @@ export const PERKIN_A5_KPIS: PerkinA5Kpi[] = [
     consolidationPeriod: 'Take Last Known (Akumulasi Jan s.d. Des)',
     reportingPeriod: 'Triwulan',
     baseline2024: 'Rp 486,50 M',
-    dataSource: '1. Dit. Pengelolaan Kawasan Bandara, 2. Dit. Pengelolaan Kepelabuhanan (Buku Satu Data BP Batam Hal 11 & 15)',
-    responsibleUnit: 'Direktorat Pengelolaan Kawasan Bandara & Direktorat Pengelolaan Kepelabuhanan',
+    dataSource: '1. Badan Pengelolaan Kawasan Bandar Udara, 2. Badan Pengelolaan dan Pengusahaan Kepelabuhanan (Buku Satu Data BP Batam Hal 11 & 15)',
+    responsibleUnit: 'Badan Pengelolaan Kawasan Bandar Udara & Badan Pengelolaan dan Pengusahaan Kepelabuhanan',
     legalBasis: 'PP No. 41 Tahun 2021 tentang Penyelenggaraan KPBPB, PMK Tarif BLU BP Batam & Perka BP Batam',
     operationalDefinition:
       'Realisasi PNBP merupakan pendapatan yang diperoleh sebagai imbalan atas layanan yang diberikan kepada masyarakat antara lain melalui pemanfaatan barang/jasa, pendapatan kerjasama pihak lain, sewa, jasa lembaga keuangan, dan pendapatan sah lainnya yang berhubungan langsung dengan pelayanan BLU (tidak termasuk pendapatan dari RM APBN). Persentase dihitung dari jumlah realisasi PNBP dibagi dengan target PNBP tahun 2025.',
     formula: 'Realisasi PNBP = (Jumlah Realisasi PNBP Bandara + Realisasi PNBP Pelabuhan) / Target PNBP (Rp 518,21 M) * 100%',
     breakdown: [
       {
-        entity: 'Direktorat Pengelolaan Kawasan Bandara',
+        entity: 'Badan Pengelolaan Kawasan Bandar Udara',
         target: 'Rp 116,32 M',
         realization: 'Rp 124,50 M',
         percentage: 107.03,
         sharePercent: 22.0,
       },
       {
-        entity: 'Direktorat Pengelolaan Kepelabuhanan',
+        entity: 'Badan Pengelolaan dan Pengusahaan Kepelabuhanan',
         target: 'Rp 401,89 M',
         realization: 'Rp 438,35 M',
         percentage: 109.07,
@@ -236,8 +236,8 @@ export interface SatkerPengampuA5 {
 export const SATKER_A5_LIST: SatkerPengampuA5[] = [
   {
     id: 'dit-bandara',
-    name: 'Direktorat Pengelolaan Kawasan Bandara',
-    shortName: 'Kawasan Bandara',
+    name: 'Badan Pengelolaan Kawasan Bandar Udara',
+    shortName: 'BP Kawasan Bandar Udara',
     paguBelanja: 11431766000,
     realisasiBelanja: 4572706400,
     serapanPersen: 40.0,
@@ -247,7 +247,7 @@ export const SATKER_A5_LIST: SatkerPengampuA5[] = [
     ikmScore: 87.8,
     ikmPredikat: 'Mutu B (Baik)',
     utilizationRate: 79.1,
-    headOfUnit: 'Direktur Pengelolaan Kawasan Bandara BP Batam',
+    headOfUnit: 'Kepala Badan Pengelolaan Kawasan Bandar Udara BP Batam',
     datasetCount: 12,
     pdfPages: 'Halaman 11 - 12 (12 Dataset)',
     operationalHighlights: [
@@ -261,8 +261,8 @@ export const SATKER_A5_LIST: SatkerPengampuA5[] = [
   },
   {
     id: 'dit-pelabuhan',
-    name: 'Direktorat Pengelolaan Kepelabuhanan',
-    shortName: 'Kepelabuhanan',
+    name: 'Badan Pengelolaan dan Pengusahaan Kepelabuhanan',
+    shortName: 'BP & Pengusahaan Kepelabuhanan',
     paguBelanja: 46293348000,
     realisasiBelanja: 18517339200,
     serapanPersen: 40.0,
@@ -272,7 +272,7 @@ export const SATKER_A5_LIST: SatkerPengampuA5[] = [
     ikmScore: 88.2,
     ikmPredikat: 'Mutu B/A (Sangat Baik)',
     utilizationRate: 86.4,
-    headOfUnit: 'Direktur Pengelolaan Kepelabuhanan BP Batam',
+    headOfUnit: 'Kepala Badan Pengelolaan dan Pengusahaan Kepelabuhanan BP Batam',
     datasetCount: 25,
     pdfPages: 'Halaman 14 - 17 (25 Dataset)',
     operationalHighlights: [
