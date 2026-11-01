@@ -25,6 +25,7 @@ import {
   Archive,
 } from 'lucide-react';
 import { BiroKeuanganDeepDive } from './BiroKeuanganDeepDive';
+import { BiroOkmrDeepDive } from './BiroOkmrDeepDive';
 import { BiroUmumDeepDive } from './BiroUmumDeepDive';
 import { BiroHukumDeepDive } from './BiroHukumDeepDive';
 import {
@@ -872,7 +873,8 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
       {/* Memuat: SAKIP (Req 5), Manajemen Risiko MRI Periode & Skor (Req 7),   */}
       {/* PEKPPP, SKM Unit Usaha & Nilai & Persentase (Req 6), Pengaduan, SPIP */}
       {/* ==================================================================== */}
-      {selectedUnitId === 'biro-organisasi' && (
+      {selectedUnitId === 'biro-organisasi' && <BiroOkmrDeepDive />}
+      {false && selectedUnitId === 'biro-organisasi' && (
         <div className="space-y-3.5">
           {/* ROW 1: DUA PILAR STRATEGIS (SAKIP 82.68 A & MANAJEMEN RISIKO MRI 3.65) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">

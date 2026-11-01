@@ -41,6 +41,7 @@ import {
   PHKS_SURVEI_KEWAJARAN,
   PhksTarifLayananDetail,
 } from '../../data/harmonisasiData';
+import { PusatHarmonisasiDeepDive } from '../KebijakanStrategis/PusatHarmonisasiDeepDive';
 
 interface HarmonisasiDashboardProps {
   activeSubTab?: string;
@@ -49,12 +50,12 @@ interface HarmonisasiDashboardProps {
 }
 
 export const HarmonisasiDashboard: React.FC<HarmonisasiDashboardProps> = ({
-  activeSubTab = 'ikk',
+  activeSubTab = 'deep-dive',
   onOpenFormulaModal,
   onOpenExportModal,
 }) => {
-  const [currentTab, setCurrentTab] = useState<'ikk' | 'tarif' | 'regulasi' | 'survei'>(
-    activeSubTab === 'rapim' ? 'regulasi' : (activeSubTab as any) || 'ikk'
+  const [currentTab, setCurrentTab] = useState<'deep-dive' | 'ikk' | 'tarif' | 'regulasi' | 'survei'>(
+    (activeSubTab as any) || 'deep-dive'
   );
   const [selectedTarifUnit, setSelectedTarifUnit] = useState<string>('ALL');
   const [tarifSearch, setTarifSearch] = useState('');
@@ -154,6 +155,15 @@ export const HarmonisasiDashboard: React.FC<HarmonisasiDashboardProps> = ({
       {/* Tabs Selector */}
       <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-xl text-xs font-semibold">
         <button
+          onClick={() => setCurrentTab('deep-dive')}
+          className={`px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            currentTab === 'deep-dive' ? 'bg-[#002B49] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+          }`}
+        >
+          <BarChart3 className="w-3.5 h-3.5" />
+          <span>Visualisasi 6-Grid Satu Data BP Batam</span>
+        </button>
+        <button
           onClick={() => setCurrentTab('ikk')}
           className={`px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
             currentTab === 'ikk' ? 'bg-[#002B49] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
@@ -190,6 +200,13 @@ export const HarmonisasiDashboard: React.FC<HarmonisasiDashboardProps> = ({
           <span>Survei Kewajaran &amp; Evaluasi Tarif (DS 5)</span>
         </button>
       </div>
+
+      {/* Tab 0: Visualisasi 6-Grid Satu Data BP Batam */}
+      {currentTab === 'deep-dive' && (
+        <div className="pt-1">
+          <PusatHarmonisasiDeepDive />
+        </div>
+      )}
 
       {/* Tab 1: IKK 4 Dimensi Policy Evaluation + Compact Visual Chart */}
       {currentTab === 'ikk' && (

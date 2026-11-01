@@ -17,6 +17,18 @@ export interface AnggaranRealisasiUraianItem {
   persentase: number; // %
 }
 
+export interface SurplusDefisitMasterItem {
+  id: string;
+  unit: string;
+  namaLengkap: string;
+  kategori: string;
+  pendapatan: number;      // Miliar Rupiah
+  belanja: number;         // Miliar Rupiah
+  surplus: number;         // Miliar Rupiah
+  status: 'SURPLUS' | 'DEFISIT';
+  coverageRatio: number;   // %
+}
+
 export interface PnbpLayananLeafItem {
   name: string;
   unit: string;
@@ -81,11 +93,20 @@ export interface BiroKeuanganMasterData {
     filterJenisList: string[];
     recordsByFilter: Record<string, AnggaranRealisasiUraianItem[]>;
   };
-  targetPnbpTreemap: {
+  targetPnbpTreemap?: {
     datasetName: string;
     accessLabel: 'Tertutup';
     filterTahunList: string[];
     byTahun: Record<string, { totalTargetMiliar: number; nodes: PnbpUnitNodeItem[] }>;
+  };
+  surplusDefisitUnit: {
+    datasetName: string;
+    accessLabel: 'Terbuka';
+    filterKategoriList: string[];
+    records: SurplusDefisitMasterItem[];
+    netSurplusKonsolidasi: number;
+    totalPendapatan: number;
+    totalBelanja: number;
   };
   penerimaanSumberDana: {
     datasetName: string;
@@ -171,7 +192,118 @@ export const BIRO_KEUANGAN_MASTER_DATA: BiroKeuanganMasterData = {
     },
   },
 
-  // 3. KARTU 3 - TARGET PNBP PER UNIT DAN LAYANAN (TREEMAP)
+  // 3. KARTU 3 - SURPLUS / DEFISIT PER UNIT KERJA (VISUALISASI LAMA DENGAN SHEET SWAP TABEL DETAIL)
+  surplusDefisitUnit: {
+    datasetName: 'Analisis Surplus dan Defisit per Unit Kerja & Badan Usaha (Terbuka, semesteran)',
+    accessLabel: 'Terbuka',
+    filterKategoriList: ['Semua Kategori', 'Badan Usaha', 'Direktorat Teknis', 'Biro & Pendukung'],
+    netSurplusKonsolidasi: 280.3,
+    totalPendapatan: 930.9,
+    totalBelanja: 650.6,
+    records: [
+      {
+        id: 'sd-1',
+        unit: 'Dit. Pelabuhan',
+        namaLengkap: 'Badan Usaha Pelabuhan BP Batam (BUP)',
+        kategori: 'Badan Usaha',
+        pendapatan: 295.4,
+        belanja: 182.7,
+        surplus: 112.7,
+        status: 'SURPLUS',
+        coverageRatio: 161.7,
+      },
+      {
+        id: 'sd-2',
+        unit: 'Dit. Pertanahan',
+        namaLengkap: 'Direktorat Pengelolaan Pertanahan & Lahan',
+        kategori: 'Direktorat Teknis',
+        pendapatan: 218.7,
+        belanja: 85.4,
+        surplus: 133.3,
+        status: 'SURPLUS',
+        coverageRatio: 256.1,
+      },
+      {
+        id: 'sd-3',
+        unit: 'BU Bandara',
+        namaLengkap: 'Badan Usaha Bandar Udara Hang Nadim',
+        kategori: 'Badan Usaha',
+        pendapatan: 139.5,
+        belanja: 98.3,
+        surplus: 41.2,
+        status: 'SURPLUS',
+        coverageRatio: 141.9,
+      },
+      {
+        id: 'sd-4',
+        unit: 'BU RSBP Batam',
+        namaLengkap: 'Badan Usaha Rumah Sakit BP Batam Sekupang',
+        kategori: 'Badan Usaha',
+        pendapatan: 108.3,
+        belanja: 109.4,
+        surplus: -1.1,
+        status: 'DEFISIT',
+        coverageRatio: 99.0,
+      },
+      {
+        id: 'sd-5',
+        unit: 'Dit. Infrastruktur',
+        namaLengkap: 'Direktorat Pembangunan Infrastruktur',
+        kategori: 'Direktorat Teknis',
+        pendapatan: 84.5,
+        belanja: 72.4,
+        surplus: 12.1,
+        status: 'SURPLUS',
+        coverageRatio: 116.7,
+      },
+      {
+        id: 'sd-6',
+        unit: 'BU SPAM',
+        namaLengkap: 'Badan Usaha SPAM & Fasilitas Distribusi Air Bersih',
+        kategori: 'Badan Usaha',
+        pendapatan: 42.8,
+        belanja: 35.2,
+        surplus: 7.6,
+        status: 'SURPLUS',
+        coverageRatio: 121.6,
+      },
+      {
+        id: 'sd-7',
+        unit: 'Biro Umum',
+        namaLengkap: 'Biro Umum & Sekretariat Kantor Pusat',
+        kategori: 'Biro & Pendukung',
+        pendapatan: 21.0,
+        belanja: 28.2,
+        surplus: -7.2,
+        status: 'DEFISIT',
+        coverageRatio: 74.5,
+      },
+      {
+        id: 'sd-8',
+        unit: 'Peng. Lingkungan',
+        namaLengkap: 'Direktorat Fasilitas & Pengelolaan Lingkungan Hidup',
+        kategori: 'Direktorat Teknis',
+        pendapatan: 18.2,
+        belanja: 24.6,
+        surplus: -6.4,
+        status: 'DEFISIT',
+        coverageRatio: 74.0,
+      },
+      {
+        id: 'sd-9',
+        unit: 'PDSI',
+        namaLengkap: 'Pusat Data dan Sistem Informasi (PDSI)',
+        kategori: 'Biro & Pendukung',
+        pendapatan: 2.5,
+        belanja: 14.4,
+        surplus: -11.9,
+        status: 'DEFISIT',
+        coverageRatio: 17.4,
+      },
+    ],
+  },
+
+  // 3. KARTU 3 (Legacy / Optional Reference) - TARGET PNBP PER UNIT DAN LAYANAN
   targetPnbpTreemap: {
     datasetName: 'Rincian dan Rekapitulasi Target PNBP (Tertutup, pertahun)',
     accessLabel: 'Tertutup',
