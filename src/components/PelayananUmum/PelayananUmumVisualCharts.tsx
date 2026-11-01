@@ -95,7 +95,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
         {/* ================================================================== */}
         {/* KOLOM KIRI: RADAR CHART CAPAIAN 3 IKP (TANPA KARTU MINI DI BAWAHNYA) */}
         {/* ================================================================== */}
-        <div className="lg:col-span-4 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
+        <div className="lg:col-span-3 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
           <div>
             <div className="flex items-center justify-between">
               <div>
@@ -111,16 +111,16 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
               </span>
             </div>
 
-            {/* Radar Visual */}
-            <div className="h-56 w-full mt-1">
+            {/* Radar Visual - Compact & Proportional */}
+            <div className="h-36 sm:h-40 w-full mt-1">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_3_IKP_A6} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+                <RadarChart data={RADAR_3_IKP_A6} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
                   <PolarGrid stroke="#CBD5E1" />
                   <PolarAngleAxis
                     dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9.5, fontWeight: 700 }}
+                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
                   />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={8} />
+                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
                   <Radar
                     name="Target Perkin (100%)"
                     dataKey="target"
@@ -136,7 +136,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                     fill="#0284C7"
                     fillOpacity={0.35}
                   />
-                  <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '6px' }} />
+                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
                   <Tooltip
                     formatter={(val: any, name: any, item: any) => [
                       `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
@@ -155,14 +155,10 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-200/70 text-[11px] text-slate-600 space-y-1">
+          <div className="pt-2 border-t border-slate-200/70 text-[10.5px] text-slate-600 space-y-1">
             <div className="flex items-center justify-between font-semibold">
-              <span className="text-slate-500">Rata-rata Capaian IKP:</span>
-              <span className="text-emerald-700 font-bold font-mono">105,85% (Melampaui Target)</span>
-            </div>
-            <div className="flex items-center justify-between text-[10px] text-slate-400">
-              <span>Metode Agregasi:</span>
-              <span className="font-mono">Akumulatif Jan - Des 2025</span>
+              <span className="text-slate-500">Rerata IKP:</span>
+              <span className="text-emerald-700 font-bold font-mono">105,85%</span>
             </div>
           </div>
         </div>
@@ -171,7 +167,7 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
         {/* KOLOM KANAN: SUB-TABS INDIKATOR + DETAIL EVALUASI + GRAFIK TREN    */}
         {/* Model Persis DEP-A4: Tab per IKP + Tabel Realisasi + Tren Tahunan   */}
         {/* ================================================================== */}
-        <div className="lg:col-span-8 space-y-3">
+        <div className="lg:col-span-9 space-y-3">
           {/* Header & Sub-Tab Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-slate-200">
             <div>

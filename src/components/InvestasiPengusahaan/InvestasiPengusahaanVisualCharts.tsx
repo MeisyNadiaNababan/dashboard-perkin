@@ -97,7 +97,7 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
         {/* ================================================================== */}
         {/* KOLOM KIRI: RADAR CHART CAPAIAN 4 IKP (TANPA KARTU MINI DI BAWAHNYA) */}
         {/* ================================================================== */}
-        <div className="lg:col-span-4 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
+        <div className="lg:col-span-3 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
           <div>
             <div className="flex items-center justify-between">
               <div>
@@ -113,16 +113,16 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
               </span>
             </div>
 
-            {/* Radar Visual */}
-            <div className="h-56 w-full mt-1">
+            {/* Radar Visual - Compact & Proportional */}
+            <div className="h-36 sm:h-40 w-full mt-1">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_4_IKP_A4} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+                <RadarChart data={RADAR_4_IKP_A4} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
                   <PolarGrid stroke="#CBD5E1" />
                   <PolarAngleAxis
                     dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9.5, fontWeight: 700 }}
+                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
                   />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={8} />
+                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
                   <Radar
                     name="Target Perkin (100%)"
                     dataKey="target"
@@ -138,7 +138,7 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
                     fill="#0284C7"
                     fillOpacity={0.35}
                   />
-                  <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '6px' }} />
+                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
                   <Tooltip
                     formatter={(val: any, name: any, item: any) => [
                       `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
@@ -157,7 +157,7 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
             </div>
           </div>
 
-          <div className="pt-2.5 border-t border-slate-200/60 text-[10.5px] text-slate-500 flex items-center justify-between">
+          <div className="pt-2 border-t border-slate-200/60 text-[10px] text-slate-500 flex items-center justify-between">
             <span className="flex items-center gap-1 font-medium text-slate-700">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
               Status: 4 IKP Optimal On Track
@@ -169,7 +169,7 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
         {/* ================================================================== */}
         {/* KOLOM KANAN: TABEL DETAIL PERSIS GAMBAR REFERENSI + GRAFIK TREN     */}
         {/* ================================================================== */}
-        <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200/80 p-3 sm:p-3.5 space-y-3">
+        <div className="lg:col-span-9 bg-white rounded-xl border border-slate-200/80 p-3 sm:p-3.5 space-y-3">
           {/* Header Tab Switcher */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
             <div className="flex items-center gap-1.5 bg-slate-100/80 p-0.5 rounded-lg border border-slate-200/60 overflow-x-auto text-[11px] font-bold">

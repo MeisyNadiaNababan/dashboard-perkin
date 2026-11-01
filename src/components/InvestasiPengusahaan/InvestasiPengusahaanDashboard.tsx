@@ -92,8 +92,8 @@ export const InvestasiPengusahaanDashboard: React.FC<
 
   return (
     <div
-      className="space-y-3.5 font-sans text-slate-800 pb-0 max-w-[1880px] mx-auto origin-top"
-      style={{ zoom: '80%' }}
+      className="w-full space-y-3 pb-3 font-sans text-slate-800 origin-top"
+      style={{ zoom: '92%' }}
     >
       {/* ==================================================================== */}
       {/* 1. FILTER BAR RINGKAS (PERSIS MODEL FILTER DASHBOARD DEP-A3)         */}

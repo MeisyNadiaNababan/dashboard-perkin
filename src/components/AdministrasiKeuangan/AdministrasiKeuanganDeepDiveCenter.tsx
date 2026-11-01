@@ -22,7 +22,11 @@ import {
   TrendingUp,
   Target,
   FileCheck,
+  Archive,
 } from 'lucide-react';
+import { BiroKeuanganDeepDive } from './BiroKeuanganDeepDive';
+import { BiroUmumDeepDive } from './BiroUmumDeepDive';
+import { BiroHukumDeepDive } from './BiroHukumDeepDive';
 import {
   BarChart,
   Bar,
@@ -331,7 +335,7 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             Unit Deep-Dive Center: Administrasi, Keuangan &amp; Tata Kelola
           </h3>
           <p className="text-[11px] text-slate-500 mt-0.5">
-            Analisis granular 3 pilar biro pengampu Perkin DEP-A1 (Biro Keuangan, Biro SDM, Biro OKMR)
+            Analisis granular unit kerja pengampu Perkin DEP-A1 (Biro Keuangan, Biro SDM, Biro OKMR, Biro Umum, Biro Hukum)
           </p>
         </div>
 
@@ -372,13 +376,38 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
             <Building2 className="w-3.5 h-3.5" />
             <span>Biro OKMR</span>
           </button>
+
+          <button
+            onClick={() => onSelectUnit('biro-umum')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              selectedUnitId === 'biro-umum'
+                ? 'bg-blue-600 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Archive className="w-3.5 h-3.5" />
+            <span>Biro Umum</span>
+          </button>
+
+          <button
+            onClick={() => onSelectUnit('biro-hukum')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              selectedUnitId === 'biro-hukum'
+                ? 'bg-blue-600 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Biro Hukum</span>
+          </button>
         </div>
       </div>
 
       {/* ==================================================================== */}
-      {/* 2. TAB KONTEN: BIRO KEUANGAN (5 KARTU)                               */}
+      {/* 2. TAB KONTEN: BIRO KEUANGAN (6 GRAFIK SESUAI SPESIFIKASI GRID 2 KOLOM) */}
       {/* ==================================================================== */}
-      {selectedUnitId === 'biro-keuangan' && (
+      {selectedUnitId === 'biro-keuangan' && <BiroKeuanganDeepDive />}
+      {false && selectedUnitId === 'biro-keuangan' && (
         <div className="space-y-3.5">
           {/* GRID 1: DUA KARTU UTAMA (ROW 1) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
@@ -1225,6 +1254,16 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
           </div>
         </div>
       )}
+
+      {/* ==================================================================== */}
+      {/* 5. TAB KONTEN: BIRO UMUM (6 GRAFIK SESUAI SPESIFIKASI)               */}
+      {/* ==================================================================== */}
+      {selectedUnitId === 'biro-umum' && <BiroUmumDeepDive />}
+
+      {/* ==================================================================== */}
+      {/* 6. TAB KONTEN: BIRO HUKUM (6 GRAFIK SESUAI SPESIFIKASI)              */}
+      {/* ==================================================================== */}
+      {selectedUnitId === 'biro-hukum' && <BiroHukumDeepDive />}
     </div>
   );
 };

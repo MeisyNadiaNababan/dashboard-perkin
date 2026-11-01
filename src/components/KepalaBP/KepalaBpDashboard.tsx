@@ -150,8 +150,8 @@ export const KepalaBpDashboard: React.FC<KepalaBpDashboardProps> = ({
 
   return (
     <div
-      className="space-y-4 pb-0 font-sans text-slate-800 origin-top"
-      style={{ zoom: '80%' }}
+      className="w-full space-y-3 pb-3 font-sans text-slate-800 origin-top"
+      style={{ zoom: '92%' }}
     >
       {/* 1. OFFICIAL LETTERHEAD & PERKIN HEADER (HANYA DI TAB NASKAH PERKIN AGAR COMMAND CENTER BERSIH) */}
       {activeTab === 'naskah_perkin' && (

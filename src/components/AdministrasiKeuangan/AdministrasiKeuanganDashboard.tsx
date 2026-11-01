@@ -29,7 +29,7 @@ export const AdministrasiKeuanganDashboard: React.FC<
 }) => {
   // Filter State - Persis Model Filter Kepala BP Batam
   const [selectedYear, setSelectedYear] = useState<string>('2026');
-  const [selectedBiro, setSelectedBiro] = useState<'biro-keuangan' | 'biro-sdm' | 'biro-organisasi'>('biro-keuangan');
+  const [selectedBiro, setSelectedBiro] = useState<'biro-keuangan' | 'biro-sdm' | 'biro-organisasi' | 'biro-umum' | 'biro-hukum'>('biro-keuangan');
 
   // Modal State
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState(false);
@@ -45,7 +45,7 @@ export const AdministrasiKeuanganDashboard: React.FC<
   };
 
   const handleSelectBiro = (biroId: string) => {
-    if (biroId === 'biro-keuangan' || biroId === 'biro-sdm' || biroId === 'biro-organisasi') {
+    if (biroId === 'biro-keuangan' || biroId === 'biro-sdm' || biroId === 'biro-organisasi' || biroId === 'biro-umum' || biroId === 'biro-hukum') {
       setSelectedBiro(biroId);
     }
     setTimeout(() => {
@@ -99,8 +99,8 @@ export const AdministrasiKeuanganDashboard: React.FC<
 
   return (
     <div
-      className="space-y-3.5 font-sans text-slate-800 pb-0 max-w-[1880px] mx-auto origin-top"
-      style={{ zoom: '80%' }}
+      className="w-full space-y-3 pb-3 font-sans text-slate-800 origin-top"
+      style={{ zoom: '92%' }}
     >
       {/* ==================================================================== */}
       {/* 1. FILTER BAR RINGKAS (PERSIS MODEL FILTER DASHBOARD KEPALA BP BATAM)*/}
@@ -179,7 +179,7 @@ export const AdministrasiKeuanganDashboard: React.FC<
         <AdministrasiKeuanganDeepDiveCenter
           selectedUnitId={selectedBiro}
           onSelectUnit={(biroId) => {
-            if (biroId === 'biro-keuangan' || biroId === 'biro-sdm' || biroId === 'biro-organisasi') {
+            if (biroId === 'biro-keuangan' || biroId === 'biro-sdm' || biroId === 'biro-organisasi' || biroId === 'biro-umum' || biroId === 'biro-hukum') {
               setSelectedBiro(biroId);
             }
           }}

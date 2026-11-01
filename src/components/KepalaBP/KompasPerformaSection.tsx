@@ -170,38 +170,38 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
   const [activeTab, setActiveTab] = useState<'investasi' | 'ikm' | 'pnbp' | 'rb'>('investasi');
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3.5">
+    <div className="bg-white rounded-xl border border-slate-200/80 p-3 sm:p-3.5 shadow-2xs space-y-3">
 
-      {/* Two Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
-        {/* Kolom Kiri: Radar Chart Capaian 4 IKS */}
-        <div className="lg:col-span-5 bg-slate-50/60 rounded-xl border border-slate-100 p-3 sm:p-3.5 space-y-2">
+      {/* Two Column Grid: Radar Lebih Kecil (col-span-3) & Tabel Luas (col-span-9) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+        {/* Kolom Kiri: Radar Chart Capaian 4 IKS (KOMPAK) */}
+        <div className="lg:col-span-3 bg-slate-50/60 rounded-xl border border-slate-100 p-2.5 sm:p-3 space-y-2">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-xs sm:text-sm font-bold text-slate-900">Radar Kinerja 4 IKS</h3>
-              <p className="text-[10px] text-slate-500">Realisasi vs Target Perkin</p>
+              <p className="text-[10px] text-slate-500">Realisasi vs Target</p>
             </div>
             <span className="text-[10px] font-medium text-slate-600 bg-white px-1.5 py-0.2 rounded border border-slate-200/60">
               0 - 100%
             </span>
           </div>
 
-          <div className="h-48 w-full">
+          <div className="h-36 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={RADAR_4_IKS_DATA} margin={{ top: 5, right: 15, bottom: 5, left: 15 }}>
+              <RadarChart data={RADAR_4_IKS_DATA} margin={{ top: 2, right: 10, bottom: 2, left: 10 }}>
                 <PolarGrid stroke="#E2E8F0" />
                 <PolarAngleAxis
                   dataKey="subject"
-                  tick={{ fill: '#334155', fontSize: 9.5, fontWeight: 600 }}
+                  tick={{ fill: '#334155', fontSize: 8.5, fontWeight: 600 }}
                 />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#94A3B8" fontSize={9} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#94A3B8" fontSize={8} />
                 <Radar
-                  name="Target Perkin (100%)"
+                  name="Target Perkin"
                   dataKey="target"
                   stroke="#94A3B8"
                   fill="#94A3B8"
                   fillOpacity={0.12}
-                  strokeDasharray="4 4"
+                  strokeDasharray="3 3"
                 />
                 <Radar
                   name="Realisasi YTD"
@@ -211,7 +211,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                   fillOpacity={0.35}
                 />
                 <Legend
-                  wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
+                  wrapperStyle={{ fontSize: '9.5px', paddingTop: '4px' }}
                 />
                 <Tooltip
                   formatter={(val: any, name: any, item: any) => [
@@ -220,29 +220,28 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                   ]}
                   contentStyle={{
                     fontSize: '11px',
-                    borderRadius: '12px',
+                    borderRadius: '10px',
                     border: '1px solid #E2E8F0',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
                   }}
                 />
               </RadarChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-slate-200/60">
-            <div className="bg-white p-2.5 rounded-xl border border-slate-100">
-              <span className="text-[10px] text-slate-500 block">Kinerja Di Atas Target</span>
-              <span className="text-xs font-bold text-emerald-700">IKM (100,5%) &bull; RB (101,7%)</span>
+          <div className="space-y-1.5 text-xs pt-1.5 border-t border-slate-200/60">
+            <div className="bg-white px-2 py-1.5 rounded-lg border border-slate-100 flex items-center justify-between">
+              <span className="text-[10px] text-slate-500">Di Atas Target</span>
+              <span className="text-[10.5px] font-bold text-emerald-700 font-mono">IKM 100,5% &bull; RB 101,7%</span>
             </div>
-            <div className="bg-white p-2.5 rounded-xl border border-slate-100">
-              <span className="text-[10px] text-slate-500 block">Kinerja On Track</span>
-              <span className="text-xs font-bold text-blue-700">Investasi (78,1%) &bull; PNBP (77,3%)</span>
+            <div className="bg-white px-2 py-1.5 rounded-lg border border-slate-100 flex items-center justify-between">
+              <span className="text-[10px] text-slate-500">On Track</span>
+              <span className="text-[10.5px] font-bold text-blue-700 font-mono">Inv 78,1% &bull; PNBP 77,3%</span>
             </div>
           </div>
         </div>
 
-        {/* Kolom Kanan: Tab Interaktif Detail 4 IKS */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Kolom Kanan: Tab Interaktif Detail 4 IKS (LUAS UNTUK TABEL) */}
+        <div className="lg:col-span-9 space-y-3">
           {/* Tab Selector Pills */}
           <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-100/80 rounded-lg">
             <button
@@ -303,15 +302,20 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                     Nilai Realisasi Investasi di KPBPB Batam
                   </h4>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                    78,1% On Track
-                  </span>
+                <div className="flex items-center gap-3">
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 font-mono">
+                      78,1%
+                    </span>
+                    <span className="text-xs text-blue-600 font-bold ml-1.5">
+                      On Track
+                    </span>
+                  </div>
                   <button
                     onClick={() => onSelectIksDetail('iks-1')}
-                    className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    <span>Buka Detail IKS</span>
+                    <span>Detail IKS</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -336,9 +340,9 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
               </div>
 
-              {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
+              {/* Tabel Rincian & Charts dalam 1 Baris (Tabel Luas 8 Kolom) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
-                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
+                <div className="lg:col-span-8 overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px]">
                       <tr>
@@ -376,7 +380,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
 
                 {/* Charts: Donut PMA vs PMDN & Area Trend Bulanan */}
-                <div className="lg:col-span-5 space-y-2.5">
+                <div className="lg:col-span-4 space-y-2.5">
                   <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100">
                     <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-1">
                       <span>Komposisi PMA vs PMDN</span>
@@ -462,15 +466,20 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                     Indeks Kepuasan Masyarakat (IKM) 5 Lokus Pelayanan Utama
                   </h4>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                    100,5% Tercapai (Mutu A)
-                  </span>
+                <div className="flex items-center gap-3">
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 font-mono">
+                      100,5%
+                    </span>
+                    <span className="text-xs text-emerald-600 font-bold ml-1.5">
+                      Tercapai (Mutu A)
+                    </span>
+                  </div>
                   <button
                     onClick={() => onSelectIksDetail('iks-2')}
-                    className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    <span>Buka Detail IKS</span>
+                    <span>Detail IKS</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -495,9 +504,9 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
               </div>
 
-              {/* Tabel Rincian & Chart dalam 1 Baris (Persis Model Deputi A2) */}
+              {/* Tabel Rincian & Chart dalam 1 Baris (Tabel Luas 8 Kolom) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
-                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
+                <div className="lg:col-span-8 overflow-x-auto rounded-xl border border-slate-200/70 bg-white">
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px]">
                       <tr>
@@ -533,7 +542,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
 
                 {/* Chart: Bar Chart Perbandingan Antar Lokus */}
-                <div className="lg:col-span-5 bg-slate-50/60 p-3 rounded-xl border border-slate-100 flex flex-col justify-between">
+                <div className="lg:col-span-4 bg-slate-50/60 p-3 rounded-xl border border-slate-100 flex flex-col justify-between">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
                     <span>Skor Kepuasan Antar Lokus vs Target (88,0)</span>
                     <span className="text-[10px] font-normal text-slate-500">TW I &amp; II</span>
@@ -572,15 +581,20 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                     Nilai Realisasi PNBP BP Batam (Target Rp 2,447 Triliun)
                   </h4>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                    77,3% On Track
-                  </span>
+                <div className="flex items-center gap-3">
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 font-mono">
+                      77,3%
+                    </span>
+                    <span className="text-xs text-blue-600 font-bold ml-1.5">
+                      On Track
+                    </span>
+                  </div>
                   <button
                     onClick={() => onSelectIksDetail('iks-3')}
-                    className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    <span>Buka Detail IKS</span>
+                    <span>Detail IKS</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -607,7 +621,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
 
               {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
-                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-72 overflow-y-auto">
+                <div className="lg:col-span-8 overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-72 overflow-y-auto">
                   <table className="w-full text-left text-xs">
                     <thead className="sticky top-0 bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px] z-10">
                       <tr>
@@ -647,7 +661,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
 
                 {/* Chart: Horizontal Bar Peringkat Capaian PNBP 10 Unit */}
-                <div className="lg:col-span-5">
+                <div className="lg:col-span-4">
                   <div className="bg-slate-50/60 p-3 rounded-xl border border-slate-100 flex flex-col justify-between">
                     <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
                       <span>Peringkat Capaian PNBP (%) 10 Unit</span>
@@ -688,15 +702,20 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                     Indeks Reformasi Birokrasi (8 Area Perubahan)
                   </h4>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                    101,7% Tercapai (Predikat A)
-                  </span>
+                <div className="flex items-center gap-3">
+                  <div className="text-right shrink-0">
+                    <span className="text-base sm:text-lg font-black text-slate-900 font-mono">
+                      101,7%
+                    </span>
+                    <span className="text-xs text-emerald-600 font-bold ml-1.5">
+                      Tercapai (Predikat A)
+                    </span>
+                  </div>
                   <button
                     onClick={() => onSelectIksDetail('iks-4')}
-                    className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    <span>Buka Detail IKS</span>
+                    <span>Detail IKS</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -723,7 +742,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
 
               {/* Tabel Rincian & Charts dalam 1 Baris (Persis Model Deputi A2) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
-                <div className="lg:col-span-7 overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-72 overflow-y-auto">
+                <div className="lg:col-span-8 overflow-x-auto rounded-xl border border-slate-200/70 bg-white max-h-72 overflow-y-auto">
                   <table className="w-full text-left text-xs">
                     <thead className="sticky top-0 bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[11px] z-10">
                       <tr>
@@ -755,7 +774,7 @@ export const KompasPerformaSection: React.FC<KompasPerformaSectionProps> = ({
                 </div>
 
                 {/* Charts: Gauge Predikat RB & Line Tren Skor Antar Periode */}
-                <div className="lg:col-span-5 space-y-2.5">
+                <div className="lg:col-span-4 space-y-2.5">
                   <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-100 text-center">
                     <span className="text-xs font-bold text-slate-800 block mb-1">Gauge Predikat RB</span>
                     <div className="relative inline-flex flex-col items-center justify-center my-1">

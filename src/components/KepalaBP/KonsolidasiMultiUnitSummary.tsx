@@ -17,7 +17,9 @@ import {
   ArrowUpRight,
   ShieldCheck,
   Building2,
-  ExternalLink
+  ExternalLink,
+  Layers,
+  ListFilter
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -56,11 +58,11 @@ const DATA_LOGISTIK_BULANAN = [
 // 2. Ketahanan 6 Waduk Air Baku (Buku Satu Data Hal. 28-37)
 const DATA_6_WADUK_DONUT = [
   { name: 'Duriangkang', volume: 78.56, persen: 98.2, color: '#2563EB' },
-  { name: 'Tembesi', volume: 56.40, persen: 96.5, color: '#38BDF8' },
-  { name: 'Mukakuning', volume: 13.20, persen: 95.0, color: '#6366F1' },
+  { name: 'Tembesi', volume: 56.40, persen: 96.5, color: '#0284C7' },
+  { name: 'Mukakuning', volume: 13.20, persen: 95.0, color: '#4F46E5' },
   { name: 'Sei Ladi', volume: 9.45, persen: 86.4, color: '#F59E0B' }, // Waspada
   { name: 'Sei Harapan', volume: 3.63, persen: 94.1, color: '#10B981' },
-  { name: 'Nongsa', volume: 0.72, persen: 92.0, color: '#A855F7' },
+  { name: 'Nongsa', volume: 0.72, persen: 92.0, color: '#9333EA' },
 ];
 
 // 3. Ketersediaan Lahan 7 SWP Batam (Buku Satu Data Hal. 6-8)
@@ -87,8 +89,9 @@ const DATA_KURVA_S_PROYEK = [
   { bln: 'Sep', target: 96.0, aktual: 96.8 },
 ];
 
-// 5. Kinerja Serapan Belanja Multi-Unit (Pagu vs Realisasi) (Buku Satu Data Hal. 2-5, 14, 20, 28, 48)
+// 5. Kinerja Serapan Belanja Multi-Unit (Pagu vs Realisasi) LENGKAP 24 UNIT SATKER BP BATAM
 interface SerapanMultiUnitItem {
+  id: string;
   satker: string;
   unitSingkat: string;
   deputiId: string;
@@ -98,16 +101,34 @@ interface SerapanMultiUnitItem {
   targetTriwulan: number;
 }
 
-const DATA_SERAPAN_MULTI_UNIT: SerapanMultiUnitItem[] = [
-  { satker: 'Dit. Pembangunan Infrastruktur', unitSingkat: 'Dit. Infrastruktur', deputiId: 'deputi-infrastruktur', pagu: 842.5, realisasi: 724.6, persen: 86.0, targetTriwulan: 80.0 },
-  { satker: 'BU SPAM, Fasilitas & Lingkungan', unitSingkat: 'BU SPAM & Fasling', deputiId: 'deputi-pelayanan-umum', pagu: 420.0, realisasi: 352.8, persen: 84.0, targetTriwulan: 80.0 },
-  { satker: 'Dit. Pengelolaan Kepelabuhanan', unitSingkat: 'Dit. Kepelabuhanan', deputiId: 'deputi-bandara-pelabuhan', pagu: 385.0, realisasi: 327.3, persen: 85.0, targetTriwulan: 80.0 },
-  { satker: 'Biro Umum & Operasional', unitSingkat: 'Biro Umum & Ops', deputiId: 'deputi-administrasi-keuangan', pagu: 210.0, realisasi: 182.7, persen: 87.0, targetTriwulan: 80.0 },
-  { satker: 'Dit. Pengelolaan Pertanahan', unitSingkat: 'Dit. Pertanahan', deputiId: 'deputi-pengelolaan-lahan', pagu: 180.0, realisasi: 158.4, persen: 88.0, targetTriwulan: 80.0 },
-  { satker: 'BU Rumah Sakit BP Batam', unitSingkat: 'BU RSBP', deputiId: 'deputi-pelayanan-umum', pagu: 135.0, realisasi: 109.4, persen: 81.0, targetTriwulan: 80.0 },
+const DATA_SERAPAN_24_UNIT: SerapanMultiUnitItem[] = [
+  { id: '1', satker: 'Dit. Pembangunan Infrastruktur', unitSingkat: 'Dit. Pembangunan Infras', deputiId: 'deputi-infrastruktur', pagu: 842.5, realisasi: 724.6, persen: 86.0, targetTriwulan: 80.0 },
+  { id: '2', satker: 'BU SPAM, Fasilitas & Lingkungan', unitSingkat: 'BU SPAM & Lingkungan', deputiId: 'deputi-pelayanan-umum', pagu: 420.0, realisasi: 352.8, persen: 84.0, targetTriwulan: 80.0 },
+  { id: '3', satker: 'Dit. Pengelolaan Kepelabuhanan', unitSingkat: 'Dit. Kepelabuhanan', deputiId: 'deputi-bandara-pelabuhan', pagu: 385.0, realisasi: 327.3, persen: 85.0, targetTriwulan: 80.0 },
+  { id: '4', satker: 'Biro Umum & Operasional', unitSingkat: 'Biro Umum & Ops', deputiId: 'deputi-administrasi-keuangan', pagu: 210.0, realisasi: 182.7, persen: 87.0, targetTriwulan: 80.0 },
+  { id: '5', satker: 'Dit. Pengelolaan Pertanahan', unitSingkat: 'Dit. Pertanahan / Lahan', deputiId: 'deputi-pengelolaan-lahan', pagu: 180.0, realisasi: 158.4, persen: 88.0, targetTriwulan: 80.0 },
+  { id: '6', satker: 'BU Rumah Sakit BP Batam', unitSingkat: 'BU Rumah Sakit (RSBP)', deputiId: 'deputi-pelayanan-umum', pagu: 135.0, realisasi: 109.4, persen: 81.0, targetTriwulan: 80.0 },
+  { id: '7', satker: 'Dit. Kawasan Bandara Hang Nadim', unitSingkat: 'Dit. Bandara Hang Nadim', deputiId: 'deputi-bandara-pelabuhan', pagu: 130.5, realisasi: 106.8, persen: 81.9, targetTriwulan: 80.0 },
+  { id: '8', satker: 'Biro Keuangan BP Batam', unitSingkat: 'Biro Keuangan (BLU)', deputiId: 'biro-keuangan', pagu: 115.0, realisasi: 89.2, persen: 77.6, targetTriwulan: 80.0 },
+  { id: '9', satker: 'Pusat Data dan Sistem Informasi', unitSingkat: 'PDSI (Satu Data)', deputiId: 'pdsi', pagu: 78.0, realisasi: 64.5, persen: 82.7, targetTriwulan: 80.0 },
+  { id: '10', satker: 'Dit. Pelayanan Terpadu Satu Pintu', unitSingkat: 'Dit. PTSP (Perizinan)', deputiId: 'ptsp', pagu: 52.0, realisasi: 45.2, persen: 86.9, targetTriwulan: 80.0 },
+  { id: '11', satker: 'Dit. Lalu Lintas Barang & Penanaman Modal', unitSingkat: 'Dit. Lalu Lintas Barang', deputiId: 'lalu-lintas-barang', pagu: 69.5, realisasi: 58.4, persen: 84.0, targetTriwulan: 80.0 },
+  { id: '12', satker: 'Dit. Kawasan Ekonomi Khusus (KEK)', unitSingkat: 'Dit. Kawasan KEK', deputiId: 'kek', pagu: 46.0, realisasi: 38.6, persen: 83.9, targetTriwulan: 80.0 },
+  { id: '13', satker: 'Dit. Pengembangan Investasi', unitSingkat: 'Dit. Investasi', deputiId: 'investasi', pagu: 51.0, realisasi: 42.1, persen: 82.5, targetTriwulan: 80.0 },
+  { id: '14', satker: 'Biro Hukum BP Batam', unitSingkat: 'Biro Hukum', deputiId: 'biro-hukum', pagu: 34.0, realisasi: 28.5, persen: 83.8, targetTriwulan: 80.0 },
+  { id: '15', satker: 'Biro Organisasi dan Kepatuhan (BOKMR)', unitSingkat: 'Biro Organisasi / BOKMR', deputiId: 'biro-organisasi', pagu: 26.5, realisasi: 22.4, persen: 84.5, targetTriwulan: 80.0 },
+  { id: '16', satker: 'Biro Sumber Daya Manusia (SDM)', unitSingkat: 'Biro SDM', deputiId: 'biro-sdm', pagu: 42.0, realisasi: 36.8, persen: 87.6, targetTriwulan: 80.0 },
+  { id: '17', satker: 'Pusat Perencanaan Program Strategis', unitSingkat: 'Pusren BP Batam', deputiId: 'pusren', pagu: 30.5, realisasi: 25.1, persen: 82.3, targetTriwulan: 80.0 },
+  { id: '18', satker: 'Satuan Pemeriksaan Intern (SPI)', unitSingkat: 'Satuan SPI (Audit)', deputiId: 'deputi-administrasi-keuangan', pagu: 21.0, realisasi: 18.2, persen: 86.7, targetTriwulan: 80.0 },
+  { id: '19', satker: 'Dit. Perencanaan Infrastruktur', unitSingkat: 'Dit. Perencanaan Infras', deputiId: 'perencanaan-infrastruktur', pagu: 63.7, realisasi: 53.6, persen: 84.1, targetTriwulan: 80.0 },
+  { id: '20', satker: 'Dit. Pengawasan Infrastruktur', unitSingkat: 'Dit. Pengawasan Infras', deputiId: 'deputi-infrastruktur', pagu: 36.0, realisasi: 28.5, persen: 79.2, targetTriwulan: 80.0 },
+  { id: '21', satker: 'Dit. Pengelolaan Lahan Pesisir & Reklamasi', unitSingkat: 'Dit. Pesisir & Reklamasi', deputiId: 'pesisir-reklamasi', pagu: 41.0, realisasi: 34.2, persen: 83.4, targetTriwulan: 80.0 },
+  { id: '22', satker: 'Dit. Pengendalian Pengelolaan Lahan', unitSingkat: 'Dit. Pengendalian Lahan', deputiId: 'pengendalian-lahan', pagu: 38.5, realisasi: 31.8, persen: 82.6, targetTriwulan: 80.0 },
+  { id: '23', satker: 'Kantor Perwakilan BP Batam Jakarta', unitSingkat: 'Perwakilan Jakarta', deputiId: 'deputi-administrasi-keuangan', pagu: 23.0, realisasi: 19.5, persen: 84.8, targetTriwulan: 80.0 },
+  { id: '24', satker: 'Badan Pengawas & Dewan Pengawas', unitSingkat: 'Dewan Pengawas', deputiId: 'deputi-administrasi-keuangan', pagu: 18.5, realisasi: 15.6, persen: 84.3, targetTriwulan: 80.0 },
 ];
 
-// 6. Papan Status Tindak Lanjut & Arahan Pimpinan (Tabel Elegan Referensi)
+// 6. Papan Status Tindak Lanjut & Arahan Pimpinan
 const DATA_TINDAK_LANJUT_TABLE = [
   { unit: 'Dit. Pembangunan Infrastruktur', topik: 'Flyover Sei Ladi segmen barat & penataan simpang', halSatuData: 'Hal. 48', status: 'Selesai', progres: 100, tenggat: '15 Maret 2026' },
   { unit: 'Dit. Pengelolaan Pertanahan', topik: 'Penagihan piutang UWT & penerbitan 1.650 SKPT/PL', halSatuData: 'Hal. 6', status: 'On Track', progres: 82, tenggat: '30 April 2026' },
@@ -123,75 +144,192 @@ interface KonsolidasiMultiUnitSummaryProps {
 }
 
 export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryProps> = ({
-  onOpenSatuDataFormula,
+  onOpenSatuDataFormula: _onOpenSatuDataFormula,
   onNavigateToUnit,
 }) => {
-  const [selectedBln, setSelectedBln] = useState<string>('Sep');
+  // Sheet swap state untuk Card 1 (Arus Petikemas)
+  const [petikemasViewMode, setPetikemasViewMode] = useState<'grafik' | 'tabel'>('grafik');
+
+  // Sheet swap state untuk Card 5 (Serapan Belanja Multi-Unit)
+  const [serapanViewMode, setSerapanViewMode] = useState<'grafik' | 'tabel'>('grafik');
 
   return (
-    <div className="space-y-5">
-
-
+    <div className="space-y-4 font-sans text-slate-800">
       {/* ==================================================================== */}
       {/* GRID 1: DUA KARTU UTAMA                                              */}
       {/* ==================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-        {/* CARD 1: Logistik Maritim Terminal Batu Ampar - WHITE CARD */}
-        <div className="lg:col-span-7 bg-white text-slate-800 rounded-xl p-3.5 sm:p-4 shadow-2xs border border-slate-200/90 flex flex-col justify-between">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+        {/* CARD 1: Logistik Maritim Terminal Batu Ampar (WITH SHEET SWAP) */}
+        <div className="lg:col-span-7 bg-white text-slate-800 rounded-xl p-3 sm:p-3.5 shadow-2xs border border-slate-200/90 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
-                Arus Petikemas Terminal Batu Ampar
-              </h3>
-              <div className="text-right shrink-0">
-                <span className="text-base sm:text-lg font-black text-slate-900 leading-none">612.400</span>
-                <span className="text-[10px] text-slate-500 font-medium ml-1.5">TEUs (94,2%)</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
+                    Arus Petikemas Terminal Batu Ampar
+                  </h3>
+                  <p className="text-xs text-slate-500 font-medium">
+                    Throughput Petikemas Ekspor, Impor, dan Domestik (TEUs)
+                  </p>
+                </div>
+              </div>
+
+              {/* Header Right: Angka Menonjol Model 612.400 + Sheet Swap Button */}
+              <div className="flex items-center gap-3">
+                <div className="text-right shrink-0">
+                  <span className="text-lg sm:text-xl font-black text-slate-900 leading-none font-mono">
+                    612.400
+                  </span>
+                  <span className="text-xs text-slate-500 font-semibold ml-1.5">
+                    TEUs (94,2%)
+                  </span>
+                </div>
+
+                {/* Sheet Swap Toggle */}
+                <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-lg shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setPetikemasViewMode('grafik')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      petikemasViewMode === 'grafik'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan grafik batang bulanan"
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPetikemasViewMode('tabel')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      petikemasViewMode === 'tabel'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan tabel rincian bulanan"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Tabel Detail</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Legenda Ringkas */}
-            <div className="flex items-center gap-3 text-[10px] py-1 text-slate-600">
-              <span className="flex items-center gap-1 font-medium">
-                <span className="w-2 h-2 rounded-xs bg-blue-600" /> Ekspor 46%
-              </span>
-              <span className="flex items-center gap-1 font-medium">
-                <span className="w-2 h-2 rounded-xs bg-sky-500" /> Impor 33%
-              </span>
-              <span className="flex items-center gap-1 font-medium">
-                <span className="w-2 h-2 rounded-xs bg-purple-500" /> Domestik 21%
-              </span>
-            </div>
+            {/* Konten Sheet Swap Card 1 */}
+            {petikemasViewMode === 'grafik' ? (
+              <div>
+                {/* Legenda Ringkas */}
+                <div className="flex items-center gap-4 text-xs py-1 text-slate-600 font-medium">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-xs bg-blue-600 shrink-0" />
+                    <span>Ekspor 46% (299 rb TEUs)</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-xs bg-sky-500 shrink-0" />
+                    <span>Impor 33% (204 rb TEUs)</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-xs bg-purple-500 shrink-0" />
+                    <span>Domestik 21% (109 rb TEUs)</span>
+                  </span>
+                </div>
 
-            {/* Stacked Bar Chart Compact */}
-            <div className="h-28 sm:h-32 w-full mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={DATA_LOGISTIK_BULANAN} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="bln" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    formatter={(val: any, name: any) => [`${val}.000 TEUs`, name === 'ekspor' ? 'Ekspor' : name === 'impor' ? 'Impor' : 'Domestik']}
-                    contentStyle={{ fontSize: '10.5px', borderRadius: '8px', border: '1px solid #E2E8F0', backgroundColor: '#FFFFFF', color: '#0F172A' }}
-                  />
-                  <Bar dataKey="ekspor" stackId="a" fill="#2563EB" barSize={14} />
-                  <Bar dataKey="impor" stackId="a" fill="#0EA5E9" barSize={14} />
-                  <Bar dataKey="domestik" stackId="a" fill="#A855F7" radius={[3, 3, 0, 0]} barSize={14} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                {/* Stacked Bar Chart */}
+                <div className="h-32 sm:h-36 w-full mt-1.5">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={DATA_LOGISTIK_BULANAN} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                      <XAxis dataKey="bln" tick={{ fontSize: 10, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 10, fill: '#475569' }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}k`} />
+                      <Tooltip
+                        formatter={(val: any, name: any) => [
+                          `${val}.000 TEUs`,
+                          name === 'ekspor' ? 'Ekspor' : name === 'impor' ? 'Impor' : 'Domestik',
+                        ]}
+                        contentStyle={{
+                          fontSize: '11px',
+                          borderRadius: '8px',
+                          border: '1px solid #CBD5E1',
+                          backgroundColor: '#FFFFFF',
+                          color: '#0F172A',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        }}
+                      />
+                      <Bar dataKey="ekspor" stackId="a" fill="#2563EB" barSize={16} name="ekspor" />
+                      <Bar dataKey="impor" stackId="a" fill="#0EA5E9" barSize={16} name="impor" />
+                      <Bar dataKey="domestik" stackId="a" fill="#A855F7" radius={[3, 3, 0, 0]} barSize={16} name="domestik" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ) : (
+              /* TABEL DETAIL ARUS PETIKEMAS */
+              <div className="h-36 sm:h-40 w-full overflow-y-auto rounded-lg border border-slate-200 mt-1 scrollbar-thin">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[11px]">
+                    <tr>
+                      <th className="py-1.5 px-3">Bulan</th>
+                      <th className="py-1.5 px-3 text-right">Ekspor (TEUs)</th>
+                      <th className="py-1.5 px-3 text-right">Impor (TEUs)</th>
+                      <th className="py-1.5 px-3 text-right">Domestik (TEUs)</th>
+                      <th className="py-1.5 px-3 text-right font-black">Total (TEUs)</th>
+                      <th className="py-1.5 px-3 text-center">Pangsa Ekspor</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs">
+                    {DATA_LOGISTIK_BULANAN.map((row) => (
+                      <tr key={row.bln} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-1.5 px-3 font-bold text-slate-900">{row.bln} 2026</td>
+                        <td className="py-1.5 px-3 text-right font-mono text-blue-700 font-semibold">
+                          {(row.ekspor * 1000).toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-3 text-right font-mono text-sky-700 font-semibold">
+                          {(row.impor * 1000).toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-3 text-right font-mono text-purple-700 font-semibold">
+                          {(row.domestik * 1000).toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-3 text-right font-mono font-black text-slate-900 bg-slate-50/50">
+                          {(row.total * 1000).toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-3 text-center">
+                          <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] border border-emerald-100">
+                            {((row.ekspor / row.total) * 100).toFixed(1)}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* CARD 2: Ketahanan 6 Waduk Air Baku (Segmented Donut) - WHITE CARD */}
-        <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 2: Ketahanan 6 Waduk Air Baku (MODEL ANGKA PERSIS ARUS PETIKEMAS) */}
+        <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3 sm:p-3.5 shadow-2xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                Kapasitas 6 Waduk Air Baku
-              </h3>
-              <span className="text-[10.5px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
-                96,8% Siaga Aman
-              </span>
+            <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
+                  Kapasitas 6 Waduk Air Baku
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Cadangan Suplai Air Bersih BP Batam
+                </p>
+              </div>
+
+              {/* TAMPILAN MODEL SEPERTI 612.400 DI ARUS PETIKEMAS */}
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-black text-slate-900 leading-none font-mono">
+                  96,8%
+                </span>
+                <span className="text-xs text-emerald-600 font-bold ml-1.5">
+                  Siaga Aman (161,9 Juta m³)
+                </span>
+              </div>
             </div>
 
             {/* Donut Chart with Center Metric */}
@@ -214,25 +352,27 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
                       `${val} Juta m³ (${item.payload.persen}%)`,
                       name,
                     ]}
-                    contentStyle={{ fontSize: '10.5px', borderRadius: '8px' }}
+                    contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-base font-black text-slate-900 leading-none">161,9M</span>
-                <span className="text-[8.5px] text-slate-400 font-medium">m³</span>
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                  161,9M
+                </span>
+                <span className="text-[10px] text-slate-500 font-semibold">m³ efektif</span>
               </div>
             </div>
 
-            {/* Mini Legend List per Waduk Compact */}
-            <div className="grid grid-cols-3 gap-x-2 gap-y-1 text-[10px] pt-1.5 border-t border-slate-100">
+            {/* Mini Legend List per Waduk */}
+            <div className="grid grid-cols-3 gap-x-2.5 gap-y-1.5 text-xs pt-2 border-t border-slate-100">
               {DATA_6_WADUK_DONUT.map((w, idx) => (
                 <div key={idx} className="flex items-center justify-between">
-                  <span className="flex items-center gap-1 text-slate-600 truncate">
-                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: w.color }} />
+                  <span className="flex items-center gap-1.5 text-slate-700 truncate font-medium">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.color }} />
                     {w.name}
                   </span>
-                  <span className={`font-semibold ${w.persen < 90 ? 'text-amber-700 font-bold' : 'text-slate-700'}`}>
+                  <span className={`font-mono font-bold ${w.persen < 90 ? 'text-amber-700' : 'text-slate-800'}`}>
                     {w.persen}%
                   </span>
                 </div>
@@ -245,178 +385,286 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
       {/* ==================================================================== */}
       {/* GRID 2: TIGA KARTU VISUAL MENENGAH (LEBIH RINGKAS & PADAT)           */}
       {/* ==================================================================== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        {/* CARD 3: Ketersediaan Lahan 7 SWP (Grouped Bar Chart) - WHITE CARD */}
-        <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* CARD 3: Ketersediaan Lahan 7 SWP (Grouped Bar Chart) */}
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3 shadow-2xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-xs font-bold text-slate-900">
-                Lahan 7 SWP
+            <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-100">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">
+                Lahan 7 Wilayah SWP
               </h3>
-              <span className="text-[10px] font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
-                3.250 Ha Cadangan
-              </span>
+              <div className="text-right shrink-0">
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                  3.250 Ha
+                </span>
+                <span className="text-xs text-blue-600 font-bold ml-1.5">
+                  Cadangan Lahan
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 text-[9.5px] text-slate-500 mb-1">
-              <span className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-xs bg-blue-600" /> Terisi
+            <div className="flex items-center gap-3 text-xs text-slate-600 mb-1 font-medium">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-xs bg-blue-600" /> Terisi (12.382 Ha)
               </span>
-              <span className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-xs bg-emerald-500" /> Cadangan
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-xs bg-emerald-500" /> Cadangan (3.250 Ha)
               </span>
             </div>
 
             <div className="h-28 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={DATA_LAHAN_7_SWP} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+                <BarChart data={DATA_LAHAN_7_SWP} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="swp" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="swp" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 500 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    formatter={(val: any, name: any) => [`${val} Ha`, name === 'terisi' ? 'Alokasi' : 'Cadangan']}
-                    contentStyle={{ fontSize: '10.5px', borderRadius: '8px' }}
+                    formatter={(val: any, name: any) => [`${val} Ha`, name === 'terisi' ? 'Alokasi Terisi' : 'Cadangan Lahan']}
+                    contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
                   />
-                  <Bar dataKey="terisi" fill="#2563EB" radius={[2, 2, 0, 0]} barSize={7} />
-                  <Bar dataKey="cadangan" fill="#10B981" radius={[2, 2, 0, 0]} barSize={7} />
+                  <Bar dataKey="terisi" fill="#2563EB" radius={[2, 2, 0, 0]} barSize={9} />
+                  <Bar dataKey="cadangan" fill="#10B981" radius={[2, 2, 0, 0]} barSize={9} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        {/* CARD 4: Kurva S 14 Megaproyek Fisik (Double Line Spline) - WHITE CARD */}
-        <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 4: Kurva S 14 Megaproyek Fisik (Double Line Spline) */}
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3 shadow-2xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-xs font-bold text-slate-900">
+            <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-100">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                 Kurva S 14 Megaproyek
               </h3>
-              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
-                Ahead +0,8%
-              </span>
+              <div className="text-right shrink-0">
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                  96,8%
+                </span>
+                <span className="text-xs text-emerald-600 font-bold ml-1.5">
+                  (Ahead +0,8%)
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 text-[9.5px] text-slate-500 mb-1">
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-0.5 bg-slate-400 inline-block" /> Rencana
+            <div className="flex items-center gap-3 text-xs text-slate-600 mb-1 font-medium">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-0.5 bg-slate-400 inline-block" /> Target Rencana
               </span>
-              <span className="flex items-center gap-1 font-semibold text-blue-600">
-                <span className="w-2 h-0.5 bg-blue-600 inline-block" /> Realisasi
+              <span className="flex items-center gap-1.5 font-bold text-blue-600">
+                <span className="w-2.5 h-1 bg-blue-600 inline-block rounded-full" /> Realisasi Lapangan
               </span>
             </div>
 
             <div className="h-28 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={DATA_KURVA_S_PROYEK} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                <LineChart data={DATA_KURVA_S_PROYEK} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="bln" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="bln" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
                   <Tooltip
                     formatter={(val: any, name: any) => [`${val}%`, name === 'target' ? 'Rencana' : 'Realisasi']}
-                    contentStyle={{ fontSize: '10.5px', borderRadius: '8px' }}
+                    contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
                   />
                   <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
-                  <Line type="monotone" dataKey="aktual" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} />
+                  <Line type="monotone" dataKey="aktual" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 3, fill: '#2563EB' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        {/* CARD 5: Kinerja Serapan Belanja Multi-Unit (Pagu vs Realisasi) - WHITE CARD */}
-        <div className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
+        {/* CARD 5: Kinerja Serapan Belanja Multi-Unit (WITH SHEET SWAP & SCROLL ALL 24 SATKER) */}
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3 shadow-2xs flex flex-col justify-between overflow-hidden">
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <h3 className="text-xs font-bold text-slate-900">
+            {/* Header: Title and Toggle Sheet Swap */}
+            <div className="flex items-center justify-between gap-1 mb-1 pb-1 border-b border-slate-100">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
                 Serapan Belanja Multi-Unit
               </h3>
-              <span className="text-[10px] font-bold text-emerald-800 bg-white/90 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs shrink-0">
-                85,5% On Track
+
+              {/* Sheet Swap Toggle: Grafik & Tabel Detail (Compact & Never overflows) */}
+              <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setSerapanViewMode('grafik')}
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-all cursor-pointer ${
+                    serapanViewMode === 'grafik'
+                      ? 'bg-blue-600 text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Tampilkan grafik batang perbandingan"
+                >
+                  <BarChart3 className="w-3 h-3" />
+                  <span>Grafik</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSerapanViewMode('tabel')}
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-all cursor-pointer ${
+                    serapanViewMode === 'tabel'
+                      ? 'bg-blue-600 text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Tampilkan tabel detail 24 satker"
+                >
+                  <FileText className="w-3 h-3" />
+                  <span>Tabel Detail</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Metric row: 85,5% (24 Satker) */}
+            <div className="flex items-baseline justify-between mb-1">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                  85,5%
+                </span>
+                <span className="text-xs text-emerald-600 font-bold">
+                  (24 Satker)
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-400 font-medium">
+                {serapanViewMode === 'grafik' ? 'Top 8 Unit' : '24 Satker (Scroll)'}
               </span>
             </div>
 
-            {/* List Satker dengan Bar Capaian & Nilai Miliar */}
-            <div className="space-y-1.5 mt-1">
-              {DATA_SERAPAN_MULTI_UNIT.map((s, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => onNavigateToUnit && onNavigateToUnit(s.deputiId)}
-                  className="group cursor-pointer hover:bg-slate-50/80 px-1 py-0.5 rounded transition-colors"
-                  title={`Klik untuk membuka dashboard Deputi terkait (${s.satker})`}
-                >
-                  <div className="flex items-center justify-between text-[10px] mb-0.5">
-                    <span className="font-semibold text-slate-700 truncate max-w-[130px] group-hover:text-blue-600 transition-colors">
-                      {s.unitSingkat}
-                    </span>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <span className="text-[9px] text-slate-500 font-mono">
-                        {s.realisasi.toFixed(1)} / {s.pagu.toFixed(1)} M
-                      </span>
-                      <span className="font-bold text-emerald-700 text-[9px] bg-emerald-50 px-1 py-0.2 rounded border border-emerald-100/60">
-                        {s.persen.toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-1 overflow-hidden">
-                    <div
-                      className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                      style={{ width: `${s.persen}%` }}
+            {/* Konten Sheet Swap Card 5: GRAFIK ATAU TABEL DETAIL DENGAN SCROLL */}
+            {serapanViewMode === 'grafik' ? (
+              /* GRAFIK SERAPAN MULTI-UNIT */
+              <div className="h-28 sm:h-32 w-full mt-1">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={DATA_SERAPAN_24_UNIT.slice(0, 8)}
+                    layout="vertical"
+                    margin={{ top: 2, right: 10, left: 15, bottom: 2 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                    <XAxis
+                      type="number"
+                      domain={[70, 100]}
+                      tick={{ fontSize: 9, fill: '#64748B' }}
+                      tickFormatter={(v) => `${v}%`}
+                      axisLine={false}
+                      tickLine={false}
                     />
-                  </div>
-                </div>
-              ))}
-            </div>
+                    <YAxis
+                      type="category"
+                      dataKey="unitSingkat"
+                      width={100}
+                      tick={{ fontSize: 8.5, fill: '#334155', fontWeight: 600 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      formatter={(val: any) => [`${val}%`, 'Serapan Anggaran']}
+                      contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                    />
+                    <Bar dataKey="persen" fill="#10B981" radius={[0, 3, 3, 0]} barSize={9} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              /* TABEL DETAIL 24 SATKER LENGKAP */
+              <div className="h-28 sm:h-32 w-full overflow-y-auto overflow-x-auto rounded-lg border border-slate-200 mt-1 scrollbar-thin">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                    <tr>
+                      <th className="py-1 px-1.5 whitespace-nowrap">Satker</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap">Pagu</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap">Real.</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap font-black">Serapan</th>
+                      <th className="py-1 px-1 text-center whitespace-nowrap">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs">
+                    {DATA_SERAPAN_24_UNIT.map((s) => (
+                      <tr
+                        key={s.id}
+                        onClick={() => onNavigateToUnit && onNavigateToUnit(s.deputiId)}
+                        className="hover:bg-slate-50/90 cursor-pointer transition-colors"
+                        title={`Klik untuk membuka dashboard ${s.satker}`}
+                      >
+                        <td className="py-1 px-1.5 font-semibold text-slate-800 truncate max-w-[95px] text-[10.5px]">
+                          {s.unitSingkat}
+                        </td>
+                        <td className="py-1 px-1 text-right font-mono text-slate-600 text-[10px]">
+                          {s.pagu.toFixed(0)} M
+                        </td>
+                        <td className="py-1 px-1 text-right font-mono text-blue-700 font-semibold text-[10px]">
+                          {s.realisasi.toFixed(0)} M
+                        </td>
+                        <td className="py-1 px-1 text-right font-mono font-bold text-slate-900 text-[10.5px]">
+                          {s.persen.toFixed(1)}%
+                        </td>
+                        <td className="py-1 px-1 text-center">
+                          <span
+                            className={`font-mono font-bold px-1 py-0.2 rounded text-[9.5px] ${
+                              s.persen >= 85
+                                ? 'text-emerald-700 bg-emerald-50 border border-emerald-100'
+                                : 'text-blue-700 bg-blue-50 border border-blue-100'
+                            }`}
+                          >
+                            {s.persen >= 80 ? 'On Track' : 'Waspada'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-
-
       {/* ==================================================================== */}
       {/* GRID 4: PAPAN STATUS TINDAK LANJUT & PENYELESAIAN AUDIT (CLEAN TABLE)*/}
-      {/* SESUAI REFERENSI TABEL COURSE/ACTIVITY DI CANSAAS ANALYTICS           */}
       {/* ==================================================================== */}
-      <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-2.5">
+      <div className="bg-white rounded-xl border border-slate-200/90 p-3 sm:p-3.5 shadow-2xs space-y-2.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2 border-b border-slate-100">
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-slate-900">
+            <h3 className="text-sm sm:text-base font-bold text-slate-900">
               Papan Monitoring Tindak Lanjut &amp; Temuan Audit
             </h3>
+            <p className="text-xs text-slate-500 font-medium">
+              Progres Penyelesaian Rekomendasi BPK RI &amp; SPI Multi-Satker
+            </p>
           </div>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-            Tindak Lanjut BPK: 93,9% Tuntas
-          </span>
+          <div className="text-right shrink-0">
+            <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+              93,9%
+            </span>
+            <span className="text-xs text-emerald-600 font-bold ml-1.5">
+              Tuntas Ditindaklanjuti
+            </span>
+          </div>
         </div>
 
         {/* Clean Responsive Table matching reference */}
-        <div className="overflow-x-auto rounded-lg border border-slate-100">
+        <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/70 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px]">
+            <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-700 font-bold text-xs">
               <tr>
-                <th className="py-2 px-2.5">Unit Kerja</th>
-                <th className="py-2 px-2.5">Subjek Arahan / Audit</th>
-                <th className="py-2 px-2 text-center">Ref.</th>
-                <th className="py-2 px-2.5 text-center">Progres</th>
-                <th className="py-2 px-2.5 text-center">Status</th>
-                <th className="py-2 px-2.5 text-right">Tenggat</th>
+                <th className="py-2.5 px-3">Unit Kerja</th>
+                <th className="py-2.5 px-3">Subjek Arahan / Audit</th>
+                <th className="py-2.5 px-3 text-center">Progres</th>
+                <th className="py-2.5 px-3 text-center">Status</th>
+                <th className="py-2.5 px-3 text-right">Tenggat</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 text-xs">
               {DATA_TINDAK_LANJUT_TABLE.map((row, i) => (
-                <tr key={i} className="hover:bg-slate-50/60 transition-colors">
-                  <td className="py-1.5 px-2.5 font-semibold text-slate-900 whitespace-nowrap text-[11px]">
+                <tr key={i} className="hover:bg-slate-50/70 transition-colors">
+                  <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">
                     {row.unit}
                   </td>
-                  <td className="py-1.5 px-2.5 text-slate-700 leading-tight text-[11px]">
+                  <td className="py-2.5 px-3 text-slate-700 leading-tight">
                     {row.topik}
                   </td>
-                  <td className="py-2.5 px-2 text-center text-slate-400 font-medium whitespace-nowrap text-[11px]">
-                    {row.halSatuData}
-                  </td>
-                  <td className="py-2.5 px-3 min-w-[130px]">
+                  <td className="py-2.5 px-3 min-w-[140px]">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                      <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
                             row.progres === 100
@@ -428,21 +676,21 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
                           style={{ width: `${row.progres}%` }}
                         />
                       </div>
-                      <span className="text-[11px] font-bold text-slate-700">{row.progres}%</span>
+                      <span className="font-mono font-bold text-slate-900">{row.progres}%</span>
                     </div>
                   </td>
                   <td className="py-2.5 px-3 text-center">
                     <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${
                         row.status === 'Selesai'
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : 'bg-blue-50 text-blue-700'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-blue-50 text-blue-700 border border-blue-200'
                       }`}
                     >
                       {row.status}
                     </span>
                   </td>
-                  <td className="py-2.5 px-3 text-right text-slate-500 whitespace-nowrap text-[11px]">
+                  <td className="py-2.5 px-3 text-right text-slate-600 whitespace-nowrap font-mono">
                     {row.tenggat}
                   </td>
                 </tr>

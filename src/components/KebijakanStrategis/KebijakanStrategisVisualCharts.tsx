@@ -89,7 +89,7 @@ export const KebijakanStrategisVisualCharts: React.FC<
         {/* ================================================================== */}
         {/* KOLOM KIRI: RADAR CHART CAPAIAN 4 IKP + INSIGHT DI RADAR CAPAIAN    */}
         {/* ================================================================== */}
-        <div className="lg:col-span-5 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5">
+        <div className="lg:col-span-3 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-xs sm:text-sm font-bold text-slate-900">
@@ -104,16 +104,16 @@ export const KebijakanStrategisVisualCharts: React.FC<
             </span>
           </div>
 
-          {/* Radar Visual */}
-          <div className="h-48 w-full">
+          {/* Radar Visual - Compact & Proportional */}
+          <div className="h-36 sm:h-40 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={RADAR_4_IKP_A2} margin={{ top: 5, right: 15, bottom: 5, left: 15 }}>
+              <RadarChart data={RADAR_4_IKP_A2} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
                 <PolarGrid stroke="#CBD5E1" />
                 <PolarAngleAxis
                   dataKey="subject"
-                  tick={{ fill: '#334155', fontSize: 9.5, fontWeight: 700 }}
+                  tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
                 />
-                <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={8} />
+                <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
                 <Radar
                   name="Target Perkin (100%)"
                   dataKey="target"
@@ -129,7 +129,7 @@ export const KebijakanStrategisVisualCharts: React.FC<
                   fill="#0284C7"
                   fillOpacity={0.35}
                 />
-                <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '4px' }} />
+                <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
                 <Tooltip
                   formatter={(val: any, name: any, item: any) => [
                     `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
@@ -161,7 +161,7 @@ export const KebijakanStrategisVisualCharts: React.FC<
         {/* ================================================================== */}
         {/* KOLOM KANAN: TAB INTERAKTIF DETAIL 4 IKP (TABEL + GRAFIK + INSIGHT) */}
         {/* ================================================================== */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-9 space-y-3">
           {/* Tab Selector Pills (Sheet Swap 4 IKP) */}
           <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-100/80 rounded-lg">
             <button

@@ -4,24 +4,6 @@ import {
   Smile,
   DollarSign,
   ShieldCheck,
-  Compass,
-  Search,
-  Calendar,
-  Download,
-  Building2,
-  HardHat,
-  Droplets,
-  MapPin,
-  Sparkles,
-  ChevronRight,
-  HelpCircle,
-  AlertTriangle,
-  CheckCircle2,
-  Coins,
-  Shield,
-  FileCheck2,
-  Clock,
-  ArrowRight
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -64,9 +46,8 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
   onNavigateToCrossUnitMatrix,
   onNavigateToUnit,
 }) => {
-  // Search & Period State
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('TA 2026 (Berjalan)');
+  // Year Filter State (2026 vs 2025)
+  const [selectedYear, setSelectedYear] = useState<'2026' | '2025'>('2026');
 
   // Formula Modal State
   const [selectedMetricId, setSelectedMetricId] = useState<string | null>(null);
@@ -77,113 +58,44 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
     setIsFormulaModalOpen(true);
   };
 
-  const handleExportCsv = () => {
-    const csvData = [
-      ['KONSOLIDASI EKSEKUTIF PERKIN & DATA STRATEGIS KEPALA BP BATAM 2026'],
-      ['No', 'Indikator / Satker', 'Target / Pagu', 'Realisasi YTD', 'Capaian (%)', 'Status'],
-      ['1', 'IKS 1: Realisasi Investasi di KPBPB', 'Rp 70,00 T', 'Rp 54,68 T', '78,11%', 'On Track'],
-      ['2', 'IKS 2: Indeks Kepuasan Masyarakat (IKM)', '88,00 Poin', '88,42 Poin', '100,48%', 'Tercapai (Mutu A)'],
-      ['3', 'IKS 3: Realisasi PNBP BP Batam', 'Rp 2.447,8 M', 'Rp 1.892,4 M', '77,31%', 'On Track'],
-      ['4', 'IKS 4: Indeks Reformasi Birokrasi', '80,00 (BB)', '81,35 (A)', '101,69%', 'Tercapai (Memuaskan)'],
-      ['5', 'Dit. Pengelolaan Pertanahan (UWT)', 'Rp 964,3 M', 'Rp 748,2 M', '77,59%', '248,5 Ha Alokasi'],
-      ['6', 'Dit. Pengelolaan Kepelabuhanan', '650.000 TEUs', '612.400 TEUs', '94,20%', '18.420 Call Kapal'],
-      ['7', 'BU SPAM (Kapasitas 6 Waduk)', '167,3M m³', '161,96M m³', '96,80%', 'Suplai 3.840 L/s'],
-      ['8', 'Dit. Kawasan Bandara Hang Nadim', 'Rp 130,5 M', 'Rp 106,8 M', '81,87%', '4,12M Pax & 42k Ton EMPU'],
-      ['9', 'Dit. Pembangunan Infrastruktur', '14 Megaproyek', '92,4% Fisik', '100,8%', 'Flyover Sei Ladi 94,2%'],
-      ['10', 'Biro Keuangan (Kas Bank BLU)', 'Rp 2.447,8 M', 'Rp 1.428,5 M Kas', 'WTP 8x', 'Serapan Belanja 77,6%'],
-    ];
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + csvData.map((e) => e.join(',')).join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Konsolidasi_Eksekutif_Kepala_BP_Batam_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
-    <div className="w-full bg-[#F8FAFC] text-slate-800 font-sans antialiased space-y-3.5 pb-0">
+    <div className="w-full bg-[#F8FAFC] text-slate-800 font-sans antialiased space-y-3 pb-0">
       {/* ================================================================== */}
-      {/* 1. TOP HEADER EKSEKUTIF (FULL-WIDTH, TANPA SIDEBAR)                */}
+      {/* 1. TOP HEADER EKSEKUTIF SLIM: HANYA TULISAN JUDUL & FILTER TAHUN   */}
       {/* ================================================================== */}
-      <header className="bg-white rounded-xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3">
-        {/* Left: Brand & Title */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black shadow-xs shrink-0">
-            <Compass className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-tight">
-                Executive Command Center BP Batam
-              </h1>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                Perkin 2026 &bull; Satu Data Terpadu
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
-              Sistem Pengawasan Terpadu Kinerja 4 IKS &amp; Multi-Indikator 24 Satker (Direktorat, Biro &amp; Badan Usaha)
-            </p>
-          </div>
-        </div>
+      <header className="bg-white rounded-xl border border-slate-200/80 px-4 py-2.5 shadow-2xs flex items-center justify-between gap-3">
+        {/* Left: Hanya tulisan Executive Command Center BP Batam */}
+        <h1 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+          Executive Command Center BP Batam
+        </h1>
 
-        {/* Right: Search, Filter Periode & Quick Actions */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          {/* Quick Search */}
-          <div className="relative min-w-[200px] sm:min-w-[240px]">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari indikator, satker, proyek..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer p-0.5"
-              >
-                &times;
-              </button>
-            )}
-          </div>
-
-          {/* Period Selector */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200/70 rounded-xl text-xs text-slate-700">
-            <Calendar className="w-3.5 h-3.5 text-blue-600" />
-            <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer"
+        {/* Right: Filter Tahun 2026 dan Tahun 2025 */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-slate-500 font-semibold hidden sm:inline">Tahun Anggaran:</span>
+          <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setSelectedYear('2026')}
+              className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                selectedYear === '2026'
+                  ? 'bg-blue-600 text-white shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
             >
-              <option value="TA 2026 (Berjalan)">Tahun Anggaran 2026 (Berjalan)</option>
-              <option value="Triwulan I 2026">Triwulan I 2026 (Jan - Mar)</option>
-              <option value="Triwulan II 2026">Triwulan II 2026 (Apr - Jun)</option>
-              <option value="Kumulatif YTD">Kumulatif Cut-Off YTD</option>
-            </select>
+              2026
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedYear('2025')}
+              className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                selectedYear === '2025'
+                  ? 'bg-blue-600 text-white shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              2025
+            </button>
           </div>
-
-          {/* Export Report Button */}
-          <button
-            onClick={handleExportCsv}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Ekspor Data</span>
-          </button>
-
-          {/* Manual IKS Link */}
-          <button
-            onClick={() => onOpenManualModal('iks-1')}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100/80 hover:bg-slate-200/70 transition-colors cursor-pointer"
-            title="Buka Manual Definisi & Rumus IKS"
-          >
-            <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
-            <span>Manual IKS</span>
-          </button>
         </div>
       </header>
 
@@ -192,7 +104,6 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
       {/* ANGKA BESAR, IKON BULAT BERWARNA, CAPAIAN %, SPARKLINE MINI       */}
       {/* ================================================================== */}
       <section>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           {/* KPI 1: Realisasi Investasi - SIGNATURE VIBRANT ROYAL BLUE CARD */}
           <div
@@ -201,18 +112,22 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">Investasi</span>
-                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                  <TrendingUp className="w-3.5 h-3.5 text-white" />
+                <span className="text-xs font-bold text-blue-100 tracking-tight">IKS 1 &bull; Investasi KPBPB</span>
+                <div className="w-5.5 h-5.5 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
+                  <TrendingUp className="w-3 h-3 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-                Rp 54,68 T
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight font-mono block">
+                {selectedYear === '2026' ? 'Rp 54,68 T' : 'Rp 49,20 T'}
               </span>
-              <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-blue-100/90">Target Rp 70 T</span>
-                <span className="text-blue-100/90 font-mono">vs 2025: Rp 49,2 T (+11,1%)</span>
+              <div className="flex items-center justify-between text-xs mt-1 pt-1 border-t border-white/15">
+                <span className="text-blue-100/90 font-medium">
+                  {selectedYear === '2026' ? 'Target Rp 70 T (78,1%)' : 'Target Rp 60 T (82,0%)'}
+                </span>
+                <span className="text-blue-100/90 font-mono font-semibold">
+                  {selectedYear === '2026' ? '+11,1% YoY' : 'Realisasi 2025'}
+                </span>
               </div>
             </div>
           </div>
@@ -224,18 +139,22 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">Kepuasan IKM</span>
-                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                  <Smile className="w-3.5 h-3.5 text-white" />
+                <span className="text-xs font-bold text-blue-100 tracking-tight">IKS 2 &bull; Kepuasan IKM</span>
+                <div className="w-5.5 h-5.5 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
+                  <Smile className="w-3 h-3 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-                88,42
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight font-mono block">
+                {selectedYear === '2026' ? '88,42' : '86,10'}
               </span>
-              <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-blue-100/90">Target 88,00</span>
-                <span className="text-blue-100/90 font-mono">vs 2025: 86,10 (+2,7%)</span>
+              <div className="flex items-center justify-between text-xs mt-1 pt-1 border-t border-white/15">
+                <span className="text-blue-100/90 font-medium">
+                  {selectedYear === '2026' ? 'Target 88,00 (Mutu A)' : 'Target 85,00 (Mutu B)'}
+                </span>
+                <span className="text-blue-100/90 font-mono font-semibold">
+                  {selectedYear === '2026' ? '+2,7% YoY' : 'Realisasi 2025'}
+                </span>
               </div>
             </div>
           </div>
@@ -247,18 +166,22 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">Penerimaan PNBP</span>
-                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                  <DollarSign className="w-3.5 h-3.5 text-white" />
+                <span className="text-xs font-bold text-blue-100 tracking-tight">IKS 3 &bull; Penerimaan PNBP</span>
+                <div className="w-5.5 h-5.5 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
+                  <DollarSign className="w-3 h-3 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-                Rp 1.892,4 M
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight font-mono block">
+                {selectedYear === '2026' ? 'Rp 1.892,4 M' : 'Rp 1.724,1 M'}
               </span>
-              <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-blue-100/90">Target Rp 2.447,8 M</span>
-                <span className="text-blue-100/90 font-mono">vs 2025: Rp 1.724,1 M (+9,8%)</span>
+              <div className="flex items-center justify-between text-xs mt-1 pt-1 border-t border-white/15">
+                <span className="text-blue-100/90 font-medium">
+                  {selectedYear === '2026' ? 'Target Rp 2.447,8 M (77,3%)' : 'Target Rp 2.100,0 M (82,1%)'}
+                </span>
+                <span className="text-blue-100/90 font-mono font-semibold">
+                  {selectedYear === '2026' ? '+9,8% YoY' : 'Realisasi 2025'}
+                </span>
               </div>
             </div>
           </div>
@@ -270,18 +193,22 @@ export const ExecutiveCommandCenterView: React.FC<ExecutiveCommandCenterViewProp
           >
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-semibold text-blue-100">Reformasi Birokrasi</span>
-                <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
+                <span className="text-xs font-bold text-blue-100 tracking-tight">IKS 4 &bull; Reformasi Birokrasi</span>
+                <div className="w-5.5 h-5.5 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
 
-              <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-                81,35 / A
+              <span className="text-lg sm:text-xl font-black text-white tracking-tight font-mono block">
+                {selectedYear === '2026' ? '81,35 / A' : '78,40 / BB'}
               </span>
-              <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-                <span className="text-blue-100/90">Target 80,00</span>
-                <span className="text-blue-100/90 font-mono">vs 2025: 78,40 (+3,8%)</span>
+              <div className="flex items-center justify-between text-xs mt-1 pt-1 border-t border-white/15">
+                <span className="text-blue-100/90 font-medium">
+                  {selectedYear === '2026' ? 'Target 80,00 (BB)' : 'Target 78,00 (BB)'}
+                </span>
+                <span className="text-blue-100/90 font-mono font-semibold">
+                  {selectedYear === '2026' ? '+3,8% YoY' : 'Realisasi 2025'}
+                </span>
               </div>
             </div>
           </div>
