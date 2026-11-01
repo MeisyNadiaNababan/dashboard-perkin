@@ -23,7 +23,7 @@ export const PengelolaanLahanPesisirDashboard: React.FC<
 > = ({ onOpenFormulaModal, onOpenExportModal, onSwitchUnit: _onSwitchUnit }) => {
   // Filter State - Persis Model Filter Dashboard DEP-A2
   const [selectedYear, setSelectedYear] = useState<string>('2026');
-  const [selectedDeepDiveUnit, setSelectedDeepDiveUnit] = useState<string>('dit-lahan');
+  const [selectedDeepDiveUnit, setSelectedDeepDiveUnit] = useState<string>('dit-pertanahan');
 
   // Modal State
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState(false);

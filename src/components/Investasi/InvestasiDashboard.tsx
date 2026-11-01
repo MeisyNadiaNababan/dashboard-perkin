@@ -10,6 +10,7 @@ import {
   Building2,
   Megaphone,
   Briefcase,
+  Sparkles,
 } from 'lucide-react';
 import {
   REALISASI_INVESTASI_DATA,
@@ -26,6 +27,7 @@ import { InvestasiWebsiteTrafficCard } from './InvestasiWebsiteTrafficCard';
 import { InvestasiPromosiCard } from './InvestasiPromosiCard';
 import { InvestasiFilters, InvestasiFilterState } from './InvestasiFilters';
 import { InvestasiKamusRumusView } from './InvestasiKamusRumusView';
+import { DirektoratPromosiInvestasiDeepDive } from '../InvestasiPengusahaan/DirektoratPromosiInvestasiDeepDive';
 
 interface InvestasiDashboardProps {
   onOpenFormulaModal: (formulaId: string) => void;
@@ -165,6 +167,18 @@ export const InvestasiDashboard: React.FC<InvestasiDashboardProps> = ({
       {/* 2. Sub-Menu Quick Navigation Bar */}
       <div className="bg-white rounded-xl border border-slate-200/90 px-3 py-2 shadow-2xs flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            onClick={() => onSubMenuChange && onSubMenuChange('visualisasi_unit')}
+            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeSubMenu === 'visualisasi_unit'
+                ? 'bg-[#2563eb] text-white shadow-xs'
+                : 'text-blue-700 bg-blue-50/70 hover:bg-blue-100 hover:text-blue-900 border border-blue-200/60'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+            <span>Dashboard Visualisasi Unit (6 Kartu)</span>
+          </button>
+
           <button
             onClick={() => onSubMenuChange && onSubMenuChange('ikhtisar')}
             className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${

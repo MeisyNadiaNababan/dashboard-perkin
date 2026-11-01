@@ -25,6 +25,7 @@ export const PengelolaanLahanPesisirUnitCards: React.FC<
 > = ({ onAnalyzeUnit, onNavigateToUnit }) => {
   const getIcon = (id: string) => {
     switch (id) {
+      case 'dit-pertanahan':
       case 'dit-lahan':
         return <MapPin className="w-5 h-5 text-blue-600" />;
       case 'dit-pesisir-reklamasi':
@@ -38,6 +39,7 @@ export const PengelolaanLahanPesisirUnitCards: React.FC<
 
   const getHeaderColor = (id: string) => {
     switch (id) {
+      case 'dit-pertanahan':
       case 'dit-lahan':
         return 'border-t-4 border-t-blue-600';
       case 'dit-pesisir-reklamasi':

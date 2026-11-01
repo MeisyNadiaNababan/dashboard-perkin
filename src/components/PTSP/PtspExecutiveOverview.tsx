@@ -405,26 +405,26 @@ export const PtspExecutiveOverview: React.FC<PtspExecutiveOverviewProps> = ({
           <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
             <div className="text-slate-500 text-[10px] uppercase font-bold">1. Verifikasi Administrasi Dokumen</div>
             <div className="text-sm font-extrabold text-slate-900 mt-0.5 font-mono">0,4 Hari Kerja</div>
-            <p className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+            <div className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" />
               <span>Otomasi Sistem Validasi NIB</span>
-            </p>
+            </div>
           </div>
           <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
             <div className="text-slate-500 text-[10px] uppercase font-bold">2. Evaluasi Teknis Bidang / Rekomendasi</div>
             <div className="text-sm font-extrabold text-slate-900 mt-0.5 font-mono">0,9 Hari Kerja</div>
-            <p className="text-[10px] text-blue-600 font-semibold mt-1 flex items-center gap-1">
+            <div className="text-[10px] text-blue-600 font-semibold mt-1 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" />
               <span>Terintegrasi Antar Unit Teknis</span>
-            </p>
+            </div>
           </div>
           <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
             <div className="text-slate-500 text-[10px] uppercase font-bold">3. Penerbitan Sertifikat &amp; Izin Final</div>
             <div className="text-sm font-extrabold text-slate-900 mt-0.5 font-mono">0,5 Hari Kerja</div>
-            <p className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+            <div className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" />
               <span>Tanda Tangan Elektronik (TTE BSrE)</span>
-            </p>
+            </div>
           </div>
         </div>
 

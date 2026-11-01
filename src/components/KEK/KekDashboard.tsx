@@ -15,6 +15,7 @@ import { KekProfilCard } from './KekProfilCard';
 import { KekKajianCard } from './KekKajianCard';
 import { KekKamusRumusView } from './KekKamusRumusView';
 import { KekPerencanaanPipelineCard } from './KekPerencanaanPipelineCard';
+import { DirektoratPerencanaanInvestasiDeepDive } from '../InvestasiPengusahaan/DirektoratPerencanaanInvestasiDeepDive';
 import {
   PieChart,
   Layers,
@@ -146,7 +147,9 @@ export const KekDashboard: React.FC<KekDashboardProps> = ({
       />
 
       {/* VIEW ROUTING BASED ON HEADER SUB-MENUS */}
-      {activeSubMenu === 'kamus_rumus' ? (
+      {activeSubMenu === 'visualisasi_unit' ? (
+        <DirektoratPerencanaanInvestasiDeepDive />
+      ) : activeSubMenu === 'kamus_rumus' ? (
         <KekKamusRumusView />
       ) : activeSubMenu === 'perencanaan_kek' ? (
         /* Focused view on Daftar Perencanaan & Pengusulan KEK (Dataset 5) */

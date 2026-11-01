@@ -197,6 +197,7 @@ export const Header: React.FC<HeaderProps> = ({
       ];
     } else if (activeUnitId === 'dit-pengembangan-kek') {
       return [
+        { id: 'visualisasi_unit', label: 'Dashboard Visualisasi Unit (6 Kartu)', icon: Sparkles, isSpecial: true },
         { id: 'ikhtisar', label: 'Ikhtisar Eksekutif KEK', icon: LayoutDashboard },
         { id: 'investasi', label: 'Realisasi Investasi PMA/PMDN (DS 1)', icon: TrendingUp },
         { id: 'profil_kek', label: 'Profil KEK & Lokasi (DS 2)', icon: MapPin },
@@ -208,6 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
       ];
     } else if (activeUnitId === 'dit-investasi') {
       return [
+        { id: 'visualisasi_unit', label: 'Dashboard Visualisasi Unit (6 Kartu)', icon: Sparkles, isSpecial: true },
         { id: 'ikhtisar', label: 'Ikhtisar Eksekutif Investasi', icon: LayoutDashboard },
         { id: 'sektor_minat', label: 'Sektor Minat Investasi (DS 14)', icon: Briefcase },
         { id: 'infrastruktur', label: 'Infrastruktur Multi-Tahun (DS 6)', icon: Building2 },

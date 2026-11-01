@@ -39,6 +39,7 @@ import {
   Line,
   ComposedChart,
 } from 'recharts';
+import { DirektoratPertanahanDeepDive } from './DirektoratPertanahanDeepDive';
 
 interface PengelolaanLahanPesisirDeepDiveCenterProps {
   selectedUnitId: string;
@@ -49,64 +50,11 @@ interface PengelolaanLahanPesisirDeepDiveCenterProps {
 }
 
 // =====================================================================
-// DATASET DIT. PENGELOLAAN LAHAN SESUAI BUKU SATU DATA (HAL. 6-8)
+// DATASET DIREKTORAT PENGELOLAAN PERTANAHAN (SEBELUMNYA DIT. LAHAN)
+// Kini terisolasi & modular di DirektoratPertanahanDeepDive.tsx
 // =====================================================================
 
-// Dataset #12: LAPORAN TARGET PENERIMAAN (JENIS PENERIMAAN, ANGGARAN PNBP IDR, TOTAL)
-const PNBP_JENIS_PENERIMAAN_DATA = [
-  {
-    jenisPenerimaan: 'UWT Alokasi Baru (30 Tahun)',
-    anggaranIdr: 380.0, // Rp Miliar
-    realisasiIdr: 326.5,
-    capaianPersen: 85.92,
-  },
-  {
-    jenisPenerimaan: 'Perpanjangan UWT Hak Atas Tanah',
-    anggaranIdr: 280.0,
-    realisasiIdr: 238.4,
-    capaianPersen: 85.14,
-  },
-  {
-    jenisPenerimaan: 'Peralihan Hak & Administrasi',
-    anggaranIdr: 110.0,
-    realisasiIdr: 92.18,
-    capaianPersen: 83.80,
-  },
-  {
-    jenisPenerimaan: 'Perubahan Peruntukan & Pecah/Revisi PL',
-    anggaranIdr: 80.0,
-    realisasiIdr: 57.20,
-    capaianPersen: 71.50,
-  },
-];
 
-// Total PNBP Lahan
-const TOTAL_PNBP_LAHAN = {
-  totalAnggaranIdr: 850.0, // Rp Miliar
-  totalRealisasiIdr: 714.28,
-  capaianPersen: 84.03,
-};
-
-// Dataset #1 s.d #14: Rekapitulasi Berdasarkan JENIS PEMOHON (PT, Individual, dsb)
-const REKAP_JENIS_PEMOHON_DATA = [
-  { jenisPemohon: 'Perseroan Terbatas (PT)', disetujui: 2840, ditolak: 382, total: 3222, persen: 88.1 },
-  { jenisPemohon: 'Individual Person', disetujui: 3120, ditolak: 546, total: 3666, persen: 85.1 },
-  { jenisPemohon: 'Pemerintahan', disetujui: 42, ditolak: 2, total: 44, persen: 95.5 },
-  { jenisPemohon: 'Yayasan', disetujui: 68, ditolak: 12, total: 80, persen: 85.0 },
-  { jenisPemohon: 'Koperasi', disetujui: 35, ditolak: 8, total: 43, persen: 81.4 },
-  { jenisPemohon: 'Gereja & Sosial', disetujui: 28, ditolak: 3, total: 31, persen: 90.3 },
-];
-
-// Dataset #15: LAHAN YANG TERSEDIA DENGAN AREA SUB WILAYAH PENGEMBANGAN (SWP, LUAS, JUMLAH PERSIL)
-const SWP_LAHAN_TERSEDIA_TABLE = [
-  { swp: 'SWP I', namaWilayah: 'Batam Centre', luasHa: 48.5, jumlahPersil: 38, peruntukan: 'Komersial & Pemerintahan' },
-  { swp: 'SWP II', namaWilayah: 'Nongsa', luasHa: 72.4, jumlahPersil: 54, peruntukan: 'KEK Digital Park & Pariwisata' },
-  { swp: 'SWP III', namaWilayah: 'Kabil', luasHa: 94.2, jumlahPersil: 68, peruntukan: 'Industri Berat & Pelabuhan' },
-  { swp: 'SWP IV', namaWilayah: 'Batu Ampar', luasHa: 18.6, jumlahPersil: 16, peruntukan: 'Depo Logistik & Pergudangan' },
-  { swp: 'SWP V', namaWilayah: 'Sekupang', luasHa: 36.8, jumlahPersil: 29, peruntukan: 'KEK Kesehatan & Wisata Air' },
-  { swp: 'SWP VI', namaWilayah: 'Batu Aji', luasHa: 24.5, jumlahPersil: 22, peruntukan: 'Industri Ringan & Pemukiman' },
-  { swp: 'SWP VII', namaWilayah: 'Tanjung Uncang', luasHa: 23.5, jumlahPersil: 19, peruntukan: 'Shipyard & Industri Maritim' },
-];
 
 // =====================================================================
 // DATASET DIT. PESISIR & REKLAMASI SESUAI BUKU SATU DATA (HAL. 13-14)
@@ -268,7 +216,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
       ? 'dit-pesisir-reklamasi'
       : selectedUnitId === 'dit-pengendalian-lahan' || selectedUnitId === 'pengendalian'
       ? 'dit-pengendalian-lahan'
-      : 'dit-lahan';
+      : 'dit-pertanahan';
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3.5 font-sans">
@@ -276,7 +224,7 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div>
           <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
-            Unit Deep-Dive Center: Pengelolaan Lahan, Pesisir &amp; Pengendalian
+            Unit Deep-Dive Center: Pengelolaan Pertanahan, Pesisir &amp; Pengendalian
           </h3>
           <p className="text-[11px] text-slate-500 mt-0.5">
             Analisis granular 3 unit kerja pengampu Perkin DEP-A3 berdasarkan atribut Buku Satu Data BP Batam
@@ -286,15 +234,16 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
         {/* Tab Switcher */}
         <div className="inline-flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80">
           <button
-            onClick={() => onSelectUnit('dit-lahan')}
+            onClick={() => onSelectUnit('dit-pertanahan')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeUnit === 'dit-lahan'
+              activeUnit === 'dit-pertanahan'
                 ? 'bg-blue-600 text-white shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
+            title="Direktorat Pengelolaan Pertanahan (sebelumnya Direktorat Pengelolaan Lahan)"
           >
             <MapPin className="w-3.5 h-3.5" />
-            <span>Dit. Pengelolaan Lahan (15 DS)</span>
+            <span>Dit. Pengelolaan Pertanahan (15 DS)</span>
           </button>
 
           <button
@@ -324,247 +273,11 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
       </div>
 
       {/* ==================================================================== */}
-      {/* 2. TAB KONTEN 1: DIT. PENGELOLAAN LAHAN                             */}
-      {/* Target: PNBP per JENIS PENERIMAAN + Rekap JENIS PEMOHON + Area SWP   */}
+      {/* 2. TAB KONTEN 1: DIT. PENGELOLAAN PERTANAHAN (SEBELUMNYA DIT. LAHAN) */}
+      {/* 6 Kartu Visualisasi Terpadu (Grid 2 Kolom x 3 Baris)                */}
       {/* ==================================================================== */}
-      {activeUnit === 'dit-lahan' && (
-        <div className="space-y-3.5">
-          {/* ROW 1: DUA KARTU UTAMA */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* CARD 1: LAPORAN TARGET PENERIMAAN PNBP BERDASARKAN JENIS PENERIMAAN & TOTAL (DATASET #12) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-blue-700" />
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Penerimaan PNBP Berdasarkan Jenis Penerimaan (Dataset #12 Hal. 7)
-                      </h3>
-                      <p className="text-[10px] text-slate-500">
-                        Atribut: Jenis Penerimaan, Anggaran PNBP (IDR), dan Total Realisasi
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* TOTAL PNBP BANNER */}
-                  <div className="text-right shrink-0 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs">
-                    <span className="text-[9.5px] text-slate-500 font-bold block uppercase tracking-wider">Total Realisasi</span>
-                    <span className="text-sm sm:text-base font-black text-blue-700 font-mono">
-                      Rp {TOTAL_PNBP_LAHAN.totalRealisasiIdr.toFixed(2)} M
-                    </span>
-                    <span className="text-[9.5px] text-emerald-600 font-bold block">
-                      Target Rp {TOTAL_PNBP_LAHAN.totalAnggaranIdr.toFixed(0)} M ({TOTAL_PNBP_LAHAN.capaianPersen.toFixed(1)}%)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-slate-400" /> Anggaran PNBP (IDR Miliar)
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-blue-600" /> Realisasi PNBP (IDR Miliar)
-                  </span>
-                  <span className="text-slate-400">&bull;</span>
-                  <span className="text-blue-700 font-bold">4 Klasifikasi Layanan PNBP</span>
-                </div>
-
-                <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      layout="vertical"
-                      data={PNBP_JENIS_PENERIMAAN_DATA}
-                      margin={{ top: 5, right: 25, left: 10, bottom: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
-                      <XAxis type="number" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis
-                        type="category"
-                        dataKey="jenisPenerimaan"
-                        tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
-                        axisLine={false}
-                        tickLine={false}
-                        width={130}
-                      />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [
-                          `Rp ${val} Miliar`,
-                          name === 'anggaranIdr' ? 'Anggaran PNBP (Target)' : 'Realisasi PNBP',
-                        ]}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="anggaranIdr" name="anggaranIdr" fill="#94A3B8" radius={[0, 4, 4, 0]} barSize={10} />
-                      <Bar dataKey="realisasiIdr" name="realisasiIdr" fill="#2563EB" radius={[0, 4, 4, 0]} barSize={10} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              {/* Rincian Tabel Atribut */}
-              <div className="pt-2 border-t border-slate-100 mt-1 overflow-x-auto">
-                <table className="w-full text-[10px] text-left border-collapse">
-                  <thead>
-                    <tr className="text-slate-500 font-bold border-b border-slate-200">
-                      <th className="py-0.5">JENIS PENERIMAAN</th>
-                      <th className="py-0.5 text-right">ANGGARAN PNBP</th>
-                      <th className="py-0.5 text-right">REALISASI</th>
-                      <th className="py-0.5 text-right">CAPAIAN (%)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
-                    {PNBP_JENIS_PENERIMAAN_DATA.map((row, idx) => (
-                      <tr key={idx}>
-                        <td className="py-1 font-medium">{row.jenisPenerimaan}</td>
-                        <td className="py-1 text-right font-mono text-slate-600">Rp {row.anggaranIdr.toFixed(1)} M</td>
-                        <td className="py-1 text-right font-mono font-bold text-blue-700">Rp {row.realisasiIdr.toFixed(1)} M</td>
-                        <td className="py-1 text-right font-mono font-bold text-emerald-600">{row.capaianPersen.toFixed(1)}%</td>
-                      </tr>
-                    ))}
-                    <tr className="font-black bg-slate-50 text-slate-800 border-t border-slate-200">
-                      <td className="py-1">TOTAL ANGGARAN &amp; REALISASI PNBP</td>
-                      <td className="py-1 text-right font-mono">Rp {TOTAL_PNBP_LAHAN.totalAnggaranIdr.toFixed(1)} M</td>
-                      <td className="py-1 text-right font-mono">Rp {TOTAL_PNBP_LAHAN.totalRealisasiIdr.toFixed(1)} M</td>
-                      <td className="py-1 text-right font-mono text-emerald-700">{TOTAL_PNBP_LAHAN.capaianPersen.toFixed(1)}%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* CARD 2: REKAPITULASI BERDASARKAN JENIS PEMOHON (DATASET #1 S.D #14) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-indigo-700" />
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Rekapitulasi Berdasarkan Jenis Pemohon
-                      </h3>
-                      <p className="text-[10px] text-slate-500">
-                        Atribut: Jenis Pemohon, Disetujui, Ditolak, Jumlah (Dataset #1-#14)
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded font-mono">
-                    86,4% Disetujui
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-indigo-600" /> Disetujui
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-amber-500" /> Ditolak / Revisi
-                  </span>
-                  <span className="text-slate-400">&bull;</span>
-                  <span>Total 7.086 Permohonan</span>
-                </div>
-
-                <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={REKAP_JENIS_PEMOHON_DATA} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="jenisPemohon" tick={{ fontSize: 9, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} interval={0} />
-                      <YAxis tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [`${val} Berkas`, name === 'disetujui' ? 'Disetujui' : 'Ditolak']}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="disetujui" name="disetujui" fill="#4F46E5" radius={[4, 4, 0, 0]} barSize={14} stackId="a" />
-                      <Bar dataKey="ditolak" name="ditolak" fill="#F59E0B" radius={[4, 4, 0, 0]} barSize={14} stackId="a" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-indigo-100 flex items-center justify-between text-[10.5px] text-slate-600">
-                <span className="text-slate-500">
-                  Pemohon Terbesar: <strong>Individu (3.666) &amp; PT (3.222)</strong>
-                </span>
-                <span className="font-bold text-indigo-800 font-mono">Lead Time: 2,4 Hari</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ROW 2: DETAIL TABEL ATRIBUT BUKU SATU DATA (DATASET #15: LAHAN TERSEDIA SWP) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* TABEL LAHAN TERSEDIA DENGAN AREA SWP (ATRIBUT: SWP, LUAS, JUMLAH PERSIL) */}
-            <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200/90 p-3.5 shadow-2xs">
-              <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
-                <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-blue-600" />
-                  Lahan Yang Tersedia Dengan Area Sub Wilayah Pengembangan (Dataset #15 Hal. 7-8)
-                </span>
-                <span className="text-[10px] font-mono font-bold bg-blue-50 text-blue-800 px-2 py-0.5 rounded border border-blue-200">
-                  Total 318,7 Ha (246 Persil)
-                </span>
-              </div>
-
-              <div className="overflow-x-auto max-h-48">
-                <table className="w-full text-[11px] text-left border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
-                      <th className="py-1 px-2">SWP</th>
-                      <th className="py-1 px-2">NAMA WILAYAH</th>
-                      <th className="py-1 px-2 text-right">LUAS (HA)</th>
-                      <th className="py-1 px-2 text-right">JUMLAH PERSIL</th>
-                      <th className="py-1 px-2">PERUNTUKAN ZONASI</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
-                    {SWP_LAHAN_TERSEDIA_TABLE.map((item, idx) => (
-                      <tr key={idx} className="hover:bg-blue-50/50">
-                        <td className="py-1.5 px-2 font-mono font-bold text-blue-700">{item.swp}</td>
-                        <td className="py-1.5 px-2 font-semibold text-slate-900">{item.namaWilayah}</td>
-                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700">{item.luasHa.toFixed(1)} Ha</td>
-                        <td className="py-1.5 px-2 text-right font-mono font-bold text-slate-700">{item.jumlahPersil} Persil</td>
-                        <td className="py-1.5 px-2 text-[10.5px] text-slate-600">{item.peruntukan}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* RINGKASAN MONITORING KINERJA ALOKASI INVESTASI (#14) */}
-            <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-3.5 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                    Laporan Pengalokasian (Dataset #14)
-                  </span>
-                  <span className="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">
-                    124,3% Capaian
-                  </span>
-                </div>
-
-                <div className="space-y-2 mt-2">
-                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
-                    <span className="text-slate-600 font-medium">Realisasi Alokasi Riil:</span>
-                    <span className="font-black font-mono text-blue-800 text-sm">248,50 Ha (Target 200 Ha)</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
-                    <span className="text-slate-600 font-medium">Persetujuan Berkas Investasi:</span>
-                    <span className="font-black font-mono text-emerald-800 text-sm">384 dari 456 Berkas</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex justify-between items-center text-xs">
-                    <span className="text-slate-600 font-medium">SLA Waktu Layanan:</span>
-                    <span className="font-black font-mono text-indigo-800 text-sm">2,4 Hari (SOP 4 Hari)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-slate-100 mt-2 flex items-center justify-between text-[10px] text-slate-500">
-                <span>Data Statistik Perizinan Lahan Terbuka</span>
-                <span className="font-bold text-blue-700">15 Dataset Aktif</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {activeUnit === 'dit-pertanahan' && (
+        <DirektoratPertanahanDeepDive />
       )}
 
       {/* ==================================================================== */}

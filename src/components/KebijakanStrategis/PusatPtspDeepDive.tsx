@@ -250,20 +250,20 @@ export const PusatPtspDeepDive: React.FC = () => {
                     if (payload && payload[0]) {
                       const p = payload[0].payload as PermohonanPerizinanItem;
                       return (
-                        <div className="space-y-1">
-                          <div className="font-bold text-slate-900 border-b border-slate-200 pb-0.5">
+                        <span className="block space-y-1">
+                          <span className="block font-bold text-slate-900 border-b border-slate-200 pb-0.5">
                             Bulan {p.bulan} ({p.total} Total Berkas)
-                          </div>
-                          <div className="text-[10px] text-slate-600">
+                          </span>
+                          <span className="block text-[10px] text-slate-600">
                             <strong>Perizinan Teratas:</strong> {p.namaPerizinanTeratas}
-                          </div>
-                          <div className="text-[10px] text-blue-700">
+                          </span>
+                          <span className="block text-[10px] text-blue-700">
                             <strong>Status Penanaman Modal:</strong> {p.statusModalDominan}
-                          </div>
-                          <div className="text-[10px] text-emerald-700 font-semibold">
+                          </span>
+                          <span className="block text-[10px] text-emerald-700 font-semibold">
                             Capaian Selesai: {p.persenSelesai}%
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       );
                     }
                     return '';
@@ -402,20 +402,20 @@ export const PusatPtspDeepDive: React.FC = () => {
                     if (payload && payload[0]) {
                       const p = payload[0].payload as InvestasiSektorItem;
                       return (
-                        <div className="space-y-1">
-                          <div className="font-bold text-slate-900 border-b border-slate-200 pb-0.5">
+                        <span className="block space-y-1">
+                          <span className="block font-bold text-slate-900 border-b border-slate-200 pb-0.5">
                             {p.sektor}
-                          </div>
-                          <div className="text-[10px] text-blue-700 font-semibold">
+                          </span>
+                          <span className="block text-[10px] text-blue-700 font-semibold">
                             Capaian: {p.persenRealisasi.toFixed(1)}% Realisasi
-                          </div>
-                          <div className="text-[10px] text-slate-600">
+                          </span>
+                          <span className="block text-[10px] text-slate-600">
                             <strong>Standar Usaha:</strong> {p.pemenuhanStandarUsaha}
-                          </div>
-                          <div className="text-[10px] text-slate-700 font-mono">
+                          </span>
+                          <span className="block text-[10px] text-slate-700 font-mono">
                             <strong>Tenaga Kerja:</strong> TKI {p.tenagaKerjaTki.toLocaleString('id-ID')} | TKA {p.tenagaKerjaTka} (Total: {p.totalTenagaKerja.toLocaleString('id-ID')})
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       );
                     }
                     return '';
@@ -704,17 +704,17 @@ export const PusatPtspDeepDive: React.FC = () => {
                     if (payload && payload[0]) {
                       const p = payload[0].payload as NonPerizinanItem;
                       return (
-                        <div className="space-y-1">
-                          <div className="font-bold text-slate-900 border-b border-slate-200 pb-0.5">
+                        <span className="block space-y-1">
+                          <span className="block font-bold text-slate-900 border-b border-slate-200 pb-0.5">
                             {p.jenisNonPerizinan}
-                          </div>
-                          <div className="text-[10px] text-slate-600">
+                          </span>
+                          <span className="block text-[10px] text-slate-600">
                             <strong>Total:</strong> {p.total} berkas | <strong>Rata-rata SLA:</strong> {p.slaRataRata}
-                          </div>
-                          <div className="text-[10px] text-emerald-700 font-semibold">
+                          </span>
+                          <span className="block text-[10px] text-emerald-700 font-semibold">
                             Selesai: {p.selesai} ({((p.selesai / (p.total || 1)) * 100).toFixed(1)}%)
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       );
                     }
                     return '';
@@ -853,23 +853,23 @@ export const PusatPtspDeepDive: React.FC = () => {
                     if (payload && payload[0]) {
                       const p = payload[0].payload as PengaduanMasyarakatItem;
                       return (
-                        <div className="space-y-1">
-                          <div className="font-bold text-slate-900 border-b border-slate-200 pb-0.5">
+                        <span className="block space-y-1">
+                          <span className="block font-bold text-slate-900 border-b border-slate-200 pb-0.5">
                             {p.saluran}
-                          </div>
-                          <div className="text-[10px] text-blue-700 font-medium">
+                          </span>
+                          <span className="block text-[10px] text-blue-700 font-medium">
                             <strong>Kode Aduan:</strong> {p.kodeSampel}
-                          </div>
-                          <div className="text-[10px] text-slate-600">
+                          </span>
+                          <span className="block text-[10px] text-slate-600">
                             <strong>Jenis Pengaduan:</strong> {p.jenisPengaduanTerbanyak}
-                          </div>
-                          <div className="text-[10px] text-emerald-700">
+                          </span>
+                          <span className="block text-[10px] text-emerald-700">
                             <strong>Penyelesaian:</strong> {p.solusiPenyelesaian}
-                          </div>
-                          <div className="text-[10px] font-mono font-semibold text-slate-800">
+                          </span>
+                          <span className="block text-[10px] font-mono font-semibold text-slate-800">
                             Status: {p.selesai} Selesai / {p.total} Masuk ({p.persenSelesai.toFixed(1)}%)
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       );
                     }
                     return '';
@@ -1013,20 +1013,20 @@ export const PusatPtspDeepDive: React.FC = () => {
                     if (payload && payload[0]) {
                       const p = payload[0].payload as BongkarMuatItem;
                       return (
-                        <div className="space-y-1">
-                          <div className="font-bold text-slate-900 border-b border-slate-200 pb-0.5">
+                        <span className="block space-y-1">
+                          <span className="block font-bold text-slate-900 border-b border-slate-200 pb-0.5">
                             {p.jenisMuatan}
-                          </div>
-                          <div className="text-[10px] text-blue-700">
+                          </span>
+                          <span className="block text-[10px] text-blue-700">
                             <strong>Pelabuhan:</strong> {p.pelabuhan}
-                          </div>
-                          <div className="text-[10px] text-slate-600">
+                          </span>
+                          <span className="block text-[10px] text-slate-600">
                             <strong>Peralatan:</strong> {p.peralatanUtama}
-                          </div>
-                          <div className="text-[10px] text-slate-700 font-mono">
+                          </span>
+                          <span className="block text-[10px] text-slate-700 font-mono">
                             <strong>TKBM:</strong> {p.jumlahTkbm} Orang | <strong>Utilisasi Dermaga:</strong> {p.persenKapasitasDermaga}%
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       );
                     }
                     return '';

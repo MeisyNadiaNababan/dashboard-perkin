@@ -490,8 +490,8 @@ export default function App() {
             ) : activeUnitId === 'dit-pengendalian-lahan' ? (
               /* --- DIREKTORAT PENGENDALIAN PENGELOLAAN LAHAN, PESISIR DAN REKLAMASI DASHBOARD --- */
               <PengendalianLahanDashboard activeSubTab={activeSheet} />
-            ) : activeUnitId === 'dit-lahan' ? (
-              /* --- DIREKTORAT PENGELOLAAN LAHAN DASHBOARD --- */
+            ) : activeUnitId === 'dit-lahan' || activeUnitId === 'dit-pertanahan' ? (
+              /* --- DIREKTORAT PENGELOLAAN PERTANAHAN (SEBELUMNYA DIT. LAHAN) DASHBOARD --- */
               <PengelolaanLahanDashboard />
             ) : activeUnitId === 'dit-pengendalian-usaha' ? (
               /* --- DIREKTORAT PENGENDALIAN PENGUSAHAAN DASHBOARD --- */

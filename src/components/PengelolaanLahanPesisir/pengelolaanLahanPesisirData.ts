@@ -371,9 +371,9 @@ export const UNIT_PILAR_LAHAN: UnitPilarLahanItem[] = [
   {
     id: 'dit-lahan',
     kode: 'DPL',
-    nama: 'Direktorat Pengelolaan Lahan',
-    namaPendek: 'Pengelolaan Lahan',
-    pejabat: 'Direktur Pengelolaan Lahan',
+    nama: 'Direktorat Pengelolaan Pertanahan',
+    namaPendek: 'Pengelolaan Pertanahan',
+    pejabat: 'Direktur Pengelolaan Pertanahan',
     paguDipa: 48200000000,
     paguFormatted: 'Rp 48,20 Miliar',
     realisasiDipa: 19850000000,
@@ -381,7 +381,7 @@ export const UNIT_PILAR_LAHAN: UnitPilarLahanItem[] = [
     jumlahDataset: 15,
     halamanPdf: 'Halaman 6 - 8 (15 Dataset)',
     deskripsi:
-      'Melaksanakan penerbitan SKPT/SPPT Baru & Perubahan, Pecah & Revisi PL, Peralihan & Perpanjangan Hak Atas Tanah, serta pengelolaan 9 SWP ketersediaan lahan siap bangun.',
+      'Direktorat Pengelolaan Pertanahan (sebelumnya Direktorat Pengelolaan Lahan) bertugas menyelenggarakan 11 layanan permohonan pertanahan (SKPT, SK Pengelolaan, Pecah/Revisi PL, Perpanjangan Hak, PNBP UWT) dan ketersediaan lahan SWP Batam.',
     highlightMetrics: [
       { label: 'Realisasi Alokasi', value: '248,5 Ha', subtext: 'Target 200 Ha (124,25%)' },
       { label: 'Layanan SKPT & SPPT', value: '3.420 Berkas', subtext: 'SLA Tepat Waktu 91.8%' },

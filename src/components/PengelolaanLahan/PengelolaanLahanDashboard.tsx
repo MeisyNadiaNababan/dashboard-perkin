@@ -75,10 +75,10 @@ export const PengelolaanLahanDashboard: React.FC = () => {
                 </span>
               </div>
               <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight mt-0.5">
-                Direktorat Pengelolaan Lahan
+                Direktorat Pengelolaan Pertanahan
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Dashboard Eksekutif Pelayanan Pertanahan, Alokasi Investasi, Ketersediaan Lahan SWP &amp; Rekapitulasi PL/SKPT/SPPT
+                (Sebelumnya Direktorat Pengelolaan Lahan) • Dashboard Eksekutif Pelayanan Pertanahan, Alokasi Investasi, Ketersediaan Lahan SWP &amp; Rekapitulasi PL/SKPT/SPPT
               </p>
             </div>
           </div>
