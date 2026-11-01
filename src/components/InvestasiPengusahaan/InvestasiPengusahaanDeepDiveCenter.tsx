@@ -46,6 +46,8 @@ import {
 } from 'recharts';
 import { DirektoratPerencanaanInvestasiDeepDive } from './DirektoratPerencanaanInvestasiDeepDive';
 import { DirektoratPromosiInvestasiDeepDive } from './DirektoratPromosiInvestasiDeepDive';
+import { DirektoratPengendalianInvestasiDeepDive } from './DirektoratPengendalianInvestasiDeepDive';
+import { DirektoratLaluLintasBarangDeepDive } from './DirektoratLaluLintasBarangDeepDive';
 
 interface InvestasiPengusahaanDeepDiveCenterProps {
   selectedUnitId: string;
@@ -272,52 +274,6 @@ const PKS_PENGUSAHAAN_MITRA_TABLE = [
   },
 ];
 
-// =========================================================================
-// DATASET DIREKTORAT LALU LINTAS BARANG (HAL. 8-9 SATU DATA BP BATAM)
-// =========================================================================
-
-// Dataset #6 & #7: Tren Bulanan Penerbitan Izin Pemasukan vs Pengeluaran Barang
-const PERIZINAN_LLB_MONTHLY = [
-  { bulan: 'Jan', pemasukan: 680, pengeluaran: 460, slaPersen: 96.2 },
-  { bulan: 'Feb', pemasukan: 640, pengeluaran: 430, slaPersen: 96.5 },
-  { bulan: 'Mar', pemasukan: 720, pengeluaran: 510, slaPersen: 96.8 },
-  { bulan: 'Apr', pemasukan: 750, pengeluaran: 530, slaPersen: 97.1 },
-  { bulan: 'Mei', pemasukan: 710, pengeluaran: 490, slaPersen: 96.6 },
-  { bulan: 'Jun', pemasukan: 740, pengeluaran: 520, slaPersen: 97.0 },
-  { bulan: 'Jul', pemasukan: 760, pengeluaran: 540, slaPersen: 96.9 },
-  { bulan: 'Agu', pemasukan: 715, pengeluaran: 495, slaPersen: 96.7 },
-  { bulan: 'Sep', pemasukan: 705, pengeluaran: 485, slaPersen: 96.8 },
-  { bulan: 'Okt', pemasukan: 730, pengeluaran: 510, slaPersen: 97.2 },
-  { bulan: 'Nov', pemasukan: 695, pengeluaran: 475, slaPersen: 96.4 },
-  { bulan: 'Des', pemasukan: 775, pengeluaran: 545, slaPersen: 97.5 },
-];
-
-// Dataset #2: Realisasi Kuota Induk Barang Konsumsi
-const KUOTA_BARANG_KONSUMSI = [
-  { komoditas: 'Beras Premium & Khusus', kuotaTon: 45000, realisasiTon: 44250, persen: 98.3, status: 'Tercukupi' },
-  { komoditas: 'Gula Pasir Kristal', kuotaTon: 28000, realisasiTon: 27500, persen: 98.2, status: 'Tercukupi' },
-  { komoditas: 'Daging Sapi & Unggas Beku', kuotaTon: 18500, realisasiTon: 18120, persen: 97.9, status: 'Tercukupi' },
-  { komoditas: 'Bawang Putih & Bombai', kuotaTon: 12000, realisasiTon: 11840, persen: 98.7, status: 'Tercukupi' },
-  { komoditas: 'Tepung Terigu & Kedelai', kuotaTon: 22000, realisasiTon: 21650, persen: 98.4, status: 'Tercukupi' },
-];
-
-// Dataset #5: Sebaran KBLI Industri & Perdagangan Kawasan Bebas
-const SEBARAN_KBLI_INDUSTRI = [
-  { sektor: 'Industri Elektronika & Semikonduktor (KBLI 26)', perusahaan: 485, porsi: '34,2%', share: 34.2 },
-  { sektor: 'Galangan Kapal & Maritim (KBLI 301)', perusahaan: 312, porsi: '22,0%', share: 22.0 },
-  { sektor: 'Kimia Dasar & Plastik (KBLI 20)', perusahaan: 228, porsi: '16,1%', share: 16.1 },
-  { sektor: 'Gudang & Logistik Kawasan (KBLI 52)', perusahaan: 245, porsi: '17,2%', share: 17.2 },
-  { sektor: 'Makanan, Minuman & Tekstil (KBLI 10/13)', perusahaan: 150, porsi: '10,5%', share: 10.5 },
-];
-
-// Dataset #8 & #9: Efektivitas Layanan SLA Dokumen (Jam)
-const SLA_LAYANAN_LLB = [
-  { layanan: 'Izin Pemasukan Barang Konsumsi', slaTargetJam: 3.0, aktualJam: 1.7, kepatuhan: '97,2%' },
-  { layanan: 'Izin Pemasukan Bahan Baku Industri', slaTargetJam: 3.0, aktualJam: 1.5, kepatuhan: '98,0%' },
-  { layanan: 'Izin Pengeluaran Barang Antar Kawasan', slaTargetJam: 3.0, aktualJam: 1.9, kepatuhan: '96,4%' },
-  { layanan: 'Penerbitan Izin Usaha Kawasan (IUK)', slaTargetJam: 24.0, aktualJam: 14.5, kepatuhan: '95,8%' },
-  { layanan: 'Rekomendasi Kuota Barang Induk', slaTargetJam: 24.0, aktualJam: 16.2, kepatuhan: '96,5%' },
-];
 
 export const InvestasiPengusahaanDeepDiveCenter: React.FC<
   InvestasiPengusahaanDeepDiveCenterProps
@@ -358,7 +314,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
               </span>
             </div>
             <h3 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-              Unit Deep-Dive Center: Investasi, KEK, Pengusahaan &amp; Lalu Lintas Barang
+              Unit Deep-Dive Center: Investasi, KEK, Pengendalian Investasi &amp; Lalu Lintas Barang
             </h3>
           </div>
         </div>
@@ -401,7 +357,7 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Dir. Pengendalian Pengusahaan</span>
+            <span>Dir. Pengendalian Investasi</span>
           </button>
 
           <button
@@ -436,177 +392,11 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
       )}
 
       {/* ================================================================== */}
-      {/* 4. TAB CONTENT: DIREKTORAT PENGENDALIAN PENGUSAHAAN (HAL. 14)      */}
+      {/* 4. TAB CONTENT: DIREKTORAT PENGENDALIAN INVESTASI                  */}
+      {/* Dashboard Visualisasi 4 Kartu (2 Kolom x 2 Baris)                */}
       {/* ================================================================== */}
       {activeUnit === 'dit-pengendalian-usaha' && (
-        <div className="space-y-3.5">
-          {/* BARIS 1: EVALUASI PEMBINAAN TRIWULANAN & DISTRIBUSI KEPATUHAN SATKER */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* KARTU 1: TREN EVALUASI PEMBINAAN & PERBAIKAN KERJASAMA (DATASET #3 & #4) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-indigo-700" />
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Tren Triwulanan Evaluasi &amp; Perbaikan Kerjasama Usaha
-                      </h3>
-                      <p className="text-[10px] text-slate-500">
-                        Atribut: Triwulan, % Evaluasi Ditindaklanjuti, % Perbaikan PKS (Dataset #3 &amp; #4 Hal. 14)
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0 bg-white px-2.5 py-1 rounded-lg border border-indigo-200 shadow-2xs">
-                    <span className="text-[9.5px] text-slate-500 font-bold block uppercase tracking-wider">Capaian Akhir</span>
-                    <span className="text-sm sm:text-base font-black text-indigo-700 font-mono">
-                      95,45%
-                    </span>
-                    <span className="text-[9.5px] text-emerald-600 font-bold block">
-                      Target 90,0% (+5,45%)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-indigo-600" /> % Evaluasi Ditindaklanjuti
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-purple-600" /> % Perbaikan PKS Ditindaklanjuti
-                  </span>
-                  <span className="text-slate-400">&bull;</span>
-                  <span className="text-indigo-700 font-bold">Basis: 110 Rekomendasi</span>
-                </div>
-
-                <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={PENGENDALIAN_BU_TRIWULAN_TREND} margin={{ top: 5, right: 15, left: -15, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                      <XAxis dataKey="triwulan" tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }} />
-                      <YAxis domain={[85, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [
-                          `${val}%`,
-                          name === 'evaluasiPembinaan' ? 'Evaluasi Pembinaan BU' : 'Perbaikan Kerjasama BU',
-                        ]}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="evaluasiPembinaan"
-                        name="evaluasiPembinaan"
-                        stroke="#4F46E5"
-                        strokeWidth={2.5}
-                        dot={{ r: 4, fill: '#4F46E5' }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="perbaikanKerjasama"
-                        name="perbaikanKerjasama"
-                        stroke="#9333EA"
-                        strokeWidth={2.5}
-                        dot={{ r: 4, fill: '#9333EA' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-indigo-100 mt-1 flex items-center justify-between text-[10px] text-slate-600">
-                <span>Status Tindak Lanjut Rekomendasi:</span>
-                <span className="font-bold text-emerald-700">105 dari 110 Selesai Ditindaklanjuti (95,5%)</span>
-              </div>
-            </div>
-
-            {/* KARTU 2: REKAPITULASI DOKUMEN PENGAWASAN PENGENDALIAN (DATASET #2) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Scale className="w-4 h-4 text-purple-700" />
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Kepatuhan Pengendalian Badan Usaha Mitra
-                      </h3>
-                      <p className="text-[10px] text-slate-500">
-                        Laporan Pengawasan Pengendalian Pengusahaan (Dataset #2 Hal. 14)
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black text-purple-800 bg-purple-100 px-2 py-0.5 rounded font-mono">
-                    28 PKS Diawasi
-                  </span>
-                </div>
-
-                <div className="space-y-2 mt-2">
-                  <div className="p-2 rounded-lg bg-white border border-purple-100 flex justify-between items-center text-xs">
-                    <span className="text-slate-700 font-medium">BUP Pelabuhan Batam:</span>
-                    <span className="font-bold font-mono text-purple-800">98,2% (Sangat Baik)</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-white border border-purple-100 flex justify-between items-center text-xs">
-                    <span className="text-slate-700 font-medium">Badan Usaha Bandara Hang Nadim:</span>
-                    <span className="font-bold font-mono text-purple-800">96,5% (Baik)</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-white border border-purple-100 flex justify-between items-center text-xs">
-                    <span className="text-slate-700 font-medium">Badan Usaha SPAM &amp; Fasling:</span>
-                    <span className="font-bold font-mono text-purple-800">95,8% (Baik)</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-white border border-purple-100 flex justify-between items-center text-xs">
-                    <span className="text-slate-700 font-medium">Badan Usaha Rumah Sakit BP:</span>
-                    <span className="font-bold font-mono text-purple-800">94,1% (Baik)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-purple-100 mt-2 flex items-center justify-between text-[10px] text-slate-600">
-                <span>Rerata Kepatuhan Tata Kelola Mitra:</span>
-                <span className="font-black text-emerald-700 font-mono">96,15% Patuh</span>
-              </div>
-            </div>
-          </div>
-
-          {/* BARIS 2: MATRIKS PENGAWASAN PKS KERJASAMA PENGUSAHAAN MITRA (DATASET #1) */}
-          <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-2xs">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                Matriks Pengawasan Perjanjian Kerjasama Pengusahaan &amp; Kontribusi PNBP (Dataset #1 Hal. 14)
-              </h4>
-              <span className="text-[9.5px] text-slate-500 font-mono">Monitoring Mitra Strategis</span>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-[10px] text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50 text-slate-500 font-bold border-y border-slate-200">
-                    <th className="py-1 px-2">NAMA MITRA / BADAN USAHA</th>
-                    <th className="py-1 px-2">OBJEK KERJASAMA</th>
-                    <th className="py-1 px-2">SKEMA</th>
-                    <th className="py-1 px-2 text-right">NILAI KONTRAK</th>
-                    <th className="py-1 px-2 text-right">KONTRIBUSI PNBP</th>
-                    <th className="py-1 px-2 text-center">STATUS KEPATUHAN</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
-                  {PKS_PENGUSAHAAN_MITRA_TABLE.map((row) => (
-                    <tr key={row.id} className="hover:bg-purple-50/40">
-                      <td className="py-1.5 px-2 font-semibold text-slate-900">{row.namaMitra}</td>
-                      <td className="py-1.5 px-2 text-slate-600">{row.objekKerjasama}</td>
-                      <td className="py-1.5 px-2 font-mono text-[9px] text-slate-500">{row.skema}</td>
-                      <td className="py-1.5 px-2 text-right font-mono font-bold text-indigo-700">{row.nilaiInvestasiKontrak}</td>
-                      <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700">{row.kontribusiPnbp}</td>
-                      <td className="py-1.5 px-2 text-center">
-                        <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          {row.statusMonev}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <DirektoratPengendalianInvestasiDeepDive />
       )}
 
       {/* ================================================================== */}
@@ -614,175 +404,9 @@ export const InvestasiPengusahaanDeepDiveCenter: React.FC<
       {/* 9 Dataset Terintegrasi Dit. Lalu Lintas Barang & Penanaman Modal    */}
       {/* ================================================================== */}
       {activeUnit === 'dit-lalu-lintas-barang' && (
-        <div className="space-y-3.5">
-          {/* DUAL VISUALISASI UTAMA: Tren Bulanan Perizinan + Realisasi Kuota Barang Konsumsi */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* Visual 1: Tren Bulanan Perizinan Pemasukan vs Pengeluaran (Dataset #6 & #7) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                      <Truck className="w-4 h-4 text-amber-600" />
-                      <span>Tren Perizinan Pemasukan vs Pengeluaran (Dataset #6 &amp; #7)</span>
-                    </h4>
-                    <p className="text-[10px] text-slate-500">
-                      Dokumen Layanan Perizinan Masuk/Keluar KPBPB Batam &amp; SLA On-Time
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">14.280 Dokumen</span>
-                    <span className="text-[10px] text-amber-600 font-bold ml-1.5">(96,8% On-Time)</span>
-                  </div>
-                </div>
-
-                <div className="h-56 w-full pt-1">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={PERIZINAN_LLB_MONTHLY} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                      <XAxis dataKey="bulan" tick={{ fontSize: 10 }} />
-                      <YAxis yAxisId="left" tick={{ fontSize: 9.5 }} domain={[300, 900]} />
-                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 9.5 }} domain={[94, 100]} tickFormatter={(v) => `${v}%`} />
-                      <Tooltip formatter={(v: any, name: any) => [name.includes('SLA') ? `${v}%` : `${v} Dokumen`, name]} />
-                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                      <Bar yAxisId="left" dataKey="pemasukan" name="Izin Pemasukan" fill="#D97706" radius={[4, 4, 0, 0]} />
-                      <Bar yAxisId="left" dataKey="pengeluaran" name="Izin Pengeluaran" fill="#0284C7" radius={[4, 4, 0, 0]} />
-                      <Line yAxisId="right" type="monotone" dataKey="slaPersen" name="SLA On-Time (%)" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-
-            {/* Visual 2: Realisasi Kuota Induk Barang Konsumsi (Dataset #2) */}
-            <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                      <Package className="w-4 h-4 text-amber-600" />
-                      <span>Realisasi Kuota Barang Konsumsi (Dataset #2)</span>
-                    </h4>
-                    <p className="text-[10px] text-slate-500">
-                      Alokasi Kuota vs Realisasi Pemasukan Komoditas Pokok Batam
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">98,2% Realisasi</span>
-                    <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(Tercukupi)</span>
-                  </div>
-                </div>
-
-                <div className="h-56 w-full pt-1">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={KUOTA_BARANG_KONSUMSI} layout="vertical" margin={{ top: 5, right: 15, left: 35, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
-                      <XAxis type="number" tick={{ fontSize: 9 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                      <YAxis type="category" dataKey="komoditas" tick={{ fontSize: 8.5 }} width={120} />
-                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toLocaleString('id-ID')} Ton`, name]} />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} />
-                      <Bar dataKey="kuotaTon" name="Alokasi Kuota" fill="#94A3B8" />
-                      <Bar dataKey="realisasiTon" name="Realisasi Masuk" fill="#D97706" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* DUAL VISUALISASI KEDUA: Sebaran KBLI Industri & Kecepatan Waktu Layanan SLA */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-            {/* Visual 3: Sebaran KBLI Industri & Usaha Kawasan (Dataset #5) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between mb-1.5">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Activity className="w-4 h-4 text-amber-600" />
-                    <span>Sebaran KBLI Perusahaan Kawasan (Dataset #5)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    1.420 Perusahaan Penerima Izin Usaha Kawasan Bebas
-                  </p>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">1.420 BU Aktif</span>
-                  <span className="text-[10px] text-blue-600 font-bold ml-1.5">(KBLI Industri &amp; Dagang)</span>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 pt-1">
-                {SEBARAN_KBLI_INDUSTRI.map((k, idx) => (
-                  <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                    <div className="min-w-0 pr-2">
-                      <div className="font-bold text-slate-800 truncate">{k.sektor}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        {k.perusahaan} Perusahaan Beroperasi
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-mono font-black text-slate-900 text-sm">{k.porsi}</span>
-                      <div className="w-20 bg-slate-200 h-1.5 rounded-full mt-1 overflow-hidden">
-                        <div className="bg-amber-600 h-full rounded-full" style={{ width: `${k.share}%` }} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Visual 4: Efektivitas Layanan SLA Perizinan (Dataset #8 & #9) */}
-            <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between mb-1.5">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-emerald-600" />
-                    <span>Efektivitas Waktu Layanan SLA Perizinan (Dataset #8 &amp; #9)</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-500">
-                    Waktu Penyelesaian Aktual vs Standar Regulasi Maksimal
-                  </p>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">Rp 2,48 M</span>
-                  <span className="text-[10px] text-emerald-600 font-bold ml-1.5">(112,7% Target &bull; 1,8 Jam)</span>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 pt-1">
-                {SLA_LAYANAN_LLB.map((s, idx) => (
-                  <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                    <div className="min-w-0 pr-2">
-                      <div className="font-bold text-slate-800 truncate">{s.layanan}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        Standar Maks {s.slaTargetJam} Jam &bull; Aktual: {s.aktualJam} Jam
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-mono font-bold text-emerald-700 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                        {s.kepatuhan} On-Time
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Action Link ke Full Unit Dashboard */}
-          {onNavigateToFullDashboard && (
-            <div className="flex justify-end pt-1">
-              <button
-                type="button"
-                onClick={() => onNavigateToFullDashboard('lalu-lintas-barang')}
-                className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
-              >
-                <span>Buka Dashboard Penuh: Direktorat Lalu Lintas Barang</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          )}
-        </div>
+        <DirektoratLaluLintasBarangDeepDive />
       )}
+
     </div>
   );
 };

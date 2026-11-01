@@ -126,7 +126,7 @@ export const BP_BATAM_24_UNITS: BpBatamUnit[] = [
     iconName: 'TrendingUp',
     pdfPages: 'Perkin A4 No. 04/SPJ/KA/4/2025',
     itemCount: 30,
-    description: 'Pusat Komando Eksekutif Perkin A4 Anggota/Deputi Bidang Investasi dan Pengusahaan BP Batam (Dr. H. Wan Darussalam, S.E., M.Si.): 4 Indikator Kinerja Program utama (Realisasi Investasi KPBPB Rp 31,48 T, Realisasi KEK Rp 9,09 T, Pengendalian Pengusahaan 94,60%, dan Fasilitasi 52 Investor Pipeline Rp 18,75 T) dengan total pagu program Rp 88.420.500.000,- mengintegrasikan Direktorat Promosi dan Fasilitasi Investasi, Direktorat Perencanaan dan Pengembangan Investasi, Direktorat Pengendalian Pengusahaan, dan Direktorat Lalu Lintas Barang.',
+    description: 'Pusat Komando Eksekutif Perkin A4 Anggota/Deputi Bidang Investasi dan Pengusahaan BP Batam (Dr. H. Wan Darussalam, S.E., M.Si.): 4 Indikator Kinerja Program utama (Realisasi Investasi KPBPB Rp 31,48 T, Realisasi KEK Rp 9,09 T, Pengendalian Pengusahaan 94,60%, dan Fasilitasi 52 Investor Pipeline Rp 18,75 T) dengan total pagu program Rp 88.420.500.000,- mengintegrasikan Direktorat Promosi dan Fasilitasi Investasi, Direktorat Perencanaan dan Pengembangan Investasi, Direktorat Pengendalian Investasi, dan Direktorat Lalu Lintas Barang.',
     status: 'active',
     headOfUnit: 'Dr. H. Wan Darussalam, S.E., M.Si. (Anggota/Deputi Bidang Investasi dan Pengusahaan)',
     keyKpis: [
@@ -140,7 +140,7 @@ export const BP_BATAM_24_UNITS: BpBatamUnit[] = [
     datasets: [
       'Dit. Promosi dan Fasilitasi Investasi (14 Dataset - Hal 46-48): Pipeline Minat Investasi, Website Traffic, Infrastruktur',
       'Dit. Perencanaan dan Pengembangan Investasi (12 Dataset - Hal 9-11): Profil 3 KEK, Perizinan Administrator',
-      'Dit. Pengendalian Pengusahaan (4 Dataset - Hal 14): Evaluasi 48 Rekomendasi, Perbaikan PKS KSO/BOT/Konsesi',
+      'Dit. Pengendalian Investasi (4 Dataset - Hal 14): Evaluasi 48 Rekomendasi, Perbaikan PKS KSO/BOT/Konsesi',
       'Dit. Lalu Lintas Barang (9 Dataset - Hal 8-9): PNBP Rp 2,48 M, 14.850 SK Terbit, SLA 96,8%',
     ],
   },

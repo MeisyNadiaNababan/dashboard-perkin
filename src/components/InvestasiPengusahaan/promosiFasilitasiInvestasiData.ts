@@ -29,6 +29,13 @@ export interface FasilitasiBulananItem {
   totalTamu: number;
   highlightKegiatan: string;
   penyelenggaraUtama: string;
+  namaKegiatan?: string;
+  penyelenggara?: string;
+  daftarKegiatan?: {
+    namaKegiatan: string;
+    penyelenggara: string;
+    kategori: string;
+  }[];
 }
 
 export interface KunjunganInvestorItem {

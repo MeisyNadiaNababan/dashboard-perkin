@@ -21,6 +21,7 @@ import { RekapPenertibanCard } from './RekapPenertibanCard';
 import { MonitoringPengamananAtasan } from './MonitoringPengamananAtasan';
 import { PengamananFormulaModal } from './PengamananFormulaModal';
 import { PengamananAsetWordDocView } from './PengamananAsetWordDocView';
+import { DirektoratPengamananAsetVisualizer } from './DirektoratPengamananAsetVisualizer';
 import { PengamananFilterState } from './types';
 
 export const PengamananAsetDashboard: React.FC = () => {
@@ -35,8 +36,8 @@ export const PengamananAsetDashboard: React.FC = () => {
   const [activeFormulaKpi, setActiveFormulaKpi] = useState<string | null>(null);
   const [showWordDocView, setShowWordDocView] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<
-    'all' | 'unjuk_rasa' | 'bencana_alam' | 'penertiban' | 'monitoring'
-  >('all');
+    'visualizer' | 'all' | 'unjuk_rasa' | 'bencana_alam' | 'penertiban' | 'monitoring'
+  >('visualizer');
 
   const handleFilterChange = (newFilters: Partial<PengamananFilterState>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -108,6 +109,17 @@ export const PengamananAsetDashboard: React.FC = () => {
         {/* Navigation Tabs for Executive View Switch */}
         <div className="flex items-center gap-1.5 mt-4 pt-3 border-t border-slate-100 overflow-x-auto text-xs">
           <button
+            onClick={() => setActiveTab('visualizer')}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer shrink-0 flex items-center gap-1.5 ${
+              activeTab === 'visualizer'
+                ? 'bg-blue-600 text-white font-bold shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Shield className="w-3.5 h-3.5" />
+            <span>Dashboard 8 Visualisasi (Grid 2 Kolom)</span>
+          </button>
+          <button
             onClick={() => setActiveTab('all')}
             className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer shrink-0 ${
               activeTab === 'all'
@@ -115,7 +127,7 @@ export const PengamananAsetDashboard: React.FC = () => {
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            Semua Modul (Executive Command)
+            Semua Modul Terperinci
           </button>
           <button
             onClick={() => setActiveTab('unjuk_rasa')}
@@ -126,7 +138,7 @@ export const PengamananAsetDashboard: React.FC = () => {
             }`}
           >
             <Users className="w-3.5 h-3.5" />
-            <span>Rekap Pengamanan Unjuk Rasa (Poin 5 • Dataset #7)</span>
+            <span>Rekap Pengamanan Unjuk Rasa (Dataset #7)</span>
           </button>
           <button
             onClick={() => setActiveTab('bencana_alam')}
@@ -137,7 +149,7 @@ export const PengamananAsetDashboard: React.FC = () => {
             }`}
           >
             <Flame className="w-3.5 h-3.5" />
-            <span>Rekap Bencana Alam &amp; Rescue (Poin 6 • Dataset #6)</span>
+            <span>Rekap Bencana Alam (Dataset #6)</span>
           </button>
           <button
             onClick={() => setActiveTab('penertiban')}
@@ -148,7 +160,7 @@ export const PengamananAsetDashboard: React.FC = () => {
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>Rekap Penertiban Rutin (Poin 7 • Dataset #9)</span>
+            <span>Rekap Penertiban Rutin (Dataset #9)</span>
           </button>
           <button
             onClick={() => setActiveTab('monitoring')}
@@ -164,32 +176,42 @@ export const PengamananAsetDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Global Filters Bar (Poin 9) */}
-      <PengamananAsetFilters
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        onResetFilters={handleResetFilters}
-      />
-
-      {/* 4 Main Executive BAN KPI Cards (Poin 1, 2, 3, 4) */}
-      <PengamananAsetKpis onOpenFormulaModal={(kpiId) => setActiveFormulaKpi(kpiId)} />
-
-      {/* Kesiapsiagaan & Penindakan Kawasan Lingkungan dan Hutan (Diletakkan Langsung Setelah KPI) */}
-      {(activeTab === 'all' || activeTab === 'monitoring') && (
-        <MonitoringPengamananAtasan filters={filters} />
+      {/* Tampilan Visualisasi 8 Kartu (Grid 2 Kolom, Tanpa KPI Terpisah & Tanpa Cover) */}
+      {activeTab === 'visualizer' && (
+        <DirektoratPengamananAsetVisualizer />
       )}
 
-      {/* Section Content Rendering */}
-      {(activeTab === 'all' || activeTab === 'unjuk_rasa') && (
-        <RekapUnjukRasaCard filters={filters} />
-      )}
+      {/* Tampilan Alternatif Modul Terperinci */}
+      {activeTab !== 'visualizer' && (
+        <>
+          {/* Interactive Global Filters Bar */}
+          <PengamananAsetFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onResetFilters={handleResetFilters}
+          />
 
-      {(activeTab === 'all' || activeTab === 'bencana_alam') && (
-        <RekapBencanaAlamCard filters={filters} />
-      )}
+          {/* 4 Main Executive BAN KPI Cards */}
+          <PengamananAsetKpis onOpenFormulaModal={(kpiId) => setActiveFormulaKpi(kpiId)} />
 
-      {(activeTab === 'all' || activeTab === 'penertiban') && (
-        <RekapPenertibanCard filters={filters} />
+          {/* Kesiapsiagaan & Penindakan Kawasan Lingkungan dan Hutan */}
+          {(activeTab === 'all' || activeTab === 'monitoring') && (
+            <MonitoringPengamananAtasan filters={filters} />
+          )}
+
+          {/* Section Content Rendering */}
+          {(activeTab === 'all' || activeTab === 'unjuk_rasa') && (
+            <RekapUnjukRasaCard filters={filters} />
+          )}
+
+          {(activeTab === 'all' || activeTab === 'bencana_alam') && (
+            <RekapBencanaAlamCard filters={filters} />
+          )}
+
+          {(activeTab === 'all' || activeTab === 'penertiban') && (
+            <RekapPenertibanCard filters={filters} />
+          )}
+        </>
       )}
 
       {/* Kamus Rumus & Tableau Desktop Formula Modal */}

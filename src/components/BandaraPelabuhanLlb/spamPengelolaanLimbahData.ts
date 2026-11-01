@@ -1,491 +1,853 @@
-// Data Terpadu Badan Usaha Sistem Pengelolaan Air Minum dan Pengelolaan Limbah BP Batam
-// Disimpan dalam satu objek JSON agar mudah diganti dengan data asli
+// ============================================================================
+// DATA TERPADU BADAN USAHA SISTEM PENGELOLAAN AIR MINUM & PENGELOLAAN LIMBAH
+// BP BATAM (DEP A5) - DISIMPAN DALAM SATU OBJEK JSON AGAR MUDAH DIGANTI DATA ASLI
+// ============================================================================
 
-export const SPAM_LIMBAH_DATA = {
-  // =========================================================================
-  // A. PRODUKSI DAN AIR BAKU
-  // =========================================================================
-  // 1. Kapasitas produksi per instalasi pengolahan air (Terbuka, perbulan)
-  kapasitasProduksiPerWtp: [
-    { bulan: 'Jan', Duriangkang: 3000, Mukakuning: 600, SeiLadi: 380, SeiHarapan: 210, Nongsa: 60, Piayu: 200 },
-    { bulan: 'Feb', Duriangkang: 3000, Mukakuning: 600, SeiLadi: 380, SeiHarapan: 210, Nongsa: 60, Piayu: 200 },
-    { bulan: 'Mar', Duriangkang: 3050, Mukakuning: 610, SeiLadi: 385, SeiHarapan: 210, Nongsa: 65, Piayu: 205 },
-    { bulan: 'Apr', Duriangkang: 3080, Mukakuning: 620, SeiLadi: 390, SeiHarapan: 215, Nongsa: 65, Piayu: 210 },
-    { bulan: 'Mei', Duriangkang: 3100, Mukakuning: 620, SeiLadi: 390, SeiHarapan: 215, Nongsa: 70, Piayu: 210 },
-    { bulan: 'Jun', Duriangkang: 3100, Mukakuning: 625, SeiLadi: 395, SeiHarapan: 220, Nongsa: 70, Piayu: 215 },
-    { bulan: 'Jul', Duriangkang: 3120, Mukakuning: 630, SeiLadi: 395, SeiHarapan: 220, Nongsa: 75, Piayu: 215 },
-    { bulan: 'Agu', Duriangkang: 3120, Mukakuning: 630, SeiLadi: 400, SeiHarapan: 220, Nongsa: 75, Piayu: 220 },
-    { bulan: 'Sep', Duriangkang: 3150, Mukakuning: 635, SeiLadi: 400, SeiHarapan: 225, Nongsa: 80, Piayu: 220 },
-    { bulan: 'Okt', Duriangkang: 3150, Mukakuning: 635, SeiLadi: 405, SeiHarapan: 225, Nongsa: 80, Piayu: 225 },
-    { bulan: 'Nov', Duriangkang: 3180, Mukakuning: 640, SeiLadi: 405, SeiHarapan: 230, Nongsa: 85, Piayu: 225 },
-    { bulan: 'Des', Duriangkang: 3200, Mukakuning: 650, SeiLadi: 410, SeiHarapan: 230, Nongsa: 85, Piayu: 230 },
-  ],
+export interface BakuCurahBatamindoRecord {
+  bulan: string;
+  airBakuM3: number;
+  airCurahM3: number;
+  penyediaanBatamindoM3: number;
+  nomorBA: string;
+}
 
-  // 2. Pemakaian air baku per WTP per semester (Tertutup, persemester)
-  pemakaianAirBakuSemester: [
-    { semester: '2024-S1', Duriangkang: 46800000, Mukakuning: 9360000, SeiLadi: 5928000, SeiHarapan: 3276000, Nongsa: 936000, Piayu: 3120000 },
-    { semester: '2024-S2', Duriangkang: 47520000, Mukakuning: 9504000, SeiLadi: 6019200, SeiHarapan: 3326400, Nongsa: 950400, Piayu: 3168000 },
-    { semester: '2025-S1', Duriangkang: 48240000, Mukakuning: 9648000, SeiLadi: 6110400, SeiHarapan: 3376800, Nongsa: 964800, Piayu: 3216000 },
-    { semester: '2025-S2', Duriangkang: 48960000, Mukakuning: 9792000, SeiLadi: 6201600, SeiHarapan: 3427200, Nongsa: 979200, Piayu: 3264000 },
-    { semester: '2026-S1', Duriangkang: 49680000, Mukakuning: 9936000, SeiLadi: 6292800, SeiHarapan: 3477600, Nongsa: 993600, Piayu: 3312000 },
-  ],
+export interface NrwRecord {
+  triwulan: string;
+  tahun2026: number;
+  tahun2025: number;
+  target: number;
+  deltaVsPrevQ: number;
+  catatan?: string;
+}
 
-  // 3. Volume air baku vs air curah per bulan (Tertutup, perbulan)
-  volumeBakuVsCurah: [
-    { bulan: 'Jan', volumeAirBaku: 11840000, volumeAirCurah: 10420000 },
-    { bulan: 'Feb', volumeAirBaku: 11120000, volumeAirCurah: 9840000 },
-    { bulan: 'Mar', volumeAirBaku: 12150000, volumeAirCurah: 10750000 },
-    { bulan: 'Apr', volumeAirBaku: 11980000, volumeAirCurah: 10580000 },
-    { bulan: 'Mei', volumeAirBaku: 12350000, volumeAirCurah: 10920000 },
-    { bulan: 'Jun', volumeAirBaku: 12050000, volumeAirCurah: 10660000 },
-    { bulan: 'Jul', volumeAirBaku: 12500000, volumeAirCurah: 11050000 },
-    { bulan: 'Agu', volumeAirBaku: 12280000, volumeAirCurah: 10860000 },
-    { bulan: 'Sep', volumeAirBaku: 12120000, volumeAirCurah: 10710000 },
-    { bulan: 'Okt', volumeAirBaku: 12450000, volumeAirCurah: 11010000 },
-    { bulan: 'Nov', volumeAirBaku: 12200000, volumeAirCurah: 10790000 },
-    { bulan: 'Des', volumeAirBaku: 12680000, volumeAirCurah: 11210000 },
-  ],
+export interface DmzAirBacaRecord {
+  dmz: string;
+  volumeAirBacaM3: number;
+  jumlahPelanggan: number;
+  volumeTagihM3: number;
+  selisihPersen: number;
+  kategori: 'Rumah Tangga' | 'Niaga' | 'Industri';
+  kpp: string;
+}
 
-  // 4. Kapasitas tampung dan luas permukaan waduk (Terbuka, jika update)
-  kapasitasDanLuasWaduk: [
-    { tahun: '2021', kapasitasTampungJutaM3: 101.2, luasPermukaanHa: 3850 },
-    { tahun: '2022', kapasitasTampungJutaM3: 103.5, luasPermukaanHa: 3910 },
-    { tahun: '2023', kapasitasTampungJutaM3: 104.8, luasPermukaanHa: 3940 },
-    { tahun: '2024', kapasitasTampungJutaM3: 106.1, luasPermukaanHa: 3980 },
-    { tahun: '2025', kapasitasTampungJutaM3: 108.4, luasPermukaanHa: 4020 },
-    { tahun: '2026', kapasitasTampungJutaM3: 109.8, luasPermukaanHa: 4050 },
-  ],
+export interface WtpProduksiRecord {
+  wtp: string;
+  kapasitasTerpasangLps: number;
+  pemakaianAirBakuLps: number;
+  utilisasiPersen: number;
+  periode: string;
+  teknologi: string;
+}
 
-  // 5. Penyediaan air baku ke industri Batamindo (Terbuka, perbulan)
-  airBakuBatamindo: [
-    { bulan: 'Jan', jumlahM3: 312500 },
-    { bulan: 'Feb', jumlahM3: 298400 },
-    { bulan: 'Mar', jumlahM3: 325600 },
-    { bulan: 'Apr', jumlahM3: 319200 },
-    { bulan: 'Mei', jumlahM3: 334100 },
-    { bulan: 'Jun', jumlahM3: 328700 },
-    { bulan: 'Jul', jumlahM3: 341200 },
-    { bulan: 'Agu', jumlahM3: 338900 },
-    { bulan: 'Sep', jumlahM3: 331400 },
-    { bulan: 'Okt', jumlahM3: 345000 },
-    { bulan: 'Nov', jumlahM3: 339800 },
-    { bulan: 'Des', jumlahM3: 352100 },
-  ],
+export interface WadukKapasitasRecord {
+  namaWaduk: string;
+  kapasitasJutaM3: number;
+  luasPermukaanHa: number;
+  tahun: number;
+  periodeRekap: string;
+  status: string;
+  elevasiMukaAirM: number;
+}
 
-  // 6. Penggunaan bahan kimia pengolahan air (Tertutup, perbulan)
-  bahanKimiaPerWtp: {
-    Semua: [
-      { bulan: 'Jan', pacKg: 42500, klorinKg: 18200, sodaAshKg: 14300, polimerKg: 2800 },
-      { bulan: 'Feb', pacKg: 39800, klorinKg: 17100, sodaAshKg: 13500, polimerKg: 2650 },
-      { bulan: 'Mar', pacKg: 44100, klorinKg: 18900, sodaAshKg: 14800, polimerKg: 2950 },
-      { bulan: 'Apr', pacKg: 43200, klorinKg: 18500, sodaAshKg: 14500, polimerKg: 2890 },
-      { bulan: 'Mei', pacKg: 45600, klorinKg: 19400, sodaAshKg: 15300, polimerKg: 3050 },
-      { bulan: 'Jun', pacKg: 44800, klorinKg: 19100, sodaAshKg: 15000, polimerKg: 2980 },
-      { bulan: 'Jul', pacKg: 46200, klorinKg: 19700, sodaAshKg: 15500, polimerKg: 3100 },
-      { bulan: 'Agu', pacKg: 45300, klorinKg: 19300, sodaAshKg: 15200, polimerKg: 3020 },
-      { bulan: 'Sep', pacKg: 44600, klorinKg: 19000, sodaAshKg: 14900, polimerKg: 2960 },
-      { bulan: 'Okt', pacKg: 46800, klorinKg: 19900, sodaAshKg: 15700, polimerKg: 3120 },
-      { bulan: 'Nov', pacKg: 45900, klorinKg: 19500, sodaAshKg: 15400, polimerKg: 3060 },
-      { bulan: 'Des', pacKg: 47500, klorinKg: 20200, sodaAshKg: 15900, polimerKg: 3180 },
-    ],
-    'WTP Duriangkang': [
-      { bulan: 'Jan', pacKg: 25500, klorinKg: 10900, sodaAshKg: 8500, polimerKg: 1680 },
-      { bulan: 'Feb', pacKg: 23800, klorinKg: 10200, sodaAshKg: 8100, polimerKg: 1590 },
-      { bulan: 'Mar', pacKg: 26400, klorinKg: 11300, sodaAshKg: 8800, polimerKg: 1770 },
-      { bulan: 'Apr', pacKg: 25900, klorinKg: 11100, sodaAshKg: 8700, polimerKg: 1730 },
-      { bulan: 'Mei', pacKg: 27300, klorinKg: 11600, sodaAshKg: 9100, polimerKg: 1830 },
-      { bulan: 'Jun', pacKg: 26800, klorinKg: 11400, sodaAshKg: 9000, polimerKg: 1780 },
-      { bulan: 'Jul', pacKg: 27700, klorinKg: 11800, sodaAshKg: 9300, polimerKg: 1860 },
-      { bulan: 'Agu', pacKg: 27100, klorinKg: 11500, sodaAshKg: 9100, polimerKg: 1810 },
-      { bulan: 'Sep', pacKg: 26700, klorinKg: 11400, sodaAshKg: 8900, polimerKg: 1770 },
-      { bulan: 'Okt', pacKg: 28000, klorinKg: 11900, sodaAshKg: 9400, polimerKg: 1870 },
-      { bulan: 'Nov', pacKg: 27500, klorinKg: 11700, sodaAshKg: 9200, polimerKg: 1830 },
-      { bulan: 'Des', pacKg: 28500, klorinKg: 12100, sodaAshKg: 9500, polimerKg: 1900 },
-    ],
-    'WTP Mukakuning': [
-      { bulan: 'Jan', pacKg: 8500, klorinKg: 3600, sodaAshKg: 2800, polimerKg: 560 },
-      { bulan: 'Feb', pacKg: 7900, klorinKg: 3400, sodaAshKg: 2700, polimerKg: 530 },
-      { bulan: 'Mar', pacKg: 8800, klorinKg: 3700, sodaAshKg: 2900, polimerKg: 590 },
-      { bulan: 'Apr', pacKg: 8600, klorinKg: 3700, sodaAshKg: 2900, polimerKg: 570 },
-      { bulan: 'Mei', pacKg: 9100, klorinKg: 3800, sodaAshKg: 3000, polimerKg: 610 },
-      { bulan: 'Jun', pacKg: 8900, klorinKg: 3800, sodaAshKg: 3000, polimerKg: 590 },
-      { bulan: 'Jul', pacKg: 9200, klorinKg: 3900, sodaAshKg: 3100, polimerKg: 620 },
-      { bulan: 'Agu', pacKg: 9000, klorinKg: 3800, sodaAshKg: 3000, polimerKg: 600 },
-      { bulan: 'Sep', pacKg: 8900, klorinKg: 3800, sodaAshKg: 2900, polimerKg: 590 },
-      { bulan: 'Okt', pacKg: 9300, klorinKg: 3900, sodaAshKg: 3100, polimerKg: 620 },
-      { bulan: 'Nov', pacKg: 9100, klorinKg: 3900, sodaAshKg: 3000, polimerKg: 610 },
-      { bulan: 'Des', pacKg: 9500, klorinKg: 4000, sodaAshKg: 3100, polimerKg: 630 },
-    ],
-    'WTP Sei Ladi': [
-      { bulan: 'Jan', pacKg: 5100, klorinKg: 2180, sodaAshKg: 1710, polimerKg: 336 },
-      { bulan: 'Feb', pacKg: 4770, klorinKg: 2050, sodaAshKg: 1620, polimerKg: 318 },
-      { bulan: 'Mar', pacKg: 5290, klorinKg: 2260, sodaAshKg: 1770, polimerKg: 354 },
-      { bulan: 'Apr', pacKg: 5180, klorinKg: 2220, sodaAshKg: 1740, polimerKg: 346 },
-      { bulan: 'Mei', pacKg: 5470, klorinKg: 2320, sodaAshKg: 1830, polimerKg: 366 },
-      { bulan: 'Jun', pacKg: 5370, klorinKg: 2290, sodaAshKg: 1800, polimerKg: 357 },
-      { bulan: 'Jul', pacKg: 5540, klorinKg: 2360, sodaAshKg: 1860, polimerKg: 372 },
-      { bulan: 'Agu', pacKg: 5430, klorinKg: 2310, sodaAshKg: 1820, polimerKg: 362 },
-      { bulan: 'Sep', pacKg: 5350, klorinKg: 2280, sodaAshKg: 1780, polimerKg: 355 },
-      { bulan: 'Okt', pacKg: 5610, klorinKg: 2380, sodaAshKg: 1880, polimerKg: 374 },
-      { bulan: 'Nov', pacKg: 5500, klorinKg: 2340, sodaAshKg: 1840, polimerKg: 367 },
-      { bulan: 'Des', pacKg: 5700, klorinKg: 2420, sodaAshKg: 1900, polimerKg: 381 },
-    ],
+export interface LimbahB3KpliRecord {
+  bulan: string;
+  padatTon: number;
+  sludgeTon: number;
+  cairTon: number;
+  totalTon: number;
+  persenDiolah: number;
+  perusahaanTerbanyak: string;
+  targetPersen: number;
+}
+
+export interface LayananLimbahDomestikRecord {
+  bulan: string;
+  limbahDomestikUmum: number;
+  pengurasanSumurTinja: number;
+  pengurasanAsetBpBatam: number;
+  totalPesanan: number;
+  totalVolumeM3: number;
+  jumlahRupiah: number;
+  trip: number;
+  zonaTerbanyak: string;
+  zonaBreakdown?: Record<string, { pesanan: number; volumeM3: number }>;
+}
+
+export interface PengujianLabRecord {
+  bulan: string;
+  sampelUji: number;
+  biayaRetribusiRp: number;
+  jenisTerbanyak: string;
+  perusahaanTerbanyak: string;
+  jenisBreakdown?: Record<string, number>;
+}
+
+export interface SpamLimbahYearData {
+  bakuCurahBatamindo: BakuCurahBatamindoRecord[];
+  nrwTriwulan: NrwRecord[];
+  dmzAirBaca: Record<string, DmzAirBacaRecord[]>; // Keyed by month (e.g. 'Semua', 'Jan', 'Feb', ... 'Des')
+  wtpProduksiBulanan: Record<string, WtpProduksiRecord[]>; // Keyed by month or semester ('Jan', 'Semester 1', etc.)
+  wadukKapasitas: WadukKapasitasRecord[];
+  limbahB3Kpli: LimbahB3KpliRecord[];
+  layananLimbahDomestik: LayananLimbahDomestikRecord[];
+  pengujianLab: PengujianLabRecord[];
+}
+
+export const SPAM_LIMBAH_DATA: {
+  tahunan: Record<number, SpamLimbahYearData>;
+  daftarWadukHistoris: Record<number, WadukKapasitasRecord[]>;
+} = {
+  tahunan: {
+    2026: {
+      // ----------------------------------------------------------------------
+      // KARTU 1: Volume Air Baku, Air Curah, dan Penyediaan ke Industri
+      // ----------------------------------------------------------------------
+      bakuCurahBatamindo: [
+        { bulan: 'Jan', airBakuM3: 12150000, airCurahM3: 10680000, penyediaanBatamindoM3: 328000, nomorBA: 'BA-AB/01/SPAM/2026' },
+        { bulan: 'Feb', airBakuM3: 11420000, airCurahM3: 10040000, penyediaanBatamindoM3: 312000, nomorBA: 'BA-AB/02/SPAM/2026' },
+        { bulan: 'Mar', airBakuM3: 12480000, airCurahM3: 10980000, penyediaanBatamindoM3: 339000, nomorBA: 'BA-AB/03/SPAM/2026' },
+        { bulan: 'Apr', airBakuM3: 12240000, airCurahM3: 10760000, penyediaanBatamindoM3: 331000, nomorBA: 'BA-AB/04/SPAM/2026' },
+        { bulan: 'Mei', airBakuM3: 12620000, airCurahM3: 11120000, penyediaanBatamindoM3: 345000, nomorBA: 'BA-AB/05/SPAM/2026' },
+        { bulan: 'Jun', airBakuM3: 12380000, airCurahM3: 10890000, penyediaanBatamindoM3: 338000, nomorBA: 'BA-AB/06/SPAM/2026' },
+        { bulan: 'Jul', airBakuM3: 12790000, airCurahM3: 11250000, penyediaanBatamindoM3: 352000, nomorBA: 'BA-AB/07/SPAM/2026' },
+        { bulan: 'Agu', airBakuM3: 12560000, airCurahM3: 11060000, penyediaanBatamindoM3: 346000, nomorBA: 'BA-AB/08/SPAM/2026' },
+        { bulan: 'Sep', airBakuM3: 12410000, airCurahM3: 10920000, penyediaanBatamindoM3: 340000, nomorBA: 'BA-AB/09/SPAM/2026' },
+        { bulan: 'Okt', airBakuM3: 12750000, airCurahM3: 11220000, penyediaanBatamindoM3: 354000, nomorBA: 'BA-AB/10/SPAM/2026' },
+        { bulan: 'Nov', airBakuM3: 12510000, airCurahM3: 11010000, penyediaanBatamindoM3: 348000, nomorBA: 'BA-AB/11/SPAM/2026' },
+        { bulan: 'Des', airBakuM3: 12980000, airCurahM3: 11420000, penyediaanBatamindoM3: 362000, nomorBA: 'BA-AB/12/SPAM/2026' },
+      ],
+
+      // ----------------------------------------------------------------------
+      // KARTU 2: Non Revenue Water (NRW) Triwulanan
+      // ----------------------------------------------------------------------
+      nrwTriwulan: [
+        { triwulan: 'Triwulan I (Q1)', tahun2026: 24.2, tahun2025: 26.5, target: 25.0, deltaVsPrevQ: -0.6, catatan: 'Rehabilitasi pipa transmisi Duriangkang selesai' },
+        { triwulan: 'Triwulan II (Q2)', tahun2026: 23.8, tahun2025: 25.9, target: 25.0, deltaVsPrevQ: -0.4, catatan: 'Pemasangan smart pressure logger di Nagoya & Sagulung' },
+        { triwulan: 'Triwulan III (Q3)', tahun2026: 23.5, tahun2025: 25.4, target: 25.0, deltaVsPrevQ: -0.3, catatan: 'Inspeksi kebocoran DMA Batu Aji' },
+        { triwulan: 'Triwulan IV (Q4)', tahun2026: 23.1, tahun2025: 24.8, target: 25.0, deltaVsPrevQ: -0.4, catatan: 'Target tercapai di bawah batas toleransi 25%' },
+      ],
+
+      // ----------------------------------------------------------------------
+      // KARTU 3: Volume Air Baca dan Pelanggan per DMZ (Top 10 DMZ)
+      // ----------------------------------------------------------------------
+      dmzAirBaca: {
+        Semua: [
+          { dmz: 'DMZ Batam Centre 01', volumeAirBacaM3: 945000, jumlahPelanggan: 38240, volumeTagihM3: 885000, selisihPersen: 6.3, kategori: 'Rumah Tangga', kpp: 'KPP Batam Centre' },
+          { dmz: 'DMZ Nagoya Hub 02', volumeAirBacaM3: 865000, jumlahPelanggan: 27500, volumeTagihM3: 820000, selisihPersen: 5.2, kategori: 'Niaga', kpp: 'KPP Nagoya' },
+          { dmz: 'DMZ Batu Aji Raya 03', volumeAirBacaM3: 792000, jumlahPelanggan: 42100, volumeTagihM3: 735000, selisihPersen: 7.2, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Sagulung Permai 04', volumeAirBacaM3: 685000, jumlahPelanggan: 36800, volumeTagihM3: 638000, selisihPersen: 6.9, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Sekupang Marina 05', volumeAirBacaM3: 590000, jumlahPelanggan: 22400, volumeTagihM3: 558000, selisihPersen: 5.4, kategori: 'Rumah Tangga', kpp: 'KPP Tiban' },
+          { dmz: 'DMZ Tiban Indah 06', volumeAirBacaM3: 535000, jumlahPelanggan: 25600, volumeTagihM3: 502000, selisihPersen: 6.2, kategori: 'Rumah Tangga', kpp: 'KPP Tiban' },
+          { dmz: 'DMZ Kabil Industrial 07', volumeAirBacaM3: 512000, jumlahPelanggan: 8400, volumeTagihM3: 492000, selisihPersen: 3.9, kategori: 'Industri', kpp: 'KPP Batam Centre' },
+          { dmz: 'DMZ Bengkong Kolam 08', volumeAirBacaM3: 480000, jumlahPelanggan: 24200, volumeTagihM3: 445000, selisihPersen: 7.3, kategori: 'Rumah Tangga', kpp: 'KPP Nagoya' },
+          { dmz: 'DMZ Sei Beduk & Piayu 09', volumeAirBacaM3: 415000, jumlahPelanggan: 19800, volumeTagihM3: 388000, selisihPersen: 6.5, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Nongsa Heritage 10', volumeAirBacaM3: 360000, jumlahPelanggan: 12100, volumeTagihM3: 342000, selisihPersen: 5.0, kategori: 'Niaga', kpp: 'KPP Batam Centre' },
+        ],
+        Jan: [
+          { dmz: 'DMZ Batam Centre 01', volumeAirBacaM3: 920000, jumlahPelanggan: 38100, volumeTagihM3: 860000, selisihPersen: 6.5, kategori: 'Rumah Tangga', kpp: 'KPP Batam Centre' },
+          { dmz: 'DMZ Nagoya Hub 02', volumeAirBacaM3: 845000, jumlahPelanggan: 27400, volumeTagihM3: 800000, selisihPersen: 5.3, kategori: 'Niaga', kpp: 'KPP Nagoya' },
+          { dmz: 'DMZ Batu Aji Raya 03', volumeAirBacaM3: 775000, jumlahPelanggan: 41900, volumeTagihM3: 718000, selisihPersen: 7.4, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Sagulung Permai 04', volumeAirBacaM3: 670000, jumlahPelanggan: 36600, volumeTagihM3: 622000, selisihPersen: 7.2, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Sekupang Marina 05', volumeAirBacaM3: 575000, jumlahPelanggan: 22300, volumeTagihM3: 542000, selisihPersen: 5.7, kategori: 'Rumah Tangga', kpp: 'KPP Tiban' },
+          { dmz: 'DMZ Tiban Indah 06', volumeAirBacaM3: 520000, jumlahPelanggan: 25400, volumeTagihM3: 488000, selisihPersen: 6.2, kategori: 'Rumah Tangga', kpp: 'KPP Tiban' },
+          { dmz: 'DMZ Kabil Industrial 07', volumeAirBacaM3: 495000, jumlahPelanggan: 8350, volumeTagihM3: 476000, selisihPersen: 3.8, kategori: 'Industri', kpp: 'KPP Batam Centre' },
+          { dmz: 'DMZ Bengkong Kolam 08', volumeAirBacaM3: 468000, jumlahPelanggan: 24100, volumeTagihM3: 433000, selisihPersen: 7.5, kategori: 'Rumah Tangga', kpp: 'KPP Nagoya' },
+          { dmz: 'DMZ Sei Beduk & Piayu 09', volumeAirBacaM3: 405000, jumlahPelanggan: 19650, volumeTagihM3: 378000, selisihPersen: 6.7, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Nongsa Heritage 10', volumeAirBacaM3: 350000, jumlahPelanggan: 12000, volumeTagihM3: 332000, selisihPersen: 5.1, kategori: 'Niaga', kpp: 'KPP Batam Centre' },
+        ],
+      },
+
+      // ----------------------------------------------------------------------
+      // KARTU 4: Kapasitas Produksi & Pemakaian Air Baku per WTP
+      // ----------------------------------------------------------------------
+      wtpProduksiBulanan: {
+        'Semester 1': [
+          { wtp: 'WTP Duriangkang', kapasitasTerpasangLps: 3000, pemakaianAirBakuLps: 2740, utilisasiPersen: 91.3, periode: 'Semester 1 2026', teknologi: 'DAF & Rapid Sand' },
+          { wtp: 'WTP Mukakuning', kapasitasTerpasangLps: 600, pemakaianAirBakuLps: 545, utilisasiPersen: 90.8, periode: 'Semester 1 2026', teknologi: 'Clarifier Konvensional' },
+          { wtp: 'WTP Sei Ladi', kapasitasTerpasangLps: 380, pemakaianAirBakuLps: 330, utilisasiPersen: 86.8, periode: 'Semester 1 2026', teknologi: 'Dual Media Rapid Filter' },
+          { wtp: 'WTP Sei Harapan', kapasitasTerpasangLps: 210, pemakaianAirBakuLps: 182, utilisasiPersen: 86.7, periode: 'Semester 1 2026', teknologi: 'Multi-barrier Sand' },
+          { wtp: 'WTP Tanjung Piayu', kapasitasTerpasangLps: 200, pemakaianAirBakuLps: 168, utilisasiPersen: 84.0, periode: 'Semester 1 2026', teknologi: 'Ultrafiltrasi Membran' },
+          { wtp: 'WTP Nongsa', kapasitasTerpasangLps: 60, pemakaianAirBakuLps: 48, utilisasiPersen: 80.0, periode: 'Semester 1 2026', teknologi: 'Compact Clarifier' },
+        ],
+        'Semester 2': [
+          { wtp: 'WTP Duriangkang', kapasitasTerpasangLps: 3200, pemakaianAirBakuLps: 2880, utilisasiPersen: 90.0, periode: 'Semester 2 2026', teknologi: 'DAF & Rapid Sand' },
+          { wtp: 'WTP Mukakuning', kapasitasTerpasangLps: 650, pemakaianAirBakuLps: 585, utilisasiPersen: 90.0, periode: 'Semester 2 2026', teknologi: 'Clarifier Konvensional' },
+          { wtp: 'WTP Sei Ladi', kapasitasTerpasangLps: 410, pemakaianAirBakuLps: 355, utilisasiPersen: 86.6, periode: 'Semester 2 2026', teknologi: 'Dual Media Rapid Filter' },
+          { wtp: 'WTP Sei Harapan', kapasitasTerpasangLps: 230, pemakaianAirBakuLps: 196, utilisasiPersen: 85.2, periode: 'Semester 2 2026', teknologi: 'Multi-barrier Sand' },
+          { wtp: 'WTP Tanjung Piayu', kapasitasTerpasangLps: 230, pemakaianAirBakuLps: 188, utilisasiPersen: 81.7, periode: 'Semester 2 2026', teknologi: 'Ultrafiltrasi Membran' },
+          { wtp: 'WTP Nongsa', kapasitasTerpasangLps: 85, pemakaianAirBakuLps: 68, utilisasiPersen: 80.0, periode: 'Semester 2 2026', teknologi: 'Compact Clarifier' },
+        ],
+      },
+
+      // ----------------------------------------------------------------------
+      // KARTU 5: Kapasitas Tampung Waduk (Urut dari terbesar)
+      // ----------------------------------------------------------------------
+      wadukKapasitas: [
+        { namaWaduk: 'Waduk Duriangkang', kapasitasJutaM3: 78.5, luasPermukaanHa: 2450, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal (Elevasi +7.2m)', elevasiMukaAirM: 7.2 },
+        { namaWaduk: 'Waduk Tembesi', kapasitasJutaM3: 56.0, luasPermukaanHa: 1200, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal (Elevasi +4.8m)', elevasiMukaAirM: 4.8 },
+        { namaWaduk: 'Waduk Mukakuning', kapasitasJutaM3: 12.3, luasPermukaanHa: 460, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal (Elevasi +11.4m)', elevasiMukaAirM: 11.4 },
+        { namaWaduk: 'Waduk Sei Ladi', kapasitasJutaM3: 9.5, luasPermukaanHa: 380, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal (Elevasi +9.8m)', elevasiMukaAirM: 9.8 },
+        { namaWaduk: 'Waduk Sei Harapan', kapasitasJutaM3: 3.6, luasPermukaanHa: 190, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal (Elevasi +14.2m)', elevasiMukaAirM: 14.2 },
+        { namaWaduk: 'Waduk Nongsa', kapasitasJutaM3: 0.8, luasPermukaanHa: 95, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal (Elevasi +6.5m)', elevasiMukaAirM: 6.5 },
+      ],
+
+      // ----------------------------------------------------------------------
+      // KARTU 6: Pengolahan Limbah B3 di KPLI Kabil
+      // ----------------------------------------------------------------------
+      limbahB3Kpli: [
+        { bulan: 'Jan', padatTon: 620, sludgeTon: 410, cairTon: 215, totalTon: 1245, persenDiolah: 99.4, perusahaanTerbanyak: 'PT McDermott Indonesia', targetPersen: 98.0 },
+        { bulan: 'Feb', padatTon: 585, sludgeTon: 395, cairTon: 205, totalTon: 1185, persenDiolah: 99.2, perusahaanTerbanyak: 'PT Schneider Electric', targetPersen: 98.0 },
+        { bulan: 'Mar', padatTon: 660, sludgeTon: 435, cairTon: 230, totalTon: 1325, persenDiolah: 99.5, perusahaanTerbanyak: 'PT SMOE Indonesia', targetPersen: 98.0 },
+        { bulan: 'Apr', padatTon: 635, sludgeTon: 420, cairTon: 220, totalTon: 1275, persenDiolah: 99.1, perusahaanTerbanyak: 'PT Caterpillar Indonesia', targetPersen: 98.0 },
+        { bulan: 'Mei', padatTon: 680, sludgeTon: 450, cairTon: 240, totalTon: 1370, persenDiolah: 99.6, perusahaanTerbanyak: 'PT Infineon Technologies', targetPersen: 98.0 },
+        { bulan: 'Jun', padatTon: 650, sludgeTon: 430, cairTon: 225, totalTon: 1305, persenDiolah: 98.9, perusahaanTerbanyak: 'PT Citra Tubindo Tbk', targetPersen: 98.0 },
+        { bulan: 'Jul', padatTon: 695, sludgeTon: 460, cairTon: 245, totalTon: 1400, persenDiolah: 99.7, perusahaanTerbanyak: 'PT McDermott Indonesia', targetPersen: 98.0 },
+        { bulan: 'Agu', padatTon: 670, sludgeTon: 445, cairTon: 235, totalTon: 1350, persenDiolah: 99.3, perusahaanTerbanyak: 'PT Pegatron Technology', targetPersen: 98.0 },
+        { bulan: 'Sep', padatTon: 655, sludgeTon: 435, cairTon: 230, totalTon: 1320, persenDiolah: 99.0, perusahaanTerbanyak: 'PT Shimano Batam', targetPersen: 98.0 },
+        { bulan: 'Okt', padatTon: 710, sludgeTon: 470, cairTon: 250, totalTon: 1430, persenDiolah: 99.8, perusahaanTerbanyak: 'PT SMOE Indonesia', targetPersen: 98.0 },
+        { bulan: 'Nov', padatTon: 685, sludgeTon: 455, cairTon: 240, totalTon: 1380, persenDiolah: 99.4, perusahaanTerbanyak: 'PT Schneider Electric', targetPersen: 98.0 },
+        { bulan: 'Des', padatTon: 730, sludgeTon: 485, cairTon: 260, totalTon: 1475, persenDiolah: 99.9, perusahaanTerbanyak: 'PT McDermott Indonesia', targetPersen: 98.0 },
+      ],
+
+      // ----------------------------------------------------------------------
+      // KARTU 7: Layanan Limbah Domestik (IPLT & Sedot Tinja)
+      // ----------------------------------------------------------------------
+      layananLimbahDomestik: [
+        {
+          bulan: 'Jan',
+          limbahDomestikUmum: 135,
+          pengurasanSumurTinja: 142,
+          pengurasanAsetBpBatam: 35,
+          totalPesanan: 312,
+          totalVolumeM3: 1560,
+          jumlahRupiah: 187200000,
+          trip: 390,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 110, volumeM3: 550 },
+            'Zona Sekupang': { pesanan: 75, volumeM3: 375 },
+            'Zona Batu Aji': { pesanan: 68, volumeM3: 340 },
+            'Zona Nongsa': { pesanan: 32, volumeM3: 160 },
+            'Zona Bengkong': { pesanan: 27, volumeM3: 135 },
+          },
+        },
+        {
+          bulan: 'Feb',
+          limbahDomestikUmum: 128,
+          pengurasanSumurTinja: 136,
+          pengurasanAsetBpBatam: 30,
+          totalPesanan: 294,
+          totalVolumeM3: 1470,
+          jumlahRupiah: 176400000,
+          trip: 368,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 104, volumeM3: 520 },
+            'Zona Sekupang': { pesanan: 70, volumeM3: 350 },
+            'Zona Batu Aji': { pesanan: 64, volumeM3: 320 },
+            'Zona Nongsa': { pesanan: 30, volumeM3: 150 },
+            'Zona Bengkong': { pesanan: 26, volumeM3: 130 },
+          },
+        },
+        {
+          bulan: 'Mar',
+          limbahDomestikUmum: 148,
+          pengurasanSumurTinja: 155,
+          pengurasanAsetBpBatam: 42,
+          totalPesanan: 345,
+          totalVolumeM3: 1725,
+          jumlahRupiah: 207000000,
+          trip: 432,
+          zonaTerbanyak: 'Zona Batu Aji',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 118, volumeM3: 590 },
+            'Zona Sekupang': { pesanan: 82, volumeM3: 410 },
+            'Zona Batu Aji': { pesanan: 85, volumeM3: 425 },
+            'Zona Nongsa': { pesanan: 34, volumeM3: 170 },
+            'Zona Bengkong': { pesanan: 26, volumeM3: 130 },
+          },
+        },
+        {
+          bulan: 'Apr',
+          limbahDomestikUmum: 140,
+          pengurasanSumurTinja: 148,
+          pengurasanAsetBpBatam: 38,
+          totalPesanan: 326,
+          totalVolumeM3: 1630,
+          jumlahRupiah: 195600000,
+          trip: 408,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 114, volumeM3: 570 },
+            'Zona Sekupang': { pesanan: 78, volumeM3: 390 },
+            'Zona Batu Aji': { pesanan: 76, volumeM3: 380 },
+            'Zona Nongsa': { pesanan: 32, volumeM3: 160 },
+            'Zona Bengkong': { pesanan: 26, volumeM3: 130 },
+          },
+        },
+        {
+          bulan: 'Mei',
+          limbahDomestikUmum: 154,
+          pengurasanSumurTinja: 162,
+          pengurasanAsetBpBatam: 45,
+          totalPesanan: 361,
+          totalVolumeM3: 1805,
+          jumlahRupiah: 216600000,
+          trip: 452,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 125, volumeM3: 625 },
+            'Zona Sekupang': { pesanan: 88, volumeM3: 440 },
+            'Zona Batu Aji': { pesanan: 84, volumeM3: 420 },
+            'Zona Nongsa': { pesanan: 36, volumeM3: 180 },
+            'Zona Bengkong': { pesanan: 28, volumeM3: 140 },
+          },
+        },
+        {
+          bulan: 'Jun',
+          limbahDomestikUmum: 146,
+          pengurasanSumurTinja: 152,
+          pengurasanAsetBpBatam: 40,
+          totalPesanan: 338,
+          totalVolumeM3: 1690,
+          jumlahRupiah: 202800000,
+          trip: 423,
+          zonaTerbanyak: 'Zona Sekupang',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 116, volumeM3: 580 },
+            'Zona Sekupang': { pesanan: 85, volumeM3: 425 },
+            'Zona Batu Aji': { pesanan: 78, volumeM3: 390 },
+            'Zona Nongsa': { pesanan: 33, volumeM3: 165 },
+            'Zona Bengkong': { pesanan: 26, volumeM3: 130 },
+          },
+        },
+        {
+          bulan: 'Jul',
+          limbahDomestikUmum: 158,
+          pengurasanSumurTinja: 168,
+          pengurasanAsetBpBatam: 48,
+          totalPesanan: 374,
+          totalVolumeM3: 1870,
+          jumlahRupiah: 224400000,
+          trip: 468,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 130, volumeM3: 650 },
+            'Zona Sekupang': { pesanan: 90, volumeM3: 450 },
+            'Zona Batu Aji': { pesanan: 88, volumeM3: 440 },
+            'Zona Nongsa': { pesanan: 38, volumeM3: 190 },
+            'Zona Bengkong': { pesanan: 28, volumeM3: 140 },
+          },
+        },
+        {
+          bulan: 'Agu',
+          limbahDomestikUmum: 150,
+          pengurasanSumurTinja: 158,
+          pengurasanAsetBpBatam: 44,
+          totalPesanan: 352,
+          totalVolumeM3: 1760,
+          jumlahRupiah: 211200000,
+          trip: 440,
+          zonaTerbanyak: 'Zona Batu Aji',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 122, volumeM3: 610 },
+            'Zona Sekupang': { pesanan: 84, volumeM3: 420 },
+            'Zona Batu Aji': { pesanan: 86, volumeM3: 430 },
+            'Zona Nongsa': { pesanan: 34, volumeM3: 170 },
+            'Zona Bengkong': { pesanan: 26, volumeM3: 130 },
+          },
+        },
+        {
+          bulan: 'Sep',
+          limbahDomestikUmum: 144,
+          pengurasanSumurTinja: 154,
+          pengurasanAsetBpBatam: 41,
+          totalPesanan: 339,
+          totalVolumeM3: 1695,
+          jumlahRupiah: 203400000,
+          trip: 424,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 118, volumeM3: 590 },
+            'Zona Sekupang': { pesanan: 82, volumeM3: 410 },
+            'Zona Batu Aji': { pesanan: 80, volumeM3: 400 },
+            'Zona Nongsa': { pesanan: 33, volumeM3: 165 },
+            'Zona Bengkong': { pesanan: 26, volumeM3: 130 },
+          },
+        },
+        {
+          bulan: 'Okt',
+          limbahDomestikUmum: 160,
+          pengurasanSumurTinja: 172,
+          pengurasanAsetBpBatam: 47,
+          totalPesanan: 379,
+          totalVolumeM3: 1895,
+          jumlahRupiah: 227400000,
+          trip: 474,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 132, volumeM3: 660 },
+            'Zona Sekupang': { pesanan: 92, volumeM3: 460 },
+            'Zona Batu Aji': { pesanan: 89, volumeM3: 445 },
+            'Zona Nongsa': { pesanan: 38, volumeM3: 190 },
+            'Zona Bengkong': { pesanan: 28, volumeM3: 140 },
+          },
+        },
+        {
+          bulan: 'Nov',
+          limbahDomestikUmum: 152,
+          pengurasanSumurTinja: 164,
+          pengurasanAsetBpBatam: 43,
+          totalPesanan: 359,
+          totalVolumeM3: 1795,
+          jumlahRupiah: 215400000,
+          trip: 449,
+          zonaTerbanyak: 'Zona Sekupang',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 124, volumeM3: 620 },
+            'Zona Sekupang': { pesanan: 88, volumeM3: 440 },
+            'Zona Batu Aji': { pesanan: 84, volumeM3: 420 },
+            'Zona Nongsa': { pesanan: 35, volumeM3: 175 },
+            'Zona Bengkong': { pesanan: 28, volumeM3: 140 },
+          },
+        },
+        {
+          bulan: 'Des',
+          limbahDomestikUmum: 165,
+          pengurasanSumurTinja: 178,
+          pengurasanAsetBpBatam: 50,
+          totalPesanan: 393,
+          totalVolumeM3: 1965,
+          jumlahRupiah: 235800000,
+          trip: 492,
+          zonaTerbanyak: 'Zona Batam Centre',
+          zonaBreakdown: {
+            'Zona Batam Centre': { pesanan: 138, volumeM3: 690 },
+            'Zona Sekupang': { pesanan: 96, volumeM3: 480 },
+            'Zona Batu Aji': { pesanan: 92, volumeM3: 460 },
+            'Zona Nongsa': { pesanan: 39, volumeM3: 195 },
+            'Zona Bengkong': { pesanan: 28, volumeM3: 140 },
+          },
+        },
+      ],
+
+      // ----------------------------------------------------------------------
+      // KARTU 8: Layanan Pengujian Laboratorium Lingkungan & Air
+      // ----------------------------------------------------------------------
+      pengujianLab: [
+        {
+          bulan: 'Jan',
+          sampelUji: 142,
+          biayaRetribusiRp: 113600000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Moya Batam SPAM',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 82,
+            'Mikrobiologi Air': 38,
+            'Uji Air Limbah B3': 22,
+          },
+        },
+        {
+          bulan: 'Feb',
+          sampelUji: 135,
+          biayaRetribusiRp: 108000000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT McDermott Indonesia',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 76,
+            'Mikrobiologi Air': 37,
+            'Uji Air Limbah B3': 22,
+          },
+        },
+        {
+          bulan: 'Mar',
+          sampelUji: 158,
+          biayaRetribusiRp: 126400000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Batamindo Investment',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 90,
+            'Mikrobiologi Air': 42,
+            'Uji Air Limbah B3': 26,
+          },
+        },
+        {
+          bulan: 'Apr',
+          sampelUji: 150,
+          biayaRetribusiRp: 120000000,
+          jenisTerbanyak: 'Mikrobiologi Air Minum',
+          perusahaanTerbanyak: 'Dinas Lingkungan Hidup Batam',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 84,
+            'Mikrobiologi Air': 41,
+            'Uji Air Limbah B3': 25,
+          },
+        },
+        {
+          bulan: 'Mei',
+          sampelUji: 165,
+          biayaRetribusiRp: 132000000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Schneider Electric Batam',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 94,
+            'Mikrobiologi Air': 44,
+            'Uji Air Limbah B3': 27,
+          },
+        },
+        {
+          bulan: 'Jun',
+          sampelUji: 156,
+          biayaRetribusiRp: 124800000,
+          jenisTerbanyak: 'Uji Air Limbah B3',
+          perusahaanTerbanyak: 'PT SMOE Indonesia',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 88,
+            'Mikrobiologi Air': 42,
+            'Uji Air Limbah B3': 26,
+          },
+        },
+        {
+          bulan: 'Jul',
+          sampelUji: 172,
+          biayaRetribusiRp: 137600000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Moya Batam SPAM',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 98,
+            'Mikrobiologi Air': 46,
+            'Uji Air Limbah B3': 28,
+          },
+        },
+        {
+          bulan: 'Agu',
+          sampelUji: 162,
+          biayaRetribusiRp: 129600000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Citra Tubindo Tbk',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 92,
+            'Mikrobiologi Air': 43,
+            'Uji Air Limbah B3': 27,
+          },
+        },
+        {
+          bulan: 'Sep',
+          sampelUji: 154,
+          biayaRetribusiRp: 123200000,
+          jenisTerbanyak: 'Mikrobiologi Air Minum',
+          perusahaanTerbanyak: 'PT Caterpillar Indonesia Batam',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 86,
+            'Mikrobiologi Air': 42,
+            'Uji Air Limbah B3': 26,
+          },
+        },
+        {
+          bulan: 'Okt',
+          sampelUji: 175,
+          biayaRetribusiRp: 140000000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Moya Batam SPAM',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 100,
+            'Mikrobiologi Air': 47,
+            'Uji Air Limbah B3': 28,
+          },
+        },
+        {
+          bulan: 'Nov',
+          sampelUji: 168,
+          biayaRetribusiRp: 134400000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Pegatron Technology',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 95,
+            'Mikrobiologi Air': 45,
+            'Uji Air Limbah B3': 28,
+          },
+        },
+        {
+          bulan: 'Des',
+          sampelUji: 182,
+          biayaRetribusiRp: 145600000,
+          jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum',
+          perusahaanTerbanyak: 'PT Batamindo Investment',
+          jenisBreakdown: {
+            'Fisika-Kimia Air': 104,
+            'Mikrobiologi Air': 49,
+            'Uji Air Limbah B3': 29,
+          },
+        },
+      ],
+    },
+
+    2025: {
+      bakuCurahBatamindo: [
+        { bulan: 'Jan', airBakuM3: 11840000, airCurahM3: 10420000, penyediaanBatamindoM3: 312500, nomorBA: 'BA-AB/01/SPAM/2025' },
+        { bulan: 'Feb', airBakuM3: 11120000, airCurahM3: 9840000, penyediaanBatamindoM3: 298400, nomorBA: 'BA-AB/02/SPAM/2025' },
+        { bulan: 'Mar', airBakuM3: 12150000, airCurahM3: 10750000, penyediaanBatamindoM3: 325600, nomorBA: 'BA-AB/03/SPAM/2025' },
+        { bulan: 'Apr', airBakuM3: 11980000, airCurahM3: 10580000, penyediaanBatamindoM3: 319200, nomorBA: 'BA-AB/04/SPAM/2025' },
+        { bulan: 'Mei', airBakuM3: 12350000, airCurahM3: 10920000, penyediaanBatamindoM3: 334100, nomorBA: 'BA-AB/05/SPAM/2025' },
+        { bulan: 'Jun', airBakuM3: 12050000, airCurahM3: 10660000, penyediaanBatamindoM3: 328700, nomorBA: 'BA-AB/06/SPAM/2025' },
+        { bulan: 'Jul', airBakuM3: 12500000, airCurahM3: 11050000, penyediaanBatamindoM3: 341200, nomorBA: 'BA-AB/07/SPAM/2025' },
+        { bulan: 'Agu', airBakuM3: 12280000, airCurahM3: 10860000, penyediaanBatamindoM3: 338900, nomorBA: 'BA-AB/08/SPAM/2025' },
+        { bulan: 'Sep', airBakuM3: 12120000, airCurahM3: 10710000, penyediaanBatamindoM3: 331400, nomorBA: 'BA-AB/09/SPAM/2025' },
+        { bulan: 'Okt', airBakuM3: 12450000, airCurahM3: 11010000, penyediaanBatamindoM3: 345000, nomorBA: 'BA-AB/10/SPAM/2025' },
+        { bulan: 'Nov', airBakuM3: 12200000, airCurahM3: 10790000, penyediaanBatamindoM3: 339800, nomorBA: 'BA-AB/11/SPAM/2025' },
+        { bulan: 'Des', airBakuM3: 12680000, airCurahM3: 11210000, penyediaanBatamindoM3: 352100, nomorBA: 'BA-AB/12/SPAM/2025' },
+      ],
+
+      nrwTriwulan: [
+        { triwulan: 'Triwulan I (Q1)', tahun2026: 24.2, tahun2025: 26.5, target: 25.0, deltaVsPrevQ: 0.3, catatan: 'Tingginya kebocoran jaringan di Nagoya' },
+        { triwulan: 'Triwulan II (Q2)', tahun2026: 23.8, tahun2025: 25.9, target: 25.0, deltaVsPrevQ: -0.6, catatan: 'Penggantian meter induk' },
+        { triwulan: 'Triwulan III (Q3)', tahun2026: 23.5, tahun2025: 25.4, target: 25.0, deltaVsPrevQ: -0.5, catatan: 'Penataan DMA Sekupang' },
+        { triwulan: 'Triwulan IV (Q4)', tahun2026: 23.1, tahun2025: 24.8, target: 25.0, deltaVsPrevQ: -0.6, catatan: 'Pencapaian mendekati target ambang batas' },
+      ],
+
+      dmzAirBaca: {
+        Semua: [
+          { dmz: 'DMZ Batam Centre 01', volumeAirBacaM3: 915000, jumlahPelanggan: 37400, volumeTagihM3: 852000, selisihPersen: 6.9, kategori: 'Rumah Tangga', kpp: 'KPP Batam Centre' },
+          { dmz: 'DMZ Nagoya Hub 02', volumeAirBacaM3: 840000, jumlahPelanggan: 26800, volumeTagihM3: 792000, selisihPersen: 5.7, kategori: 'Niaga', kpp: 'KPP Nagoya' },
+          { dmz: 'DMZ Batu Aji Raya 03', volumeAirBacaM3: 765000, jumlahPelanggan: 41200, volumeTagihM3: 708000, selisihPersen: 7.5, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Sagulung Permai 04', volumeAirBacaM3: 660000, jumlahPelanggan: 35900, volumeTagihM3: 612000, selisihPersen: 7.3, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Sekupang Marina 05', volumeAirBacaM3: 570000, jumlahPelanggan: 21900, volumeTagihM3: 538000, selisihPersen: 5.6, kategori: 'Rumah Tangga', kpp: 'KPP Tiban' },
+          { dmz: 'DMZ Tiban Indah 06', volumeAirBacaM3: 515000, jumlahPelanggan: 25000, volumeTagihM3: 482000, selisihPersen: 6.4, kategori: 'Rumah Tangga', kpp: 'KPP Tiban' },
+          { dmz: 'DMZ Kabil Industrial 07', volumeAirBacaM3: 490000, jumlahPelanggan: 8200, volumeTagihM3: 470000, selisihPersen: 4.1, kategori: 'Industri', kpp: 'KPP Batam Centre' },
+          { dmz: 'DMZ Bengkong Kolam 08', volumeAirBacaM3: 462000, jumlahPelanggan: 23700, volumeTagihM3: 426000, selisihPersen: 7.8, kategori: 'Rumah Tangga', kpp: 'KPP Nagoya' },
+          { dmz: 'DMZ Sei Beduk & Piayu 09', volumeAirBacaM3: 400000, jumlahPelanggan: 19300, volumeTagihM3: 372000, selisihPersen: 7.0, kategori: 'Rumah Tangga', kpp: 'KPP Batu Aji' },
+          { dmz: 'DMZ Nongsa Heritage 10', volumeAirBacaM3: 345000, jumlahPelanggan: 11800, volumeTagihM3: 327000, selisihPersen: 5.2, kategori: 'Niaga', kpp: 'KPP Batam Centre' },
+        ],
+      },
+
+      wtpProduksiBulanan: {
+        'Semester 1': [
+          { wtp: 'WTP Duriangkang', kapasitasTerpasangLps: 3000, pemakaianAirBakuLps: 2680, utilisasiPersen: 89.3, periode: 'Semester 1 2025', teknologi: 'DAF & Rapid Sand' },
+          { wtp: 'WTP Mukakuning', kapasitasTerpasangLps: 600, pemakaianAirBakuLps: 535, utilisasiPersen: 89.2, periode: 'Semester 1 2025', teknologi: 'Clarifier Konvensional' },
+          { wtp: 'WTP Sei Ladi', kapasitasTerpasangLps: 380, pemakaianAirBakuLps: 320, utilisasiPersen: 84.2, periode: 'Semester 1 2025', teknologi: 'Dual Media Rapid Filter' },
+          { wtp: 'WTP Sei Harapan', kapasitasTerpasangLps: 210, pemakaianAirBakuLps: 178, utilisasiPersen: 84.8, periode: 'Semester 1 2025', teknologi: 'Multi-barrier Sand' },
+          { wtp: 'WTP Tanjung Piayu', kapasitasTerpasangLps: 200, pemakaianAirBakuLps: 160, utilisasiPersen: 80.0, periode: 'Semester 1 2025', teknologi: 'Ultrafiltrasi Membran' },
+          { wtp: 'WTP Nongsa', kapasitasTerpasangLps: 60, pemakaianAirBakuLps: 45, utilisasiPersen: 75.0, periode: 'Semester 1 2025', teknologi: 'Compact Clarifier' },
+        ],
+        'Semester 2': [
+          { wtp: 'WTP Duriangkang', kapasitasTerpasangLps: 3000, pemakaianAirBakuLps: 2720, utilisasiPersen: 90.7, periode: 'Semester 2 2025', teknologi: 'DAF & Rapid Sand' },
+          { wtp: 'WTP Mukakuning', kapasitasTerpasangLps: 600, pemakaianAirBakuLps: 540, utilisasiPersen: 90.0, periode: 'Semester 2 2025', teknologi: 'Clarifier Konvensional' },
+          { wtp: 'WTP Sei Ladi', kapasitasTerpasangLps: 380, pemakaianAirBakuLps: 325, utilisasiPersen: 85.5, periode: 'Semester 2 2025', teknologi: 'Dual Media Rapid Filter' },
+          { wtp: 'WTP Sei Harapan', kapasitasTerpasangLps: 210, pemakaianAirBakuLps: 180, utilisasiPersen: 85.7, periode: 'Semester 2 2025', teknologi: 'Multi-barrier Sand' },
+          { wtp: 'WTP Tanjung Piayu', kapasitasTerpasangLps: 200, pemakaianAirBakuLps: 165, utilisasiPersen: 82.5, periode: 'Semester 2 2025', teknologi: 'Ultrafiltrasi Membran' },
+          { wtp: 'WTP Nongsa', kapasitasTerpasangLps: 60, pemakaianAirBakuLps: 46, utilisasiPersen: 76.7, periode: 'Semester 2 2025', teknologi: 'Compact Clarifier' },
+        ],
+      },
+
+      wadukKapasitas: [
+        { namaWaduk: 'Waduk Duriangkang', kapasitasJutaM3: 78.5, luasPermukaanHa: 2450, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 7.1 },
+        { namaWaduk: 'Waduk Tembesi', kapasitasJutaM3: 56.0, luasPermukaanHa: 1200, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 4.6 },
+        { namaWaduk: 'Waduk Mukakuning', kapasitasJutaM3: 12.3, luasPermukaanHa: 460, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 11.2 },
+        { namaWaduk: 'Waduk Sei Ladi', kapasitasJutaM3: 9.5, luasPermukaanHa: 380, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 9.6 },
+        { namaWaduk: 'Waduk Sei Harapan', kapasitasJutaM3: 3.6, luasPermukaanHa: 190, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 14.0 },
+        { namaWaduk: 'Waduk Nongsa', kapasitasJutaM3: 0.8, luasPermukaanHa: 95, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 6.3 },
+      ],
+
+      limbahB3Kpli: [
+        { bulan: 'Jan', padatTon: 590, sludgeTon: 390, cairTon: 205, totalTon: 1185, persenDiolah: 99.1, perusahaanTerbanyak: 'PT McDermott Indonesia', targetPersen: 98.0 },
+        { bulan: 'Feb', padatTon: 560, sludgeTon: 375, cairTon: 195, totalTon: 1130, persenDiolah: 98.9, perusahaanTerbanyak: 'PT Schneider Electric', targetPersen: 98.0 },
+        { bulan: 'Mar', padatTon: 630, sludgeTon: 415, cairTon: 220, totalTon: 1265, persenDiolah: 99.2, perusahaanTerbanyak: 'PT SMOE Indonesia', targetPersen: 98.0 },
+        { bulan: 'Apr', padatTon: 605, sludgeTon: 400, cairTon: 210, totalTon: 1215, persenDiolah: 98.8, perusahaanTerbanyak: 'PT Caterpillar Indonesia', targetPersen: 98.0 },
+        { bulan: 'Mei', padatTon: 650, sludgeTon: 430, cairTon: 230, totalTon: 1310, persenDiolah: 99.3, perusahaanTerbanyak: 'PT Infineon Technologies', targetPersen: 98.0 },
+        { bulan: 'Jun', padatTon: 620, sludgeTon: 410, cairTon: 215, totalTon: 1245, persenDiolah: 98.7, perusahaanTerbanyak: 'PT Citra Tubindo Tbk', targetPersen: 98.0 },
+        { bulan: 'Jul', padatTon: 665, sludgeTon: 440, cairTon: 235, totalTon: 1340, persenDiolah: 99.4, perusahaanTerbanyak: 'PT McDermott Indonesia', targetPersen: 98.0 },
+        { bulan: 'Agu', padatTon: 640, sludgeTon: 425, cairTon: 225, totalTon: 1290, persenDiolah: 99.1, perusahaanTerbanyak: 'PT Pegatron Technology', targetPersen: 98.0 },
+        { bulan: 'Sep', padatTon: 625, sludgeTon: 415, cairTon: 220, totalTon: 1260, persenDiolah: 98.9, perusahaanTerbanyak: 'PT Shimano Batam', targetPersen: 98.0 },
+        { bulan: 'Okt', padatTon: 680, sludgeTon: 450, cairTon: 240, totalTon: 1370, persenDiolah: 99.5, perusahaanTerbanyak: 'PT SMOE Indonesia', targetPersen: 98.0 },
+        { bulan: 'Nov', padatTon: 655, sludgeTon: 435, cairTon: 230, totalTon: 1320, persenDiolah: 99.2, perusahaanTerbanyak: 'PT Schneider Electric', targetPersen: 98.0 },
+        { bulan: 'Des', padatTon: 700, sludgeTon: 465, cairTon: 250, totalTon: 1415, persenDiolah: 99.7, perusahaanTerbanyak: 'PT McDermott Indonesia', targetPersen: 98.0 },
+      ],
+
+      layananLimbahDomestik: [
+        {
+          bulan: 'Jan',
+          limbahDomestikUmum: 125,
+          pengurasanSumurTinja: 130,
+          pengurasanAsetBpBatam: 30,
+          totalPesanan: 285,
+          totalVolumeM3: 1425,
+          jumlahRupiah: 171000000,
+          trip: 356,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Feb',
+          limbahDomestikUmum: 118,
+          pengurasanSumurTinja: 124,
+          pengurasanAsetBpBatam: 28,
+          totalPesanan: 270,
+          totalVolumeM3: 1350,
+          jumlahRupiah: 162000000,
+          trip: 338,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Mar',
+          limbahDomestikUmum: 136,
+          pengurasanSumurTinja: 142,
+          pengurasanAsetBpBatam: 36,
+          totalPesanan: 314,
+          totalVolumeM3: 1570,
+          jumlahRupiah: 188400000,
+          trip: 392,
+          zonaTerbanyak: 'Zona Batu Aji',
+        },
+        {
+          bulan: 'Apr',
+          limbahDomestikUmum: 130,
+          pengurasanSumurTinja: 138,
+          pengurasanAsetBpBatam: 32,
+          totalPesanan: 300,
+          totalVolumeM3: 1500,
+          jumlahRupiah: 180000000,
+          trip: 375,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Mei',
+          limbahDomestikUmum: 142,
+          pengurasanSumurTinja: 150,
+          pengurasanAsetBpBatam: 40,
+          totalPesanan: 332,
+          totalVolumeM3: 1660,
+          jumlahRupiah: 199200000,
+          trip: 415,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Jun',
+          limbahDomestikUmum: 134,
+          pengurasanSumurTinja: 140,
+          pengurasanAsetBpBatam: 35,
+          totalPesanan: 309,
+          totalVolumeM3: 1545,
+          jumlahRupiah: 185400000,
+          trip: 386,
+          zonaTerbanyak: 'Zona Sekupang',
+        },
+        {
+          bulan: 'Jul',
+          limbahDomestikUmum: 146,
+          pengurasanSumurTinja: 155,
+          pengurasanAsetBpBatam: 42,
+          totalPesanan: 343,
+          totalVolumeM3: 1715,
+          jumlahRupiah: 205800000,
+          trip: 429,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Agu',
+          limbahDomestikUmum: 138,
+          pengurasanSumurTinja: 145,
+          pengurasanAsetBpBatam: 38,
+          totalPesanan: 321,
+          totalVolumeM3: 1605,
+          jumlahRupiah: 192600000,
+          trip: 401,
+          zonaTerbanyak: 'Zona Batu Aji',
+        },
+        {
+          bulan: 'Sep',
+          limbahDomestikUmum: 132,
+          pengurasanSumurTinja: 140,
+          pengurasanAsetBpBatam: 35,
+          totalPesanan: 307,
+          totalVolumeM3: 1535,
+          jumlahRupiah: 184200000,
+          trip: 384,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Okt',
+          limbahDomestikUmum: 148,
+          pengurasanSumurTinja: 158,
+          pengurasanAsetBpBatam: 42,
+          totalPesanan: 348,
+          totalVolumeM3: 1740,
+          jumlahRupiah: 208800000,
+          trip: 435,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+        {
+          bulan: 'Nov',
+          limbahDomestikUmum: 140,
+          pengurasanSumurTinja: 150,
+          pengurasanAsetBpBatam: 38,
+          totalPesanan: 328,
+          totalVolumeM3: 1640,
+          jumlahRupiah: 196800000,
+          trip: 410,
+          zonaTerbanyak: 'Zona Sekupang',
+        },
+        {
+          bulan: 'Des',
+          limbahDomestikUmum: 152,
+          pengurasanSumurTinja: 164,
+          pengurasanAsetBpBatam: 45,
+          totalPesanan: 361,
+          totalVolumeM3: 1805,
+          jumlahRupiah: 216600000,
+          trip: 451,
+          zonaTerbanyak: 'Zona Batam Centre',
+        },
+      ],
+
+      pengujianLab: [
+        { bulan: 'Jan', sampelUji: 130, biayaRetribusiRp: 104000000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Moya Batam SPAM' },
+        { bulan: 'Feb', sampelUji: 122, biayaRetribusiRp: 97600000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT McDermott Indonesia' },
+        { bulan: 'Mar', sampelUji: 145, biayaRetribusiRp: 116000000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Batamindo Investment' },
+        { bulan: 'Apr', sampelUji: 138, biayaRetribusiRp: 110400000, jenisTerbanyak: 'Mikrobiologi Air Minum', perusahaanTerbanyak: 'Dinas Lingkungan Hidup Batam' },
+        { bulan: 'Mei', sampelUji: 152, biayaRetribusiRp: 121600000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Schneider Electric Batam' },
+        { bulan: 'Jun', sampelUji: 142, biayaRetribusiRp: 113600000, jenisTerbanyak: 'Uji Air Limbah B3', perusahaanTerbanyak: 'PT SMOE Indonesia' },
+        { bulan: 'Jul', sampelUji: 158, biayaRetribusiRp: 126400000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Moya Batam SPAM' },
+        { bulan: 'Agu', sampelUji: 148, biayaRetribusiRp: 118400000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Citra Tubindo Tbk' },
+        { bulan: 'Sep', sampelUji: 140, biayaRetribusiRp: 112000000, jenisTerbanyak: 'Mikrobiologi Air Minum', perusahaanTerbanyak: 'PT Caterpillar Indonesia Batam' },
+        { bulan: 'Okt', sampelUji: 160, biayaRetribusiRp: 128000000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Moya Batam SPAM' },
+        { bulan: 'Nov', sampelUji: 152, biayaRetribusiRp: 121600000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Pegatron Technology' },
+        { bulan: 'Des', sampelUji: 166, biayaRetribusiRp: 132800000, jenisTerbanyak: 'Fisika-Kimia Air Baku/Minum', perusahaanTerbanyak: 'PT Batamindo Investment' },
+      ],
+    },
   },
 
-  // =========================================================================
-  // B. DISTRIBUSI DAN PELANGGAN
-  // =========================================================================
-  // 7. Volume air baca vs volume tagih (Tertutup, perbulan)
-  volumeBacaVsTagihPerKpp: {
-    Semua: [
-      { bulan: 'Jan', volumeBaca: 10420000, volumeTagih: 8650000, selisih: 1770000 },
-      { bulan: 'Feb', volumeBaca: 9840000, volumeTagih: 8180000, selisih: 1660000 },
-      { bulan: 'Mar', volumeBaca: 10750000, volumeTagih: 8940000, selisih: 1810000 },
-      { bulan: 'Apr', volumeBaca: 10580000, volumeTagih: 8810000, selisih: 1770000 },
-      { bulan: 'Mei', volumeBaca: 10920000, volumeTagih: 9120000, selisih: 1800000 },
-      { bulan: 'Jun', volumeBaca: 10660000, volumeTagih: 8920000, selisih: 1740000 },
-      { bulan: 'Jul', volumeBaca: 11050000, volumeTagih: 9280000, selisih: 1770000 },
-      { bulan: 'Agu', volumeBaca: 10860000, volumeTagih: 9140000, selisih: 1720000 },
-      { bulan: 'Sep', volumeBaca: 10710000, volumeTagih: 9020000, selisih: 1690000 },
-      { bulan: 'Okt', volumeBaca: 11010000, volumeTagih: 9310000, selisih: 1700000 },
-      { bulan: 'Nov', volumeBaca: 10790000, volumeTagih: 9150000, selisih: 1640000 },
-      { bulan: 'Des', volumeBaca: 11210000, volumeTagih: 9550000, selisih: 1660000 },
+  // Historis Waduk untuk filter multi-tahun waduk
+  daftarWadukHistoris: {
+    2026: [
+      { namaWaduk: 'Waduk Duriangkang', kapasitasJutaM3: 78.5, luasPermukaanHa: 2450, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal', elevasiMukaAirM: 7.2 },
+      { namaWaduk: 'Waduk Tembesi', kapasitasJutaM3: 56.0, luasPermukaanHa: 1200, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal', elevasiMukaAirM: 4.8 },
+      { namaWaduk: 'Waduk Mukakuning', kapasitasJutaM3: 12.3, luasPermukaanHa: 460, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal', elevasiMukaAirM: 11.4 },
+      { namaWaduk: 'Waduk Sei Ladi', kapasitasJutaM3: 9.5, luasPermukaanHa: 380, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal', elevasiMukaAirM: 9.8 },
+      { namaWaduk: 'Waduk Sei Harapan', kapasitasJutaM3: 3.6, luasPermukaanHa: 190, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal', elevasiMukaAirM: 14.2 },
+      { namaWaduk: 'Waduk Nongsa', kapasitasJutaM3: 0.8, luasPermukaanHa: 95, tahun: 2026, periodeRekap: 'Desember 2026', status: 'Normal', elevasiMukaAirM: 6.5 },
     ],
-    'KPP Batam Center': [
-      { bulan: 'Jan', volumeBaca: 3950000, volumeTagih: 3340000, selisih: 610000 },
-      { bulan: 'Feb', volumeBaca: 3730000, volumeTagih: 3160000, selisih: 570000 },
-      { bulan: 'Mar', volumeBaca: 4080000, volumeTagih: 3460000, selisih: 620000 },
-      { bulan: 'Apr', volumeBaca: 4020000, volumeTagih: 3410000, selisih: 610000 },
-      { bulan: 'Mei', volumeBaca: 4150000, volumeTagih: 3530000, selisih: 620000 },
-      { bulan: 'Jun', volumeBaca: 4050000, volumeTagih: 3460000, selisih: 590000 },
-      { bulan: 'Jul', volumeBaca: 4200000, volumeTagih: 3600000, selisih: 600000 },
-      { bulan: 'Agu', volumeBaca: 4130000, volumeTagih: 3550000, selisih: 580000 },
-      { bulan: 'Sep', volumeBaca: 4070000, volumeTagih: 3500000, selisih: 570000 },
-      { bulan: 'Okt', volumeBaca: 4180000, volumeTagih: 3610000, selisih: 570000 },
-      { bulan: 'Nov', volumeBaca: 4100000, volumeTagih: 3550000, selisih: 550000 },
-      { bulan: 'Des', volumeBaca: 4260000, volumeTagih: 3710000, selisih: 550000 },
+    2025: [
+      { namaWaduk: 'Waduk Duriangkang', kapasitasJutaM3: 78.5, luasPermukaanHa: 2450, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 7.1 },
+      { namaWaduk: 'Waduk Tembesi', kapasitasJutaM3: 56.0, luasPermukaanHa: 1200, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 4.6 },
+      { namaWaduk: 'Waduk Mukakuning', kapasitasJutaM3: 12.3, luasPermukaanHa: 460, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 11.2 },
+      { namaWaduk: 'Waduk Sei Ladi', kapasitasJutaM3: 9.5, luasPermukaanHa: 380, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 9.6 },
+      { namaWaduk: 'Waduk Sei Harapan', kapasitasJutaM3: 3.6, luasPermukaanHa: 190, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 14.0 },
+      { namaWaduk: 'Waduk Nongsa', kapasitasJutaM3: 0.8, luasPermukaanHa: 95, tahun: 2025, periodeRekap: 'Desember 2025', status: 'Normal', elevasiMukaAirM: 6.3 },
     ],
-    'KPP Batu Aji': [
-      { bulan: 'Jan', volumeBaca: 3230000, volumeTagih: 2640000, selisih: 590000 },
-      { bulan: 'Feb', volumeBaca: 3050000, volumeTagih: 2490000, selisih: 560000 },
-      { bulan: 'Mar', volumeBaca: 3330000, volumeTagih: 2720000, selisih: 610000 },
-      { bulan: 'Apr', volumeBaca: 3280000, volumeTagih: 2690000, selisih: 590000 },
-      { bulan: 'Mei', volumeBaca: 3390000, volumeTagih: 2780000, selisih: 610000 },
-      { bulan: 'Jun', volumeBaca: 3310000, volumeTagih: 2720000, selisih: 590000 },
-      { bulan: 'Jul', volumeBaca: 3430000, volumeTagih: 2830000, selisih: 600000 },
-      { bulan: 'Agu', volumeBaca: 3370000, volumeTagih: 2790000, selisih: 580000 },
-      { bulan: 'Sep', volumeBaca: 3320000, volumeTagih: 2750000, selisih: 570000 },
-      { bulan: 'Okt', volumeBaca: 3410000, volumeTagih: 2840000, selisih: 570000 },
-      { bulan: 'Nov', volumeBaca: 3350000, volumeTagih: 2790000, selisih: 560000 },
-      { bulan: 'Des', volumeBaca: 3480000, volumeTagih: 2920000, selisih: 560000 },
+    2024: [
+      { namaWaduk: 'Waduk Duriangkang', kapasitasJutaM3: 78.5, luasPermukaanHa: 2450, tahun: 2024, periodeRekap: 'Desember 2024', status: 'Normal', elevasiMukaAirM: 7.0 },
+      { namaWaduk: 'Waduk Tembesi', kapasitasJutaM3: 56.0, luasPermukaanHa: 1200, tahun: 2024, periodeRekap: 'Desember 2024', status: 'Normal', elevasiMukaAirM: 4.4 },
+      { namaWaduk: 'Waduk Mukakuning', kapasitasJutaM3: 12.3, luasPermukaanHa: 460, tahun: 2024, periodeRekap: 'Desember 2024', status: 'Normal', elevasiMukaAirM: 11.0 },
+      { namaWaduk: 'Waduk Sei Ladi', kapasitasJutaM3: 9.5, luasPermukaanHa: 380, tahun: 2024, periodeRekap: 'Desember 2024', status: 'Normal', elevasiMukaAirM: 9.5 },
+      { namaWaduk: 'Waduk Sei Harapan', kapasitasJutaM3: 3.6, luasPermukaanHa: 190, tahun: 2024, periodeRekap: 'Desember 2024', status: 'Normal', elevasiMukaAirM: 13.8 },
+      { namaWaduk: 'Waduk Nongsa', kapasitasJutaM3: 0.8, luasPermukaanHa: 95, tahun: 2024, periodeRekap: 'Desember 2024', status: 'Normal', elevasiMukaAirM: 6.1 },
     ],
-    'KPP Tiban': [
-      { bulan: 'Jan', volumeBaca: 1820000, volumeTagih: 1540000, selisih: 280000 },
-      { bulan: 'Feb', volumeBaca: 1720000, volumeTagih: 1460000, selisih: 260000 },
-      { bulan: 'Mar', volumeBaca: 1880000, volumeTagih: 1600000, selisih: 280000 },
-      { bulan: 'Apr', volumeBaca: 1850000, volumeTagih: 1570000, selisih: 280000 },
-      { bulan: 'Mei', volumeBaca: 1910000, volumeTagih: 1630000, selisih: 280000 },
-      { bulan: 'Jun', volumeBaca: 1860000, volumeTagih: 1590000, selisih: 270000 },
-      { bulan: 'Jul', volumeBaca: 1930000, volumeTagih: 1660000, selisih: 270000 },
-      { bulan: 'Agu', volumeBaca: 1890000, volumeTagih: 1630000, selisih: 260000 },
-      { bulan: 'Sep', volumeBaca: 1870000, volumeTagih: 1610000, selisih: 260000 },
-      { bulan: 'Okt', volumeBaca: 1920000, volumeTagih: 1660000, selisih: 260000 },
-      { bulan: 'Nov', volumeBaca: 1880000, volumeTagih: 1630000, selisih: 250000 },
-      { bulan: 'Des', volumeBaca: 1950000, volumeTagih: 1700000, selisih: 250000 },
-    ],
-  },
-
-  // 8. Non Revenue Water (NRW) per triwulan (Terbuka, pertriwulan)
-  nrwPerTriwulan: [
-    { triwulan: '2024-Q1', nrwPersen: 17.1, targetNrw: 16.5, volumeHilangM3: 5320000 },
-    { triwulan: '2024-Q2', nrwPersen: 16.8, targetNrw: 16.3, volumeHilangM3: 5210000 },
-    { triwulan: '2024-Q3', nrwPersen: 16.4, targetNrw: 16.0, volumeHilangM3: 5120000 },
-    { triwulan: '2024-Q4', nrwPersen: 16.0, targetNrw: 15.8, volumeHilangM3: 4980000 },
-    { triwulan: '2025-Q1', nrwPersen: 15.7, targetNrw: 15.5, volumeHilangM3: 4890000 },
-    { triwulan: '2025-Q2', nrwPersen: 15.4, targetNrw: 15.3, volumeHilangM3: 4780000 },
-    { triwulan: '2025-Q3', nrwPersen: 15.1, targetNrw: 15.0, volumeHilangM3: 4690000 },
-    { triwulan: '2025-Q4', nrwPersen: 14.8, targetNrw: 14.8, volumeHilangM3: 4570000 },
-    { triwulan: '2026-Q1', nrwPersen: 14.5, targetNrw: 14.5, volumeHilangM3: 4480000 },
-  ],
-
-  // 9. Jumlah pelanggan per DMZ (23 DMZ, diurutkan terbesar) (Terbuka, persemester)
-  pelangganPerDmz: [
-    { dmz: 'DMZ-04 Sagulung Baru', pelanggan: 28450, wilayah: 'Sagulung' },
-    { dmz: 'DMZ-03 Batu Aji Indah', pelanggan: 26800, wilayah: 'Batu Aji' },
-    { dmz: 'DMZ-01 Batam Center Kota', pelanggan: 24650, wilayah: 'Batam Center' },
-    { dmz: 'DMZ-07 Bengkong Laut', pelanggan: 22100, wilayah: 'Bengkong' },
-    { dmz: 'DMZ-02 Tiban Raya', pelanggan: 21400, wilayah: 'Sekupang' },
-    { dmz: 'DMZ-05 Sei Panas Sentral', pelanggan: 19850, wilayah: 'Batam Center' },
-    { dmz: 'DMZ-06 Nagoya Jodoh', pelanggan: 18320, wilayah: 'Lubuk Baja' },
-    { dmz: 'DMZ-08 Baloi Permai', pelanggan: 17240, wilayah: 'Batam Center' },
-    { dmz: 'DMZ-09 Tanjung Piayu', pelanggan: 16800, wilayah: 'Sei Beduk' },
-    { dmz: 'DMZ-10 Mukakuning Industri', pelanggan: 15420, wilayah: 'Sei Beduk' },
-    { dmz: 'DMZ-11 Batu Ampar Port', pelanggan: 14950, wilayah: 'Batu Ampar' },
-    { dmz: 'DMZ-12 Marina City', pelanggan: 13780, wilayah: 'Sekupang' },
-    { dmz: 'DMZ-13 Nongsa Pantai', pelanggan: 12640, wilayah: 'Nongsa' },
-    { dmz: 'DMZ-14 Kabil Terpadu', pelanggan: 11950, wilayah: 'Nongsa' },
-    { dmz: 'DMZ-15 Tanjung Uncang Galangan', pelanggan: 11200, wilayah: 'Batu Aji' },
-    { dmz: 'DMZ-16 Sei Harapan Lama', pelanggan: 10450, wilayah: 'Sekupang' },
-    { dmz: 'DMZ-17 Batamindo Estate', pelanggan: 9800, wilayah: 'Mukakuning' },
-    { dmz: 'DMZ-18 Punggur Ferry Terminal', pelanggan: 8950, wilayah: 'Nongsa' },
-    { dmz: 'DMZ-19 Duriangkang Sub-Zone', pelanggan: 8200, wilayah: 'Sei Beduk' },
-    { dmz: 'DMZ-20 Tembesi Raya', pelanggan: 7650, wilayah: 'Sagulung' },
-    { dmz: 'DMZ-21 Seraya Hills', pelanggan: 6920, wilayah: 'Batu Ampar' },
-    { dmz: 'DMZ-22 Rempang Gateway', pelanggan: 4850, wilayah: 'Galang' },
-    { dmz: 'DMZ-23 Galang Relokasi', pelanggan: 3620, wilayah: 'Galang' },
-  ],
-
-  // 10. Volume air baca per DMZ per bulan (Heatmap matrix) (Terbuka, perbulan)
-  heatmapDmzBulan: [
-    { dmz: 'DMZ-04 Sagulung', Jan: 895, Feb: 840, Mar: 920, Apr: 905, Mei: 935, Jun: 915, Jul: 950, Agu: 930, Sep: 918, Okt: 942, Nov: 925, Des: 960 },
-    { dmz: 'DMZ-03 Batu Aji', Jan: 840, Feb: 790, Mar: 865, Apr: 850, Mei: 880, Jun: 860, Jul: 890, Agu: 875, Sep: 862, Okt: 885, Nov: 870, Des: 905 },
-    { dmz: 'DMZ-01 Batam Center', Jan: 820, Feb: 775, Mar: 850, Apr: 835, Mei: 865, Jun: 845, Jul: 875, Agu: 860, Sep: 848, Okt: 870, Nov: 855, Des: 890 },
-    { dmz: 'DMZ-07 Bengkong', Jan: 710, Feb: 670, Mar: 735, Apr: 720, Mei: 745, Jun: 730, Jul: 755, Agu: 742, Sep: 732, Okt: 750, Nov: 738, Des: 770 },
-    { dmz: 'DMZ-02 Tiban Raya', Jan: 685, Feb: 645, Mar: 710, Apr: 695, Mei: 720, Jun: 705, Jul: 730, Agu: 718, Sep: 708, Okt: 725, Nov: 712, Des: 745 },
-    { dmz: 'DMZ-05 Sei Panas', Jan: 640, Feb: 605, Mar: 665, Apr: 650, Mei: 675, Jun: 660, Jul: 685, Agu: 672, Sep: 662, Okt: 680, Nov: 668, Des: 700 },
-    { dmz: 'DMZ-06 Nagoya', Jan: 620, Feb: 585, Mar: 645, Apr: 630, Mei: 655, Jun: 640, Jul: 665, Agu: 652, Sep: 642, Okt: 660, Nov: 648, Des: 680 },
-    { dmz: 'DMZ-10 Mukakuning', Jan: 580, Feb: 550, Mar: 605, Apr: 590, Mei: 615, Jun: 600, Jul: 625, Agu: 612, Sep: 602, Okt: 620, Nov: 608, Des: 640 },
-    { dmz: 'DMZ-11 Batu Ampar', Jan: 540, Feb: 510, Mar: 565, Apr: 550, Mei: 575, Jun: 560, Jul: 585, Agu: 572, Sep: 562, Okt: 580, Nov: 568, Des: 600 },
-    { dmz: 'DMZ-13 Nongsa', Jan: 430, Feb: 405, Mar: 450, Apr: 440, Mei: 460, Jun: 448, Jul: 470, Agu: 458, Sep: 450, Okt: 465, Nov: 455, Des: 480 },
-  ],
-
-  // 11. Komposisi volume menurut kategori pelanggan (Tertutup)
-  komposisiPelangganVolume: [
-    { kategori: 'Rumah Tangga (Domestik)', volumeTagihM3: 56250000, persentase: 51.5, color: '#1E40AF' },
-    { kategori: 'Niaga & Industri', volumeTagihM3: 31200000, persentase: 28.6, color: '#3B82F6' },
-    { kategori: 'Instansi Pemerintah & TNI/Polri', volumeTagihM3: 11450000, persentase: 10.5, color: '#60A5FA' },
-    { kategori: 'Sosial & Keagamaan', volumeTagihM3: 6200000, persentase: 5.7, color: '#93C5FD' },
-    { kategori: 'Khusus & Pelabuhan/Bandara', volumeTagihM3: 4050000, persentase: 3.7, color: '#BFDBFE' },
-  ],
-
-  // =========================================================================
-  // C. KEPUASAN LAYANAN
-  // =========================================================================
-  // 12. Persepsi pengguna jasa per pertanyaan (100% stacked bar) (Tertutup, perbulan)
-  persepsiPenggunaJasa: {
-    'Semester 1 2026': [
-      { pertanyaan: 'Kemudahan Pendaftaran Sambungan Baru', sangatPuas: 48, puas: 38, cukupPuas: 10, tidakPuas: 3, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kecepatan Respons Penanganan Keluhan', sangatPuas: 42, puas: 41, cukupPuas: 12, tidakPuas: 4, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kualitas Kekeruhan & Kejernihan Air', sangatPuas: 51, puas: 37, cukupPuas: 8, tidakPuas: 3, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kontinuitas Aliran Air 24 Jam', sangatPuas: 39, puas: 44, cukupPuas: 11, tidakPuas: 5, sangatTidakPuas: 1 },
-      { pertanyaan: 'Akurasi Pencatatan Meter Air', sangatPuas: 54, puas: 36, cukupPuas: 7, tidakPuas: 2, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kemudahan Pembayaran Rekening Digital', sangatPuas: 62, puas: 31, cukupPuas: 5, tidakPuas: 1, sangatTidakPuas: 1 },
-      { pertanyaan: 'Ketepatan Waktu Tangki Bantuan Darurat', sangatPuas: 37, puas: 43, cukupPuas: 14, tidakPuas: 5, sangatTidakPuas: 1 },
-    ],
-    'Tahun 2025': [
-      { pertanyaan: 'Kemudahan Pendaftaran Sambungan Baru', sangatPuas: 45, puas: 39, cukupPuas: 11, tidakPuas: 4, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kecepatan Respons Penanganan Keluhan', sangatPuas: 39, puas: 42, cukupPuas: 13, tidakPuas: 5, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kualitas Kekeruhan & Kejernihan Air', sangatPuas: 48, puas: 38, cukupPuas: 9, tidakPuas: 4, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kontinuitas Aliran Air 24 Jam', sangatPuas: 36, puas: 43, cukupPuas: 13, tidakPuas: 6, sangatTidakPuas: 2 },
-      { pertanyaan: 'Akurasi Pencatatan Meter Air', sangatPuas: 52, puas: 37, cukupPuas: 8, tidakPuas: 2, sangatTidakPuas: 1 },
-      { pertanyaan: 'Kemudahan Pembayaran Rekening Digital', sangatPuas: 59, puas: 33, cukupPuas: 6, tidakPuas: 1, sangatTidakPuas: 1 },
-      { pertanyaan: 'Ketepatan Waktu Tangki Bantuan Darurat', sangatPuas: 34, puas: 44, cukupPuas: 15, tidakPuas: 5, sangatTidakPuas: 2 },
-    ],
-  },
-
-  // =========================================================================
-  // D. PENGELOLAAN LIMBAH
-  // =========================================================================
-  // 13. Volume layanan limbah per bulan (Stacked column) (Tertutup, perbulan)
-  volumeLayananLimbah: [
-    { bulan: 'Jan', limbahCairM3: 42500, limbahDomestikM3: 16800, sumurTinjaM3: 8400 },
-    { bulan: 'Feb', limbahCairM3: 39800, limbahDomestikM3: 15900, sumurTinjaM3: 7900 },
-    { bulan: 'Mar', limbahCairM3: 44200, limbahDomestikM3: 17400, sumurTinjaM3: 8800 },
-    { bulan: 'Apr', limbahCairM3: 43100, limbahDomestikM3: 17100, sumurTinjaM3: 8600 },
-    { bulan: 'Mei', limbahCairM3: 45800, limbahDomestikM3: 18200, sumurTinjaM3: 9100 },
-    { bulan: 'Jun', limbahCairM3: 44600, limbahDomestikM3: 17800, sumurTinjaM3: 8900 },
-    { bulan: 'Jul', limbahCairM3: 46500, limbahDomestikM3: 18600, sumurTinjaM3: 9300 },
-    { bulan: 'Agu', limbahCairM3: 45200, limbahDomestikM3: 18100, sumurTinjaM3: 9000 },
-    { bulan: 'Sep', limbahCairM3: 44900, limbahDomestikM3: 17900, sumurTinjaM3: 8900 },
-    { bulan: 'Okt', limbahCairM3: 47100, limbahDomestikM3: 18900, sumurTinjaM3: 9400 },
-    { bulan: 'Nov', limbahCairM3: 46000, limbahDomestikM3: 18400, sumurTinjaM3: 9200 },
-    { bulan: 'Des', limbahCairM3: 48200, limbahDomestikM3: 19200, sumurTinjaM3: 9600 },
-  ],
-
-  // 14. Jumlah trip pengurasan per zona (Bar horizontal, diurutkan) (Tertutup)
-  tripPengurasanZona: [
-    { zona: 'Zona Batam Center', trip: 1240, armada: 12, rataDurasiJam: 1.8 },
-    { zona: 'Zona Batu Aji & Sagulung', trip: 1150, armada: 11, rataDurasiJam: 2.1 },
-    { zona: 'Zona Sekupang & Tiban', trip: 980, armada: 9, rataDurasiJam: 1.9 },
-    { zona: 'Zona Lubuk Baja & Nagoya', trip: 870, armada: 8, rataDurasiJam: 1.6 },
-    { zona: 'Zona Bengkong', trip: 760, armada: 7, rataDurasiJam: 1.7 },
-    { zona: 'Zona Nongsa & Kabil', trip: 640, armada: 6, rataDurasiJam: 2.3 },
-    { zona: 'Zona Sei Beduk & Piayu', trip: 520, armada: 5, rataDurasiJam: 2.0 },
-  ],
-
-  // 15. Berat limbah B3 dan persentase yang ditangani (Combo chart) (Tertutup, perbulan)
-  limbahB3Ditangani: [
-    { bulan: 'Jan', padatTon: 42.5, sludgeTon: 34.2, cairTon: 28.5, totalTon: 105.2, diolahTon: 103.5, persentase: 98.4 },
-    { bulan: 'Feb', padatTon: 39.8, sludgeTon: 32.1, cairTon: 26.8, totalTon: 98.7, diolahTon: 97.2, persentase: 98.5 },
-    { bulan: 'Mar', padatTon: 44.1, sludgeTon: 35.8, cairTon: 29.4, totalTon: 109.3, diolahTon: 107.8, persentase: 98.6 },
-    { bulan: 'Apr', padatTon: 43.0, sludgeTon: 34.9, cairTon: 28.9, totalTon: 106.8, diolahTon: 105.4, persentase: 98.7 },
-    { bulan: 'Mei', padatTon: 46.2, sludgeTon: 37.4, cairTon: 31.0, totalTon: 114.6, diolahTon: 113.2, persentase: 98.8 },
-    { bulan: 'Jun', padatTon: 45.0, sludgeTon: 36.5, cairTon: 30.2, totalTon: 111.7, diolahTon: 110.5, persentase: 98.9 },
-    { bulan: 'Jul', padatTon: 47.5, sludgeTon: 38.6, cairTon: 32.1, totalTon: 118.2, diolahTon: 117.1, persentase: 99.1 },
-    { bulan: 'Agu', padatTon: 46.1, sludgeTon: 37.2, cairTon: 31.2, totalTon: 114.5, diolahTon: 113.4, persentase: 99.0 },
-    { bulan: 'Sep', padatTon: 45.4, sludgeTon: 36.8, cairTon: 30.8, totalTon: 113.0, diolahTon: 112.0, persentase: 99.1 },
-    { bulan: 'Okt', padatTon: 48.0, sludgeTon: 39.1, cairTon: 32.7, totalTon: 119.8, diolahTon: 118.8, persentase: 99.2 },
-    { bulan: 'Nov', padatTon: 46.8, sludgeTon: 38.0, cairTon: 31.9, totalTon: 116.7, diolahTon: 115.8, persentase: 99.2 },
-    { bulan: 'Des', padatTon: 49.2, sludgeTon: 40.2, cairTon: 33.5, totalTon: 122.9, diolahTon: 122.1, persentase: 99.3 },
-  ],
-
-  // 16. Produksi dan distribusi kompos organik (Combo chart) (Tertutup, perbulan)
-  komposOrganik: [
-    { bulan: 'Jan', produksiKarung: 2450, distribusiKarung: 2200, stockAkhirKarung: 1450 },
-    { bulan: 'Feb', produksiKarung: 2300, distribusiKarung: 2150, stockAkhirKarung: 1600 },
-    { bulan: 'Mar', produksiKarung: 2600, distribusiKarung: 2400, stockAkhirKarung: 1800 },
-    { bulan: 'Apr', produksiKarung: 2550, distribusiKarung: 2500, stockAkhirKarung: 1850 },
-    { bulan: 'Mei', produksiKarung: 2750, distribusiKarung: 2650, stockAkhirKarung: 1950 },
-    { bulan: 'Jun', produksiKarung: 2700, distribusiKarung: 2600, stockAkhirKarung: 2050 },
-    { bulan: 'Jul', produksiKarung: 2850, distribusiKarung: 2800, stockAkhirKarung: 2100 },
-    { bulan: 'Agu', produksiKarung: 2800, distribusiKarung: 2750, stockAkhirKarung: 2150 },
-    { bulan: 'Sep', produksiKarung: 2750, distribusiKarung: 2700, stockAkhirKarung: 2200 },
-    { bulan: 'Okt', produksiKarung: 2900, distribusiKarung: 2850, stockAkhirKarung: 2250 },
-    { bulan: 'Nov', produksiKarung: 2850, distribusiKarung: 2800, stockAkhirKarung: 2300 },
-    { bulan: 'Des', produksiKarung: 3050, distribusiKarung: 2950, stockAkhirKarung: 2400 },
-  ],
-
-  // =========================================================================
-  // E. PENERIMAAN DAN KINERJA
-  // =========================================================================
-  // 17. PNBP air per bulan (Stacked column) (Tertutup, perbulan)
-  pnbpAirBulanan: [
-    { bulan: 'Jan', pnbpAirMiliar: 34.2, pnbpHgatMiliar: 4.8, totalMiliar: 39.0 },
-    { bulan: 'Feb', pnbpAirMiliar: 32.5, pnbpHgatMiliar: 4.5, totalMiliar: 37.0 },
-    { bulan: 'Mar', pnbpAirMiliar: 35.8, pnbpHgatMiliar: 5.1, totalMiliar: 40.9 },
-    { bulan: 'Apr', pnbpAirMiliar: 35.1, pnbpHgatMiliar: 4.9, totalMiliar: 40.0 },
-    { bulan: 'Mei', pnbpAirMiliar: 36.9, pnbpHgatMiliar: 5.3, totalMiliar: 42.2 },
-    { bulan: 'Jun', pnbpAirMiliar: 36.2, pnbpHgatMiliar: 5.2, totalMiliar: 41.4 },
-    { bulan: 'Jul', pnbpAirMiliar: 37.8, pnbpHgatMiliar: 5.5, totalMiliar: 43.3 },
-    { bulan: 'Agu', pnbpAirMiliar: 37.1, pnbpHgatMiliar: 5.4, totalMiliar: 42.5 },
-    { bulan: 'Sep', pnbpAirMiliar: 36.7, pnbpHgatMiliar: 5.3, totalMiliar: 42.0 },
-    { bulan: 'Okt', pnbpAirMiliar: 38.4, pnbpHgatMiliar: 5.6, totalMiliar: 44.0 },
-    { bulan: 'Nov', pnbpAirMiliar: 37.9, pnbpHgatMiliar: 5.5, totalMiliar: 43.4 },
-    { bulan: 'Des', pnbpAirMiliar: 39.5, pnbpHgatMiliar: 5.8, totalMiliar: 45.3 },
-  ],
-
-  // 18. Capaian penerimaan terhadap target (Clustered bar horizontal) (Tertutup, perbulan)
-  capaianPenerimaan: {
-    'Semua Unit': [
-      { jenis: 'Tarif Air Minum Bersih', targetMiliar: 410.0, realisasiMiliar: 438.1, capaian: 106.9 },
-      { jenis: 'Retribusi Pengolahan Air Limbah', targetMiliar: 32.5, realisasiMiliar: 35.2, capaian: 108.3 },
-      { jenis: 'HGAT (Hak Guna Air Tanah)', targetMiliar: 58.0, realisasiMiliar: 62.9, capaian: 108.4 },
-      { jenis: 'Layanan Pengurasan IPLT/Tinja', targetMiliar: 14.2, realisasiMiliar: 15.6, capaian: 109.9 },
-      { jenis: 'Pasang Baru & Tera Meter', targetMiliar: 18.5, realisasiMiliar: 19.8, capaian: 107.0 },
-    ],
-    'Subdit Air Minum': [
-      { jenis: 'Tarif Air Minum Bersih', targetMiliar: 410.0, realisasiMiliar: 438.1, capaian: 106.9 },
-      { jenis: 'HGAT (Hak Guna Air Tanah)', targetMiliar: 58.0, realisasiMiliar: 62.9, capaian: 108.4 },
-      { jenis: 'Pasang Baru & Tera Meter', targetMiliar: 18.5, realisasiMiliar: 19.8, capaian: 107.0 },
-    ],
-    'Subdit Pengelolaan Limbah': [
-      { jenis: 'Retribusi Pengolahan Air Limbah', targetMiliar: 32.5, realisasiMiliar: 35.2, capaian: 108.3 },
-      { jenis: 'Layanan Pengurasan IPLT/Tinja', targetMiliar: 14.2, realisasiMiliar: 15.6, capaian: 109.9 },
-    ],
-  },
-
-  // 19. Capaian produksi terhadap target (Clustered bar horizontal) (Tertutup, perbulan)
-  capaianProduksi: {
-    'Semua Unit': [
-      { jenis: 'Air Bersih WTP Duriangkang (m3)', targetVolumeJuta: 95.0, realisasiVolumeJuta: 98.4, capaian: 103.6 },
-      { jenis: 'Air Bersih WTP Mukakuning (m3)', targetVolumeJuta: 19.0, realisasiVolumeJuta: 19.8, capaian: 104.2 },
-      { jenis: 'Air Bersih WTP Sei Ladi (m3)', targetVolumeJuta: 12.2, realisasiVolumeJuta: 12.8, capaian: 104.9 },
-      { jenis: 'Pengolahan Limbah Cair WWTP (m3)', targetVolumeJuta: 0.52, realisasiVolumeJuta: 0.55, capaian: 105.8 },
-      { jenis: 'Produksi Kompos Organik IPLT (Karung)', targetVolumeJuta: 0.032, realisasiVolumeJuta: 0.034, capaian: 106.3 },
-    ],
-    'Subdit Air Minum': [
-      { jenis: 'Air Bersih WTP Duriangkang (m3)', targetVolumeJuta: 95.0, realisasiVolumeJuta: 98.4, capaian: 103.6 },
-      { jenis: 'Air Bersih WTP Mukakuning (m3)', targetVolumeJuta: 19.0, realisasiVolumeJuta: 19.8, capaian: 104.2 },
-      { jenis: 'Air Bersih WTP Sei Ladi (m3)', targetVolumeJuta: 12.2, realisasiVolumeJuta: 12.8, capaian: 104.9 },
-    ],
-    'Subdit Pengelolaan Limbah': [
-      { jenis: 'Pengolahan Limbah Cair WWTP (m3)', targetVolumeJuta: 0.52, realisasiVolumeJuta: 0.55, capaian: 105.8 },
-      { jenis: 'Produksi Kompos Organik IPLT (Karung)', targetVolumeJuta: 0.032, realisasiVolumeJuta: 0.034, capaian: 106.3 },
-    ],
-  },
-
-  // 20. Penyelesaian piutang per jenis piutang (Stacked bar horizontal) (Tertutup, perbulan)
-  penyelesaianPiutang: [
-    { jenis: 'Piutang Pelanggan Rumah Tangga', realisasiMiliar: 14.8, sisaPiutangMiliar: 1.9, totalPiutangMiliar: 16.7, tingkatPenyelesaian: 88.6 },
-    { jenis: 'Piutang Pelanggan Niaga & Industri', realisasiMiliar: 28.5, sisaPiutangMiliar: 2.3, totalPiutangMiliar: 30.8, tingkatPenyelesaian: 92.5 },
-    { jenis: 'Piutang Instansi & BUMN', realisasiMiliar: 8.9, sisaPiutangMiliar: 1.1, totalPiutangMiliar: 10.0, tingkatPenyelesaian: 89.0 },
-    { jenis: 'Piutang Retribusi Limbah & IPLT', realisasiMiliar: 5.4, sisaPiutangMiliar: 0.6, totalPiutangMiliar: 6.0, tingkatPenyelesaian: 90.0 },
-  ],
-
-  // =========================================================================
-  // F. PETA INFRASTRUKTUR AIR MINUM (Terbatas/Tertutup)
-  // Koordinat Batam real-world & nodes infrastruktur
-  // =========================================================================
-  petaInfrastruktur: {
-    waduk: [
-      { id: 'w-1', nama: 'Waduk Duriangkang', volumeJutaM3: 78.5, luasHa: 2450, lat: 1.055, lng: 104.072, x: 57, y: 55 },
-      { id: 'w-2', nama: 'Waduk Mukakuning', volumeJutaM3: 12.3, luasHa: 460, lat: 1.042, lng: 104.028, x: 49, y: 58 },
-      { id: 'w-3', nama: 'Waduk Sei Ladi', volumeJutaM3: 9.5, luasHa: 380, lat: 1.118, lng: 104.005, x: 44, y: 41 },
-      { id: 'w-4', nama: 'Waduk Sei Harapan', volumeJutaM3: 3.6, luasHa: 190, lat: 1.108, lng: 103.952, x: 34, y: 44 },
-      { id: 'w-5', nama: 'Waduk Nongsa', volumeJutaM3: 0.8, luasHa: 95, lat: 1.162, lng: 104.095, x: 62, y: 31 },
-      { id: 'w-6', nama: 'Waduk Tembesi', volumeJutaM3: 56.0, luasHa: 1200, lat: 1.025, lng: 104.058, x: 54, y: 62 },
-    ],
-    ipaWtp: [
-      { id: 'ipa-1', nama: 'IPA WTP Duriangkang', kapasitas: '3.000 L/detik', teknologi: 'Pulsator & DAF', lat: 1.062, lng: 104.075, x: 58, y: 53 },
-      { id: 'ipa-2', nama: 'IPA WTP Mukakuning', kapasitas: '600 L/detik', teknologi: 'Clarifier Konvensional', lat: 1.048, lng: 104.032, x: 50, y: 57 },
-      { id: 'ipa-3', nama: 'IPA WTP Sei Ladi', kapasitas: '380 L/detik', teknologi: 'Rapid Sand Filter', lat: 1.122, lng: 104.009, x: 45, y: 40 },
-      { id: 'ipa-4', nama: 'IPA WTP Sei Harapan', kapasitas: '210 L/detik', teknologi: 'Filtrasi Multi-media', lat: 1.112, lng: 103.955, x: 35, y: 43 },
-      { id: 'ipa-5', nama: 'IPA WTP Nongsa', kapasitas: '60 L/detik', teknologi: 'Clarifier Compact', lat: 1.165, lng: 104.098, x: 63, y: 30 },
-      { id: 'ipa-6', nama: 'IPA WTP Tanjung Piayu', kapasitas: '200 L/detik', teknologi: 'Ultrafiltrasi Membran', lat: 1.018, lng: 104.088, x: 60, y: 64 },
-    ],
-    tankiReservoir: [
-      { id: 'tk-1', nama: 'Reservoir Bukit Senyum', kapasitasM3: 15000, elevasiM: 85, x: 46, y: 35 },
-      { id: 'tk-2', nama: 'Reservoir Ocarina Batam Center', kapasitasM3: 12000, elevasiM: 52, x: 53, y: 44 },
-      { id: 'tk-3', nama: 'Reservoir Tanjung Uncang', kapasitasM3: 10000, elevasiM: 45, x: 33, y: 64 },
-      { id: 'tk-4', nama: 'Reservoir Batu Aji Raya', kapasitasM3: 14000, elevasiM: 48, x: 40, y: 65 },
-      { id: 'tk-5', nama: 'Reservoir Tiban Koperasi', kapasitasM3: 8000, elevasiM: 65, x: 38, y: 45 },
-      { id: 'tk-6', nama: 'Reservoir Kabil Industrial', kapasitasM3: 9000, elevasiM: 42, x: 64, y: 47 },
-    ],
-    boosterPump: [
-      { id: 'bp-1', nama: 'Booster Pump Sukajadi', headM: 45, debitLps: 450, x: 49, y: 47 },
-      { id: 'bp-2', nama: 'Booster Pump Simpang Kepri Mall', headM: 50, debitLps: 550, x: 51, y: 49 },
-      { id: 'bp-3', nama: 'Booster Pump Tanjung Pinggir', headM: 40, debitLps: 320, x: 32, y: 48 },
-      { id: 'bp-4', nama: 'Booster Pump Sei Panas', headM: 35, debitLps: 400, x: 48, y: 38 },
-      { id: 'bp-5', nama: 'Booster Pump Tembesi Trans', headM: 45, debitLps: 480, x: 48, y: 63 },
-    ],
-    meterLogger: [
-      { id: 'ml-1', nama: 'DMA Logger Duriangkang Trunk', tekananBar: 3.8, flowLps: 820, status: 'Normal', x: 55, y: 51 },
-      { id: 'ml-2', nama: 'DMA Logger Batam Center Hub', tekananBar: 3.2, flowLps: 410, status: 'Normal', x: 53, y: 46 },
-      { id: 'ml-3', nama: 'DMA Logger Batu Aji Indah', tekananBar: 2.8, flowLps: 380, status: 'Perlu Monitor', x: 42, y: 64 },
-      { id: 'ml-4', nama: 'DMA Logger Nagoya Commercial', tekananBar: 3.5, flowLps: 320, status: 'Normal', x: 44, y: 36 },
-      { id: 'ml-5', nama: 'DMA Logger Nongsa Beachline', tekananBar: 2.5, flowLps: 180, status: 'Normal', x: 61, y: 34 },
-    ],
-    pipaJaringan: [
-      { id: 'pipe-1', nama: 'Trunk Transmisi Duriangkang - Batam Center (DN 1000mm)', points: '58,53 55,50 53,46' },
-      { id: 'pipe-2', nama: 'Trunk Transmisi Duriangkang - Sukajadi - Nagoya (DN 800mm)', points: '58,53 51,49 49,47 48,38 44,36' },
-      { id: 'pipe-3', nama: 'Trunk Mukakuning - Batu Aji - Tanjung Uncang (DN 600mm)', points: '50,57 48,63 42,64 33,64' },
-      { id: 'pipe-4', nama: 'Trunk Sei Ladi - Baloi - Batu Ampar (DN 600mm)', points: '45,40 46,35 45,31' },
-      { id: 'pipe-5', nama: 'Trunk Sei Harapan - Tiban - Sekupang (DN 500mm)', points: '35,43 38,45 32,48' },
-      { id: 'pipe-6', nama: 'Trunk Duriangkang - Kabil Port (DN 500mm)', points: '58,53 62,50 64,47' },
-      { id: 'pipe-7', nama: 'Trunk Nongsa Sub-system (DN 300mm)', points: '63,30 61,34 65,36' },
-    ],
-    stressArea: [
-      { id: 'sa-1', nama: 'Stress Area Bukit Senyum Ujung', masalah: 'Elevasi Tinggi, Tekanan < 0.8 bar jam puncak', x: 46, y: 34, r: 16 },
-      { id: 'sa-2', nama: 'Stress Area Tanjung Uncang Ujung', masalah: 'Pipa Ujung Jaringan, Sering Drop saat Shift Pabrik', x: 31, y: 65, r: 18 },
-      { id: 'sa-3', nama: 'Stress Area Bengkong Kolam', masalah: 'Kepadatan Tinggi, Fluktuasi Tekanan Siang Hari', x: 49, y: 36, r: 14 },
-      { id: 'sa-4', nama: 'Stress Area Piayu Laut', masalah: 'Jarak dari WTP > 14 km, Pasokan Tergantung Booster', x: 62, y: 66, r: 15 },
-    ],
-    wilayahDmz: [
-      { id: 'dmz-bc', nama: 'DMZ-01 Batam Center', warna: '#3B82F6', points: '50,42 55,41 57,48 51,49' },
-      { id: 'dmz-ba', nama: 'DMZ-03 Batu Aji Indah', warna: '#60A5FA', points: '38,60 45,60 44,68 37,68' },
-      { id: 'dmz-tb', nama: 'DMZ-02 Tiban Raya', warna: '#93C5FD', points: '34,40 40,40 41,48 35,48' },
-      { id: 'dmz-ng', nama: 'DMZ-06 Nagoya Commercial', warna: '#2563EB', points: '42,33 47,33 47,38 42,38' },
-      { id: 'dmz-kb', nama: 'DMZ-14 Kabil Industrial', warna: '#1D4ED8', points: '61,44 67,44 68,52 62,52' },
-    ],
-    sebaranPelanggan: [
-      { id: 'sp-1', nama: 'Klaster Pelanggan Batam Center Kota (24.650 SL)', x: 53, y: 44, density: 95 },
-      { id: 'sp-2', nama: 'Klaster Pelanggan Batu Aji & Sagulung (55.250 SL)', x: 41, y: 64, density: 98 },
-      { id: 'sp-3', nama: 'Klaster Pelanggan Bengkong & Sei Panas (41.950 SL)', x: 48, y: 37, density: 92 },
-      { id: 'sp-4', nama: 'Klaster Pelanggan Tiban & Sekupang (31.850 SL)', x: 37, y: 45, density: 88 },
-      { id: 'sp-5', nama: 'Klaster Pelanggan Nagoya & Jodoh (18.320 SL)', x: 44, y: 35, density: 85 },
-      { id: 'sp-6', nama: 'Klaster Industri Batamindo & Mukakuning (25.220 SL)', x: 50, y: 55, density: 90 },
-      { id: 'sp-7', nama: 'Klaster Nongsa & Kabil (24.590 SL)', x: 63, y: 46, density: 78 },
-      { id: 'sp-8', nama: 'Klaster Tanjung Piayu & Sei Beduk (16.800 SL)', x: 59, y: 63, density: 82 },
+    2023: [
+      { namaWaduk: 'Waduk Duriangkang', kapasitasJutaM3: 78.5, luasPermukaanHa: 2450, tahun: 2023, periodeRekap: 'Desember 2023', status: 'Normal', elevasiMukaAirM: 6.9 },
+      { namaWaduk: 'Waduk Tembesi', kapasitasJutaM3: 56.0, luasPermukaanHa: 1200, tahun: 2023, periodeRekap: 'Desember 2023', status: 'Normal', elevasiMukaAirM: 4.2 },
+      { namaWaduk: 'Waduk Mukakuning', kapasitasJutaM3: 12.3, luasPermukaanHa: 460, tahun: 2023, periodeRekap: 'Desember 2023', status: 'Normal', elevasiMukaAirM: 10.9 },
+      { namaWaduk: 'Waduk Sei Ladi', kapasitasJutaM3: 9.5, luasPermukaanHa: 380, tahun: 2023, periodeRekap: 'Desember 2023', status: 'Normal', elevasiMukaAirM: 9.4 },
+      { namaWaduk: 'Waduk Sei Harapan', kapasitasJutaM3: 3.6, luasPermukaanHa: 190, tahun: 2023, periodeRekap: 'Desember 2023', status: 'Normal', elevasiMukaAirM: 13.5 },
+      { namaWaduk: 'Waduk Nongsa', kapasitasJutaM3: 0.8, luasPermukaanHa: 95, tahun: 2023, periodeRekap: 'Desember 2023', status: 'Normal', elevasiMukaAirM: 6.0 },
     ],
   },
 };
