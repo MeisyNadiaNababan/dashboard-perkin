@@ -20,7 +20,8 @@ const formatNumberId = (val: number): string => {
   return new Intl.NumberFormat('id-ID').format(val);
 };
 
-const formatRupiahMiliar = (val: number): string => {
+const formatRupiahMiliar = (val?: number): string => {
+  if (val === undefined || val === null) return '-';
   return `Rp ${val.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} M`;
 };
 

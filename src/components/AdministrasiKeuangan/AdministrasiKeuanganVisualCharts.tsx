@@ -10,13 +10,11 @@ import {
   CheckCircle2,
   FileCode2,
   Sparkles,
-  BarChart3,
   PieChart as PieIcon,
   Layers,
   ArrowUpRight,
   Info,
   Calendar,
-  FileText,
 } from 'lucide-react';
 import {
   RadarChart,
@@ -130,11 +128,6 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
   AdministrasiKeuanganVisualChartsProps
 > = ({ onOpenFormulaModal }) => {
   const [activeTab, setActiveTab] = useState<'rb' | 'merit' | 'spip' | 'wtp'>('rb');
-  const [radarMode, setRadarMode] = useState<'grafik' | 'tabel'>('grafik');
-  const [rbChartMode, setRbChartMode] = useState<'grafik' | 'tabel'>('grafik');
-  const [meritChartMode, setMeritChartMode] = useState<'grafik' | 'tabel'>('grafik');
-  const [spipChartMode, setSpipChartMode] = useState<'grafik' | 'tabel'>('grafik');
-  const [wtpChartMode, setWtpChartMode] = useState<'grafik' | 'tabel'>('grafik');
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3.5">
@@ -153,110 +146,48 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                 Realisasi Aktual vs Target Perkin A1 2026
               </p>
             </div>
-            {/* Sheet Swap Toggle */}
-            <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
-              <button
-                type="button"
-                onClick={() => setRadarMode('grafik')}
-                className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                  radarMode === 'grafik'
-                    ? 'bg-blue-600 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Tampilkan grafik radar"
-              >
-                <BarChart3 className="w-3 h-3" />
-                <span>Grafik</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setRadarMode('tabel')}
-                className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                  radarMode === 'tabel'
-                    ? 'bg-blue-600 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Tampilkan tabel detail"
-              >
-                <FileText className="w-3 h-3" />
-                <span>Tabel</span>
-              </button>
-            </div>
           </div>
 
-          {/* Radar Visual vs Tabel Detail */}
-          {radarMode === 'grafik' ? (
-            <div className="h-36 sm:h-40 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_4_IKP_DATA} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <PolarGrid stroke="#CBD5E1" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                  <Radar
-                    name="Target Perkin (100%)"
-                    dataKey="target"
-                    stroke="#94A3B8"
-                    fill="#94A3B8"
-                    fillOpacity={0.12}
-                    strokeDasharray="4 4"
-                  />
-                  <Radar
-                    name="Realisasi Aktual"
-                    dataKey="realisasi"
-                    stroke="#2563EB"
-                    fill="#2563EB"
-                    fillOpacity={0.35}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      fontSize: '11px',
-                      borderRadius: '8px',
-                      border: '1px solid #E2E8F0',
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="h-36 sm:h-40 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
-                  <tr>
-                    <th className="py-1 px-1.5">Indikator IKP</th>
-                    <th className="py-1 px-1 text-right">Target</th>
-                    <th className="py-1 px-1 text-right font-black">Realisasi</th>
-                    <th className="py-1 px-1 text-center">Capaian</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-[10px]">
-                  {RADAR_4_IKP_DATA.map((row, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-1.5 px-1.5 font-bold text-slate-800">{row.subject}</td>
-                      <td className="py-1.5 px-1 text-right text-slate-500">100%</td>
-                      <td className="py-1.5 px-1 text-right font-semibold text-slate-900">{row.skorAsli}</td>
-                      <td className="py-1.5 px-1 text-center">
-                        <span className={`px-1 py-0.2 rounded font-bold text-[9.5px] ${
-                          row.realisasi >= 100
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                            : 'bg-blue-50 text-blue-700 border border-blue-100'
-                        }`}>
-                          {row.realisasi.toFixed(1)}%
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          {/* Radar Visual */}
+          <div className="h-36 sm:h-40 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart data={RADAR_4_IKP_DATA} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                <PolarGrid stroke="#CBD5E1" />
+                <PolarAngleAxis
+                  dataKey="subject"
+                  tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
+                />
+                <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
+                <Radar
+                  name="Target Perkin (100%)"
+                  dataKey="target"
+                  stroke="#94A3B8"
+                  fill="#94A3B8"
+                  fillOpacity={0.12}
+                  strokeDasharray="4 4"
+                />
+                <Radar
+                  name="Realisasi Aktual"
+                  dataKey="realisasi"
+                  stroke="#2563EB"
+                  fill="#2563EB"
+                  fillOpacity={0.35}
+                />
+                <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                <Tooltip
+                  formatter={(val: any, name: any, item: any) => [
+                    `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                    name,
+                  ]}
+                  contentStyle={{
+                    fontSize: '11px',
+                    borderRadius: '8px',
+                    border: '1px solid #E2E8F0',
+                  }}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
 
           {/* 2 Status Mini Badges */}
           <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-slate-200/60">
@@ -397,112 +328,47 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                   </table>
                 </div>
 
-                {/* Visualisasi Grafis Tren & Komparasi (WITH SHEET SWAP) */}
+                {/* Visualisasi Grafis Tren & Komparasi */}
                 <div className="lg:col-span-5 space-y-2">
                   <div className="flex items-center justify-between pb-1 border-b border-slate-100">
                     <span className="text-xs font-bold text-slate-800">Analisis Tren &amp; Komparasi</span>
-                    {/* Sheet Swap Toggle */}
-                    <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setRbChartMode('grafik')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          rbChartMode === 'grafik'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan grafik"
-                      >
-                        <BarChart3 className="w-3 h-3" />
-                        <span>Grafik</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setRbChartMode('tabel')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          rbChartMode === 'tabel'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan tabel detail"
-                      >
-                        <FileText className="w-3 h-3" />
-                        <span>Tabel Detail</span>
-                      </button>
+                  </div>
+
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                      Tren Skor Indeks RB (2021 - 2026)
+                    </span>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={RB_TREND_TAHUNAN} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[65, 85]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor RB']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} />
+                        </LineChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
 
-                  {rbChartMode === 'grafik' ? (
-                    <>
-                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
-                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
-                          Tren Skor Indeks RB (2021 - 2026)
-                        </span>
-                        <div className="h-24 w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={RB_TREND_TAHUNAN} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                              <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                              <YAxis domain={[65, 85]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                              <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor RB']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                              <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
-                              <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-
-                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
-                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
-                          Capaian Nilai vs Bobot 8 Area
-                        </span>
-                        <div className="h-24 w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={RB_8_AREA_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                              <XAxis dataKey="komponen" tick={false} axisLine={false} tickLine={false} />
-                              <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                              <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'nilai' ? 'Realisasi' : 'Bobot']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                              <Bar dataKey="bobot" fill="#CBD5E1" barSize={7} radius={[2, 2, 0, 0]} />
-                              <Bar dataKey="nilai" fill="#3B82F6" barSize={7} radius={[2, 2, 0, 0]} />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="h-56 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
-                          <tr>
-                            <th className="py-1 px-1.5">Tahun</th>
-                            <th className="py-1 px-1 text-right">Target</th>
-                            <th className="py-1 px-1 text-right font-black">Realisasi</th>
-                            <th className="py-1 px-1 text-right">Capaian</th>
-                            <th className="py-1 px-1 text-center">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-[10.5px]">
-                          {RB_TREND_TAHUNAN.map((row) => {
-                            const pct = ((row.skor / row.target) * 100).toFixed(1);
-                            return (
-                              <tr key={row.tahun} className="hover:bg-slate-50 transition-colors">
-                                <td className="py-1.5 px-1.5 font-bold text-slate-800">{row.tahun}</td>
-                                <td className="py-1.5 px-1 text-right text-slate-500 font-mono">{row.target.toFixed(1)}</td>
-                                <td className="py-1.5 px-1 text-right font-bold text-blue-700 font-mono">{row.skor.toFixed(2)}</td>
-                                <td className="py-1.5 px-1 text-right font-semibold text-slate-900 font-mono">{pct}%</td>
-                                <td className="py-1.5 px-1 text-center">
-                                  <span className="px-1.5 py-0.2 rounded font-bold text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                    Tercapai
-                                  </span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                      Capaian Nilai vs Bobot 8 Area
+                    </span>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={RB_8_AREA_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="komponen" tick={false} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'nilai' ? 'Realisasi' : 'Bobot']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Bar dataKey="bobot" fill="#CBD5E1" barSize={7} radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="nilai" fill="#3B82F6" barSize={7} radius={[2, 2, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -583,125 +449,64 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                   </table>
                 </div>
 
-                {/* Visualisasi Grafis: Bar Chart 8 Aspek & Tren Skor Sistem Merit (WITH SHEET SWAP) */}
+                {/* Visualisasi Grafis: Bar Chart 8 Aspek & Tren Skor Sistem Merit */}
                 <div className="lg:col-span-5 space-y-2">
                   <div className="flex items-center justify-between pb-1 border-b border-slate-100">
                     <span className="text-xs font-bold text-slate-800">Analisis Aspek &amp; Tren Merit</span>
-                    <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setMeritChartMode('grafik')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          meritChartMode === 'grafik'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan grafik"
-                      >
-                        <BarChart3 className="w-3 h-3" />
-                        <span>Grafik</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setMeritChartMode('tabel')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          meritChartMode === 'tabel'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan tabel detail"
-                      >
-                        <FileText className="w-3 h-3" />
-                        <span>Tabel Detail</span>
-                      </button>
+                  </div>
+
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                      Capaian Skor 8 Aspek Sistem Merit
+                    </span>
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={MERIT_8_ASPEK_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="aspek" tick={false} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`${v} Poin`, name === 'skor' ? 'Realisasi' : 'Bobot Maksimal']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Bar dataKey="bobotMax" fill="#CBD5E1" barSize={7} radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="skor" fill="#10B981" barSize={7} radius={[2, 2, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
 
-                  {meritChartMode === 'grafik' ? (
-                    <>
-                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
-                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
-                          Capaian Skor 8 Aspek Sistem Merit
-                        </span>
-                        <div className="h-24 w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={MERIT_8_ASPEK_TABLE_DATA} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                              <XAxis dataKey="aspek" tick={false} axisLine={false} tickLine={false} />
-                              <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                              <Tooltip formatter={(v: any, name: any) => [`${v} Poin`, name === 'skor' ? 'Realisasi' : 'Bobot Maksimal']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                              <Bar dataKey="bobotMax" fill="#CBD5E1" barSize={7} radius={[2, 2, 0, 0]} />
-                              <Bar dataKey="skor" fill="#10B981" barSize={7} radius={[2, 2, 0, 0]} />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-
-                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-slate-800 truncate">
-                            Tren Skor Sistem Merit
-                          </span>
-                          <span className="text-[9px] font-bold text-emerald-700 font-mono shrink-0">
-                            342,5 / IV
-                          </span>
-                        </div>
-                        <div className="h-24 w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={MERIT_TREND_ANNUAL_DATA} margin={{ top: 5, right: 8, left: -24, bottom: 0 }}>
-                              <defs>
-                                <linearGradient id="meritTrendGrad" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
-                                  <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
-                                </linearGradient>
-                              </defs>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                              <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                              <YAxis domain={[250, 360]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                              <Tooltip
-                                formatter={(v: any, _name: any, item: any) => [
-                                  `${v} Poin (${item?.payload?.kategori || ''})`,
-                                  'Skor Sistem Merit',
-                                ]}
-                                contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
-                              />
-                              <ReferenceLine y={280} stroke="#94A3B8" strokeDasharray="3 3" label={{ value: 'Target 280', fontSize: 7, fill: '#64748B' }} />
-                              <Area type="monotone" dataKey="skor" stroke="#10B981" strokeWidth={2} fill="url(#meritTrendGrad)" dot={{ r: 2.5, fill: '#10B981' }} />
-                            </AreaChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="h-56 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
-                          <tr>
-                            <th className="py-1 px-1.5">Tahun</th>
-                            <th className="py-1 px-1 text-right">Target</th>
-                            <th className="py-1 px-1 text-right font-black">Skor Merit</th>
-                            <th className="py-1 px-1.5">Kategori</th>
-                            <th className="py-1 px-1 text-center">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-[10.5px]">
-                          {MERIT_TREND_ANNUAL_DATA.map((row) => (
-                            <tr key={row.tahun} className="hover:bg-slate-50 transition-colors">
-                              <td className="py-1.5 px-1.5 font-bold text-slate-800">{row.tahun}</td>
-                              <td className="py-1.5 px-1 text-right text-slate-500 font-mono">{row.target}</td>
-                              <td className="py-1.5 px-1 text-right font-bold text-emerald-700 font-mono">{row.skor.toFixed(1)}</td>
-                              <td className="py-1.5 px-1.5 text-slate-700 text-[10px]">{row.kategori}</td>
-                              <td className="py-1.5 px-1 text-center">
-                                <span className="px-1.5 py-0.2 rounded font-bold text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                  Sangat Baik
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold text-slate-800 truncate">
+                        Tren Skor Sistem Merit
+                      </span>
+                      <span className="text-[9px] font-bold text-emerald-700 font-mono shrink-0">
+                        342,5 / IV
+                      </span>
                     </div>
-                  )}
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={MERIT_TREND_ANNUAL_DATA} margin={{ top: 5, right: 8, left: -24, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="meritTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
+                              <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[250, 360]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            formatter={(v: any, _name: any, item: any) => [
+                              `${v} Poin (${item?.payload?.kategori || ''})`,
+                              'Skor Sistem Merit',
+                            ]}
+                            contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
+                          />
+                          <ReferenceLine y={280} stroke="#94A3B8" strokeDasharray="3 3" label={{ value: 'Target 280', fontSize: 7, fill: '#64748B' }} />
+                          <Area type="monotone" dataKey="skor" stroke="#10B981" strokeWidth={2} fill="url(#meritTrendGrad)" dot={{ r: 2.5, fill: '#10B981' }} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -782,88 +587,29 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                   </table>
                 </div>
 
-                {/* Visualisasi Grafis Bar Chart 5 Unsur SPIP vs Standar (WITH SHEET SWAP) */}
+                {/* Visualisasi Grafis Bar Chart 5 Unsur SPIP vs Standar */}
                 <div className="lg:col-span-5 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60 flex flex-col justify-between">
                   <div className="flex items-center justify-between pb-1 mb-1 border-b border-slate-200/50">
                     <span className="text-[10px] font-bold text-slate-800 truncate pr-1">
                       Komparasi 5 Unsur SPIP vs Standar L3
                     </span>
-                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setSpipChartMode('grafik')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          spipChartMode === 'grafik'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan grafik"
-                      >
-                        <BarChart3 className="w-3 h-3" />
-                        <span>Grafik</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSpipChartMode('tabel')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          spipChartMode === 'tabel'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan tabel detail"
-                      >
-                        <FileText className="w-3 h-3" />
-                        <span>Tabel</span>
-                      </button>
-                    </div>
                   </div>
 
-                  {spipChartMode === 'grafik' ? (
-                    <>
-                      <div className="h-32 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={SPIP_5_UNSUR_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                            <XAxis dataKey="unsur" tick={{ fontSize: 7.5, fill: '#475569' }} axisLine={false} tickLine={false} />
-                            <YAxis domain={[2.5, 4.0]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                            <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'skor' ? 'Skor Aktual' : 'Standar Level 3']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                            <Bar dataKey="standarL3" fill="#CBD5E1" barSize={10} radius={[2, 2, 0, 0]} />
-                            <Bar dataKey="skor" fill="#F59E0B" barSize={10} radius={[2, 2, 0, 0]} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <span className="text-[9.5px] text-slate-500 text-center block mt-1">
-                        Seluruh unsur melampaui ambang batas Level 3 Terdefinisi
-                      </span>
-                    </>
-                  ) : (
-                    <div className="h-36 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
-                          <tr>
-                            <th className="py-1 px-1.5">Unsur SPIP</th>
-                            <th className="py-1 px-1 text-right">Standar</th>
-                            <th className="py-1 px-1 text-right font-black">Skor</th>
-                            <th className="py-1 px-1 text-center">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-[10px]">
-                          {SPIP_5_UNSUR_TABLE_DATA.map((row, idx) => (
-                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                              <td className="py-1.5 px-1.5 font-bold text-slate-800">{row.unsur}</td>
-                              <td className="py-1.5 px-1 text-right text-slate-500 font-mono">{row.standarL3.toFixed(2)}</td>
-                              <td className="py-1.5 px-1 text-right font-bold text-amber-700 font-mono">{row.skor.toFixed(2)}</td>
-                              <td className="py-1.5 px-1 text-center">
-                                <span className="px-1 py-0.2 rounded font-bold text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                  L3 Terdefinisi
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
+                  <div className="h-32 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={SPIP_5_UNSUR_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="unsur" tick={{ fontSize: 7.5, fill: '#475569' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[2.5, 4.0]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'skor' ? 'Skor Aktual' : 'Standar Level 3']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                        <Bar dataKey="standarL3" fill="#CBD5E1" barSize={10} radius={[2, 2, 0, 0]} />
+                        <Bar dataKey="skor" fill="#F59E0B" barSize={10} radius={[2, 2, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Seluruh unsur melampaui ambang batas Level 3 Terdefinisi
+                  </span>
                 </div>
               </div>
             </div>
@@ -942,85 +688,26 @@ export const AdministrasiKeuanganVisualCharts: React.FC<
                   </table>
                 </div>
 
-                {/* Visualisasi Grafis Tren Tindak Lanjut & Rekam Jejak 8 Tahun WTP (WITH SHEET SWAP) */}
+                {/* Visualisasi Grafis Tren Tindak Lanjut & Rekam Jejak 8 Tahun WTP */}
                 <div className="lg:col-span-5 bg-slate-50/60 p-2.5 rounded-lg border border-slate-200/60 flex flex-col justify-between">
                   <div className="flex items-center justify-between mb-1 pb-1 border-b border-slate-200/50 text-[10px] font-bold text-slate-800">
                     <span className="truncate pr-1">Rekam Jejak 8 Tahun WTP &amp; TLHP BPK</span>
-                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setWtpChartMode('grafik')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          wtpChartMode === 'grafik'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan grafik"
-                      >
-                        <BarChart3 className="w-3 h-3" />
-                        <span>Grafik</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setWtpChartMode('tabel')}
-                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          wtpChartMode === 'tabel'
-                            ? 'bg-blue-600 text-white shadow-2xs'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                        title="Tampilkan tabel detail"
-                      >
-                        <FileText className="w-3 h-3" />
-                        <span>Tabel</span>
-                      </button>
-                    </div>
                   </div>
 
-                  {wtpChartMode === 'grafik' ? (
-                    <>
-                      <div className="h-32 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={OPINI_BPK_HISTORY} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                            <XAxis dataKey="thn" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                            <YAxis domain={[85, 100]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                            <Tooltip formatter={(v: any) => [`${v}% Tuntas (Opini WTP)`, 'Tindak Lanjut']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                            <Line type="monotone" dataKey="skorTindakLanjut" stroke="#10B981" strokeWidth={2.5} dot={{ r: 3, fill: '#10B981' }} />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <span className="text-[9.5px] text-slate-500 text-center block mt-1">
-                        Predikat WTP beruntun dan 139 rekomendasi selesai (93,9% Tuntas)
-                      </span>
-                    </>
-                  ) : (
-                    <div className="h-36 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
-                          <tr>
-                            <th className="py-1 px-1.5">Tahun Buku</th>
-                            <th className="py-1 px-1 text-center">Opini BPK</th>
-                            <th className="py-1 px-1 text-right font-black">TLHP (%)</th>
-                            <th className="py-1 px-1 text-center">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-[10px]">
-                          {OPINI_BPK_HISTORY.map((row) => (
-                            <tr key={row.thn} className="hover:bg-slate-50 transition-colors">
-                              <td className="py-1.5 px-1.5 font-bold text-slate-800">{row.thn}</td>
-                              <td className="py-1.5 px-1 text-center font-bold text-emerald-700">{row.opini}</td>
-                              <td className="py-1.5 px-1 text-right font-mono font-bold text-slate-900">{row.skorTindakLanjut.toFixed(1)}%</td>
-                              <td className="py-1.5 px-1 text-center">
-                                <span className="px-1 py-0.2 rounded font-bold text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                  Tuntas WTP
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
+                  <div className="h-32 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={OPINI_BPK_HISTORY} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="thn" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[85, 100]} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(v: any) => [`${v}% Tuntas (Opini WTP)`, 'Tindak Lanjut']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                        <Line type="monotone" dataKey="skorTindakLanjut" stroke="#10B981" strokeWidth={2.5} dot={{ r: 3, fill: '#10B981' }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="text-[9.5px] text-slate-500 text-center block mt-1">
+                    Predikat WTP beruntun dan 139 rekomendasi selesai (93,9% Tuntas)
+                  </span>
                 </div>
               </div>
             </div>

@@ -7,6 +7,8 @@ export interface CapaianTriwulanItem {
   triwulanTahun: string;
   capaianBelanja: number;     // dalam %
   capaianPenerimaan: number;  // dalam %
+  nominalBelanjaMiliar: number; // Miliar Rupiah
+  nominalPenerimaanMiliar: number; // Miliar Rupiah
 }
 
 export interface AnggaranRealisasiUraianItem {
@@ -143,13 +145,13 @@ export const BIRO_KEUANGAN_MASTER_DATA: BiroKeuanganMasterData = {
     datasetName: 'Persentase Realisasi Belanja dan Penerimaan BP Batam (Terbuka, pertriwulan)',
     accessLabel: 'Terbuka',
     quarterlyRecords: [
-      { triwulanTahun: 'TW I 2025', capaianBelanja: 19.8, capaianPenerimaan: 24.2 },
-      { triwulanTahun: 'TW II 2025', capaianBelanja: 44.5, capaianPenerimaan: 49.8 },
-      { triwulanTahun: 'TW III 2025', capaianBelanja: 69.2, capaianPenerimaan: 74.5 },
-      { triwulanTahun: 'TW IV 2025', capaianBelanja: 95.8, capaianPenerimaan: 104.2 },
-      { triwulanTahun: 'TW I 2026', capaianBelanja: 22.4, capaianPenerimaan: 26.5 },
-      { triwulanTahun: 'TW II 2026', capaianBelanja: 51.6, capaianPenerimaan: 53.4 },
-      { triwulanTahun: 'TW III 2026', capaianBelanja: 85.5, capaianPenerimaan: 77.3 },
+      { triwulanTahun: 'TW I 2025', capaianBelanja: 19.8, capaianPenerimaan: 24.2, nominalBelanjaMiliar: 485.2, nominalPenerimaanMiliar: 620.5 },
+      { triwulanTahun: 'TW II 2025', capaianBelanja: 44.5, capaianPenerimaan: 49.8, nominalBelanjaMiliar: 1089.4, nominalPenerimaanMiliar: 1275.3 },
+      { triwulanTahun: 'TW III 2025', capaianBelanja: 69.2, capaianPenerimaan: 74.5, nominalBelanjaMiliar: 1694.0, nominalPenerimaanMiliar: 1908.1 },
+      { triwulanTahun: 'TW IV 2025', capaianBelanja: 95.8, capaianPenerimaan: 104.2, nominalBelanjaMiliar: 2345.1, nominalPenerimaanMiliar: 2668.4 },
+      { triwulanTahun: 'TW I 2026', capaianBelanja: 22.4, capaianPenerimaan: 26.5, nominalBelanjaMiliar: 582.4, nominalPenerimaanMiliar: 710.2 },
+      { triwulanTahun: 'TW II 2026', capaianBelanja: 51.6, capaianPenerimaan: 53.4, nominalBelanjaMiliar: 1341.6, nominalPenerimaanMiliar: 1431.1 },
+      { triwulanTahun: 'TW III 2026', capaianBelanja: 85.5, capaianPenerimaan: 77.3, nominalBelanjaMiliar: 2223.0, nominalPenerimaanMiliar: 2071.6 },
     ],
   },
 
