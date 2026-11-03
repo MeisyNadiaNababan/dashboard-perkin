@@ -37,7 +37,7 @@ export const OperasionalBadanUsahaKpiRow: React.FC<OperasionalBadanUsahaKpiRowPr
               Serapan Belanja
             </span>
             <div className="text-right shrink-0">
-              <span className="text-sm font-black text-slate-900 font-mono">
+              <span className="text-sm font-black text-slate-900">
                 85,5%
               </span>
               <span className="text-[11px] text-emerald-600 font-bold ml-1">
@@ -46,7 +46,7 @@ export const OperasionalBadanUsahaKpiRow: React.FC<OperasionalBadanUsahaKpiRowPr
             </div>
           </div>
           <div className="flex items-baseline justify-between gap-1">
-            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-mono">
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
               Rp 1.937,9 M
             </span>
             <span className="text-xs text-slate-500 font-medium truncate">
@@ -69,7 +69,7 @@ export const OperasionalBadanUsahaKpiRow: React.FC<OperasionalBadanUsahaKpiRowPr
               Kepatuhan SLA
             </span>
             <div className="text-right shrink-0">
-              <span className="text-sm font-black text-slate-900 font-mono">
+              <span className="text-sm font-black text-slate-900">
                 96,4%
               </span>
               <span className="text-[11px] text-emerald-600 font-bold ml-1">
@@ -101,7 +101,7 @@ export const OperasionalBadanUsahaKpiRow: React.FC<OperasionalBadanUsahaKpiRowPr
               Likuiditas Kas BLU
             </span>
             <div className="text-right shrink-0">
-              <span className="text-sm font-black text-slate-900 font-mono">
+              <span className="text-sm font-black text-slate-900">
                 242,8%
               </span>
               <span className="text-[11px] text-emerald-600 font-bold ml-1">
@@ -110,7 +110,7 @@ export const OperasionalBadanUsahaKpiRow: React.FC<OperasionalBadanUsahaKpiRowPr
             </div>
           </div>
           <div className="flex items-baseline justify-between gap-1">
-            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-mono">
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
               Rp 1,42 T
             </span>
             <span className="text-xs text-slate-500 font-medium truncate">
@@ -133,7 +133,7 @@ export const OperasionalBadanUsahaKpiRow: React.FC<OperasionalBadanUsahaKpiRowPr
               Audit SPI &amp; BPK
             </span>
             <div className="text-right shrink-0">
-              <span className="text-sm font-black text-slate-900 font-mono">
+              <span className="text-sm font-black text-slate-900">
                 91,4%
               </span>
               <span className="text-[11px] text-emerald-600 font-bold ml-1">

@@ -5,6 +5,8 @@ import {
   ShieldCheck,
   Award,
   ChevronRight,
+  BarChart3,
+  FileText,
 } from 'lucide-react';
 import {
   RadarChart,
@@ -81,6 +83,11 @@ export const KebijakanStrategisVisualCharts: React.FC<
 > = ({ onOpenFormulaModal }) => {
   // Sheet swap tab state for 4 IKP (mirrors AdministrasiKeuanganVisualCharts)
   const [activeTab, setActiveTab] = useState<'ippn' | 'ikk' | 'spbe' | 'ikm'>('ippn');
+  const [radarMode, setRadarMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [ippnChartMode, setIppnChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [ikkChartMode, setIkkChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [spbeChartMode, setSpbeChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [ikmChartMode, setIkmChartMode] = useState<'grafik' | 'tabel'>('grafik');
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3.5">
@@ -90,7 +97,7 @@ export const KebijakanStrategisVisualCharts: React.FC<
         {/* KOLOM KIRI: RADAR CHART CAPAIAN 4 IKP + INSIGHT DI RADAR CAPAIAN    */}
         {/* ================================================================== */}
         <div className="lg:col-span-3 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-1">
             <div>
               <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                 Radar Capaian 4 IKP DEP-A2
@@ -99,51 +106,110 @@ export const KebijakanStrategisVisualCharts: React.FC<
                 Realisasi Aktual vs Target Perkin A2 2026
               </p>
             </div>
-            <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
-              0 - 130%
-            </span>
+            {/* Sheet Swap Toggle */}
+            <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+              <button
+                type="button"
+                onClick={() => setRadarMode('grafik')}
+                className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                  radarMode === 'grafik'
+                    ? 'bg-blue-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                title="Tampilkan grafik radar"
+              >
+                <BarChart3 className="w-3 h-3" />
+                <span>Grafik</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setRadarMode('tabel')}
+                className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                  radarMode === 'tabel'
+                    ? 'bg-blue-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                title="Tampilkan tabel detail"
+              >
+                <FileText className="w-3 h-3" />
+                <span>Tabel</span>
+              </button>
+            </div>
           </div>
 
-          {/* Radar Visual - Compact & Proportional */}
-          <div className="h-36 sm:h-40 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={RADAR_4_IKP_A2} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                <PolarGrid stroke="#CBD5E1" />
-                <PolarAngleAxis
-                  dataKey="subject"
-                  tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                />
-                <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                <Radar
-                  name="Target Perkin (100%)"
-                  dataKey="target"
-                  stroke="#94A3B8"
-                  fill="#94A3B8"
-                  fillOpacity={0.12}
-                  strokeDasharray="4 4"
-                />
-                <Radar
-                  name="Realisasi Aktual"
-                  dataKey="realisasi"
-                  stroke="#0284C7"
-                  fill="#0284C7"
-                  fillOpacity={0.35}
-                />
-                <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => [
-                    `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                    name,
-                  ]}
-                  contentStyle={{
-                    fontSize: '11px',
-                    borderRadius: '8px',
-                    border: '1px solid #E2E8F0',
-                  }}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Radar Visual vs Tabel Detail */}
+          {radarMode === 'grafik' ? (
+            <div className="h-36 sm:h-40 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={RADAR_4_IKP_A2} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                  <PolarGrid stroke="#CBD5E1" />
+                  <PolarAngleAxis
+                    dataKey="subject"
+                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
+                  />
+                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
+                  <Radar
+                    name="Target Perkin (100%)"
+                    dataKey="target"
+                    stroke="#94A3B8"
+                    fill="#94A3B8"
+                    fillOpacity={0.12}
+                    strokeDasharray="4 4"
+                  />
+                  <Radar
+                    name="Realisasi Aktual"
+                    dataKey="realisasi"
+                    stroke="#0284C7"
+                    fill="#0284C7"
+                    fillOpacity={0.35}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => [
+                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                      name,
+                    ]}
+                    contentStyle={{
+                      fontSize: '11px',
+                      borderRadius: '8px',
+                      border: '1px solid #E2E8F0',
+                    }}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-36 sm:h-40 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                  <tr>
+                    <th className="py-1 px-1.5">Indikator IKP</th>
+                    <th className="py-1 px-1 text-right">Target</th>
+                    <th className="py-1 px-1 text-right font-black">Realisasi</th>
+                    <th className="py-1 px-1 text-center">Capaian</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-[10px]">
+                  {RADAR_4_IKP_A2.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-1.5 px-1.5 font-bold text-slate-800">{row.subject}</td>
+                      <td className="py-1.5 px-1 text-right text-slate-500">100%</td>
+                      <td className="py-1.5 px-1 text-right font-semibold text-slate-900">{row.skorAsli}</td>
+                      <td className="py-1.5 px-1 text-center">
+                        <span className={`px-1 py-0.2 rounded font-bold text-[9.5px] ${
+                          row.realisasi >= 100
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                            : 'bg-blue-50 text-blue-700 border border-blue-100'
+                        }`}>
+                          {row.realisasi.toFixed(1)}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* 2 Status Mini Badges */}
           <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-slate-200/60">
@@ -290,21 +356,76 @@ export const KebijakanStrategisVisualCharts: React.FC<
 
                 {/* Tren Skor Tahunan IPPN */}
                 <div className="sm:col-span-5 bg-slate-50/70 p-2.5 rounded-lg border border-slate-100 flex flex-col justify-between">
-                  <span className="text-[10px] font-bold text-slate-700 block mb-1">
-                    Tren Skor IPPN (2022 - 2026)
-                  </span>
-                  <div className="h-32 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={IPPN_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[85, 96]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
-                        <Line type="monotone" dataKey="skor" stroke="#0284C7" strokeWidth={2} dot={{ r: 2.5 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-slate-700 block">
+                      Tren Skor IPPN (2022 - 2026)
+                    </span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIppnChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ippnChartMode === 'grafik' ? 'bg-sky-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIppnChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ippnChartMode === 'tabel' ? 'bg-sky-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
+                  {ippnChartMode === 'grafik' ? (
+                    <div className="h-32 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={IPPN_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[85, 96]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#0284C7" strokeWidth={2} dot={{ r: 2.5 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <div className="h-32 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                          <tr>
+                            <th className="py-1 px-1.5">Tahun</th>
+                            <th className="py-1 px-1.5 text-right">Target</th>
+                            <th className="py-1 px-1.5 text-right font-black">Realisasi</th>
+                            <th className="py-1 px-1.5 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[10px]">
+                          {IPPN_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-1 px-1.5 font-bold text-slate-800">{row.tahun}</td>
+                              <td className="py-1 px-1.5 text-right text-slate-500">{row.target.toFixed(1)}</td>
+                              <td className="py-1 px-1.5 text-right font-semibold text-sky-700">{row.skor.toFixed(2)}</td>
+                              <td className="py-1 px-1.5 text-center">
+                                <span className={`px-1 py-0.2 rounded font-bold text-[9px] ${
+                                  row.skor >= row.target ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                                }`}>
+                                  {row.skor >= row.target ? 'Tercapai' : 'Di Bawah'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                   <span className="text-[9.5px] text-slate-500 text-center block mt-1">
                     Tren konsisten meningkat dari 88,5 ke 94,20
                   </span>
@@ -393,21 +514,76 @@ export const KebijakanStrategisVisualCharts: React.FC<
 
                 {/* Tren Skor Tahunan IKK */}
                 <div className="sm:col-span-5 bg-slate-50/70 p-2.5 rounded-lg border border-slate-100 flex flex-col justify-between">
-                  <span className="text-[10px] font-bold text-slate-700 block mb-1">
-                    Tren Skor IKK (2022 - 2026)
-                  </span>
-                  <div className="h-32 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={IKK_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[55, 75]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
-                        <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-slate-700 block">
+                      Tren Skor IKK (2022 - 2026)
+                    </span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIkkChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikkChartMode === 'grafik' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIkkChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikkChartMode === 'tabel' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
+                  {ikkChartMode === 'grafik' ? (
+                    <div className="h-32 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={IKK_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[55, 75]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <div className="h-32 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                          <tr>
+                            <th className="py-1 px-1.5">Tahun</th>
+                            <th className="py-1 px-1.5 text-right">Target</th>
+                            <th className="py-1 px-1.5 text-right font-black">Realisasi</th>
+                            <th className="py-1 px-1.5 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[10px]">
+                          {IKK_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-1 px-1.5 font-bold text-slate-800">{row.tahun}</td>
+                              <td className="py-1 px-1.5 text-right text-slate-500">{row.target.toFixed(1)}</td>
+                              <td className="py-1 px-1.5 text-right font-semibold text-blue-700">{row.skor.toFixed(2)}</td>
+                              <td className="py-1 px-1.5 text-center">
+                                <span className={`px-1 py-0.2 rounded font-bold text-[9px] ${
+                                  row.skor >= row.target ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                                }`}>
+                                  {row.skor >= row.target ? 'Tercapai' : 'Di Bawah'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                   <span className="text-[9.5px] text-slate-500 text-center block mt-1">
                     Skor meningkat bertahap melampaui target standar LAN RI
                   </span>
@@ -496,21 +672,76 @@ export const KebijakanStrategisVisualCharts: React.FC<
 
                 {/* Tren Skor Tahunan SPBE */}
                 <div className="sm:col-span-5 bg-slate-50/70 p-2.5 rounded-lg border border-slate-100 flex flex-col justify-between">
-                  <span className="text-[10px] font-bold text-slate-700 block mb-1">
-                    Tren Skor SPBE (2022 - 2026)
-                  </span>
-                  <div className="h-32 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={SPBE_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[3.0, 4.5]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
-                        <Line type="monotone" dataKey="skor" stroke="#4F46E5" strokeWidth={2} dot={{ r: 2.5 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-slate-700 block">
+                      Tren Skor SPBE (2022 - 2026)
+                    </span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setSpbeChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          spbeChartMode === 'grafik' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSpbeChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          spbeChartMode === 'tabel' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
+                  {spbeChartMode === 'grafik' ? (
+                    <div className="h-32 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={SPBE_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[3.0, 4.5]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#4F46E5" strokeWidth={2} dot={{ r: 2.5 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <div className="h-32 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                          <tr>
+                            <th className="py-1 px-1.5">Tahun</th>
+                            <th className="py-1 px-1.5 text-right">Target</th>
+                            <th className="py-1 px-1.5 text-right font-black">Realisasi</th>
+                            <th className="py-1 px-1.5 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[10px]">
+                          {SPBE_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-1 px-1.5 font-bold text-slate-800">{row.tahun}</td>
+                              <td className="py-1 px-1.5 text-right text-slate-500">{row.target.toFixed(2)}</td>
+                              <td className="py-1 px-1.5 text-right font-semibold text-indigo-700">{row.skor.toFixed(2)}</td>
+                              <td className="py-1 px-1.5 text-center">
+                                <span className={`px-1 py-0.2 rounded font-bold text-[9px] ${
+                                  row.skor >= row.target ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                                }`}>
+                                  {row.skor >= row.target ? 'Tercapai' : 'Di Bawah'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                   <span className="text-[9.5px] text-slate-500 text-center block mt-1">
                     Kenaikan bertahap Level 3 ke Level 4 Terpadu
                   </span>
@@ -596,21 +827,76 @@ export const KebijakanStrategisVisualCharts: React.FC<
 
                 {/* Tren Skor Tahunan IKM */}
                 <div className="sm:col-span-5 bg-slate-50/70 p-2.5 rounded-lg border border-slate-100 flex flex-col justify-between">
-                  <span className="text-[10px] font-bold text-slate-700 block mb-1">
-                    Tren Skor IKM PTSP (2022 - 2026)
-                  </span>
-                  <div className="h-32 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={IKM_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[80, 92]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
-                        <Line type="monotone" dataKey="skor" stroke="#059669" strokeWidth={2} dot={{ r: 2.5 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-slate-700 block">
+                      Tren Skor IKM PTSP (2022 - 2026)
+                    </span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIkmChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikmChartMode === 'grafik' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIkmChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikmChartMode === 'tabel' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
+                  {ikmChartMode === 'grafik' ? (
+                    <div className="h-32 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={IKM_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[80, 92]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeWidth={1.5} strokeDasharray="3 3" dot={false} />
+                          <Line type="monotone" dataKey="skor" stroke="#059669" strokeWidth={2} dot={{ r: 2.5 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <div className="h-32 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                          <tr>
+                            <th className="py-1 px-1.5">Tahun</th>
+                            <th className="py-1 px-1.5 text-right">Target</th>
+                            <th className="py-1 px-1.5 text-right font-black">Realisasi</th>
+                            <th className="py-1 px-1.5 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[10px]">
+                          {IKM_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-1 px-1.5 font-bold text-slate-800">{row.tahun}</td>
+                              <td className="py-1 px-1.5 text-right text-slate-500">{row.target.toFixed(1)}</td>
+                              <td className="py-1 px-1.5 text-right font-semibold text-emerald-700">{row.skor.toFixed(2)}</td>
+                              <td className="py-1 px-1.5 text-center">
+                                <span className={`px-1 py-0.2 rounded font-bold text-[9px] ${
+                                  row.skor >= row.target ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                                }`}>
+                                  {row.skor >= row.target ? 'Tercapai' : 'Di Bawah'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                   <span className="text-[9.5px] text-slate-500 text-center block mt-1">
                     Kepuasan masyarakat stabil pada kategori Mutu A
                   </span>

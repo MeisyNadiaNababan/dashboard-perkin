@@ -17,6 +17,8 @@ import {
   Droplets,
   Trees,
   Zap,
+  BarChart3,
+  FileText,
 } from 'lucide-react';
 import {
   RadarChart,
@@ -83,6 +85,12 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
   // Tab state: ikp-1, ikp-2, matriks
   const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'matriks'>('ikp-1');
 
+  // Sheet Swap view modes
+  const [radarMode, setRadarMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [fisikChartMode, setFisikChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [pnbpChartMode, setPnbpChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [sinergiChartMode, setSinergiChartMode] = useState<'grafik' | 'tabel'>('grafik');
+
   const ikp1 = PERKIN_A7_KPIS[0];
   const ikp2 = PERKIN_A7_KPIS[1];
 
@@ -104,52 +112,103 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
                   Realisasi Aktual vs Target Penetapan Perkin A7 2025
                 </p>
               </div>
-              <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
-                0 - 120%
-              </span>
+              <div className="flex items-center gap-1.5">
+                <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setRadarMode('grafik')}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                      radarMode === 'grafik' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    <span>Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRadarMode('tabel')}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                      radarMode === 'tabel' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3 h-3" />
+                    <span>Tabel</span>
+                  </button>
+                </div>
+                <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
+                  0 - 120%
+                </span>
+              </div>
             </div>
 
-            {/* Radar Visual - Compact & Proportional */}
+            {/* Radar Visual / Table Sheet Swap */}
             <div className="h-36 sm:h-40 w-full mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_2_IKP_A7} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <PolarGrid stroke="#CBD5E1" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 120]} stroke="#94A3B8" fontSize={7.5} />
-                  <Radar
-                    name="Target Perkin (100%)"
-                    dataKey="target"
-                    stroke="#94A3B8"
-                    fill="#94A3B8"
-                    fillOpacity={0.12}
-                    strokeDasharray="4 4"
-                  />
-                  <Radar
-                    name="Realisasi Aktual"
-                    dataKey="realisasi"
-                    stroke="#0284C7"
-                    fill="#0284C7"
-                    fillOpacity={0.35}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      fontSize: '11px',
-                      borderRadius: '8px',
-                      backgroundColor: '#0F172A',
-                      color: '#FFFFFF',
-                      border: 'none',
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+              {radarMode === 'grafik' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={RADAR_2_IKP_A7} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                    <PolarGrid stroke="#CBD5E1" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
+                    />
+                    <PolarRadiusAxis angle={30} domain={[0, 120]} stroke="#94A3B8" fontSize={7.5} />
+                    <Radar
+                      name="Target Perkin (100%)"
+                      dataKey="target"
+                      stroke="#94A3B8"
+                      fill="#94A3B8"
+                      fillOpacity={0.12}
+                      strokeDasharray="4 4"
+                    />
+                    <Radar
+                      name="Realisasi Aktual"
+                      dataKey="realisasi"
+                      stroke="#0284C7"
+                      fill="#0284C7"
+                      fillOpacity={0.35}
+                    />
+                    <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                    <Tooltip
+                      formatter={(val: any, name: any, item: any) => [
+                        `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                        name,
+                      ]}
+                      contentStyle={{
+                        fontSize: '11px',
+                        borderRadius: '8px',
+                        backgroundColor: '#0F172A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                  <table className="w-full text-left text-[10px]">
+                    <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                      <tr>
+                        <th className="px-2 py-1.5">Indikator IKP</th>
+                        <th className="px-2 py-1.5 text-right">Target</th>
+                        <th className="px-2 py-1.5 text-right">Realisasi</th>
+                        <th className="px-2 py-1.5 text-right">Capaian</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {RADAR_2_IKP_A7.map((row) => (
+                        <tr key={row.subject} className="hover:bg-slate-50/50">
+                          <td className="px-2 py-1.5 font-medium text-slate-800">{row.subject}</td>
+                          <td className="px-2 py-1.5 text-right font-mono text-slate-500">100%</td>
+                          <td className="px-2 py-1.5 text-right font-mono font-bold text-slate-800">{row.skorAsli}</td>
+                          <td className="px-2 py-1.5 text-right font-mono font-black text-emerald-700">
+                            {row.realisasi.toFixed(1)}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 
@@ -302,34 +361,86 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
                     <span className="font-bold text-slate-800 text-[10.5px]">
                       Tren Realisasi Fisik (2022 - 2026)
                     </span>
-                    <span className="text-[9.5px] text-blue-600 font-mono font-bold">Satuan: %</span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setFisikChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          fisikChartMode === 'grafik' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFisikChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          fisikChartMode === 'tabel' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="h-36 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={INFRASTRUKTUR_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[80, 105]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip formatter={(v: any, name: any) => [`${Number(v).toFixed(1)}%`, name]} contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
-                        <Line
-                          type="monotone"
-                          dataKey="target"
-                          name="Target (100%)"
-                          stroke="#94A3B8"
-                          strokeDasharray="3 3"
-                          strokeWidth={1.5}
-                          dot={false}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="realisasi"
-                          name="Realisasi Fisik"
-                          stroke="#2563EB"
-                          strokeWidth={2}
-                          dot={{ r: 3, fill: '#2563EB' }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {fisikChartMode === 'grafik' ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={INFRASTRUKTUR_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[80, 105]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`${Number(v).toFixed(1)}%`, name]} contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                          <Line
+                            type="monotone"
+                            dataKey="target"
+                            name="Target (100%)"
+                            stroke="#94A3B8"
+                            strokeDasharray="3 3"
+                            strokeWidth={1.5}
+                            dot={false}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="realisasi"
+                            name="Realisasi Fisik"
+                            stroke="#2563EB"
+                            strokeWidth={2}
+                            dot={{ r: 3, fill: '#2563EB' }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                            <tr>
+                              <th className="px-2 py-1">Tahun</th>
+                              <th className="px-2 py-1 text-right">Target (%)</th>
+                              <th className="px-2 py-1 text-right">Realisasi (%)</th>
+                              <th className="px-2 py-1 text-right">Deviasi</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {INFRASTRUKTUR_TREND_ANNUAL.map((row) => {
+                              const dev = (row.realisasi - row.target).toFixed(1);
+                              const isPositive = Number(dev) >= 0;
+                              return (
+                                <tr key={row.tahun} className="hover:bg-slate-50/50">
+                                  <td className="px-2 py-1 font-semibold text-slate-800">{row.tahun}</td>
+                                  <td className="px-2 py-1 text-right font-mono text-slate-500">{row.target.toFixed(1)}%</td>
+                                  <td className="px-2 py-1 text-right font-mono font-bold text-blue-700">{row.realisasi.toFixed(1)}%</td>
+                                  <td className={`px-2 py-1 text-right font-mono font-bold ${isPositive ? 'text-emerald-700' : 'text-rose-600'}`}>
+                                    {isPositive ? `+${dev}%` : `${dev}%`}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                   <span className="text-[9.5px] text-slate-500 text-center block mt-1">
                     Progres 14 paket proyek konstruksi rata-rata 92,40%
@@ -427,34 +538,83 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
                     <span className="font-bold text-slate-800 text-[10.5px]">
                       Tren PNBP ROW (2022 - 2026)
                     </span>
-                    <span className="text-[9.5px] text-cyan-700 font-mono font-bold">Satuan: Rp M</span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setPnbpChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          pnbpChartMode === 'grafik' ? 'bg-cyan-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPnbpChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          pnbpChartMode === 'tabel' ? 'bg-cyan-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="h-36 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PNBP_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[4.0, 9.0]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                        <Tooltip formatter={(v: any, name: any) => [`Rp ${Number(v).toFixed(2)} Miliar`, name]} contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
-                        <Line
-                          type="monotone"
-                          dataKey="target"
-                          name="Target DIPA"
-                          stroke="#94A3B8"
-                          strokeDasharray="3 3"
-                          strokeWidth={1.5}
-                          dot={false}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="realisasi"
-                          name="Realisasi PNBP"
-                          stroke="#0891B2"
-                          strokeWidth={2}
-                          dot={{ r: 3, fill: '#0891B2' }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {pnbpChartMode === 'grafik' ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={PNBP_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[4.0, 9.0]} tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`Rp ${Number(v).toFixed(2)} Miliar`, name]} contentStyle={{ fontSize: '10.5px', borderRadius: '6px' }} />
+                          <Line
+                            type="monotone"
+                            dataKey="target"
+                            name="Target DIPA"
+                            stroke="#94A3B8"
+                            strokeDasharray="3 3"
+                            strokeWidth={1.5}
+                            dot={false}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="realisasi"
+                            name="Realisasi PNBP"
+                            stroke="#0891B2"
+                            strokeWidth={2}
+                            dot={{ r: 3, fill: '#0891B2' }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                            <tr>
+                              <th className="px-2 py-1">Tahun</th>
+                              <th className="px-2 py-1 text-right">Target (Rp M)</th>
+                              <th className="px-2 py-1 text-right">Realisasi (Rp M)</th>
+                              <th className="px-2 py-1 text-right">Capaian</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {PNBP_TREND_ANNUAL.map((row) => {
+                              const cap = ((row.realisasi / row.target) * 100).toFixed(1);
+                              return (
+                                <tr key={row.tahun} className="hover:bg-slate-50/50">
+                                  <td className="px-2 py-1 font-semibold text-slate-800">{row.tahun}</td>
+                                  <td className="px-2 py-1 text-right font-mono text-slate-500">Rp {row.target.toFixed(2)} M</td>
+                                  <td className="px-2 py-1 text-right font-mono font-bold text-cyan-700">Rp {row.realisasi.toFixed(2)} M</td>
+                                  <td className="px-2 py-1 text-right font-mono font-bold text-emerald-700">{cap}%</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                   <span className="text-[9.5px] text-slate-500 text-center block mt-1">
                     Penerimaan konsisten melampaui target penetapan DIPA
@@ -547,34 +707,78 @@ export const InfrastrukturPerkinA7VisualCharts: React.FC<
                   <span className="font-bold text-slate-800">
                     Korelasi Serapan Belanja Modal (%) vs Capaian IKP Rerata (2022 - 2026)
                   </span>
-                  <span className="text-[10px] text-slate-500 font-mono">Satuan: Persen (%)</span>
+                  <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setSinergiChartMode('grafik')}
+                      className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                        sinergiChartMode === 'grafik' ? 'bg-purple-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      <BarChart3 className="w-3 h-3" />
+                      <span>Grafik</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSinergiChartMode('tabel')}
+                      className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                        sinergiChartMode === 'tabel' ? 'bg-purple-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      <FileText className="w-3 h-3" />
+                      <span>Tabel</span>
+                    </button>
+                  </div>
                 </div>
                 <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={SINERGI_TREND_ANNUAL} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 10 }} />
-                      <YAxis domain={[70, 110]} tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v}%`} />
-                      <Tooltip formatter={(v: any, name: any) => [`${Number(v).toFixed(2)}%`, name]} />
-                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                      <Line
-                        type="monotone"
-                        dataKey="serapanPersen"
-                        name="Serapan Belanja Modal"
-                        stroke="#7C3AED"
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="capaianIku"
-                        name="Capaian IKP Rerata"
-                        stroke="#059669"
-                        strokeWidth={2.5}
-                        dot={{ r: 4, fill: '#059669' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {sinergiChartMode === 'grafik' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={SINERGI_TREND_ANNUAL} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 10 }} />
+                        <YAxis domain={[70, 110]} tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v}%`} />
+                        <Tooltip formatter={(v: any, name: any) => [`${Number(v).toFixed(2)}%`, name]} />
+                        <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="serapanPersen"
+                          name="Serapan Belanja Modal"
+                          stroke="#7C3AED"
+                          strokeWidth={2}
+                          dot={{ r: 3 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="capaianIku"
+                          name="Capaian IKP Rerata"
+                          stroke="#059669"
+                          strokeWidth={2.5}
+                          dot={{ r: 4, fill: '#059669' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                      <table className="w-full text-left text-[10px]">
+                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                          <tr>
+                            <th className="px-2 py-1.5">Tahun</th>
+                            <th className="px-2 py-1.5 text-right">Serapan Belanja Modal (%)</th>
+                            <th className="px-2 py-1.5 text-right">Capaian IKP Rerata (%)</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {SINERGI_TREND_ANNUAL.map((row) => (
+                            <tr key={row.tahun} className="hover:bg-slate-50/50">
+                              <td className="px-2 py-1.5 font-semibold text-slate-800">{row.tahun}</td>
+                              <td className="px-2 py-1.5 text-right font-mono font-bold text-purple-700">{row.serapanPersen.toFixed(2)}%</td>
+                              <td className="px-2 py-1.5 text-right font-mono font-bold text-emerald-700">{row.capaianIku.toFixed(2)}%</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

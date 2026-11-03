@@ -12,6 +12,9 @@ import {
   ChevronRight,
   Sparkles,
   Users,
+  BarChart3,
+  FileText,
+  Layers,
 } from 'lucide-react';
 import {
   RadarChart,
@@ -27,6 +30,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  BarChart,
+  Bar,
 } from 'recharts';
 import { PERKIN_A5_KPIS } from './bandaraPelabuhanLlbData';
 
@@ -43,31 +48,57 @@ const RADAR_3_IKP_A5 = [
   { subject: '4. Total PNBP A5', target: 100, realisasi: 108.63, skorAsli: 'Rp 565,33 M / Rp 520,41 M' },
 ];
 
-// Tren Tahunan IKP 1: Rata-rata IKM Gabungan
+// 1. Data Detail IKM Layanan (IKP 1 - Model Persis Gambar Referensi)
+const IKM_LOKUS_TABLE_DATA = [
+  { komponen: 'Bandara Internasional Hang Nadim (Terminal & Sisi Udara)', bobot: 35, target: '86,00', nilai: 87.80, status: 'Sangat Baik' },
+  { komponen: 'Pelabuhan Batu Ampar (Terminal Petikemas & Kargo)', bobot: 25, target: '86,30', nilai: 88.20, status: 'Optimal' },
+  { komponen: 'Pelabuhan Domestik & Internasional (Sekupang & Punggur)', bobot: 15, target: '86,30', nilai: 88.00, status: 'Optimal' },
+  { komponen: 'Pelayanan Perizinan Masuk/Keluar Barang Bebas (LLB)', bobot: 15, target: '86,50', nilai: 89.35, status: 'Optimal' },
+  { komponen: 'Layanan Logistik & Konsolidasi Distribusi Kawasan', bobot: 10, target: '86,00', nilai: 88.50, status: 'Baik' },
+];
+
 const IKM_TREND_ANNUAL = [
-  { tahun: '2022', skor: 82.5, target: 80.0 },
-  { tahun: '2023', skor: 84.1, target: 82.5 },
-  { tahun: '2024', skor: 86.2, target: 85.0 },
-  { tahun: '2025', skor: 88.45, target: 86.3 },
-  { tahun: '2026', skor: 90.1, target: 87.0 },
+  { tahun: '2021', target: 78.0, skor: 80.2 },
+  { tahun: '2022', target: 80.0, skor: 82.5 },
+  { tahun: '2023', target: 82.5, skor: 84.1 },
+  { tahun: '2024', target: 85.0, skor: 86.2 },
+  { tahun: '2025', target: 86.3, skor: 88.45 },
+  { tahun: '2026', target: 87.0, skor: 90.1 },
 ];
 
-// Tren Tahunan IKP 2: Realisasi PNBP Bandara & Kepelabuhanan (Rp Miliar)
+// 2. Data Detail PNBP Bandara & Kepelabuhanan (IKP 2 - Model Persis Gambar Referensi)
+const PNBP_BANDARA_LAUT_TABLE_DATA = [
+  { komponen: 'Jasa Aeronautika & PJP2U (Bandara Hang Nadim)', bobot: 32, target: 'Rp 165 M', nilai: 182.50, status: 'Optimal' },
+  { komponen: 'Jasa Labuh, Tambat & Dermaga Pelabuhan', bobot: 26, target: 'Rp 132 M', nilai: 142.10, status: 'Optimal' },
+  { komponen: 'Jasa Non-Aeronautika (Kargo & Konsesi Bandara)', bobot: 23, target: 'Rp 120 M', nilai: 129.95, status: 'Sangat Baik' },
+  { komponen: 'Jasa Bongkar Muat & Petikemas Batu Ampar', bobot: 14, target: 'Rp 78 M', nilai: 85.30, status: 'Sangat Baik' },
+  { komponen: 'Pemanfaatan Fasilitas & Lahan Kawasan Pelabuhan', bobot: 5, target: 'Rp 23 M', nilai: 23.00, status: 'Baik' },
+];
+
 const PNBP_BANDARA_LAUT_TREND_ANNUAL = [
-  { tahun: '2022', skor: 412.5, target: 400.0 },
-  { tahun: '2023', skor: 468.2, target: 450.0 },
-  { tahun: '2024', skor: 512.4, target: 490.0 },
-  { tahun: '2025', skor: 562.85, target: 518.21 },
-  { tahun: '2026', skor: 610.5, target: 560.0 },
+  { tahun: '2021', target: 360.0, skor: 375.0 },
+  { tahun: '2022', target: 400.0, skor: 412.5 },
+  { tahun: '2023', target: 450.0, skor: 468.2 },
+  { tahun: '2024', target: 490.0, skor: 512.4 },
+  { tahun: '2025', target: 518.21, skor: 562.85 },
+  { tahun: '2026', target: 560.0, skor: 610.5 },
 ];
 
-// Tren Tahunan IKP 3: Realisasi PNBP Dit. Lalu Lintas Barang (Rp Miliar)
+// 3. Data Detail PNBP & SLA Lalu Lintas Barang (IKP 3 - Model Persis Gambar Referensi)
+const PNBP_LLB_TABLE_DATA = [
+  { komponen: 'PNBP Layanan Perizinan Dokumen LLB', bobot: 40, target: 'Rp 2,20 M', nilai: 2.48, status: 'Optimal' },
+  { komponen: 'Kepatuhan Waktu Layanan SLA (<3 Jam)', bobot: 30, target: '95,0%', nilai: 96.80, status: 'Optimal' },
+  { komponen: 'Pengawasan Kuota Konsumsi Pokok BP Batam', bobot: 18, target: '100,0%', nilai: 98.20, status: 'Sangat Baik' },
+  { komponen: 'Integrasi Single Window INSW & CEISA Ekspor-Impor', bobot: 12, target: '100,0%', nilai: 100.0, status: 'Optimal' },
+];
+
 const PNBP_LLB_TREND_ANNUAL = [
-  { tahun: '2022', skor: 1.65, target: 1.5 },
-  { tahun: '2023', skor: 1.88, target: 1.8 },
-  { tahun: '2024', skor: 2.15, target: 2.0 },
-  { tahun: '2025', skor: 2.48, target: 2.2 },
-  { tahun: '2026', skor: 2.8, target: 2.5 },
+  { tahun: '2021', target: 1.30, skor: 1.45 },
+  { tahun: '2022', target: 1.50, skor: 1.65 },
+  { tahun: '2023', target: 1.80, skor: 1.88 },
+  { tahun: '2024', target: 2.00, skor: 2.15 },
+  { tahun: '2025', target: 2.20, skor: 2.48 },
+  { tahun: '2026', target: 2.50, skor: 2.80 },
 ];
 
 export const BandaraPelabuhanLlbVisualCharts: React.FC<
@@ -75,6 +106,10 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
 > = ({ onOpenFormulaModal }) => {
   // Tab state: ikp-1, ikp-2, ikp-3
   const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3'>('ikp-1');
+  const [radarMode, setRadarMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [ikmChartMode, setIkmChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [pnbpChartMode, setPnbpChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [pnbpLlbChartMode, setPnbpLlbChartMode] = useState<'grafik' | 'tabel'>('grafik');
 
   const ikp1 = PERKIN_A5_KPIS.find((k) => k.id === 'ikp-1-ikm-gabungan') || PERKIN_A5_KPIS[0];
   const ikp2 = PERKIN_A5_KPIS.find((k) => k.id === 'ikp-2-pnbp-bandara-pelabuhan') || PERKIN_A5_KPIS[1];
@@ -82,7 +117,7 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3.5 font-sans">
-      {/* Two Column Grid: Left is Radar Chart (NO MINI CARDS BELOW IT PERSIS DEP-A4), Right is Detailed Table + Trend Chart */}
+      {/* Two Column Grid: Left is Radar Chart (NO MINI CARDS), Right is Detailed Table + Dual Trend Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
         {/* ================================================================== */}
         {/* KOLOM KIRI: RADAR CHART CAPAIAN 3 IKP (TANPA KARTU MINI DI BAWAHNYA) */}
@@ -98,53 +133,122 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                   Realisasi Aktual vs Target Penetapan Perkin A5 2025
                 </p>
               </div>
-              <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
-                0 - 130%
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60 font-mono">
+                  0-130%
+                </span>
+                <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setRadarMode('grafik')}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                      radarMode === 'grafik' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    <span>Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRadarMode('tabel')}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                      radarMode === 'tabel' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3 h-3" />
+                    <span>Tabel</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* Radar Visual - Compact & Proportional */}
-            <div className="h-36 sm:h-40 w-full mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_3_IKP_A5} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <PolarGrid stroke="#CBD5E1" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                  <Radar
-                    name="Target Perkin (100%)"
-                    dataKey="target"
-                    stroke="#94A3B8"
-                    fill="#94A3B8"
-                    fillOpacity={0.12}
-                    strokeDasharray="4 4"
-                  />
-                  <Radar
-                    name="Realisasi Aktual"
-                    dataKey="realisasi"
-                    stroke="#0284C7"
-                    fill="#0284C7"
-                    fillOpacity={0.35}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      fontSize: '11px',
-                      borderRadius: '8px',
-                      backgroundColor: '#0F172A',
-                      color: '#FFFFFF',
-                      border: 'none',
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
+            {/* Radar Visual / Table View */}
+            {radarMode === 'grafik' ? (
+              <div className="h-44 sm:h-48 w-full mt-2">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={RADAR_3_IKP_A5} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+                    <PolarGrid stroke="#CBD5E1" strokeDasharray="2 2" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: '#334155', fontSize: 9.5, fontWeight: 600 }}
+                    />
+                    <PolarRadiusAxis
+                      angle={30}
+                      domain={[0, 130]}
+                      tick={{ fill: '#94A3B8', fontSize: 8 }}
+                      stroke="#E2E8F0"
+                    />
+                    <Radar
+                      name="Target (100%)"
+                      dataKey="target"
+                      stroke="#94A3B8"
+                      fill="#94A3B8"
+                      fillOpacity={0.15}
+                      strokeWidth={1.5}
+                      strokeDasharray="3 3"
+                    />
+                    <Radar
+                      name="Realisasi (%)"
+                      dataKey="realisasi"
+                      stroke="#2563EB"
+                      fill="#3B82F6"
+                      fillOpacity={0.4}
+                      strokeWidth={2}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={20}
+                      iconType="circle"
+                      iconSize={7}
+                      wrapperStyle={{ fontSize: '10px', paddingTop: '4px' }}
+                    />
+                    <Tooltip
+                      formatter={(value: any, name: any, item: any) => {
+                        const raw = item?.payload?.skorAsli || '';
+                        return [`${value}% (${raw})`, name];
+                      }}
+                      contentStyle={{
+                        backgroundColor: '#0F172A',
+                        color: '#F8FAFC',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        padding: '4px 8px',
+                        border: 'none',
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="mt-2 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                <table className="w-full text-[10px] text-left">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                    <tr>
+                      <th className="p-1.5">Indikator Program</th>
+                      <th className="p-1.5 text-right">Target</th>
+                      <th className="p-1.5 text-right font-black">Capaian</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {RADAR_3_IKP_A5.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50">
+                        <td className="p-1.5 font-medium text-slate-800">{row.subject}</td>
+                        <td className="p-1.5 text-right font-mono text-slate-500">100%</td>
+                        <td className="p-1.5 text-right font-mono font-bold">
+                          <span className={`px-1.5 py-0.5 rounded text-[9.5px] ${
+                            row.realisasi >= 100
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                              : 'bg-blue-50 text-blue-700 border border-blue-100'
+                          }`}>
+                            {row.realisasi.toFixed(1)}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           <div className="pt-2 border-t border-slate-200/70 text-[10.5px] text-slate-600 space-y-1">
@@ -156,335 +260,629 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
         </div>
 
         {/* ================================================================== */}
-        {/* KOLOM KANAN: SUB-TABS INDIKATOR + DETAIL EVALUASI + GRAFIK TREN    */}
-        {/* Model Persis DEP-A4: Tab per IKP + Tabel Realisasi + Tren Tahunan   */}
+        {/* KOLOM KANAN: MODEL PERSIS GAMBAR REFERENSI (TABEL DETAIL + DUAL GRAFIK) */}
         {/* ================================================================== */}
         <div className="lg:col-span-9 space-y-3">
-          {/* Header & Sub-Tab Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-slate-200">
-            <div>
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <span>Capaian Evaluasi 3 Indikator Kinerja Program Perkin A5</span>
-                <span className="text-[10px] bg-blue-100 text-blue-800 font-mono font-bold px-1.5 py-0.2 rounded">
-                  TA 2025
-                </span>
-              </h4>
-              <p className="text-[10.5px] text-slate-500">
-                Pilih tab indikator untuk menganalisis breakdown target per satker dan tren tahunan
-              </p>
-            </div>
+          {/* Tab Selector Pills (Persis Gambar Referensi) */}
+          <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-100/80 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setActiveTab('ikp-1')}
+              className={`flex-1 min-w-[130px] py-1.5 px-2 text-[11px] font-semibold rounded-md transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
+                activeTab === 'ikp-1'
+                  ? 'bg-white text-blue-600 shadow-2xs font-bold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5" />
+              <span>1. IKM Layanan</span>
+            </button>
 
-            {/* Sub-Tab Switcher */}
-            <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg border border-slate-200 overflow-x-auto no-scrollbar shrink-0">
-              <button
-                type="button"
-                onClick={() => setActiveTab('ikp-1')}
-                className={`px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                  activeTab === 'ikp-1'
-                    ? 'bg-blue-600 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <Award className="w-3.5 h-3.5" />
-                <span>IKP 1: IKM Layanan</span>
-              </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('ikp-2')}
+              className={`flex-1 min-w-[130px] py-1.5 px-2 text-[11px] font-semibold rounded-md transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
+                activeTab === 'ikp-2'
+                  ? 'bg-white text-blue-600 shadow-2xs font-bold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <Plane className="w-3.5 h-3.5" />
+              <span>2. PNBP Bandara &amp; Laut</span>
+            </button>
 
-              <button
-                type="button"
-                onClick={() => setActiveTab('ikp-2')}
-                className={`px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                  activeTab === 'ikp-2'
-                    ? 'bg-sky-600 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <Plane className="w-3.5 h-3.5" />
-                <span>IKP 2: PNBP Bandara-Laut</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('ikp-3')}
-                className={`px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                  activeTab === 'ikp-3'
-                    ? 'bg-amber-600 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <Truck className="w-3.5 h-3.5" />
-                <span>IKP 3: PNBP LLB</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setActiveTab('ikp-3')}
+              className={`flex-1 min-w-[130px] py-1.5 px-2 text-[11px] font-semibold rounded-md transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
+                activeTab === 'ikp-3'
+                  ? 'bg-white text-blue-600 shadow-2xs font-bold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <Truck className="w-3.5 h-3.5" />
+              <span>3. PNBP Lalu Lintas Barang</span>
+            </button>
           </div>
 
-          {/* TAB 1: IKP 1 RATA-RATA IKM LAYANAN */}
+          {/* ================================================================ */}
+          {/* TAB 1: IKP 1 - RATA-RATA IKM GABUNGAN 3 SATKER                   */}
+          {/* ================================================================ */}
           {activeTab === 'ikp-1' && (
             <div className="space-y-3">
-              {/* Highlight Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-blue-700 font-bold block uppercase">Lokus Bandara Hang Nadim</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">87,80</span>
-                    <span className="text-[10px] font-bold text-emerald-700">102,1% (Mutu A)</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">BP Kawasan Bandar Udara &bull; Target: 86,00</span>
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Indeks Kepuasan Masyarakat (5 Lokus Pelayanan Publik DEP-A5)
+                  </h4>
                 </div>
-
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-sky-700 font-bold block uppercase">Lokus Kepelabuhanan</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">88,20</span>
-                    <span className="text-[10px] font-bold text-emerald-700">102,2% (Mutu A)</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">BP &amp; Pengusahaan Kepelabuhanan &bull; Target: 86,30</span>
-                </div>
-
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-amber-700 font-bold block uppercase">Lokus Lalu Lintas Barang</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">89,35</span>
-                    <span className="text-[10px] font-bold text-emerald-700">103,3% (Mutu A)</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Dit. Lalu Lintas Barang &bull; Target: 86,50</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                    102,5% Tercapai
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onOpenFormulaModal('ikp-1-ikm-gabungan')}
+                    className="text-[11px] font-medium text-blue-600 hover:text-blue-800 flex items-center gap-0.5 transition-colors cursor-pointer"
+                  >
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
 
-              {/* Table & Chart Split */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                <div className="md:col-span-7 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <span className="text-[10.5px] font-bold text-slate-700 block mb-1">
-                    Tabel Breakdown Capaian per Satker Pengampu IKP 1:
-                  </span>
-                  <table className="w-full text-[10.5px]">
-                    <thead>
-                      <tr className="border-b border-slate-200 text-slate-500 text-left">
-                        <th className="py-1">Lokus Layanan</th>
-                        <th className="py-1 text-right">Target</th>
-                        <th className="py-1 text-right">Realisasi</th>
-                        <th className="py-1 text-right">Capaian</th>
-                        <th className="py-1 text-right">Mutu</th>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">88,45 / Mutu A</span>
+                  <span className="text-[9.5px] text-blue-600 block mt-0.5">102,5% Capaian</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin</span>
+                  <span className="text-base font-bold text-slate-900">86,30 (Mutu A)</span>
+                  <span className="text-[9.5px] text-slate-400 block mt-0.5">Rerata 3 Satker Pengampu</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Lokus Tertinggi</span>
+                  <span className="text-base font-bold text-slate-900">Dit. LLB (89,35)</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">Kategori Pelayanan Prima</span>
+                </div>
+              </div>
+
+              {/* Grid: Tabel Kiri (7 Col) & Grafik Kanan (5 Col) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                {/* Tabel Rincian */}
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-64 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Lokus Pelayanan Publik</th>
+                        <th className="py-1.5 px-2 text-right">Bobot</th>
+                        <th className="py-1.5 px-2 text-right">Nilai (IKM)</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">Hang Nadim (Bandara)</td>
-                        <td className="py-1.5 text-right font-mono">86,00</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-blue-700">87,80</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">102,1%</td>
-                        <td className="py-1.5 text-right"><span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">A</span></td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">Batu Ampar (Pelabuhan)</td>
-                        <td className="py-1.5 text-right font-mono">86,30</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-blue-700">88,20</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">102,2%</td>
-                        <td className="py-1.5 text-right"><span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">A</span></td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">Layanan Perizinan LLB</td>
-                        <td className="py-1.5 text-right font-mono">86,50</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-blue-700">89,35</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">103,3%</td>
-                        <td className="py-1.5 text-right"><span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">A</span></td>
-                      </tr>
-                      <tr className="bg-blue-50/50 font-bold">
-                        <td className="py-1.5 text-blue-900">Rata-rata Gabungan DEP-A5</td>
-                        <td className="py-1.5 text-right font-mono">86,30</td>
-                        <td className="py-1.5 text-right font-mono text-blue-800 font-black">88,45</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-black">102,5%</td>
-                        <td className="py-1.5 text-right"><span className="px-1.5 py-0.2 rounded bg-blue-600 text-white text-[9px] font-bold">A</span></td>
-                      </tr>
+                      {IKM_LOKUS_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.komponen}</td>
+                          <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}%</td>
+                          <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">{row.nilai.toFixed(2)}</td>
+                          <td className="py-1 px-2.5 text-center">
+                            <span className={`inline-block px-1.5 py-0.5 rounded text-[9.5px] font-semibold ${
+                              row.status === 'Optimal'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : row.status === 'Sangat Baik'
+                                ? 'bg-blue-50 text-blue-700'
+                                : 'bg-amber-50 text-amber-700'
+                            }`}>
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
 
-                {/* Trend Chart */}
-                <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-slate-700">Tren IKM Tahunan (2022-2026)</span>
-                    <span className="text-[9px] font-mono text-slate-400">Skala 100</span>
+                {/* Visualisasi Grafis Tren & Komparasi (WITH SHEET SWAP) */}
+                <div className="lg:col-span-5 space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-slate-100">
+                    <span className="text-xs font-bold text-slate-800">Analisis Tren &amp; Komparasi</span>
+                    <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIkmChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikmChartMode === 'grafik'
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Tampilkan grafik"
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIkmChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikmChartMode === 'tabel'
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Tampilkan tabel detail"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel Detail</span>
+                      </button>
+                    </div>
                   </div>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={IKM_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis domain={[75, 95]} tick={{ fontSize: 9 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
-                        <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} name="Realisasi IKM" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
+
+                  {ikmChartMode === 'grafik' ? (
+                    <>
+                      {/* Box 1: Tren Skor IKM */}
+                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                          Tren Skor IKM Gabungan (2021 - 2026)
+                        </span>
+                        <div className="h-24 w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={IKM_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                              <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <YAxis domain={[75, 95]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor IKM']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                              <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} name="Target" />
+                              <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} name="Realisasi IKM" />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+
+                      {/* Box 2: Capaian Nilai vs Bobot Lokus */}
+                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                          Capaian Nilai vs Bobot 5 Lokus Layanan
+                        </span>
+                        <div className="h-24 w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={IKM_LOKUS_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                              <XAxis
+                                dataKey="komponen"
+                                tick={{ fontSize: 7, fill: '#64748B' }}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(val) => val.split(' ')[0]}
+                              />
+                              <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'bobot' ? 'Bobot (%)' : 'Nilai IKM']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                              <Bar dataKey="bobot" fill="#CBD5E1" radius={[2, 2, 0, 0]} name="bobot" />
+                              <Bar dataKey="nilai" fill="#3B82F6" radius={[2, 2, 0, 0]} name="nilai" />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="overflow-x-auto rounded border border-slate-200 bg-white">
+                      <table className="w-full text-[10px] text-left">
+                        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                          <tr>
+                            <th className="p-1.5">Tahun</th>
+                            <th className="p-1.5 text-right">Target</th>
+                            <th className="p-1.5 text-right">Realisasi</th>
+                            <th className="p-1.5 text-right">Capaian</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {IKM_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50">
+                              <td className="p-1.5 font-medium">{row.tahun}</td>
+                              <td className="p-1.5 text-right font-mono text-slate-500">{row.target.toFixed(1)}</td>
+                              <td className="p-1.5 text-right font-mono font-bold text-blue-700">{row.skor.toFixed(2)}</td>
+                              <td className="p-1.5 text-right font-mono text-emerald-600 font-semibold">
+                                {((row.skor / row.target) * 100).toFixed(1)}%
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 2: IKP 2 PNBP BANDARA & KEPELABUHANAN */}
+          {/* ================================================================ */}
+          {/* TAB 2: IKP 2 - PNBP BANDARA & KEPELABUHANAN                      */}
+          {/* ================================================================ */}
           {activeTab === 'ikp-2' && (
             <div className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-emerald-800 font-bold block uppercase">Badan Pengelolaan Kawasan Bandar Udara (Hang Nadim)</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xl font-black text-slate-900 font-mono">Rp 312,45 M</span>
-                    <span className="text-xs font-bold text-emerald-700">109,63% Capaian</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Target Rp 285,00 M &bull; Surplus Rp 27,45 Miliar (55,2% Share)</span>
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Realisasi PNBP Bandara &amp; Kepelabuhanan (2 Badan Usaha Strategis)
+                  </h4>
                 </div>
-
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-blue-800 font-bold block uppercase">Badan Pengelolaan dan Pengusahaan Kepelabuhanan</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xl font-black text-slate-900 font-mono">Rp 250,40 M</span>
-                    <span className="text-xs font-bold text-blue-700">107,37% Capaian</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Target Rp 233,21 M &bull; Surplus Rp 17,19 Miliar (44,5% Share)</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                    108,6% Melampaui
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onOpenFormulaModal('ikp-2-pnbp-bandara-pelabuhan')}
+                    className="text-[11px] font-medium text-blue-600 hover:text-blue-800 flex items-center gap-0.5 transition-colors cursor-pointer"
+                  >
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                <div className="md:col-span-7 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <span className="text-[10.5px] font-bold text-slate-700 block mb-1">
-                    Breakdown PNBP Gabungan Bandara &amp; Kepelabuhanan (IKP 2):
-                  </span>
-                  <table className="w-full text-[10.5px]">
-                    <thead>
-                      <tr className="border-b border-slate-200 text-slate-500 text-left">
-                        <th className="py-1">Satker</th>
-                        <th className="py-1 text-right">Target (M)</th>
-                        <th className="py-1 text-right">Realisasi (M)</th>
-                        <th className="py-1 text-right">Capaian</th>
-                        <th className="py-1 text-right">Status</th>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">Rp 562,85 M</span>
+                  <span className="text-[9.5px] text-blue-600 block mt-0.5">108,6% Capaian (+Rp 44,6 M)</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin</span>
+                  <span className="text-base font-bold text-slate-900">Rp 518,21 M</span>
+                  <span className="text-[9.5px] text-slate-400 block mt-0.5">BP Bandara &amp; BP Pelabuhan</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Kontributor Terbesar</span>
+                  <span className="text-base font-bold text-slate-900">Hang Nadim (312,45 M)</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">Share 55,5% PNBP</span>
+                </div>
+              </div>
+
+              {/* Grid: Tabel Kiri (7 Col) & Grafik Kanan (5 Col) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                {/* Tabel Rincian */}
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-64 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Unit Kerja / Sumber PNBP</th>
+                        <th className="py-1.5 px-2 text-right">Bobot</th>
+                        <th className="py-1.5 px-2 text-right">Nilai (Rp M)</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">BP Kawasan Bandar Udara</td>
-                        <td className="py-1.5 text-right font-mono">Rp 285,00</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-emerald-700">Rp 312,45</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">109,6%</td>
-                        <td className="py-1.5 text-right text-emerald-600 font-bold text-[9.5px]">Melampaui</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">BP &amp; Pengusahaan Kepelabuhanan</td>
-                        <td className="py-1.5 text-right font-mono">Rp 233,21</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-blue-700">Rp 250,40</td>
-                        <td className="py-1.5 text-right font-mono text-blue-700 font-bold">107,4%</td>
-                        <td className="py-1.5 text-right text-blue-600 font-bold text-[9.5px]">Melampaui</td>
-                      </tr>
-                      <tr className="bg-sky-50/50 font-bold">
-                        <td className="py-1.5 text-sky-900">Total IKP 2 Perkin A5</td>
-                        <td className="py-1.5 text-right font-mono">Rp 518,21</td>
-                        <td className="py-1.5 text-right font-mono text-sky-800 font-black">Rp 562,85</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-black">108,6%</td>
-                        <td className="py-1.5 text-right text-emerald-700 font-bold text-[9.5px]">+Rp 44,6 M</td>
-                      </tr>
+                      {PNBP_BANDARA_LAUT_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.komponen}</td>
+                          <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}%</td>
+                          <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">Rp {row.nilai.toFixed(2)} M</td>
+                          <td className="py-1 px-2.5 text-center">
+                            <span className={`inline-block px-1.5 py-0.5 rounded text-[9.5px] font-semibold ${
+                              row.status === 'Optimal'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : row.status === 'Sangat Baik'
+                                ? 'bg-blue-50 text-blue-700'
+                                : 'bg-amber-50 text-amber-700'
+                            }`}>
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
 
-                <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-slate-700">Tren PNBP Bandara &amp; Laut (Rp Miliar)</span>
-                    <span className="text-[9px] font-mono text-slate-400">2022-2026</span>
+                {/* Visualisasi Grafis Tren & Komparasi (WITH SHEET SWAP) */}
+                <div className="lg:col-span-5 space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-slate-100">
+                    <span className="text-xs font-bold text-slate-800">Analisis Tren &amp; Komparasi</span>
+                    <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setPnbpChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          pnbpChartMode === 'grafik'
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Tampilkan grafik"
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPnbpChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          pnbpChartMode === 'tabel'
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Tampilkan tabel detail"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel Detail</span>
+                      </button>
+                    </div>
                   </div>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PNBP_BANDARA_LAUT_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis tick={{ fontSize: 9 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
-                        <Line type="monotone" dataKey="skor" stroke="#0284C7" strokeWidth={2} dot={{ r: 3 }} name="Realisasi PNBP" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
+
+                  {pnbpChartMode === 'grafik' ? (
+                    <>
+                      {/* Box 1: Tren Realisasi PNBP */}
+                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                          Tren Realisasi PNBP Bandara &amp; Laut (2021 - 2026)
+                        </span>
+                        <div className="h-24 w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={PNBP_BANDARA_LAUT_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                              <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <YAxis domain={[340, 640]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v: any) => [`Rp ${v} M`, 'PNBP']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                              <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} name="Target" />
+                              <Line type="monotone" dataKey="skor" stroke="#0284C7" strokeWidth={2} dot={{ r: 2.5, fill: '#0284C7' }} name="Realisasi PNBP" />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+
+                      {/* Box 2: Capaian Nilai vs Bobot Sektor */}
+                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                          Capaian Nilai vs Bobot 5 Sumber PNBP
+                        </span>
+                        <div className="h-24 w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={PNBP_BANDARA_LAUT_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                              <XAxis
+                                dataKey="komponen"
+                                tick={{ fontSize: 7, fill: '#64748B' }}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(val) => val.split(' ')[0]}
+                              />
+                              <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'bobot' ? 'Bobot (%)' : 'Nilai (Rp M)']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                              <Bar dataKey="bobot" fill="#CBD5E1" radius={[2, 2, 0, 0]} name="bobot" />
+                              <Bar dataKey="nilai" fill="#0284C7" radius={[2, 2, 0, 0]} name="nilai" />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="overflow-x-auto rounded border border-slate-200 bg-white">
+                      <table className="w-full text-[10px] text-left">
+                        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                          <tr>
+                            <th className="p-1.5">Tahun</th>
+                            <th className="p-1.5 text-right">Target</th>
+                            <th className="p-1.5 text-right">Realisasi</th>
+                            <th className="p-1.5 text-right">Capaian</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {PNBP_BANDARA_LAUT_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50">
+                              <td className="p-1.5 font-medium">{row.tahun}</td>
+                              <td className="p-1.5 text-right font-mono text-slate-500">Rp {row.target.toFixed(1)} M</td>
+                              <td className="p-1.5 text-right font-mono font-bold text-sky-700">Rp {row.skor.toFixed(2)} M</td>
+                              <td className="p-1.5 text-right font-mono text-emerald-600 font-semibold">
+                                {((row.skor / row.target) * 100).toFixed(1)}%
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 3: IKP 3 PNBP LALU LINTAS BARANG */}
+          {/* ================================================================ */}
+          {/* TAB 3: IKP 3 - PNBP & SLA LALU LINTAS BARANG                     */}
+          {/* ================================================================ */}
           {activeTab === 'ikp-3' && (
             <div className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-amber-800 font-bold block uppercase">Dit. Lalu Lintas Barang (Realisasi PNBP)</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xl font-black text-slate-900 font-mono">Rp 2,48 M</span>
-                    <span className="text-xs font-bold text-amber-700">112,73% Capaian</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Target Rp 2,20 M &bull; Surplus Rp 0,28 Miliar dari perizinan &amp; dokumen LLB</span>
+              {/* Header Panel */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    Realisasi PNBP &amp; SLA Pelayanan Dit. Lalu Lintas Barang
+                  </h4>
                 </div>
-
-                <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-2xs">
-                  <span className="text-[10px] text-slate-600 font-bold block uppercase">Kepatuhan Waktu Layanan SLA</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xl font-black text-slate-900 font-mono">96,8%</span>
-                    <span className="text-xs font-bold text-emerald-700">Rata-rata 1,8 Jam</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Standar regulasi penyelesaian: maks 3,0 jam kerja</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                    112,7% Melampaui
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onOpenFormulaModal('ikp-3-pnbp-lalu-lintas-barang')}
+                    className="text-[11px] font-medium text-blue-600 hover:text-blue-800 flex items-center gap-0.5 transition-colors cursor-pointer"
+                  >
+                    <span>Manual IKP</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                <div className="md:col-span-7 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <span className="text-[10.5px] font-bold text-slate-700 block mb-1">
-                    Detail Capaian Kinerja Dit. Lalu Lintas Barang (IKP 3):
-                  </span>
-                  <table className="w-full text-[10.5px]">
-                    <thead>
-                      <tr className="border-b border-slate-200 text-slate-500 text-left">
-                        <th className="py-1">Indikator</th>
-                        <th className="py-1 text-right">Target</th>
-                        <th className="py-1 text-right">Realisasi</th>
-                        <th className="py-1 text-right">Capaian</th>
+              {/* 3 Kartu Ringkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Realisasi Nilai</span>
+                  <span className="text-base font-bold text-slate-900">Rp 2,48 M</span>
+                  <span className="text-[9.5px] text-blue-600 block mt-0.5">112,7% Capaian (+Rp 0,28 M)</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">Target Perkin</span>
+                  <span className="text-base font-bold text-slate-900">Rp 2,20 M</span>
+                  <span className="text-[9.5px] text-slate-400 block mt-0.5">Dit. Lalu Lintas Barang</span>
+                </div>
+                <div className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                  <span className="text-[9.5px] text-slate-500 block">SLA Tepat Waktu</span>
+                  <span className="text-base font-bold text-slate-900">96,8% (&lt;3 Jam)</span>
+                  <span className="text-[9.5px] text-slate-500 block mt-0.5">Rerata Durasi 1,8 Jam</span>
+                </div>
+              </div>
+
+              {/* Grid: Tabel Kiri (7 Col) & Grafik Kanan (5 Col) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+                {/* Tabel Rincian */}
+                <div className="lg:col-span-7 overflow-x-auto rounded-lg border border-slate-200/70 bg-white max-h-64 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-semibold text-[10.5px] sticky top-0 bg-slate-50">
+                      <tr>
+                        <th className="py-1.5 px-2.5">Komponen Kinerja Pelayanan LLB</th>
+                        <th className="py-1.5 px-2 text-right">Bobot</th>
+                        <th className="py-1.5 px-2 text-right">Nilai</th>
+                        <th className="py-1.5 px-2.5 text-center">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">PNBP Layanan Perizinan LLB</td>
-                        <td className="py-1.5 text-right font-mono">Rp 2,20 M</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-amber-700">Rp 2,48 M</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">112,7%</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">SLA Perizinan Tepat Waktu</td>
-                        <td className="py-1.5 text-right font-mono">95,0%</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-slate-800">96,8%</td>
-                        <td className="py-1.5 text-right font-mono text-emerald-700 font-bold">101,9%</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-semibold text-slate-800">Realisasi Kuota Induk Konsumsi</td>
-                        <td className="py-1.5 text-right font-mono">100,0%</td>
-                        <td className="py-1.5 text-right font-mono font-bold text-slate-800">98,2%</td>
-                        <td className="py-1.5 text-right font-mono text-blue-700 font-bold">98,2%</td>
-                      </tr>
+                      {PNBP_LLB_TABLE_DATA.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50">
+                          <td className="py-1 px-2.5 font-medium text-slate-800 text-[11px]">{row.komponen}</td>
+                          <td className="py-1 px-2 text-right text-slate-500 text-[10.5px]">{row.bobot}%</td>
+                          <td className="py-1 px-2 text-right font-bold text-slate-900 text-[11px]">
+                            {typeof row.nilai === 'number' && row.nilai < 10
+                              ? `Rp ${row.nilai.toFixed(2)} M`
+                              : `${row.nilai.toFixed(1)}%`}
+                          </td>
+                          <td className="py-1 px-2.5 text-center">
+                            <span className={`inline-block px-1.5 py-0.5 rounded text-[9.5px] font-semibold ${
+                              row.status === 'Optimal'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : row.status === 'Sangat Baik'
+                                ? 'bg-blue-50 text-blue-700'
+                                : 'bg-amber-50 text-amber-700'
+                            }`}>
+                              {row.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
 
-                <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-slate-700">Tren PNBP LLB Tahunan (Rp M)</span>
-                    <span className="text-[9px] font-mono text-slate-400">2022-2026</span>
+                {/* Visualisasi Grafis Tren & Komparasi (WITH SHEET SWAP) */}
+                <div className="lg:col-span-5 space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-slate-100">
+                    <span className="text-xs font-bold text-slate-800">Analisis Tren &amp; Komparasi</span>
+                    <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setPnbpLlbChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          pnbpLlbChartMode === 'grafik'
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Tampilkan grafik"
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPnbpLlbChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          pnbpLlbChartMode === 'tabel'
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Tampilkan tabel detail"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel Detail</span>
+                      </button>
+                    </div>
                   </div>
-                  <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PNBP_LLB_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis tick={{ fontSize: 9 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
-                        <Line type="monotone" dataKey="skor" stroke="#D97706" strokeWidth={2} dot={{ r: 3 }} name="Realisasi" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
+
+                  {pnbpLlbChartMode === 'grafik' ? (
+                    <>
+                      {/* Box 1: Tren Realisasi PNBP LLB */}
+                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                          Tren Realisasi PNBP LLB (2021 - 2026)
+                        </span>
+                        <div className="h-24 w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={PNBP_LLB_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                              <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <YAxis domain={[1.0, 3.2]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v: any) => [`Rp ${v} M`, 'PNBP LLB']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                              <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} name="Target" />
+                              <Line type="monotone" dataKey="skor" stroke="#D97706" strokeWidth={2} dot={{ r: 2.5, fill: '#D97706' }} name="Realisasi" />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+
+                      {/* Box 2: Capaian Nilai vs Bobot Komponen */}
+                      <div className="bg-slate-50/60 p-2 rounded-lg border border-slate-200/60">
+                        <span className="text-[10px] font-bold text-slate-800 block mb-1">
+                          Capaian Nilai vs Bobot 4 Komponen LLB
+                        </span>
+                        <div className="h-24 w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={PNBP_LLB_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                              <XAxis
+                                dataKey="komponen"
+                                tick={{ fontSize: 7, fill: '#64748B' }}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(val) => val.split(' ')[0]}
+                              />
+                              <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'bobot' ? 'Bobot (%)' : 'Nilai Capaian']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                              <Bar dataKey="bobot" fill="#CBD5E1" radius={[2, 2, 0, 0]} name="bobot" />
+                              <Bar dataKey="nilai" fill="#D97706" radius={[2, 2, 0, 0]} name="nilai" />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="overflow-x-auto rounded border border-slate-200 bg-white">
+                      <table className="w-full text-[10px] text-left">
+                        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                          <tr>
+                            <th className="p-1.5">Tahun</th>
+                            <th className="p-1.5 text-right">Target</th>
+                            <th className="p-1.5 text-right">Realisasi</th>
+                            <th className="p-1.5 text-right">Capaian</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {PNBP_LLB_TREND_ANNUAL.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50">
+                              <td className="p-1.5 font-medium">{row.tahun}</td>
+                              <td className="p-1.5 text-right font-mono text-slate-500">Rp {row.target.toFixed(2)} M</td>
+                              <td className="p-1.5 text-right font-mono font-bold text-amber-700">Rp {row.skor.toFixed(2)} M</td>
+                              <td className="p-1.5 text-right font-mono text-emerald-600 font-semibold">
+                                {((row.skor / row.target) * 100).toFixed(1)}%
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

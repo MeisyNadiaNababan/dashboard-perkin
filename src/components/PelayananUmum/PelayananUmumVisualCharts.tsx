@@ -11,6 +11,8 @@ import {
   Scale,
   Sparkles,
   CheckCircle2,
+  BarChart3,
+  FileText,
 } from 'lucide-react';
 import {
   RadarChart,
@@ -84,6 +86,13 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
   // Tab state: ikp-1, ikp-2, ikp-3, matriks (Persis Model DEP-A4 & DEP-A5)
   const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3' | 'matriks'>('ikp-1');
 
+  // Sheet Swap view modes
+  const [radarMode, setRadarMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [buChartMode, setBuChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [rasioChartMode, setRasioChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [ikmChartMode, setIkmChartMode] = useState<'grafik' | 'tabel'>('grafik');
+  const [sinergiChartMode, setSinergiChartMode] = useState<'grafik' | 'tabel'>('grafik');
+
   const ikp1 = PERKIN_A6_KPIS[0];
   const ikp2 = PERKIN_A6_KPIS[1];
   const ikp3 = PERKIN_A6_KPIS[2];
@@ -106,52 +115,103 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                   Realisasi Aktual vs Target Penetapan Perkin A6 2025
                 </p>
               </div>
-              <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
-                0 - 130%
-              </span>
+              <div className="flex items-center gap-1.5">
+                <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setRadarMode('grafik')}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                      radarMode === 'grafik' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    <span>Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRadarMode('tabel')}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                      radarMode === 'tabel' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3 h-3" />
+                    <span>Tabel</span>
+                  </button>
+                </div>
+                <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60 font-mono">
+                  0 - 130%
+                </span>
+              </div>
             </div>
 
-            {/* Radar Visual - Compact & Proportional */}
+            {/* Radar Visual / Table Sheet Swap */}
             <div className="h-36 sm:h-40 w-full mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_3_IKP_A6} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <PolarGrid stroke="#CBD5E1" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                  <Radar
-                    name="Target Perkin (100%)"
-                    dataKey="target"
-                    stroke="#94A3B8"
-                    fill="#94A3B8"
-                    fillOpacity={0.12}
-                    strokeDasharray="4 4"
-                  />
-                  <Radar
-                    name="Realisasi Aktual"
-                    dataKey="realisasi"
-                    stroke="#0284C7"
-                    fill="#0284C7"
-                    fillOpacity={0.35}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      fontSize: '11px',
-                      borderRadius: '8px',
-                      backgroundColor: '#0F172A',
-                      color: '#FFFFFF',
-                      border: 'none',
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+              {radarMode === 'grafik' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={RADAR_3_IKP_A6} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                    <PolarGrid stroke="#CBD5E1" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
+                    />
+                    <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
+                    <Radar
+                      name="Target Perkin (100%)"
+                      dataKey="target"
+                      stroke="#94A3B8"
+                      fill="#94A3B8"
+                      fillOpacity={0.12}
+                      strokeDasharray="4 4"
+                    />
+                    <Radar
+                      name="Realisasi Aktual"
+                      dataKey="realisasi"
+                      stroke="#0284C7"
+                      fill="#0284C7"
+                      fillOpacity={0.35}
+                    />
+                    <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                    <Tooltip
+                      formatter={(val: any, name: any, item: any) => [
+                        `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                        name,
+                      ]}
+                      contentStyle={{
+                        fontSize: '11px',
+                        borderRadius: '8px',
+                        backgroundColor: '#0F172A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                  <table className="w-full text-left text-[10px]">
+                    <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                      <tr>
+                        <th className="px-2 py-1.5">Indikator IKP</th>
+                        <th className="px-2 py-1.5 text-right">Target</th>
+                        <th className="px-2 py-1.5 text-right">Realisasi</th>
+                        <th className="px-2 py-1.5 text-right">Capaian</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {RADAR_3_IKP_A6.map((row) => (
+                        <tr key={row.subject} className="hover:bg-slate-50/50">
+                          <td className="px-2 py-1.5 font-medium text-slate-800">{row.subject}</td>
+                          <td className="px-2 py-1.5 text-right font-mono text-slate-500">100%</td>
+                          <td className="px-2 py-1.5 text-right font-mono font-bold text-slate-800">{row.skorAsli}</td>
+                          <td className="px-2 py-1.5 text-right font-mono font-black text-emerald-700">
+                            {row.realisasi.toFixed(1)}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 
@@ -305,19 +365,71 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                 <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-bold text-slate-700">Tren Peningkatan Kinerja BU (%)</span>
-                    <span className="text-[9px] font-mono text-slate-400">2022-2026</span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setBuChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          buChartMode === 'grafik' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setBuChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          buChartMode === 'tabel' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PERTUMBUHAN_BU_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis tick={{ fontSize: 9 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
-                        <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} name="Realisasi (%)" />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {buChartMode === 'grafik' ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={PERTUMBUHAN_BU_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
+                          <YAxis tick={{ fontSize: 9 }} />
+                          <Tooltip />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
+                          <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} name="Realisasi (%)" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                            <tr>
+                              <th className="px-2 py-1">Tahun</th>
+                              <th className="px-2 py-1 text-right">Target (%)</th>
+                              <th className="px-2 py-1 text-right">Realisasi (%)</th>
+                              <th className="px-2 py-1 text-right">Deviasi</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {PERTUMBUHAN_BU_TREND_ANNUAL.map((row) => {
+                              const deviasi = (row.skor - row.target).toFixed(2);
+                              const isPositive = Number(deviasi) >= 0;
+                              return (
+                                <tr key={row.tahun} className="hover:bg-slate-50/50">
+                                  <td className="px-2 py-1 font-semibold text-slate-800">{row.tahun}</td>
+                                  <td className="px-2 py-1 text-right font-mono text-slate-500">{row.target.toFixed(2)}%</td>
+                                  <td className="px-2 py-1 text-right font-mono font-bold text-blue-700">{row.skor.toFixed(2)}%</td>
+                                  <td className={`px-2 py-1 text-right font-mono font-bold ${isPositive ? 'text-emerald-700' : 'text-rose-600'}`}>
+                                    {isPositive ? `+${deviasi}%` : `${deviasi}%`}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -391,19 +503,68 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                 <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-bold text-slate-700">Tren Rasio PNBP Tahunan</span>
-                    <span className="text-[9px] font-mono text-slate-400">2022-2026</span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setRasioChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          rasioChartMode === 'grafik' ? 'bg-sky-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setRasioChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          rasioChartMode === 'tabel' ? 'bg-sky-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={RASIO_PNBP_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis domain={[0.55, 0.8]} tick={{ fontSize: 9 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
-                        <Line type="monotone" dataKey="skor" stroke="#0284C7" strokeWidth={2} dot={{ r: 3 }} name="Realisasi Rasio" />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {rasioChartMode === 'grafik' ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={RASIO_PNBP_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
+                          <YAxis domain={[0.55, 0.8]} tick={{ fontSize: 9 }} />
+                          <Tooltip />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
+                          <Line type="monotone" dataKey="skor" stroke="#0284C7" strokeWidth={2} dot={{ r: 3 }} name="Realisasi Rasio" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                            <tr>
+                              <th className="px-2 py-1">Tahun</th>
+                              <th className="px-2 py-1 text-right">Target</th>
+                              <th className="px-2 py-1 text-right">Realisasi Rasio</th>
+                              <th className="px-2 py-1 text-right">Capaian</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {RASIO_PNBP_TREND_ANNUAL.map((row) => {
+                              const cap = ((row.skor / row.target) * 100).toFixed(1);
+                              return (
+                                <tr key={row.tahun} className="hover:bg-slate-50/50">
+                                  <td className="px-2 py-1 font-semibold text-slate-800">{row.tahun}</td>
+                                  <td className="px-2 py-1 text-right font-mono text-slate-500">{row.target.toFixed(2)}</td>
+                                  <td className="px-2 py-1 text-right font-mono font-bold text-sky-700">{row.skor.toFixed(2)}</td>
+                                  <td className="px-2 py-1 text-right font-mono font-bold text-emerald-700">{cap}%</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -477,19 +638,67 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                 <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-bold text-slate-700">Tren IKM Tahunan (2022-2026)</span>
-                    <span className="text-[9px] font-mono text-slate-400">Skala 100</span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIkmChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikmChartMode === 'grafik' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIkmChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          ikmChartMode === 'tabel' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={IKM_BU_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis domain={[80, 95]} tick={{ fontSize: 9 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
-                        <Line type="monotone" dataKey="skor" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} name="Realisasi IKM" />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {ikmChartMode === 'grafik' ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={IKM_BU_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
+                          <YAxis domain={[80, 95]} tick={{ fontSize: 9 }} />
+                          <Tooltip />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" name="Target" />
+                          <Line type="monotone" dataKey="skor" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} name="Realisasi IKM" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                            <tr>
+                              <th className="px-2 py-1">Tahun</th>
+                              <th className="px-2 py-1 text-right">Target</th>
+                              <th className="px-2 py-1 text-right">Realisasi</th>
+                              <th className="px-2 py-1 text-right">Mutu</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {IKM_BU_TREND_ANNUAL.map((row) => (
+                              <tr key={row.tahun} className="hover:bg-slate-50/50">
+                                <td className="px-2 py-1 font-semibold text-slate-800">{row.tahun}</td>
+                                <td className="px-2 py-1 text-right font-mono text-slate-500">{row.target.toFixed(2)}</td>
+                                <td className="px-2 py-1 text-right font-mono font-bold text-emerald-700">{row.skor.toFixed(2)}</td>
+                                <td className="px-2 py-1 text-right">
+                                  <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">A</span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -556,19 +765,63 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                 <div className="md:col-span-5 bg-slate-50/80 rounded-lg border border-slate-200 p-2.5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-bold text-slate-700">Tren Sinergi Serapan &amp; IKU (%)</span>
-                    <span className="text-[9px] font-mono text-slate-400">2022-2026</span>
+                    <div className="inline-flex items-center p-0.5 bg-white border border-slate-200 rounded-md shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setSinergiChartMode('grafik')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          sinergiChartMode === 'grafik' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                        <span>Grafik</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSinergiChartMode('tabel')}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                          sinergiChartMode === 'tabel' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Tabel</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="h-28 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={SINERGI_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
-                        <YAxis tick={{ fontSize: 9 }} domain={[70, 115]} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="serapanPersen" stroke="#6366F1" strokeWidth={2} name="Serapan Pagu (%)" />
-                        <Line type="monotone" dataKey="capaianIku" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} name="Rata-rata IKU (%)" />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {sinergiChartMode === 'grafik' ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={SINERGI_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 9 }} />
+                          <YAxis tick={{ fontSize: 9 }} domain={[70, 115]} />
+                          <Tooltip />
+                          <Line type="monotone" dataKey="serapanPersen" stroke="#6366F1" strokeWidth={2} name="Serapan Pagu (%)" />
+                          <Line type="monotone" dataKey="capaianIku" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} name="Rata-rata IKU (%)" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full overflow-y-auto rounded-lg border border-slate-200 bg-white scrollbar-thin">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-600 font-bold">
+                            <tr>
+                              <th className="px-2 py-1">Tahun</th>
+                              <th className="px-2 py-1 text-right">Serapan (%)</th>
+                              <th className="px-2 py-1 text-right">IKU (%)</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {SINERGI_TREND_ANNUAL.map((row) => (
+                              <tr key={row.tahun} className="hover:bg-slate-50/50">
+                                <td className="px-2 py-1 font-semibold text-slate-800">{row.tahun}</td>
+                                <td className="px-2 py-1 text-right font-mono font-bold text-indigo-700">{row.serapanPersen.toFixed(1)}%</td>
+                                <td className="px-2 py-1 text-right font-mono font-bold text-emerald-700">{row.capaianIku.toFixed(2)}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
