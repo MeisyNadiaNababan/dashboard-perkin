@@ -32,9 +32,9 @@ export const InfrastrukturPerkinA7Dashboard: React.FC<
   // Filter State - Model Filter Dashboard DEP-A3 (Ultra-Clean & Compact)
   const [selectedYear, setSelectedYear] = useState<string>('2026');
 
-  // Deep-Dive Unit State (Default: dit-pembangunan-infrastruktur)
+  // Deep-Dive Unit State (Default: dit-perencanaan-infrastruktur)
   const [selectedDeepDiveUnit, setSelectedDeepDiveUnit] = useState<string>(
-    'dit-pembangunan-infrastruktur'
+    'dit-perencanaan-infrastruktur'
   );
 
   // Formula Modal State

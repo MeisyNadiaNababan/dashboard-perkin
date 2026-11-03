@@ -1,22 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import {
-  HardHat,
-  TrendingUp,
-  FileText,
-  DollarSign,
-  AlertCircle,
-  Mountain,
-  Route,
-  Search,
-  Filter,
-  ArrowUpDown,
-  CheckCircle2,
-  Calendar,
-  Layers,
-  ChevronDown,
-  Info,
-} from 'lucide-react';
-import {
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -26,47 +9,28 @@ import {
   Tooltip,
   Legend,
   Cell,
-  ReferenceLine,
-  ComposedChart,
-  Line,
-  Treemap,
 } from 'recharts';
 import {
   PEMBANGUNAN_INFRASTRUKTUR_MASTER_DATA,
-  PaketPekerjaanItem,
+  RowUtilitasBulananItem,
+  RowGalianJenisItem,
+  RowPenghijauanBulananItem,
+  KondisiJalanItem,
+  PaketKategoriPekerjaanItem,
+  PaketBswItem,
 } from './pembangunanInfrastrukturVisualData';
 
 interface PembangunanInfrastrukturVisualSuiteProps {
   onOpenFormulaModal?: (kpiId: string) => void;
 }
 
-// Format Rupiah (Juta)
-const formatRupiahJuta = (val: number): string => {
-  return `Rp ${val.toLocaleString('id-ID')} Jt`;
+// Formatters
+const formatNumberId = (val: number): string => {
+  return new Intl.NumberFormat('id-ID').format(val);
 };
 
-// Custom Badge Komponen Terbatas / Terbuka
-const SifatDataBadge: React.FC<{ jenis: 'Terbatas' | 'Terbuka' }> = ({ jenis }) => {
-  if (jenis === 'Terbatas') {
-    return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-amber-50 text-amber-800 border border-amber-300/80">
-        Terbatas
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-emerald-50 text-emerald-800 border border-emerald-300/80">
-      Terbuka
-    </span>
-  );
-};
-
-// Palet Warna Subdirektorat untuk Treemap & Chart
-const SUBDIT_COLORS: Record<string, string> = {
-  'Pembangunan Jalan dan Jembatan': '#1D4ED8', // Royal Blue
-  'Pembangunan Drainase': '#0284C7', // Light Cyan/Blue
-  'Pembangunan Gedung': '#4338CA', // Indigo
-  'Pematangan Tanah': '#2563EB', // Blue
+const formatRupiahMiliar = (valM: number): string => {
+  return `Rp ${valM.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} M`;
 };
 
 export const PembangunanInfrastrukturVisualSuite: React.FC<
@@ -74,1295 +38,983 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
 > = () => {
   const masterData = PEMBANGUNAN_INFRASTRUKTUR_MASTER_DATA;
 
-  // -------------------------------------------------------------
-  // FILTER STATE - GRAFIK 1 (Progres Fisik per Paket Pekerjaan)
-  // -------------------------------------------------------------
-  const [filterBulanG1, setFilterBulanG1] = useState<string>('Semua');
-  const [filterSubditG1, setFilterSubditG1] = useState<string>('Semua');
-  const [filterKategoriG1, setFilterKategoriG1] = useState<string>('Semua');
+  // =========================================================================
+  // STATE FILTERS
+  // =========================================================================
 
-  // -------------------------------------------------------------
-  // FILTER STATE - TABEL PAKET PEKERJAAN (GRAFIK 7)
-  // -------------------------------------------------------------
-  const [tableSearch, setTableSearch] = useState<string>('');
-  const [tableSortBy, setTableSortBy] = useState<'progres-asc' | 'progres-desc' | 'nama' | 'kontrak-desc'>('progres-asc');
+  // Kartu 1: Filter Tahun & Jenis Utilitas
+  const [k1Tahun, setK1Tahun] = useState<string>('2026');
+  const [k1JenisUtilitas, setK1JenisUtilitas] = useState<string>('Semua Utilitas');
 
-  // -------------------------------------------------------------
-  // FILTER STATE - GRAFIK 9 (Jaringan Jalan)
-  // -------------------------------------------------------------
-  const [filterWilayahG9, setFilterWilayahG9] = useState<string>('Semua Wilayah');
+  // Kartu 2: Filter Tahun & Bulan
+  const [k2Tahun, setK2Tahun] = useState<string>('2026');
+  const [k2Bulan, setK2Bulan] = useState<string>('Semua');
 
-  // =============================================================
-  // 1. DATASET GRAFIK 1: 15 PAKET PROGRES TERENDAH
-  // =============================================================
-  const filteredPaketG1 = useMemo(() => {
-    let list = [...masterData.paketPekerjaan];
+  // Kartu 3: Filter Tahun
+  const [k3Tahun, setK3Tahun] = useState<string>('2026');
 
-    if (filterBulanG1 !== 'Semua') {
-      list = list.filter((p) => p.bulan === filterBulanG1);
+  // Kartu 4: Filter Wilayah
+  const [k4Wilayah, setK4Wilayah] = useState<string>('Semua Wilayah');
+
+  // Kartu 5: Filter Tahun & Subdit
+  const [k5Tahun, setK5Tahun] = useState<string>('2026');
+  const [k5Subdit, setK5Subdit] = useState<string>('Semua Subdit');
+
+  // Kartu 6: Filter Tahun & Kategori Pekerjaan
+  const [k6Tahun, setK6Tahun] = useState<string>('2026');
+  const [k6Kategori, setK6Kategori] = useState<string>('Semua Kategori');
+
+  // =========================================================================
+  // DATA PROCESSING: KARTU 1 - Perizinan Pemanfaatan ROW untuk Utilitas
+  // =========================================================================
+  const k1Data = useMemo(() => {
+    const raw = masterData.rowUtilitasPerTahun[k1Tahun] || masterData.rowUtilitasPerTahun['2026'];
+    if (k1JenisUtilitas === 'Semua Utilitas') {
+      return raw;
     }
-    if (filterSubditG1 !== 'Semua') {
-      list = list.filter((p) => p.subdirektorat === filterSubditG1);
-    }
-    if (filterKategoriG1 !== 'Semua') {
-      list = list.filter((p) => p.kategoriPekerjaan === filterKategoriG1);
-    }
 
-    // Urutkan dari progres terendah ke tertinggi, ambil maksimal 15 paket
-    return list
-      .sort((a, b) => a.progresPersen - b.progresPersen)
-      .slice(0, 15)
-      .map((p) => ({
-        ...p,
-        // Short label for Y-axis (max 28 chars)
-        shortName: p.namaPaket.length > 28 ? `${p.namaPaket.substring(0, 26)}...` : p.namaPaket,
-        isUnder50: p.progresPersen < 50,
-      }));
-  }, [masterData.paketPekerjaan, filterBulanG1, filterSubditG1, filterKategoriG1]);
-
-  // =============================================================
-  // 2. DATASET GRAFIK 2: RATA-RATA PROGRES PER SUBDIREKTORAT
-  // =============================================================
-  const rataRataSubditData = useMemo(() => {
-    const subditMap: Record<string, { totalProgres: number; count: number }> = {
-      'Pembangunan Jalan dan Jembatan': { totalProgres: 0, count: 0 },
-      'Pembangunan Drainase': { totalProgres: 0, count: 0 },
-      'Pembangunan Gedung': { totalProgres: 0, count: 0 },
-      'Pematangan Tanah': { totalProgres: 0, count: 0 },
+    const keyMap: Record<string, keyof RowUtilitasBulananItem> = {
+      'Fiber Optik': 'fiberOptik',
+      Listrik: 'listrik',
+      Air: 'air',
+      Gas: 'gas',
+      Telekomunikasi: 'telekomunikasi',
     };
+    const activeKey = keyMap[k1JenisUtilitas];
 
-    masterData.paketPekerjaan.forEach((p) => {
-      if (subditMap[p.subdirektorat]) {
-        subditMap[p.subdirektorat].totalProgres += p.progresPersen;
-        subditMap[p.subdirektorat].count += 1;
-      }
-    });
-
-    return Object.entries(subditMap).map(([subdit, stat]) => ({
-      subdirektorat: subdit,
-      shortSubdit:
-        subdit === 'Pembangunan Jalan dan Jembatan'
-          ? 'Jalan & Jembatan'
-          : subdit === 'Pembangunan Drainase'
-          ? 'Drainase'
-          : subdit === 'Pembangunan Gedung'
-          ? 'Gedung'
-          : 'Pematangan Tanah',
-      rataRataProgres: stat.count > 0 ? parseFloat((stat.totalProgres / stat.count).toFixed(2)) : 0,
-      jumlahPaket: stat.count,
-    }));
-  }, [masterData.paketPekerjaan]);
-
-  // =============================================================
-  // 3. DATASET GRAFIK 3: JUMLAH PAKET PER KATEGORI & JENIS PEKERJAAN (STACKED COLUMN)
-  // =============================================================
-  const kategoriJenisData = useMemo(() => {
-    const categories: Record<string, Record<string, number>> = {
-      'Konektivitas & Transportasi': {},
-      'Pengendalian Banjir': {},
-      'Fasilitas Publik & Gedung': {},
-      'Pengembangan Kawasan Industri': {},
-    };
-
-    masterData.paketPekerjaan.forEach((p) => {
-      const kat = p.kategoriPekerjaan;
-      const jenis = p.jenisPekerjaan;
-      if (!categories[kat]) {
-        categories[kat] = {};
-      }
-      categories[kat][jenis] = (categories[kat][jenis] || 0) + 1;
-    });
-
-    return [
-      {
-        kategori: 'Konektivitas & Transportasi',
-        'Pelebaran Jalan': categories['Konektivitas & Transportasi']['Pelebaran Jalan'] || 0,
-        'Flyover & Jembatan': categories['Konektivitas & Transportasi']['Flyover & Jembatan'] || 0,
-        total: (categories['Konektivitas & Transportasi']['Pelebaran Jalan'] || 0) + (categories['Konektivitas & Transportasi']['Flyover & Jembatan'] || 0),
-      },
-      {
-        kategori: 'Pengendalian Banjir',
-        'Saluran Drainase Primer': categories['Pengendalian Banjir']['Saluran Drainase Primer'] || 0,
-        'Kolam Retensi': categories['Pengendalian Banjir']['Kolam Retensi'] || 0,
-        total: (categories['Pengendalian Banjir']['Saluran Drainase Primer'] || 0) + (categories['Pengendalian Banjir']['Kolam Retensi'] || 0),
-      },
-      {
-        kategori: 'Fasilitas Publik & Gedung',
-        'Gedung Kantor / Arsip': categories['Fasilitas Publik & Gedung']['Gedung Kantor / Arsip'] || 0,
-        'Gedung Layanan Publik': categories['Fasilitas Publik & Gedung']['Gedung Layanan Publik'] || 0,
-        total: (categories['Fasilitas Publik & Gedung']['Gedung Kantor / Arsip'] || 0) + (categories['Fasilitas Publik & Gedung']['Gedung Layanan Publik'] || 0),
-      },
-      {
-        kategori: 'Pengembangan Kawasan Industri',
-        'Cut and Fill BSW': categories['Pengembangan Kawasan Industri']['Cut and Fill BSW'] || 0,
-        'Pematangan Lahan': categories['Pengembangan Kawasan Industri']['Pematangan Lahan'] || 0,
-        total: (categories['Pengembangan Kawasan Industri']['Cut and Fill BSW'] || 0) + (categories['Pengembangan Kawasan Industri']['Pematangan Lahan'] || 0),
-      },
-    ];
-  }, [masterData.paketPekerjaan]);
-
-  // =============================================================
-  // 4. DATASET GRAFIK 4: PAGU VS HPS VS NILAI KONTRAK (10 TERATAS MENURUT PAGU)
-  // =============================================================
-  const paguHpsKontrakTop10 = useMemo(() => {
-    return [...masterData.paketPekerjaan]
-      .sort((a, b) => b.nilaiPagu - a.nilaiPagu)
-      .slice(0, 10)
-      .map((p) => ({
-        ...p,
-        shortPaket: p.namaPaket.length > 22 ? `${p.namaPaket.substring(0, 20)}...` : p.namaPaket,
-      }));
-  }, [masterData.paketPekerjaan]);
-
-  // =============================================================
-  // 5. DATASET GRAFIK 5: EFISIENSI KONTRAK TERHADAP PAGU (%)
-  // =============================================================
-  const efisiensiKontrakData = useMemo(() => {
-    return [...masterData.paketPekerjaan]
-      .map((p) => {
-        const rasioPersen = parseFloat(((p.nilaiKontrak / p.nilaiPagu) * 100).toFixed(2));
-        const penghematanJuta = p.nilaiPagu - p.nilaiKontrak;
-        return {
-          ...p,
-          shortName: p.namaPaket.length > 26 ? `${p.namaPaket.substring(0, 24)}...` : p.namaPaket,
-          rasioPersen,
-          penghematanJuta,
-          isAbove95: rasioPersen > 95.0,
-        };
-      })
-      .sort((a, b) => a.rasioPersen - b.rasioPersen);
-  }, [masterData.paketPekerjaan]);
-
-  // =============================================================
-  // 6. DATASET GRAFIK 6: KENDALA PEKERJAAN PALING SERING (TREEMAP)
-  // =============================================================
-  const kendalaTreemapData = useMemo(() => {
-    const kendalaOrder: Array<PaketPekerjaanItem['jenisKendala']> = [
-      'Tidak Ada Kendala',
-      'Cuaca',
-      'Perizinan',
-      'Utilitas Eksisting',
-      'Pembebasan Lahan',
-      'Ketersediaan Material',
-    ];
-
-    return kendalaOrder.map((kendala) => {
-      const matchingPackets = masterData.paketPekerjaan.filter((p) => p.jenisKendala === kendala);
-      // Group by subdirektorat
-      const subditCounts: Record<string, number> = {};
-      matchingPackets.forEach((p) => {
-        subditCounts[p.subdirektorat] = (subditCounts[p.subdirektorat] || 0) + 1;
-      });
-
-      return {
-        name: kendala,
-        value: matchingPackets.length,
-        subditCounts,
-        paketList: matchingPackets.map((p) => p.namaPaket),
-      };
-    });
-  }, [masterData.paketPekerjaan]);
-
-  // =============================================================
-  // 7. DATASET TABEL PAKET PEKERJAAN DENGAN PENCARIAN & SORTING
-  // =============================================================
-  const filteredTableData = useMemo(() => {
-    let list = [...masterData.paketPekerjaan];
-
-    if (tableSearch.trim()) {
-      const q = tableSearch.toLowerCase();
-      list = list.filter(
-        (p) =>
-          p.namaPaket.toLowerCase().includes(q) ||
-          p.kontraktor.toLowerCase().includes(q) ||
-          p.supervisi.toLowerCase().includes(q) ||
-          p.subdirektorat.toLowerCase().includes(q) ||
-          p.jenisKendala.toLowerCase().includes(q) ||
-          p.kendalaDetail.toLowerCase().includes(q)
-      );
-    }
-
-    if (tableSortBy === 'progres-asc') {
-      list.sort((a, b) => a.progresPersen - b.progresPersen);
-    } else if (tableSortBy === 'progres-desc') {
-      list.sort((a, b) => b.progresPersen - a.progresPersen);
-    } else if (tableSortBy === 'nama') {
-      list.sort((a, b) => a.namaPaket.localeCompare(b.namaPaket));
-    } else if (tableSortBy === 'kontrak-desc') {
-      list.sort((a, b) => b.nilaiKontrak - a.nilaiKontrak);
-    }
-
-    return list;
-  }, [masterData.paketPekerjaan, tableSearch, tableSortBy]);
-
-  // =============================================================
-  // 9. DATASET GRAFIK 9: PANJANG JALAN PER KELAS & MATERIAL
-  // =============================================================
-  const jalanKelasMaterialData = useMemo(() => {
-    const classes: Record<string, { aspal: number; beton: number; paving: number; tanahKerikil: number }> = {
-      Arteri: { aspal: 0, beton: 0, paving: 0, tanahKerikil: 0 },
-      Kolektor: { aspal: 0, beton: 0, paving: 0, tanahKerikil: 0 },
-      Lokal: { aspal: 0, beton: 0, paving: 0, tanahKerikil: 0 },
-      Lingkungan: { aspal: 0, beton: 0, paving: 0, tanahKerikil: 0 },
-    };
-
-    masterData.jaringanJalanData
-      .filter((item) => filterWilayahG9 === 'Semua Wilayah' || item.wilayah === filterWilayahG9)
-      .forEach((item) => {
-        if (classes[item.kelasJalan]) {
-          classes[item.kelasJalan].aspal += item.aspalKm;
-          classes[item.kelasJalan].beton += item.betonKm;
-          classes[item.kelasJalan].paving += item.pavingKm;
-          classes[item.kelasJalan].tanahKerikil += item.tanahKerikilKm;
+    return raw.map((item) => {
+      const copy: any = { ...item };
+      ['fiberOptik', 'listrik', 'air', 'gas', 'telekomunikasi'].forEach((k) => {
+        if (k !== activeKey) {
+          copy[k] = 0;
         }
       });
+      copy.totalIzin = copy[activeKey] || 0;
+      return copy;
+    });
+  }, [masterData, k1Tahun, k1JenisUtilitas]);
 
-    return (['Arteri', 'Kolektor', 'Lokal', 'Lingkungan'] as const).map((kelas) => ({
-      kelasJalan: `Jalan ${kelas}`,
-      Aspal: parseFloat(classes[kelas].aspal.toFixed(1)),
-      Beton: parseFloat(classes[kelas].beton.toFixed(1)),
-      Paving: parseFloat(classes[kelas].paving.toFixed(1)),
-      'Tanah / Kerikil': parseFloat(classes[kelas].tanahKerikil.toFixed(1)),
-      totalKm: parseFloat(
-        (
-          classes[kelas].aspal +
-          classes[kelas].beton +
-          classes[kelas].paving +
-          classes[kelas].tanahKerikil
-        ).toFixed(1)
-      ),
-    }));
-  }, [masterData.jaringanJalanData, filterWilayahG9]);
+  const k1Summary = useMemo(() => {
+    const rawCurr = masterData.rowUtilitasPerTahun[k1Tahun] || masterData.rowUtilitasPerTahun['2026'];
+    const totalIzinCurr = rawCurr.reduce((acc, curr) => acc + curr.totalIzin, 0);
+
+    const prevYearNum = parseInt(k1Tahun, 10) - 1;
+    const rawPrev = masterData.rowUtilitasPerTahun[String(prevYearNum)];
+
+    let diffText = '';
+    let isPositive = true;
+
+    if (rawPrev) {
+      const totalIzinPrev = rawPrev.reduce((acc, curr) => acc + curr.totalIzin, 0);
+      const diff = totalIzinCurr - totalIzinPrev;
+      const pct = totalIzinPrev > 0 ? ((diff / totalIzinPrev) * 100).toFixed(1) : '0';
+      const sign = diff >= 0 ? '+' : '';
+      diffText = `${sign}${diff} Izin (${sign}${pct}%) vs ${prevYearNum}`;
+      isPositive = diff >= 0;
+    } else {
+      diffText = 'Tahun Dasar';
+      isPositive = true;
+    }
+
+    return { totalIzinCurr, diffText, isPositive };
+  }, [masterData, k1Tahun]);
+
+  // =========================================================================
+  // DATA PROCESSING: KARTU 2 - Panjang Galian per Jenis Utilitas
+  // =========================================================================
+  const k2Data: RowGalianJenisItem[] = useMemo(() => {
+    const yearObj = masterData.panjangGalianPerTahun[k2Tahun] || masterData.panjangGalianPerTahun['2026'];
+    const list = yearObj[k2Bulan] || yearObj['Semua'] || [];
+    return [...list].sort((a, b) => b.totalGalianM - a.totalGalianM);
+  }, [masterData, k2Tahun, k2Bulan]);
+
+  const k2Summary = useMemo(() => {
+    const totalGalian = k2Data.reduce((acc, curr) => acc + curr.totalGalianM, 0);
+    return {
+      totalGalianMeter: `${formatNumberId(totalGalian)} m`,
+      totalKm: (totalGalian / 1000).toFixed(2),
+    };
+  }, [k2Data]);
+
+  // =========================================================================
+  // DATA PROCESSING: KARTU 3 - Perizinan Pemanfaatan ROW untuk Penghijauan
+  // =========================================================================
+  const k3Data: RowPenghijauanBulananItem[] = useMemo(() => {
+    return masterData.rowPenghijauanPerTahun[k3Tahun] || masterData.rowPenghijauanPerTahun['2026'];
+  }, [masterData, k3Tahun]);
+
+  const k3Summary = useMemo(() => {
+    const totalLuas = k3Data.reduce((acc, curr) => acc + curr.totalLuasM2, 0);
+    const totalIzin = k3Data.reduce((acc, curr) => acc + curr.jumlahIzin, 0);
+    return {
+      totalLuasM2: `${formatNumberId(totalLuas)} m²`,
+      totalIzin,
+    };
+  }, [k3Data]);
+
+  // =========================================================================
+  // DATA PROCESSING: KARTU 4 - Kondisi Jaringan Jalan Eksisting
+  // =========================================================================
+  const k4Data: KondisiJalanItem[] = useMemo(() => {
+    return masterData.kondisiJalanPerWilayah[k4Wilayah] || masterData.kondisiJalanPerWilayah['Semua Wilayah'];
+  }, [masterData, k4Wilayah]);
+
+  const k4Summary = useMemo(() => {
+    const totalPanjang = k4Data.reduce((acc, curr) => acc + curr.totalPanjangKm, 0);
+    const totalBaik = k4Data.reduce((acc, curr) => acc + curr.baikKm, 0);
+    const pctBaik = totalPanjang > 0 ? (totalBaik / totalPanjang) * 100 : 0;
+    const isGood = pctBaik >= 80;
+    return {
+      totalPanjangKm: `${totalPanjang.toFixed(1)} km`,
+      pctBaik: pctBaik.toFixed(1),
+      isGood,
+    };
+  }, [k4Data]);
+
+  // =========================================================================
+  // DATA PROCESSING: KARTU 5 - Paket Pembangunan Infrastruktur
+  // =========================================================================
+  const k5Data = useMemo(() => {
+    const raw = masterData.paketInfrastrukturPerTahun[k5Tahun] || masterData.paketInfrastrukturPerTahun['2026'];
+    if (k5Subdit === 'Semua Subdit') {
+      return raw;
+    }
+    return raw.filter((item) => item.subdit === k5Subdit);
+  }, [masterData, k5Tahun, k5Subdit]);
+
+  const k5Summary = useMemo(() => {
+    const totalKontrak = k5Data.reduce((acc, curr) => acc + curr.nilaiKontrakM, 0);
+    const totalPaket = k5Data.reduce((acc, curr) => acc + curr.jumlahPaket, 0);
+    return {
+      totalKontrakDisplay: formatRupiahMiliar(totalKontrak),
+      totalPaket,
+    };
+  }, [k5Data]);
+
+  // =========================================================================
+  // DATA PROCESSING: KARTU 6 - Paket Pematangan Tanah (BSW)
+  // =========================================================================
+  const k6Data = useMemo(() => {
+    const raw = masterData.paketBswPerTahun[k6Tahun] || masterData.paketBswPerTahun['2026'];
+    let filtered = [...raw];
+    if (k6Kategori !== 'Semua Kategori') {
+      filtered = filtered.filter((item) => item.kategoriPekerjaan === k6Kategori);
+    }
+    // Urutkan nilai kontrak terbesar dan ambil 8 paket
+    return filtered.sort((a, b) => b.nilaiKontrakM - a.nilaiKontrakM).slice(0, 8);
+  }, [masterData, k6Tahun, k6Kategori]);
+
+  const k6Summary = useMemo(() => {
+    const totalVolume = k6Data.reduce((acc, curr) => acc + curr.volumePekerjaanM3, 0);
+    return {
+      jumlahPaket: k6Data.length,
+      totalVolumeM3: `${formatNumberId(totalVolume)} m³`,
+    };
+  }, [k6Data]);
+
+  const maxKontrakBsw = useMemo(() => {
+    return Math.max(...k6Data.map((d) => d.nilaiKontrakM), 1);
+  }, [k6Data]);
 
   return (
-    <div className="space-y-6 font-sans text-slate-800">
-      {/* ========================================================================= */}
-      {/* SECTION A. PROGRES PEKERJAAN KONSTRUKSI                                  */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-600 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                A. PROGRES PEKERJAAN KONSTRUKSI
-              </h2>
-              <p className="text-xs text-slate-500">
-                Monitoring pelaksanaan fisik, capaian subdirektorat, dan segmentasi kategori pekerjaan tahun berjalan.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Laporan Progres Fisik Bulanan
-          </span>
-        </div>
-
-        {/* GRAFIK 1: Progres Fisik per Paket Pekerjaan */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm relative">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  1. Progres Fisik per Paket Pekerjaan (15 Paket Terendah)
+    <div className="w-full font-sans text-slate-800">
+      {/* ==================================================================== */}
+      {/* GRID 2 KOLOM, 3 BARIS (TOTAL 6 KARTU BERUKURAN SAMA)                 */}
+      {/* ==================================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 w-full">
+        {/* ================================================================== */}
+        {/* BARIS 1 - KARTU 1: Perizinan Pemanfaatan ROW untuk Utilitas        */}
+        {/* ================================================================== */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between h-[420px]">
+          <div>
+            {/* Header */}
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 tracking-tight leading-snug">
+                  Perizinan Pemanfaatan ROW untuk Utilitas
                 </h3>
-                <SifatDataBadge jenis="Terbatas" />
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Bar horizontal diurutkan dari progres terendah. Paket dengan progres di bawah 50% diberi warna aksen amber/merah.
-              </p>
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-mono font-black text-slate-900 leading-none">
+                  {k1Summary.totalIzinCurr} Izin
+                </span>
+                <span
+                  className={`text-[11px] font-semibold ml-1.5 inline-block ${
+                    k1Summary.isPositive ? 'text-emerald-600' : 'text-amber-500'
+                  }`}
+                >
+                  {k1Summary.diffText}
+                </span>
+              </div>
             </div>
 
-            {/* Filter: Bulan, Subdirektorat, Kategori Pekerjaan */}
-            <div className="flex flex-wrap items-center gap-2 text-xs">
-              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
-                <span className="text-slate-500 text-[10px] font-medium">Bulan:</span>
-                <select
-                  aria-label="Filter Bulan Progres"
-                  value={filterBulanG1}
-                  onChange={(e) => setFilterBulanG1(e.target.value)}
-                  className="bg-transparent font-semibold text-slate-800 text-xs outline-none cursor-pointer"
-                >
-                  <option value="Semua">Semua Bulan</option>
-                  <option value="Januari">Januari</option>
-                  <option value="Februari">Februari</option>
-                  <option value="Maret">Maret</option>
-                  <option value="April">April (Aktif)</option>
-                </select>
-              </div>
+            {/* Legenda Jenis Utilitas */}
+            <div className="flex flex-wrap items-center gap-2.5 text-xs mb-2">
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#2563eb]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Fiber Optik</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#3b82f6]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Listrik</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#0284c7]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Air Bersih</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#0d9488]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Gas Bumi</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#64748b]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Telekomunikasi</span>
+              </span>
+            </div>
 
-              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
-                <span className="text-slate-500 text-[10px] font-medium">Subdit:</span>
-                <select
-                  aria-label="Filter Subdirektorat"
-                  value={filterSubditG1}
-                  onChange={(e) => setFilterSubditG1(e.target.value)}
-                  className="bg-transparent font-semibold text-slate-800 text-xs outline-none cursor-pointer max-w-[140px] truncate"
-                >
-                  <option value="Semua">Semua Subdirektorat</option>
-                  <option value="Pembangunan Jalan dan Jembatan">Jalan & Jembatan</option>
-                  <option value="Pembangunan Drainase">Drainase</option>
-                  <option value="Pembangunan Gedung">Gedung</option>
-                  <option value="Pematangan Tanah">Pematangan Tanah</option>
-                </select>
-              </div>
+            {/* Filter Bar: Tahun & Jenis Utilitas */}
+            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
+              <select
+                aria-label="Filter Tahun ROW Utilitas"
+                value={k1Tahun}
+                onChange={(e) => setK1Tahun(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.tahunList.map((th) => (
+                  <option key={th} value={th}>
+                    Tahun {th}
+                  </option>
+                ))}
+              </select>
 
-              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
-                <span className="text-slate-500 text-[10px] font-medium">Kategori:</span>
-                <select
-                  aria-label="Filter Kategori Pekerjaan"
-                  value={filterKategoriG1}
-                  onChange={(e) => setFilterKategoriG1(e.target.value)}
-                  className="bg-transparent font-semibold text-slate-800 text-xs outline-none cursor-pointer max-w-[140px] truncate"
-                >
-                  <option value="Semua">Semua Kategori</option>
-                  <option value="Konektivitas & Transportasi">Konektivitas</option>
-                  <option value="Pengendalian Banjir">Pengendalian Banjir</option>
-                  <option value="Fasilitas Publik & Gedung">Fasilitas Publik</option>
-                  <option value="Pengembangan Kawasan Industri">Kawasan Industri</option>
-                </select>
-              </div>
+              <select
+                aria-label="Filter Jenis Utilitas"
+                value={k1JenisUtilitas}
+                onChange={(e) => setK1JenisUtilitas(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                <option value="Semua Utilitas">Semua Utilitas</option>
+                <option value="Fiber Optik">Fiber Optik</option>
+                <option value="Listrik">Listrik</option>
+                <option value="Air">Air Bersih</option>
+                <option value="Gas">Gas Bumi</option>
+                <option value="Telekomunikasi">Telekomunikasi</option>
+              </select>
             </div>
           </div>
 
-          {/* Chart 1 Container */}
-          <div className="h-80 w-full">
+          {/* Chart Section: Stacked Column Bulanan */}
+          <div className="flex-1 w-full min-h-0 my-1">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={filteredPaketG1}
-                layout="vertical"
-                margin={{ top: 8, right: 30, left: 10, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={true} stroke="#E2E8F0" />
+              <BarChart data={k1Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
                 <XAxis
-                  type="number"
-                  domain={[0, 100]}
-                  tick={{ fontSize: 10, fill: '#64748B' }}
-                  tickFormatter={(v) => `${v}%`}
+                  dataKey="bulan"
+                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
                 />
                 <YAxis
-                  type="category"
-                  dataKey="shortName"
-                  width={180}
-                  tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }}
+                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
                 />
                 <Tooltip
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const data = payload[0].payload as (typeof filteredPaketG1)[0];
-                      return (
-                        <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-w-sm">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                            {data.namaPaket}
-                          </div>
-                          <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
-                            <span className="text-slate-500">Kontraktor:</span>
-                            <span className="font-semibold text-slate-800">{data.kontraktor}</span>
-                            <span className="text-slate-500">Supervisi:</span>
-                            <span className="font-semibold text-slate-800">{data.supervisi}</span>
-                            <span className="text-slate-500">Tanggal Mulai:</span>
-                            <span className="text-slate-700">{data.tanggalMulai}</span>
-                            <span className="text-slate-500">Tanggal Selesai:</span>
-                            <span className="text-slate-700">{data.tanggalSelesai}</span>
-                            <span className="text-slate-500">Subdirektorat:</span>
-                            <span className="text-slate-700">{data.subdirektorat}</span>
-                            <span className="text-slate-500">Progres Pekerjaan:</span>
-                            <span className={`font-black ${data.isUnder50 ? 'text-amber-600' : 'text-blue-600'}`}>
-                              {data.progresPersen}% {data.isUnder50 ? '(Perlu Akselerasi < 50%)' : ''}
-                            </span>
-                          </div>
-                        </div>
-                      );
+                  formatter={(val: any, name: any) => {
+                    const num = Number(val);
+                    const map: Record<string, string> = {
+                      fiberOptik: 'Fiber Optik',
+                      listrik: 'Jaringan Listrik',
+                      air: 'Pipa Air Bersih',
+                      gas: 'Pipa Gas Bumi',
+                      telekomunikasi: 'Telekomunikasi Seluler',
+                    };
+                    return [`${num} Izin`, map[name] || name];
+                  }}
+                  labelFormatter={(label, items) => {
+                    const p = items && items[0]?.payload;
+                    if (p) {
+                      return `Bulan ${label} • Total: ${p.totalIzin} Izin (${formatNumberId(p.totalGalianMeter)} m Galian)\nLokasi: ${p.lokasiTerbanyak}`;
                     }
-                    return null;
+                    return `Bulan ${label}`;
+                  }}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
                   }}
                 />
-                <Bar dataKey="progresPersen" name="Progres Fisik" radius={[0, 4, 4, 0]}>
-                  {filteredPaketG1.map((entry, index) => (
-                    <Cell
-                      key={`cell-g1-${index}`}
-                      fill={entry.isUnder50 ? '#EA580C' : '#2563EB'}
-                    />
-                  ))}
-                </Bar>
+                <Bar dataKey="fiberOptik" name="fiberOptik" stackId="utilitas" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={15} />
+                <Bar dataKey="listrik" name="listrik" stackId="utilitas" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={15} />
+                <Bar dataKey="air" name="air" stackId="utilitas" fill="#0284c7" radius={[0, 0, 0, 0]} barSize={15} />
+                <Bar dataKey="gas" name="gas" stackId="utilitas" fill="#0d9488" radius={[0, 0, 0, 0]} barSize={15} />
+                <Bar dataKey="telekomunikasi" name="telekomunikasi" stackId="utilitas" fill="#64748b" radius={[2, 2, 0, 0]} barSize={15} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100">
-            <div className="flex items-center gap-4">
+          {/* Footer Kecil */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+            <span className="inline-flex items-center gap-1 font-semibold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Tertutup
+            </span>
+            <span className="truncate ml-2 text-slate-600">
+              Rekapitulasi Perizinan Pemanfaatan ROW untuk Utilitas (Tertutup, perbulan)
+            </span>
+          </div>
+        </div>
+
+        {/* ================================================================== */}
+        {/* BARIS 1 - KARTU 2: Panjang Galian per Jenis Utilitas               */}
+        {/* ================================================================== */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between h-[420px]">
+          <div>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 tracking-tight leading-snug">
+                  Panjang Galian per Jenis Utilitas
+                </h3>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-mono font-black text-slate-900 leading-none">
+                  {k2Summary.totalGalianMeter}
+                </span>
+                <span className="text-[11px] font-semibold text-[#2563eb] ml-1.5 inline-block">
+                  ({k2Summary.totalKm} km)
+                </span>
+              </div>
+            </div>
+
+            {/* Legenda Galian Terbuka vs Crossing */}
+            <div className="flex flex-wrap items-center gap-3 text-xs mb-2">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 bg-blue-600 rounded-sm"></span>
-                <span>Progres &ge; 50%</span>
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#2563eb]" />
+                <span className="text-slate-700 font-medium text-[11px]">Galian Terbuka (Open Trench)</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 bg-amber-600 rounded-sm"></span>
-                <span>Progres &lt; 50% (Warna Aksen Pengawasan Khusus)</span>
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#94a3b8]" />
+                <span className="text-slate-700 font-medium text-[11px]">Galian Crossing (Boring / HDD)</span>
               </span>
             </div>
-            <span>Dataset: Laporan Progres Pekerjaan Konstruksi Tahun Berjalan</span>
-          </div>
-        </div>
 
-        {/* DUA GRAFIK SUBDIREKTORAT & KATEGORI (GRID 2 KOLOM) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* GRAFIK 2: Rata-rata Progres per Subdirektorat */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  2. Rata-Rata Progres per Subdirektorat
-                </h3>
-                <SifatDataBadge jenis="Terbatas" />
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Column chart komparasi rata-rata capaian fisik antar 4 Subdirektorat teknis.
-              </p>
+            {/* Filter Bar: Tahun & Bulan */}
+            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
+              <select
+                aria-label="Filter Tahun Galian"
+                value={k2Tahun}
+                onChange={(e) => setK2Tahun(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.tahunList.slice(0, 2).map((th) => (
+                  <option key={th} value={th}>
+                    Tahun {th}
+                  </option>
+                ))}
+              </select>
 
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={rataRataSubditData} margin={{ top: 10, right: 10, left: -10, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis
-                      dataKey="shortSubdit"
-                      tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
-                      interval={0}
-                    />
-                    <YAxis
-                      domain={[0, 100]}
-                      tick={{ fontSize: 10, fill: '#64748B' }}
-                      tickFormatter={(v) => `${v}%`}
-                    />
-                    <Tooltip
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const item = payload[0].payload;
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs">
-                              <p className="font-bold text-slate-900">{item.subdirektorat}</p>
-                              <p className="text-slate-600 mt-1">
-                                Rata-rata Progres: <span className="font-bold text-blue-600">{item.rataRataProgres}%</span>
-                              </p>
-                              <p className="text-slate-500 text-[11px]">
-                                Total Paket Aktif: <span className="font-semibold">{item.jumlahPaket} Paket</span>
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Bar dataKey="rataRataProgres" name="Rata-rata Progres (%)" fill="#2563EB" radius={[4, 4, 0, 0]}>
-                      {rataRataSubditData.map((entry, index) => (
-                        <Cell
-                          key={`cell-g2-${index}`}
-                          fill={SUBDIT_COLORS[entry.subdirektorat] || '#2563EB'}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu Y: Rata-rata Progres Pekerjaan (%)</span>
-              <span>Dataset: Laporan Progres Pekerjaan</span>
+              <select
+                aria-label="Filter Bulan Galian"
+                value={k2Bulan}
+                onChange={(e) => setK2Bulan(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                <option value="Semua">Semua Bulan (Tahunan)</option>
+                <option value="Januari">Januari</option>
+                <option value="Februari">Februari</option>
+              </select>
             </div>
           </div>
 
-          {/* GRAFIK 3: Jumlah Paket per Kategori dan Jenis Pekerjaan (Stacked Column) */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  3. Jumlah Paket per Kategori dan Jenis Pekerjaan
-                </h3>
-                <SifatDataBadge jenis="Terbatas" />
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Stacked column chart distribusi portofolio jenis pekerjaan di setiap kategori pembangunan.
-              </p>
-
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={kategoriJenisData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis
-                      dataKey="kategori"
-                      tick={{ fontSize: 9.5, fill: '#334155' }}
-                      angle={-10}
-                      textAnchor="end"
-                      interval={0}
-                    />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: '#64748B' }} />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">{label}</p>
-                              {payload.map((entry, idx) => (
-                                <div key={idx} className="flex justify-between gap-3 text-[11px]">
-                                  <span style={{ color: entry.color }} className="font-medium">
-                                    {entry.name}:
-                                  </span>
-                                  <span className="font-bold text-slate-800">{entry.value} Paket</span>
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '4px' }} />
-                    {/* Segmen Jenis Pekerjaan */}
-                    <Bar dataKey="Pelebaran Jalan" stackId="a" fill="#1E40AF" />
-                    <Bar dataKey="Flyover & Jembatan" stackId="a" fill="#3B82F6" />
-                    <Bar dataKey="Saluran Drainase Primer" stackId="a" fill="#0284C7" />
-                    <Bar dataKey="Kolam Retensi" stackId="a" fill="#0EA5E9" />
-                    <Bar dataKey="Gedung Kantor / Arsip" stackId="a" fill="#4338CA" />
-                    <Bar dataKey="Gedung Layanan Publik" stackId="a" fill="#6366F1" />
-                    <Bar dataKey="Cut and Fill BSW" stackId="a" fill="#2563EB" />
-                    <Bar dataKey="Pematangan Lahan" stackId="a" fill="#93C5FD" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu Y: Jumlah Paket Konstruksi</span>
-              <span>Dataset: Laporan Progres Pekerjaan</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION B. ANGGARAN DAN KONTRAK                                           */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-700 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                B. ANGGARAN DAN KONTRAK
-              </h2>
-              <p className="text-xs text-slate-500">
-                Analisis perbandingan Pagu vs HPS vs Kontrak serta efisiensi pengadaan pada 10 paket terbesar.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Mata Uang: Juta Rupiah
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* GRAFIK 4: Pagu vs HPS vs Nilai Kontrak (10 Teratas menurut Pagu) */}
-          <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  4. Pagu vs HPS vs Nilai Kontrak (10 Teratas Menurut Pagu)
-                </h3>
-                <SifatDataBadge jenis="Terbatas" />
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Clustered bar chart membandingkan Nilai Pagu, Nilai HPS, dan Nilai Kontrak (dalam Juta Rupiah).
-              </p>
-
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={paguHpsKontrakTop10}
-                    margin={{ top: 10, right: 10, left: 10, bottom: 45 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis
-                      dataKey="shortPaket"
-                      tick={{ fontSize: 9, fill: '#334155' }}
-                      angle={-25}
-                      textAnchor="end"
-                      interval={0}
-                    />
-                    <YAxis
-                      tick={{ fontSize: 9.5, fill: '#64748B' }}
-                      tickFormatter={(val) => `Rp ${(val / 1000).toFixed(0)} M`}
-                    />
-                    <Tooltip
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const item = payload[0].payload as (typeof paguHpsKontrakTop10)[0];
-                          const hematHps = item.nilaiHps - item.nilaiKontrak;
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-w-xs">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                                {item.namaPaket}
-                              </p>
-                              <div className="space-y-1 text-[11px]">
-                                <div className="flex justify-between">
-                                  <span className="text-slate-500">Nilai Pagu:</span>
-                                  <span className="font-semibold text-slate-900">{formatRupiahJuta(item.nilaiPagu)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-slate-500">Nilai HPS:</span>
-                                  <span className="font-semibold text-blue-700">{formatRupiahJuta(item.nilaiHps)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-slate-500">Nilai Kontrak:</span>
-                                  <span className="font-bold text-emerald-700">{formatRupiahJuta(item.nilaiKontrak)}</span>
-                                </div>
-                                <div className="flex justify-between border-t border-slate-100 pt-1 text-slate-600">
-                                  <span>Efisiensi terhadap HPS:</span>
-                                  <span className="font-bold text-emerald-600">{formatRupiahJuta(hematHps)}</span>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                    <Bar dataKey="nilaiPagu" name="Nilai Pagu" fill="#1E3A8A" radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="nilaiHps" name="Nilai HPS" fill="#3B82F6" radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="nilaiKontrak" name="Nilai Kontrak" fill="#60A5FA" radius={[3, 3, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Paket Pekerjaan &bull; Sumbu Y: Nilai (Juta Rupiah)</span>
-              <span>Dataset: Laporan Progres Pekerjaan</span>
-            </div>
-          </div>
-
-          {/* GRAFIK 5: Efisiensi Kontrak terhadap Pagu (%) */}
-          <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  5. Efisiensi Kontrak terhadap Pagu (%)
-                </h3>
-                <SifatDataBadge jenis="Terbatas" />
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Bar horizontal dengan garis acuan 100%. Rasio di atas 95% diberi warna aksen oranye.
-              </p>
-
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={efisiensiKontrakData.slice(0, 12)}
-                    layout="vertical"
-                    margin={{ top: 8, right: 30, left: 10, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
-                    <XAxis
-                      type="number"
-                      domain={[85, 102]}
-                      tick={{ fontSize: 9.5, fill: '#64748B' }}
-                      tickFormatter={(v) => `${v}%`}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="shortName"
-                      width={140}
-                      tick={{ fontSize: 9.5, fill: '#334155' }}
-                    />
-                    <Tooltip
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const item = payload[0].payload as (typeof efisiensiKontrakData)[0];
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900">{item.namaPaket}</p>
-                              <p className="text-slate-600">
-                                Rasio Kontrak/Pagu:{' '}
-                                <span className={`font-bold ${item.isAbove95 ? 'text-orange-600' : 'text-blue-600'}`}>
-                                  {item.rasioPersen}% {item.isAbove95 ? '(>95% Aksen)' : ''}
-                                </span>
-                              </p>
-                              <p className="text-slate-500 text-[11px]">
-                                Pagu: {formatRupiahJuta(item.nilaiPagu)} | Kontrak: {formatRupiahJuta(item.nilaiKontrak)}
-                              </p>
-                              <p className="text-emerald-700 text-[11px] font-semibold">
-                                Penghematan: {formatRupiahJuta(item.penghematanJuta)}
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    {/* Garis Acuan 100% Pagu */}
-                    <ReferenceLine
-                      x={100}
-                      stroke="#DC2626"
-                      strokeDasharray="4 4"
-                      label={{ value: '100% Pagu', position: 'top', fill: '#DC2626', fontSize: 10 }}
-                    />
-                    <Bar dataKey="rasioPersen" name="Rasio Kontrak / Pagu (%)" radius={[0, 4, 4, 0]}>
-                      {efisiensiKontrakData.slice(0, 12).map((entry, index) => (
-                        <Cell
-                          key={`cell-g5-${index}`}
-                          fill={entry.isAbove95 ? '#EA580C' : '#2563EB'}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-orange-600 rounded-xs"></span>
-                <span>Rasio &gt; 95% (Margin Hemat Ketat)</span>
-              </span>
-              <span>Dataset: Laporan Progres Pekerjaan</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION C. KENDALA PEKERJAAN                                             */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-800 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                C. KENDALA PEKERJAAN
-              </h2>
-              <p className="text-xs text-slate-500">
-                Peta kendala pekerjaan konstruksi terstandardisasi dan inventarisasi tabel paket terperinci.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Identifikasi Lapangan
-          </span>
-        </div>
-
-        {/* GRAFIK 6: Kendala Pekerjaan Paling Sering (Treemap Interaktif) */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm relative">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-              6. Kendala Pekerjaan Paling Sering (Treemap Segmentasi Kendala)
-            </h3>
-            <SifatDataBadge jenis="Terbatas" />
-          </div>
-          <p className="text-[11px] text-slate-500 mb-3">
-            Ukuran kotak proporsional dengan jumlah paket. Warna merepresentasikan Subdirektorat pengampu dan status kendala.
-          </p>
-
-          {/* Treemap Visual Cards Representation */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-1">
-            {kendalaTreemapData.map((item, idx) => {
-              const bgColors = [
-                'bg-emerald-50 border-emerald-300 text-emerald-900',
-                'bg-blue-50 border-blue-300 text-blue-900',
-                'bg-indigo-50 border-indigo-300 text-indigo-900',
-                'bg-sky-50 border-sky-300 text-sky-900',
-                'bg-amber-50 border-amber-300 text-amber-900',
-                'bg-orange-50 border-orange-300 text-orange-900',
-              ];
-              const badgeColors = [
-                'bg-emerald-600',
-                'bg-blue-600',
-                'bg-indigo-600',
-                'bg-sky-600',
-                'bg-amber-600',
-                'bg-orange-600',
-              ];
-
-              return (
-                <div
-                  key={idx}
-                  className={`p-3 rounded-xl border ${bgColors[idx % bgColors.length]} transition-all hover:shadow-md flex flex-col justify-between`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold leading-tight">{item.name}</span>
-                      <span
-                        className={`text-white text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
-                          badgeColors[idx % badgeColors.length]
-                        }`}
-                      >
-                        {item.value} Paket
-                      </span>
-                    </div>
-
-                    <div className="space-y-1 text-[11px] text-slate-600 mt-2">
-                      <span className="block font-semibold text-[10px] uppercase tracking-wider text-slate-500">
-                        Distribusi Subdit:
-                      </span>
-                      {Object.entries(item.subditCounts).map(([subdit, count]) => (
-                        <div key={subdit} className="flex justify-between items-center text-[10.5px]">
-                          <span className="truncate pr-1 text-slate-700">
-                            {subdit === 'Pembangunan Jalan dan Jembatan'
-                              ? 'Jalan/Jembatan'
-                              : subdit === 'Pembangunan Drainase'
-                              ? 'Drainase'
-                              : subdit === 'Pembangunan Gedung'
-                              ? 'Gedung'
-                              : 'Pematangan'}
-                          </span>
-                          <span className="font-mono font-bold text-slate-900">{count}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-3 pt-2 border-t border-slate-200/60 text-[10px] text-slate-500">
-                    Proporsi: {((item.value / 20) * 100).toFixed(0)}% dari 20 Paket
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="text-[11px] text-slate-500 pt-3 mt-3 border-t border-slate-100 flex justify-between">
-            <span>Kategori: Cuaca, Pembebasan Lahan, Ketersediaan Material, Perizinan, Utilitas Eksisting, Tidak Ada Kendala</span>
-            <span>Dataset: Laporan Progres Pekerjaan</span>
-          </div>
-        </div>
-
-        {/* GRAFIK 7: Tabel Paket Pekerjaan dengan Pencarian & Pengurutan */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm relative space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  7. Tabel Paket Pekerjaan Konstruksi Terpadu
-                </h3>
-                <SifatDataBadge jenis="Terbatas" />
-              </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Rincian Nama Paket, Kontraktor, Supervisi, Tanggal Mulai, Tanggal Selesai, Progres, dan Deskripsi Kendala Lapangan.
-              </p>
-            </div>
-
-            {/* Kontrol Pencarian & Pengurutan */}
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Cari paket, kontraktor, kendala..."
-                  value={tableSearch}
-                  onChange={(e) => setTableSearch(e.target.value)}
-                  className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-blue-500 w-52"
+          {/* Chart Section: Clustered Horizontal Bar */}
+          <div className="flex-1 w-full min-h-0 my-1">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                layout="vertical"
+                data={k2Data}
+                margin={{ top: 5, right: 25, left: 125, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                  tickFormatter={(val) => `${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}m`}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
                 />
-              </div>
+                <YAxis
+                  type="category"
+                  dataKey="jenisUtilitas"
+                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                  width={120}
+                />
+                <Tooltip
+                  formatter={(val: any, name: any) => {
+                    const num = Number(val);
+                    return [
+                      `${formatNumberId(num)} meter`,
+                      name === 'galianTerbukaM' ? 'Galian Terbuka' : 'Galian Crossing',
+                    ];
+                  }}
+                  labelFormatter={(label, items) => {
+                    const p = items && items[0]?.payload;
+                    if (p) {
+                      const warning =
+                        p.izinAkanBerakhir90Hari > 0
+                          ? `\n⚠️ PERINGATAN: ${p.izinAkanBerakhir90Hari} izin akan berakhir dalam 90 hari!`
+                          : '';
+                      return `${label} • Total: ${formatNumberId(p.totalGalianM)} m\nLokasi Terbanyak: ${p.lokasiDominan}${warning}`;
+                    }
+                    return `${label}`;
+                  }}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
+                  }}
+                />
+                <Bar dataKey="galianTerbukaM" name="galianTerbukaM" fill="#2563eb" radius={[0, 2, 2, 0]} barSize={10} />
+                <Bar dataKey="galianCrossingM" name="galianCrossingM" fill="#94a3b8" radius={[0, 2, 2, 0]} barSize={10} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs">
-                <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
-                <select
-                  aria-label="Pengurutan Tabel Paket"
-                  value={tableSortBy}
-                  onChange={(e: any) => setTableSortBy(e.target.value)}
-                  className="bg-transparent font-semibold text-slate-800 text-xs outline-none cursor-pointer"
-                >
-                  <option value="progres-asc">Progres Terendah</option>
-                  <option value="progres-desc">Progres Tertinggi</option>
-                  <option value="kontrak-desc">Nilai Kontrak Terbesar</option>
-                  <option value="nama">Nama Paket (A-Z)</option>
-                </select>
+          {/* Footer Kecil */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+            <span className="inline-flex items-center gap-1 font-semibold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Tertutup
+            </span>
+            <span className="truncate ml-2 text-slate-600">
+              Rekapitulasi Perizinan Pemanfaatan ROW untuk Utilitas (Tertutup, perbulan)
+            </span>
+          </div>
+        </div>
+
+        {/* ================================================================== */}
+        {/* BARIS 2 - KARTU 3: Perizinan Pemanfaatan ROW untuk Penghijauan      */}
+        {/* ================================================================== */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between h-[420px]">
+          <div>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 tracking-tight leading-snug">
+                  Perizinan Pemanfaatan ROW untuk Penghijauan
+                </h3>
               </div>
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-mono font-black text-slate-900 leading-none">
+                  {k3Summary.totalLuasM2}
+                </span>
+                <span className="text-[11px] font-semibold text-[#2563eb] ml-1.5 inline-block">
+                  ({k3Summary.totalIzin} Izin Terbit)
+                </span>
+              </div>
+            </div>
+
+            {/* Legenda 4 Jenis Penghijauan */}
+            <div className="flex flex-wrap items-center gap-2.5 text-xs mb-2">
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#10b981]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Taman</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#2563eb]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Median Jalan</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#3b82f6]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Pot Gantung</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#059669]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Pohon Peneduh</span>
+              </span>
+            </div>
+
+            {/* Filter Bar: Tahun */}
+            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+              <select
+                aria-label="Filter Tahun ROW Penghijauan"
+                value={k3Tahun}
+                onChange={(e) => setK3Tahun(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.tahunList.map((th) => (
+                  <option key={th} value={th}>
+                    Tahun {th}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Table Container */}
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full text-left text-xs border-collapse">
+          {/* Chart Section: Stacked Column Luas Penghijauan */}
+          <div className="flex-1 w-full min-h-0 my-1">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={k3Data} margin={{ top: 10, right: 15, left: -5, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                <XAxis
+                  dataKey="bulan"
+                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                  tickFormatter={(val) => `${Math.round(val / 1000)}k m²`}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                />
+                <Tooltip
+                  formatter={(val: any, name: any) => {
+                    const num = Number(val);
+                    const map: Record<string, string> = {
+                      tamanM2: 'Penghijauan Taman',
+                      medianM2: 'Penghijauan Median Jalan',
+                      potGantungM2: 'Pot Gantung / Estetika',
+                      pohonPeneduhM2: 'Pohon Peneduh Jalan',
+                    };
+                    return [`${formatNumberId(num)} m²`, map[name] || name];
+                  }}
+                  labelFormatter={(label, items) => {
+                    const p = items && items[0]?.payload;
+                    if (p) {
+                      return `Bulan ${label} • Total: ${formatNumberId(p.totalLuasM2)} m² (${p.jumlahIzin} Izin)\nLokasi Terbanyak: ${p.lokasiTerbanyak}`;
+                    }
+                    return `Bulan ${label}`;
+                  }}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
+                  }}
+                />
+                <Bar dataKey="tamanM2" name="tamanM2" stackId="hijau" fill="#10b981" radius={[0, 0, 0, 0]} barSize={16} />
+                <Bar dataKey="medianM2" name="medianM2" stackId="hijau" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={16} />
+                <Bar dataKey="potGantungM2" name="potGantungM2" stackId="hijau" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={16} />
+                <Bar dataKey="pohonPeneduhM2" name="pohonPeneduhM2" stackId="hijau" fill="#059669" radius={[2, 2, 0, 0]} barSize={16} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Footer Kecil */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+            <span className="inline-flex items-center gap-1 font-semibold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              Tertutup
+            </span>
+            <span className="truncate ml-2 text-slate-600">
+              Rekapitulasi Perizinan Pemanfaatan ROW untuk Penghijauan (Tertutup, perbulan)
+            </span>
+          </div>
+        </div>
+
+        {/* ================================================================== */}
+        {/* BARIS 2 - KARTU 4: Kondisi Jaringan Jalan Eksisting                */}
+        {/* ================================================================== */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between h-[420px]">
+          <div>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 tracking-tight leading-snug">
+                  Kondisi Jaringan Jalan Eksisting
+                </h3>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-mono font-black text-slate-900 leading-none">
+                  {k4Summary.totalPanjangKm}
+                </span>
+                <span
+                  className={`text-[11px] font-semibold ml-1.5 inline-block ${
+                    k4Summary.isGood ? 'text-emerald-600' : 'text-amber-500'
+                  }`}
+                >
+                  ({k4Summary.pctBaik}% Baik)
+                </span>
+              </div>
+            </div>
+
+            {/* Legenda 4 Kondisi Jalan */}
+            <div className="flex flex-wrap items-center gap-2.5 text-xs mb-2">
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#10b981]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Baik</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#3b82f6]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Sedang</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#f59e0b]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Rusak Ringan</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#ef4444]" />
+                <span className="text-slate-700 font-medium text-[10.5px]">Rusak Berat</span>
+              </span>
+            </div>
+
+            {/* Filter Bar: Wilayah */}
+            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+              <select
+                aria-label="Filter Wilayah Jalan"
+                value={k4Wilayah}
+                onChange={(e) => setK4Wilayah(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.wilayahList.map((w) => (
+                  <option key={w} value={w}>
+                    {w}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Chart Section: Stacked Bar Horizontal */}
+          <div className="flex-1 w-full min-h-0 my-1">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                layout="vertical"
+                data={k4Data}
+                margin={{ top: 5, right: 25, left: 110, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                  tickFormatter={(val) => `${val} km`}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="kelasJalan"
+                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                  width={105}
+                />
+                <Tooltip
+                  formatter={(val: any, name: any) => {
+                    const num = Number(val);
+                    const map: Record<string, string> = {
+                      baikKm: 'Kondisi Baik',
+                      sedangKm: 'Kondisi Sedang',
+                      rusakRinganKm: 'Rusak Ringan',
+                      rusakBeratKm: 'Rusak Berat',
+                    };
+                    return [`${num.toFixed(1)} km`, map[name] || name];
+                  }}
+                  labelFormatter={(label, items) => {
+                    const p = items && items[0]?.payload;
+                    if (p) {
+                      return `${label} • Total: ${p.totalPanjangKm.toFixed(1)} km\nLebar Rerata: ${p.lebarRataRataMeter} m\nPerkerasan: ${p.materialPerkerasan}`;
+                    }
+                    return `${label}`;
+                  }}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
+                  }}
+                />
+                <Bar dataKey="baikKm" name="baikKm" stackId="jalan" fill="#10b981" radius={[0, 0, 0, 0]} barSize={18} />
+                <Bar dataKey="sedangKm" name="sedangKm" stackId="jalan" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={18} />
+                <Bar dataKey="rusakRinganKm" name="rusakRinganKm" stackId="jalan" fill="#f59e0b" radius={[0, 0, 0, 0]} barSize={18} />
+                <Bar dataKey="rusakBeratKm" name="rusakBeratKm" stackId="jalan" fill="#ef4444" radius={[0, 3, 3, 0]} barSize={18} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Footer Kecil */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+            <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Terbuka
+            </span>
+            <span className="truncate ml-2 text-slate-600">
+              Jaringan Jalan (Eksisting) (Terbuka, jika update; atribut tabular dari data spasial)
+            </span>
+          </div>
+        </div>
+
+        {/* ================================================================== */}
+        {/* BARIS 3 - KARTU 5: Paket Pembangunan Infrastruktur                 */}
+        {/* ================================================================== */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between h-[420px]">
+          <div>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 tracking-tight leading-snug">
+                  Paket Pembangunan Infrastruktur
+                </h3>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-mono font-black text-slate-900 leading-none">
+                  {k5Summary.totalKontrakDisplay}
+                </span>
+                <span className="text-[11px] font-semibold text-[#2563eb] ml-1.5 inline-block">
+                  ({k5Summary.totalPaket} Paket Kontrak)
+                </span>
+              </div>
+            </div>
+
+            {/* Legenda 3 Batang (Pagu, HPS, Kontrak) */}
+            <div className="flex flex-wrap items-center gap-3 text-xs mb-2">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#94a3b8]" />
+                <span className="text-slate-700 font-medium text-[11px]">Nilai Pagu</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#60a5fa]" />
+                <span className="text-slate-700 font-medium text-[11px]">Nilai HPS</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-xs bg-[#2563eb]" />
+                <span className="text-slate-700 font-medium text-[11px]">Nilai Kontrak</span>
+              </span>
+            </div>
+
+            {/* Filter Bar: Tahun & Subdit */}
+            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
+              <select
+                aria-label="Filter Tahun Paket Infrastruktur"
+                value={k5Tahun}
+                onChange={(e) => setK5Tahun(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.tahunList.slice(0, 2).map((th) => (
+                  <option key={th} value={th}>
+                    Tahun {th}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                aria-label="Filter Subdit Infrastruktur"
+                value={k5Subdit}
+                onChange={(e) => setK5Subdit(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.subditList.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Chart Section: Clustered Horizontal Bar */}
+          <div className="flex-1 w-full min-h-0 my-1">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                layout="vertical"
+                data={k5Data}
+                margin={{ top: 5, right: 25, left: 145, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                  tickFormatter={(val) => `Rp ${val}M`}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="kategoriPekerjaan"
+                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                  axisLine={{ stroke: '#E2E8F0' }}
+                  tickLine={false}
+                  width={140}
+                />
+                <Tooltip
+                  formatter={(val: any, name: any) => {
+                    const num = Number(val);
+                    const map: Record<string, string> = {
+                      nilaiPaguM: 'Nilai Pagu Anggaran',
+                      nilaiHpsM: 'Nilai HPS Tender',
+                      nilaiKontrakM: 'Nilai Kontrak Riil',
+                    };
+                    return [formatRupiahMiliar(num), map[name] || name];
+                  }}
+                  labelFormatter={(label, items) => {
+                    const p = items && items[0]?.payload;
+                    if (p) {
+                      return `${label} • ${p.jumlahPaket} Paket\nPekerjaan Utama: ${p.jenisPekerjaanUtama}\nEfisiensi Tender: ${p.efisiensiTenderPct}% hemat terhadap pagu`;
+                    }
+                    return `${label}`;
+                  }}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                    fontSize: '11px',
+                    fontFamily: 'monospace',
+                  }}
+                />
+                <Bar dataKey="nilaiPaguM" name="nilaiPaguM" fill="#94a3b8" radius={[0, 2, 2, 0]} barSize={9} />
+                <Bar dataKey="nilaiHpsM" name="nilaiHpsM" fill="#60a5fa" radius={[0, 2, 2, 0]} barSize={9} />
+                <Bar dataKey="nilaiKontrakM" name="nilaiKontrakM" fill="#2563eb" radius={[0, 2, 2, 0]} barSize={9} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Footer Kecil */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+            <span className="inline-flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              Terbatas
+            </span>
+            <span className="truncate ml-2 text-slate-600">
+              Pembangunan Infrastruktur BP Batam (Terbatas, pertahun; atribut tabular dari data spasial)
+            </span>
+          </div>
+        </div>
+
+        {/* ================================================================== */}
+        {/* BARIS 3 - KARTU 6: Paket Pematangan Tanah (BSW) - Tabel Ringkas    */}
+        {/* ================================================================== */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between h-[420px]">
+          <div>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 tracking-tight leading-snug">
+                  Paket Pematangan Tanah (BSW)
+                </h3>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-lg sm:text-xl font-mono font-black text-slate-900 leading-none">
+                  {k6Summary.jumlahPaket} Paket
+                </span>
+                <span className="text-[11px] font-semibold text-[#2563eb] ml-1.5 inline-block">
+                  ({k6Summary.totalVolumeM3} Cut &amp; Fill)
+                </span>
+              </div>
+            </div>
+
+            {/* Legenda Ringkas */}
+            <div className="flex flex-wrap items-center gap-2.5 text-xs mb-2">
+              <span className="text-[11px] text-slate-500">
+                8 paket strategis pematangan tanah &amp; penyiapan kawasan industri / relokasi
+              </span>
+            </div>
+
+            {/* Filter Bar: Tahun & Kategori Pekerjaan */}
+            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
+              <select
+                aria-label="Filter Tahun BSW"
+                value={k6Tahun}
+                onChange={(e) => setK6Tahun(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.tahunList.slice(0, 2).map((th) => (
+                  <option key={th} value={th}>
+                    Tahun {th}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                aria-label="Filter Kategori BSW"
+                value={k6Kategori}
+                onChange={(e) => setK6Kategori(e.target.value)}
+                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+              >
+                {masterData.metadata.kategoriBswList.map((k) => (
+                  <option key={k} value={k}>
+                    {k}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Table Section: 8 Paket Terbesar */}
+          <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto">
+            <table className="w-full text-[11px] text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
-                  <th className="py-2.5 px-3 whitespace-nowrap">No</th>
-                  <th className="py-2.5 px-3 min-w-[200px]">Nama Paket</th>
-                  <th className="py-2.5 px-3 min-w-[140px]">Kontraktor</th>
-                  <th className="py-2.5 px-3 min-w-[130px]">Supervisi</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Tgl Mulai</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Tgl Selesai</th>
-                  <th className="py-2.5 px-3 text-right whitespace-nowrap">Progres</th>
-                  <th className="py-2.5 px-3 min-w-[220px]">Kendala Lapangan</th>
+                <tr className="border-b border-slate-200 text-slate-500 font-bold bg-slate-50/80">
+                  <th className="py-1.5 px-2">Nama Paket</th>
+                  <th className="py-1.5 px-2">Kategori</th>
+                  <th className="py-1.5 px-2">PPK</th>
+                  <th className="py-1.5 px-2">Kontraktor</th>
+                  <th className="py-1.5 px-2 min-w-[130px]">Nilai Kontrak</th>
+                  <th className="py-1.5 px-2 text-right">Volume (m³)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-[11px]">
-                {filteredTableData.map((item, index) => (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2 px-3 font-mono text-slate-500">{index + 1}</td>
-                    <td className="py-2 px-3 font-semibold text-slate-900">
-                      <div>{item.namaPaket}</div>
-                      <div className="text-[10px] text-slate-500 font-normal">{item.subdirektorat}</div>
-                    </td>
-                    <td className="py-2 px-3 text-slate-700">{item.kontraktor}</td>
-                    <td className="py-2 px-3 text-slate-600">{item.supervisi}</td>
-                    <td className="py-2 px-3 text-slate-600 whitespace-nowrap">{item.tanggalMulai}</td>
-                    <td className="py-2 px-3 text-slate-600 whitespace-nowrap">{item.tanggalSelesai}</td>
-                    <td className="py-2 px-3 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <span
-                          className={`font-mono font-bold ${
-                            item.progresPersen < 50 ? 'text-amber-600' : 'text-blue-600'
-                          }`}
-                        >
-                          {item.progresPersen}%
+              <tbody className="divide-y divide-slate-100">
+                {k6Data.map((row) => {
+                  const barPct = Math.round((row.nilaiKontrakM / maxKontrakBsw) * 100);
+                  return (
+                    <tr key={row.id} className="hover:bg-blue-50/40 transition-colors">
+                      <td className="py-1 px-2 font-bold text-slate-900 max-w-[170px] truncate" title={row.namaPaket}>
+                        {row.namaPaket}
+                      </td>
+                      <td className="py-1 px-2 whitespace-nowrap">
+                        <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
+                          {row.kategoriPekerjaan}
                         </span>
-                        <div className="w-12 h-1.5 bg-slate-200 rounded-full overflow-hidden inline-block">
-                          <div
-                            className={`h-full ${item.progresPersen < 50 ? 'bg-amber-500' : 'bg-blue-600'}`}
-                            style={{ width: `${item.progresPersen}%` }}
-                          ></div>
+                      </td>
+                      <td className="py-1 px-2 text-slate-600 text-[10px] whitespace-nowrap">
+                        {row.ppk.replace('PPK ', '')}
+                      </td>
+                      <td className="py-1 px-2 text-slate-700 max-w-[120px] truncate" title={row.kontraktor}>
+                        {row.kontraktor}
+                      </td>
+                      <td className="py-1 px-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-slate-900 font-bold text-[10.5px] w-14 shrink-0">
+                            {formatRupiahMiliar(row.nilaiKontrakM)}
+                          </span>
+                          <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-blue-600 rounded-full"
+                              style={{ width: `${barPct}%` }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="py-2 px-3">
-                      <span
-                        className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold mr-1.5 ${
-                          item.jenisKendala === 'Tidak Ada Kendala'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-amber-50 text-amber-800 border border-amber-200'
-                        }`}
-                      >
-                        {item.jenisKendala}
-                      </span>
-                      <span className="text-slate-600 text-[10.5px]">{item.kendalaDetail}</span>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="py-1 px-2 text-right font-mono font-bold text-blue-700 whitespace-nowrap">
+                        {formatNumberId(row.volumePekerjaanM3)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
-          <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between items-center">
-            <span>Menampilkan {filteredTableData.length} dari 20 paket pekerjaan terdaftar</span>
-            <span>Dataset: Laporan Progres Pekerjaan Konstruksi Tahun Berjalan</span>
+          {/* Footer Kecil */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+            <span className="inline-flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              Terbatas
+            </span>
+            <span className="truncate ml-2 text-slate-600">
+              Pematangan Tanah (BSW) (Terbatas, perbulan; atribut tabular dari data spasial)
+            </span>
           </div>
         </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION D. PEMATANGAN TANAH                                              */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-600 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                D. PEMATANGAN TANAH
-              </h2>
-              <p className="text-xs text-slate-500">
-                Aktivitas pematangan lahan, volume pekerjaan bulanan (m³), dan capaian kumulatif kawasan BSW.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            BSW Batam Spatial Works
-          </span>
-        </div>
-
-        {/* GRAFIK 8: Volume Pekerjaan Pematangan Tanah per Bulan (Column + Line Kumulatif) */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm relative">
-          <div className="flex items-center justify-between mb-1">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  8. Volume Pekerjaan Pematangan Tanah per Bulan
-                </h3>
-                <SifatDataBadge jenis="Terbatas" />
-              </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Column chart volume pekerjaan (m³) pada sumbu kiri, dipadukan garis progres kumulatif (%) pada sumbu kanan.
-              </p>
-            </div>
-            <div className="text-right">
-              <span className="text-xs font-mono font-bold text-slate-900 block">
-                Total Volume: 4.700.000 m³
-              </span>
-              <span className="text-[10px] text-emerald-600 font-semibold">
-                Capaian S/D April: 44,6%
-              </span>
-            </div>
-          </div>
-
-          <div className="h-72 w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart
-                data={masterData.pematanganTanahBulanan}
-                margin={{ top: 15, right: 30, left: 10, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                <XAxis dataKey="bulan" tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }} />
-                {/* Sumbu Y Kiri: Volume (m3) */}
-                <YAxis
-                  yAxisId="left"
-                  tick={{ fontSize: 10, fill: '#64748B' }}
-                  tickFormatter={(val) => `${(val / 1000).toFixed(0)}k m³`}
-                />
-                {/* Sumbu Y Kanan: Progres Kumulatif (%) */}
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  domain={[0, 100]}
-                  tick={{ fontSize: 10, fill: '#64748B' }}
-                  tickFormatter={(val) => `${val}%`}
-                />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      const item = payload[0].payload as (typeof masterData.pematanganTanahBulanan)[0];
-                      return (
-                        <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1">
-                          <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                            Bulan {label}
-                          </p>
-                          <p className="text-blue-700">
-                            Volume Pekerjaan: <span className="font-bold">{item.volumeM3.toLocaleString('id-ID')} m³</span>
-                          </p>
-                          <p className="text-emerald-700">
-                            Progres Kumulatif: <span className="font-bold">{item.progresKumulatifPersen}%</span>
-                          </p>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '6px' }} />
-                <Bar
-                  yAxisId="left"
-                  dataKey="volumeM3"
-                  name="Volume Pekerjaan (m³)"
-                  fill="#2563EB"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="progresKumulatifPersen"
-                  name="Progres Kumulatif (%)"
-                  stroke="#10B981"
-                  strokeWidth={2.5}
-                  dot={{ r: 3.5, fill: '#10B981', strokeWidth: 1.5, stroke: '#FFFFFF' }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="text-[11px] text-slate-500 pt-2 mt-2 border-t border-slate-100 flex justify-between">
-            <span>Sumbu Kiri: Volume (m³) &bull; Sumbu Kanan: Progres Kumulatif (%)</span>
-            <span>Dataset: Pematangan Tanah (BSW) (Terbatas, perbulan)</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION E. JARINGAN JALAN                                                */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-900 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                E. JARINGAN JALAN
-              </h2>
-              <p className="text-xs text-slate-500">
-                Katalog data spasial jaringan jalan eksisting berdasarkan kelas, perkerasan material, dan status jalan.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md">
-            Satu Data BP Batam (Terbuka)
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* GRAFIK 9: Panjang Jalan per Kelas dan Material (Stacked Bar Horizontal) */}
-          <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                      9. Panjang Jalan per Kelas dan Material
-                    </h3>
-                    <SifatDataBadge jenis="Terbuka" />
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Stacked bar horizontal: Kelas Jalan (Arteri, Kolektor, Lokal, Lingkungan) vs Material jalan (km).
-                  </p>
-                </div>
-
-                {/* Filter Wilayah */}
-                <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs shrink-0">
-                  <span className="text-slate-500 text-[10px] font-medium">Wilayah:</span>
-                  <select
-                    aria-label="Filter Wilayah Jaringan Jalan"
-                    value={filterWilayahG9}
-                    onChange={(e) => setFilterWilayahG9(e.target.value)}
-                    className="bg-transparent font-semibold text-slate-800 text-xs outline-none cursor-pointer"
-                  >
-                    <option value="Semua Wilayah">Semua Wilayah (Batam)</option>
-                    <option value="Batam Center">Batam Center</option>
-                    <option value="Batu Ampar & Bengkong">Batu Ampar & Bengkong</option>
-                    <option value="Nongsa">Nongsa</option>
-                    <option value="Sekupang">Sekupang</option>
-                    <option value="Batu Aji & Sagulung">Batu Aji & Sagulung</option>
-                    <option value="Rempang & Galang">Rempang & Galang</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="h-72 w-full pt-1">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={jalanKelasMaterialData}
-                    layout="vertical"
-                    margin={{ top: 10, right: 25, left: 15, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={true} stroke="#E2E8F0" />
-                    <XAxis
-                      type="number"
-                      tick={{ fontSize: 9.5, fill: '#64748B' }}
-                      tickFormatter={(val) => `${val} km`}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="kelasJalan"
-                      width={110}
-                      tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
-                    />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          const total = payload.reduce((acc, p) => acc + (Number(p.value) || 0), 0);
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                                {label}
-                              </p>
-                              {payload.map((entry, idx) => (
-                                <div key={idx} className="flex justify-between gap-3 text-[11px]">
-                                  <span style={{ color: entry.color }} className="font-medium">
-                                    {entry.name}:
-                                  </span>
-                                  <span className="font-semibold text-slate-800">{entry.value} km</span>
-                                </div>
-                              ))}
-                              <div className="border-t border-slate-100 pt-1 flex justify-between text-[11px] font-bold text-blue-800">
-                                <span>Total Panjang:</span>
-                                <span>{total.toFixed(1)} km</span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '4px' }} />
-                    <Bar dataKey="Aspal" stackId="mat" fill="#1E3A8A" />
-                    <Bar dataKey="Beton" stackId="mat" fill="#3B82F6" />
-                    <Bar dataKey="Paving" stackId="mat" fill="#60A5FA" />
-                    <Bar dataKey="Tanah / Kerikil" stackId="mat" fill="#94A3B8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu Y: Kelas Jalan &bull; Sumbu X: Panjang (km)</span>
-              <span>Dataset: Jaringan Jalan (Eksisting) (Terbuka, jika update)</span>
-            </div>
-          </div>
-
-          {/* GRAFIK 10: Lebar Jalan Rata-Rata per Status Jalan (Column Chart) */}
-          <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    10. Lebar Jalan Rata-Rata per Status Jalan
-                  </h3>
-                  <SifatDataBadge jenis="Terbuka" />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Column chart memperlihatkan rata-rata geometric lebar badan jalan (m) berdasarkan hierarki status hukum jalan.
-              </p>
-
-              <div className="h-72 w-full pt-1">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={masterData.lebarJalanStatusData}
-                    margin={{ top: 15, right: 10, left: -10, bottom: 35 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis
-                      dataKey="statusJalan"
-                      tick={{ fontSize: 9.5, fill: '#334155' }}
-                      angle={-15}
-                      textAnchor="end"
-                      interval={0}
-                    />
-                    <YAxis
-                      domain={[0, 30]}
-                      tick={{ fontSize: 10, fill: '#64748B' }}
-                      tickFormatter={(v) => `${v} m`}
-                    />
-                    <Tooltip
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const item = payload[0].payload as (typeof masterData.lebarJalanStatusData)[0];
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900">{item.statusJalan}</p>
-                              <p className="text-blue-700">
-                                Rata-rata Lebar: <span className="font-bold text-slate-900">{item.rataRataLebarMeter} Meter</span>
-                              </p>
-                              <p className="text-slate-600 text-[11px]">
-                                Jumlah Ruas: <span className="font-semibold">{item.jumlahRuas} Ruas</span>
-                              </p>
-                              <p className="text-slate-500 text-[11px]">
-                                Total Panjang: <span className="font-semibold">{item.totalPanjangKm} km</span>
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Bar
-                      dataKey="rataRataLebarMeter"
-                      name="Rata-rata Lebar (m)"
-                      fill="#2563EB"
-                      radius={[4, 4, 0, 0]}
-                    >
-                      {masterData.lebarJalanStatusData.map((_, index) => {
-                        const shades = ['#1E3A8A', '#2563EB', '#3B82F6', '#60A5FA'];
-                        return <Cell key={`cell-g10-${index}`} fill={shades[index % shades.length]} />;
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Status Jalan &bull; Sumbu Y: Rata-rata Lebar (Meter)</span>
-              <span>Dataset: Jaringan Jalan (Eksisting) (Terbuka, jika update)</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 };

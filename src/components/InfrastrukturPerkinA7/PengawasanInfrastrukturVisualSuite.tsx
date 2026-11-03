@@ -1,1064 +1,1066 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Search,
-  Filter,
-  Info,
-  Calendar,
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  Eye,
-  Building2,
-  Users,
-  FileCheck,
-  ChevronDown,
-} from 'lucide-react';
-import {
   ResponsiveContainer,
-  LineChart,
+  ComposedChart,
   Line,
+  Area,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   Cell,
-  ReferenceLine,
+  Legend,
 } from 'recharts';
 import {
+  Filter,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  HardHat,
+  Building2,
+  Calendar,
+} from 'lucide-react';
+import {
   PENGAWASAN_INFRASTRUKTUR_MASTER_DATA,
-  PengawasanPaketItem,
+  PaketPengawasanDetail,
 } from './pengawasanInfrastrukturVisualData';
 
 interface PengawasanInfrastrukturVisualSuiteProps {
   onOpenFormulaModal?: (kpiId: string) => void;
 }
 
-// Badge "Terbatas (usulan)" di pojok setiap grafik
-const UsulanBadge: React.FC = () => (
-  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-amber-50 text-amber-800 border border-amber-300/80">
-    Terbatas (usulan)
-  </span>
-);
-
 export const PengawasanInfrastrukturVisualSuite: React.FC<
   PengawasanInfrastrukturVisualSuiteProps
 > = () => {
   const masterData = PENGAWASAN_INFRASTRUKTUR_MASTER_DATA;
 
-  // Filter Grafik 1: Paket Terpilih untuk Kurva S
-  const [selectedPaketKurvaS, setSelectedPaketKurvaS] = useState<string>('ALL');
-
-  // Filter Tabel Temuan (Grafik 4)
-  const [searchTemuan, setSearchTemuan] = useState<string>('');
-
   // -------------------------------------------------------------
-  // 1. DATASET GRAFIK 1: Kurva S Rencana vs Realisasi
+  // Filter States per Card
   // -------------------------------------------------------------
-  const kurvaSData = useMemo(() => {
-    if (selectedPaketKurvaS === 'ALL') {
-      // Hitung rata-rata agregat kumulatif dari 20 paket per bulan
-      const bulanList = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
-      return bulanList.map((bln, idx) => {
-        let sumRencana = 0;
-        let sumRealisasi = 0;
-        let countRealisasi = 0;
+  // Kartu 1: Subdit, Bulan, Tahun
+  const [filterSubdit1, setFilterSubdit1] = useState<string>('Semua Subdit');
+  const [filterBulan1, setFilterBulan1] = useState<string>('September');
+  const [filterTahun1, setFilterTahun1] = useState<number>(2026);
+  const [hoveredPaketId1, setHoveredPaketId1] = useState<string | null>(null);
 
-        masterData.paketPengawasan.forEach((p) => {
-          const point = p.kurvaSBulanan[idx];
-          if (point) {
-            sumRencana += point.rencana;
-            if (point.realisasi !== null) {
-              sumRealisasi += point.realisasi;
-              countRealisasi += 1;
-            }
-          }
-        });
+  // Kartu 2: Subdit, Kategori, Tahun
+  const [filterSubdit2, setFilterSubdit2] = useState<string>('Semua Subdit');
+  const [filterKategori2, setFilterKategori2] = useState<string>('Semua Kategori');
+  const [filterTahun2, setFilterTahun2] = useState<number>(2026);
 
-        const totalPaket = masterData.paketPengawasan.length;
-        const avgRencana = parseFloat((sumRencana / totalPaket).toFixed(1));
-        const avgRealisasi = countRealisasi > 0 ? parseFloat((sumRealisasi / countRealisasi).toFixed(1)) : null;
+  // Kartu 3: Subdit, Bulan, Tahun
+  const [filterSubdit3, setFilterSubdit3] = useState<string>('Semua Subdit');
+  const [filterBulan3, setFilterBulan3] = useState<string>('September');
+  const [filterTahun3, setFilterTahun3] = useState<number>(2026);
 
-        return {
-          bulan: bln,
-          rencana: avgRencana,
-          realisasi: avgRealisasi,
-        };
-      });
-    }
+  // Kartu 4: Subdit, Tahun
+  const [filterSubdit4, setFilterSubdit4] = useState<string>('Semua Subdit');
+  const [filterTahun4, setFilterTahun4] = useState<number>(2026);
 
-    // Ambil data paket spesifik
-    const found = masterData.paketPengawasan.find((p) => p.id === selectedPaketKurvaS);
-    return found ? found.kurvaSBulanan : [];
-  }, [masterData.paketPengawasan, selectedPaketKurvaS]);
+  // =============================================================
+  // 1. DATA KARTU 1 - Progres Fisik Paket Pekerjaan
+  // =============================================================
+  const kartu1Data = useMemo(() => {
+    // Filter paket berdasarkan Tahun & Subdit
+    const filtered = masterData.paketList.filter((p) => {
+      const matchTahun = p.tahun === filterTahun1;
+      const matchSubdit = filterSubdit1 === 'Semua Subdit' || p.subdit === filterSubdit1;
+      return matchTahun && matchSubdit;
+    });
 
-  // -------------------------------------------------------------
-  // 2. DATASET GRAFIK 2: Deviasi Progres per Paket (15 Terburuk)
-  // -------------------------------------------------------------
-  const deviasiTop15Data = useMemo(() => {
-    return [...masterData.paketPengawasan]
-      .sort((a, b) => a.deviasiPoin - b.deviasiPoin) // Urutkan dari yang paling negatif (terburuk)
-      .slice(0, 15)
-      .map((p) => ({
-        ...p,
-        shortPaket: p.namaPaket.length > 26 ? `${p.namaPaket.substring(0, 24)}...` : p.namaPaket,
-        isUnderMin10: p.deviasiPoin < -10, // Kritis di bawah -10 poin
-      }));
-  }, [masterData.paketPengawasan]);
-
-  // -------------------------------------------------------------
-  // 4. DATASET TABEL TEMUAN (DENGAN PENCARIAN)
-  // -------------------------------------------------------------
-  const filteredTabelTemuan = useMemo(() => {
-    if (!searchTemuan.trim()) return masterData.daftarTemuanTabel;
-    const q = searchTemuan.toLowerCase();
-    return masterData.daftarTemuanTabel.filter(
-      (t) =>
-        t.paket.toLowerCase().includes(q) ||
-        t.temuan.toLowerCase().includes(q) ||
-        t.kategori.toLowerCase().includes(q) ||
-        t.tingkatKeparahan.toLowerCase().includes(q) ||
-        t.status.toLowerCase().includes(q)
-    );
-  }, [masterData.daftarTemuanTabel, searchTemuan]);
-
-  // -------------------------------------------------------------
-  // 6. DATASET GRAFIK 6: KENDALA PEKERJAAN BERULANG (TREEMAP)
-  // -------------------------------------------------------------
-  const kendalaBerulangData = useMemo(() => {
-    const listKendala = [
-      'Cuaca',
-      'Perizinan',
-      'Utilitas Eksisting',
-      'Pembebasan Lahan',
-      'Ketersediaan Material',
-      'Tidak Ada Kendala',
-    ];
-
-    return listKendala.map((k) => {
-      const match = masterData.paketPengawasan.filter((p) => p.jenisKendala === k);
-      const subditGroup: Record<string, number> = {};
-      match.forEach((p) => {
-        subditGroup[p.subdirektorat] = (subditGroup[p.subdirektorat] || 0) + 1;
-      });
+    // Petakan progres bulan terpilih
+    const mapped = filtered.map((p) => {
+      const bData = p.bulanData[filterBulan1];
+      const rencana = bData ? bData.rencana : 0;
+      const realisasi = bData && bData.realisasi !== null ? bData.realisasi : 0;
+      const deviasi = realisasi - rencana;
+      const isAheadOrOnTrack = realisasi >= rencana;
 
       return {
-        name: k,
-        totalPaket: match.length,
-        subditBreakdown: subditGroup,
-        paketNames: match.map((m) => m.namaPaket),
+        ...p,
+        rencanaBulan: rencana,
+        realisasiBulan: realisasi,
+        deviasiBulan: deviasi,
+        isAheadOrOnTrack,
+        kendalaBulan: bData?.kendala || 'Tidak Ada Kendala',
       };
     });
-  }, [masterData.paketPengawasan]);
+
+    // Hitung rata-rata progres fisik seluruh paket
+    const totalRealisasi = mapped.reduce((acc, curr) => acc + curr.realisasiBulan, 0);
+    const avgRealisasi = mapped.length > 0 ? totalRealisasi / mapped.length : 0;
+
+    // Urutkan 10 paket teratas dari progres terendah
+    const sortedLowest10 = [...mapped]
+      .sort((a, b) => a.realisasiBulan - b.realisasiBulan)
+      .slice(0, 10);
+
+    return {
+      paketList10: sortedLowest10,
+      avgRealisasi: parseFloat(avgRealisasi.toFixed(1)),
+      totalPaket: mapped.length,
+    };
+  }, [masterData.paketList, filterTahun1, filterSubdit1, filterBulan1]);
+
+  // =============================================================
+  // 2. DATA KARTU 2 - Kurva Progres Rencana vs Realisasi
+  // =============================================================
+  const kartu2Data = useMemo(() => {
+    // Filter paket berdasarkan Tahun, Subdit, & Kategori
+    const filtered = masterData.paketList.filter((p) => {
+      const matchTahun = p.tahun === filterTahun2;
+      const matchSubdit = filterSubdit2 === 'Semua Subdit' || p.subdit === filterSubdit2;
+      const matchKategori = filterKategori2 === 'Semua Kategori' || p.kategoriPekerjaan === filterKategori2;
+      return matchTahun && matchSubdit && matchKategori;
+    });
+
+    const bulanKeys = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agt',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ];
+
+    let lastKnownDeviasi = 0;
+    let lastKnownMonth = 'Sep';
+
+    const curveData = masterData.bulanList.map((blnFull, idx) => {
+      let sumRencana = 0;
+      let sumRealisasi = 0;
+      let countRealisasi = 0;
+
+      filtered.forEach((p) => {
+        const bData = p.bulanData[blnFull];
+        if (bData) {
+          sumRencana += bData.rencana;
+          if (bData.realisasi !== null) {
+            sumRealisasi += bData.realisasi;
+            countRealisasi += 1;
+          }
+        }
+      });
+
+      const totalP = filtered.length || 1;
+      const avgRnc = parseFloat((sumRencana / totalP).toFixed(1));
+      const avgRls = countRealisasi > 0 ? parseFloat((sumRealisasi / countRealisasi).toFixed(1)) : null;
+
+      // Area arsir oranye jika realisasi di bawah rencana
+      let deficitValue: number | null = null;
+      let deficitBottom: number | null = null;
+      if (avgRls !== null && avgRls < avgRnc) {
+        deficitBottom = avgRls;
+        deficitValue = parseFloat((avgRnc - avgRls).toFixed(1));
+      }
+
+      if (avgRls !== null) {
+        lastKnownDeviasi = parseFloat((avgRls - avgRnc).toFixed(1));
+        lastKnownMonth = bulanKeys[idx];
+      }
+
+      return {
+        bulanKey: bulanKeys[idx],
+        bulanFull: blnFull,
+        rencana: avgRnc,
+        realisasi: avgRls,
+        deficitBottom,
+        deficitValue,
+        gapRange: avgRls !== null && avgRls < avgRnc ? [avgRls, avgRnc] : undefined,
+      };
+    });
+
+    return {
+      curveData,
+      lastDeviasi: lastKnownDeviasi,
+      lastMonth: lastKnownMonth,
+      totalPaket: filtered.length,
+    };
+  }, [masterData.paketList, masterData.bulanList, filterTahun2, filterSubdit2, filterKategori2]);
+
+  // =============================================================
+  // 3. DATA KARTU 3 - Kendala Pelaksanaan Pekerjaan
+  // =============================================================
+  const kartu3Data = useMemo(() => {
+    // Filter paket berdasarkan Tahun & Subdit
+    const filtered = masterData.paketList.filter((p) => {
+      const matchTahun = p.tahun === filterTahun3;
+      const matchSubdit = filterSubdit3 === 'Semua Subdit' || p.subdit === filterSubdit3;
+      return matchTahun && matchSubdit;
+    });
+
+    // Kelompokkan kendala
+    const kategoriMap: Record<
+      string,
+      { count: number; paketContoh: string[]; subditSet: Set<string> }
+    > = {
+      'Lahan Belum Bebas': { count: 0, paketContoh: [], subditSet: new Set() },
+      Cuaca: { count: 0, paketContoh: [], subditSet: new Set() },
+      Material: { count: 0, paketContoh: [], subditSet: new Set() },
+      Perizinan: { count: 0, paketContoh: [], subditSet: new Set() },
+      'Utilitas Eksisting': { count: 0, paketContoh: [], subditSet: new Set() },
+      'Administrasi Kontrak': { count: 0, paketContoh: [], subditSet: new Set() },
+    };
+
+    let paketBerkendalaCount = 0;
+
+    filtered.forEach((p) => {
+      const bData = p.bulanData[filterBulan3];
+      const k = bData?.kendala;
+      if (k && kategoriMap[k]) {
+        paketBerkendalaCount += 1;
+        kategoriMap[k].count += 1;
+        if (kategoriMap[k].paketContoh.length < 2) {
+          kategoriMap[k].paketContoh.push(p.namaPaket);
+        }
+        kategoriMap[k].subditSet.add(p.subdit);
+      }
+    });
+
+    // Urutkan dari jumlah paket terbanyak
+    const chartData = Object.entries(kategoriMap)
+      .map(([kategori, val]) => ({
+        kategori,
+        jumlahPaket: val.count,
+        contohPaket: val.paketContoh.join(', ') || '-',
+        subditTerkait: Array.from(val.subditSet).join(', ') || '-',
+      }))
+      .sort((a, b) => b.jumlahPaket - a.jumlahPaket);
+
+    const totalPaket = filtered.length;
+    const persentaseBerkendala =
+      totalPaket > 0 ? parseFloat(((paketBerkendalaCount / totalPaket) * 100).toFixed(1)) : 0;
+
+    return {
+      chartData,
+      paketBerkendalaCount,
+      totalPaket,
+      persentaseBerkendala,
+    };
+  }, [masterData.paketList, filterTahun3, filterSubdit3, filterBulan3]);
+
+  // =============================================================
+  // 4. DATA KARTU 4 - Beban Supervisi per Konsultan/Pengawas
+  // =============================================================
+  const kartu4Data = useMemo(() => {
+    // Filter paket berdasarkan Tahun & Subdit
+    const filtered = masterData.paketList.filter((p) => {
+      const matchTahun = p.tahun === filterTahun4;
+      const matchSubdit = filterSubdit4 === 'Semua Subdit' || p.subdit === filterSubdit4;
+      return matchTahun && matchSubdit;
+    });
+
+    const supervisiMap: Record<
+      string,
+      {
+        supervisi: string;
+        sesuaiRencana: number;
+        terlambat: number;
+        selesai: number;
+        totalPaket: number;
+        totalNilaiKontrakRp: number;
+        sumProgres: number;
+        volumeList: string[];
+      }
+    > = {};
+
+    filtered.forEach((p) => {
+      const sup = p.supervisi;
+      if (!supervisiMap[sup]) {
+        supervisiMap[sup] = {
+          supervisi: sup,
+          sesuaiRencana: 0,
+          terlambat: 0,
+          selesai: 0,
+          totalPaket: 0,
+          totalNilaiKontrakRp: 0,
+          sumProgres: 0,
+          volumeList: [],
+        };
+      }
+
+      // Ambil status progres bulan berjalan (September 2026 atau status terkini)
+      const bData = p.bulanData['September'];
+      const st = bData ? bData.status : 'Sesuai Rencana';
+      const rls = bData && bData.realisasi !== null ? bData.realisasi : 0;
+
+      if (st === 'Selesai' || rls >= 100) {
+        supervisiMap[sup].selesai += 1;
+      } else if (st === 'Terlambat') {
+        supervisiMap[sup].terlambat += 1;
+      } else {
+        supervisiMap[sup].sesuaiRencana += 1;
+      }
+
+      supervisiMap[sup].totalPaket += 1;
+      supervisiMap[sup].totalNilaiKontrakRp += p.nilaiKontrakRp;
+      supervisiMap[sup].sumProgres += rls;
+      supervisiMap[sup].volumeList.push(p.volumePekerjaan);
+    });
+
+    // Format dan urutkan dari paket terbanyak
+    const chartData = Object.values(supervisiMap)
+      .map((item) => {
+        const avgProgres = item.totalPaket > 0 ? (item.sumProgres / item.totalPaket).toFixed(1) : '0';
+        const nilaiMiliar = (item.totalNilaiKontrakRp / 1_000_000_000).toFixed(1);
+        return {
+          ...item,
+          rataProgres: parseFloat(avgProgres),
+          nilaiKontrakDisplay: `Rp ${nilaiMiliar} M`,
+          volumeDisplay: item.volumeList.slice(0, 2).join('; '),
+        };
+      })
+      .sort((a, b) => b.totalPaket - a.totalPaket);
+
+    const totalPengawas = chartData.length;
+    const totalSemuaPaket = filtered.length;
+    const avgPaketPerPengawas =
+      totalPengawas > 0 ? (totalSemuaPaket / totalPengawas).toFixed(1) : '0';
+
+    return {
+      chartData,
+      totalPengawas,
+      avgPaketPerPengawas,
+    };
+  }, [masterData.paketList, filterTahun4, filterSubdit4]);
 
   return (
-    <div className="space-y-6 font-sans text-slate-800">
-      {/* ========================================================================= */}
-      {/* NOTICE BANNER ATAS: Data dummy, belum terdaftar di Satu Data             */}
-      {/* ========================================================================= */}
-      <div className="bg-sky-50/80 border border-sky-200 rounded-xl p-3 flex items-start sm:items-center gap-2.5 text-xs text-sky-900 shadow-2xs">
-        <Info className="w-4 h-4 text-sky-600 shrink-0 mt-0.5 sm:mt-0" />
-        <div className="flex-1">
-          <span className="font-bold text-sky-950 mr-1.5">
-            Unit Pengawasan Infrastruktur:
-          </span>
-          <span className="text-sky-800">
-            Data dummy, belum terdaftar di Satu Data. Seluruh indikator dan dataset merupakan rancangan usulan pengawasan konstruksi terpadu BP Batam (pengganti Dit. Pengamanan Aset pada Perkin A.7).
-          </span>
-        </div>
-        <span className="shrink-0 text-[10px] font-bold bg-sky-200/80 text-sky-900 px-2 py-0.5 rounded">
-          Usulan Indikator Baru
-        </span>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION A. PENGAWASAN PROGRES                                            */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-600 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                A. PENGAWASAN PROGRES
-              </h2>
-              <p className="text-xs text-slate-500">
-                Pemantauan dinamika Kurva S rencana versus realisasi serta identifikasi deviasi kritis per paket pekerjaan.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Laporan Pengawasan Progres
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* GRAFIK 1: Kurva S Rencana vs Realisasi */}
-          <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                      1. Kurva S Rencana vs Realisasi
-                    </h3>
-                    <UsulanBadge />
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Line chart komparasi progres kumulatif bulanan (%) rencana vs capaian realisasi lapangan.
-                  </p>
-                </div>
-
-                {/* Filter Paket */}
-                <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs">
-                  <span className="text-slate-500 text-[10px] font-medium">Filter Paket:</span>
-                  <select
-                    aria-label="Filter Paket Kurva S"
-                    value={selectedPaketKurvaS}
-                    onChange={(e) => setSelectedPaketKurvaS(e.target.value)}
-                    className="bg-transparent font-semibold text-slate-800 text-xs outline-none cursor-pointer max-w-[150px] truncate"
-                  >
-                    <option value="ALL">Semua Paket (Agregat)</option>
-                    {masterData.paketPengawasan.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.kode} - {p.namaPaket}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+    <div className="space-y-4 font-sans text-slate-800">
+      {/* ============================================================== */}
+      {/* GRID 2 KOLOM x 2 BARIS = 4 KARTU BERUKURAN SAMA                */}
+      {/* ============================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* ============================================================ */}
+        {/* BARIS 1 / KARTU 1 - Progres Fisik Paket Pekerjaan             */}
+        {/* ============================================================ */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between">
+          <div>
+            {/* Header: Judul Kiri & Angka Ringkasan Kanan */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                  Progres Fisik Paket Pekerjaan
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  10 paket konstruksi dengan progres terendah untuk prioritas percepatan
+                </p>
               </div>
 
-              <div className="h-72 w-full pt-1">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={kurvaSData} margin={{ top: 15, right: 20, left: -10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }} />
-                    <YAxis
-                      domain={[0, 100]}
-                      tick={{ fontSize: 10, fill: '#64748B' }}
-                      tickFormatter={(v) => `${v}%`}
-                    />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          const rnc = payload.find((p) => p.dataKey === 'rencana')?.value;
-                          const rls = payload.find((p) => p.dataKey === 'realisasi')?.value;
-                          const dev =
-                            rls !== null && rls !== undefined && rnc !== undefined
-                              ? (Number(rls) - Number(rnc)).toFixed(1)
-                              : null;
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                                Bulan {label}
-                              </p>
-                              <p className="text-slate-600">
-                                Rencana Kumulatif: <span className="font-bold text-slate-800">{rnc}%</span>
-                              </p>
-                              <p className="text-blue-600">
-                                Realisasi Lapangan:{' '}
-                                <span className="font-bold">{rls !== null ? `${rls}%` : 'Tahap Proyeksi'}</span>
-                              </p>
-                              {dev !== null && (
-                                <p
-                                  className={`text-[11px] font-semibold ${
-                                    Number(dev) >= 0 ? 'text-emerald-600' : 'text-amber-600'
-                                  }`}
-                                >
-                                  Deviasi: {Number(dev) > 0 ? `+${dev}` : dev}%
-                                </p>
-                              )}
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '6px' }} />
-                    <Line
-                      type="monotone"
-                      dataKey="rencana"
-                      name="Rencana Kumulatif (%)"
-                      stroke="#94A3B8"
-                      strokeWidth={2}
-                      strokeDasharray="4 4"
-                      dot={{ r: 3, fill: '#94A3B8' }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="realisasi"
-                      name="Realisasi Lapangan (%)"
-                      stroke="#2563EB"
-                      strokeWidth={2.5}
-                      dot={{ r: 3.5, fill: '#2563EB' }}
-                      connectNulls={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              {/* Angka Ringkasan Monospace & Keterangan Biru */}
+              <div className="text-right shrink-0">
+                <span className="text-xl sm:text-2xl font-black font-mono tracking-tight text-slate-900">
+                  {kartu1Data.avgRealisasi}%
+                </span>
+                <span className="block text-[10px] text-blue-600 font-semibold mt-0.5">
+                  Rata-rata Progres Fisik
+                </span>
               </div>
             </div>
 
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Bulan (Jan-Des) &bull; Sumbu Y: Progres Kumulatif (%)</span>
-              <span>Dataset (usulan): Laporan Pengawasan Progres</span>
-            </div>
-          </div>
-
-          {/* GRAFIK 2: Deviasi Progres per Paket (15 Paket Terburuk) */}
-          <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    2. Deviasi Progres per Paket (15 Terburuk)
-                  </h3>
-                  <UsulanBadge />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-2">
-                Bar horizontal diurutkan dari deviasi terendah. Paket dengan deviasi di bawah -10 poin diberi warna aksen merah.
-              </p>
-
-              <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={deviasiTop15Data}
-                    layout="vertical"
-                    margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
-                    <XAxis
-                      type="number"
-                      domain={[-20, 5]}
-                      tick={{ fontSize: 9.5, fill: '#64748B' }}
-                      tickFormatter={(v) => `${v}%`}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="shortPaket"
-                      width={140}
-                      tick={{ fontSize: 9.5, fill: '#334155' }}
-                    />
-                    <Tooltip
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const item = payload[0].payload as (typeof deviasiTop15Data)[0];
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-w-xs">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                                {item.namaPaket}
-                              </p>
-                              <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
-                                <span className="text-slate-500">Kontraktor:</span>
-                                <span className="font-semibold text-slate-800">{item.kontraktor}</span>
-                                <span className="text-slate-500">Supervisi:</span>
-                                <span className="font-semibold text-slate-800">{item.supervisi}</span>
-                                <span className="text-slate-500">Rencana:</span>
-                                <span className="text-slate-700">{item.rencanaPersen}%</span>
-                                <span className="text-slate-500">Realisasi:</span>
-                                <span className="text-slate-700">{item.realisasiPersen}%</span>
-                                <span className="text-slate-500">Deviasi:</span>
-                                <span
-                                  className={`font-black ${
-                                    item.isUnderMin10 ? 'text-red-600' : 'text-blue-600'
-                                  }`}
-                                >
-                                  {item.deviasiPoin > 0 ? `+${item.deviasiPoin}` : item.deviasiPoin} poin %
-                                  {item.isUnderMin10 ? ' (Kritis < -10%)' : ''}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
-                    <ReferenceLine
-                      x={-10}
-                      stroke="#DC2626"
-                      strokeDasharray="4 4"
-                      label={{ value: 'Batas Kritis -10%', position: 'top', fill: '#DC2626', fontSize: 9.5 }}
-                    />
-                    <Bar dataKey="deviasiPoin" name="Deviasi (poin %)" radius={[3, 3, 3, 3]}>
-                      {deviasiTop15Data.map((entry, index) => (
-                        <Cell
-                          key={`cell-g2-${index}`}
-                          fill={entry.isUnderMin10 ? '#DC2626' : entry.deviasiPoin >= 0 ? '#2563EB' : '#3B82F6'}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span className="flex items-center gap-3">
+            {/* Filter Controls & Legenda */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
+              {/* Legenda Bar Hijau / Oranye */}
+              <div className="flex items-center gap-3 text-[10px] text-slate-600 font-medium">
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 bg-red-600 rounded-xs"></span>
-                  <span>Deviasi &lt; -10 poin (Aksen Kritis)</span>
+                  <span className="w-2.5 h-2.5 rounded-xs bg-emerald-500"></span>
+                  <span>Progres &ge; Rencana</span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 bg-blue-600 rounded-xs"></span>
-                  <span>Deviasi Normal</span>
+                  <span className="w-2.5 h-2.5 rounded-xs bg-amber-500"></span>
+                  <span>Di Bawah Rencana</span>
                 </span>
-              </span>
-              <span>Dataset: Laporan Pengawasan Progres</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION B. TEMUAN DAN TINDAK LANJUT                                      */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-700 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                B. TEMUAN DAN TINDAK LANJUT
-              </h2>
-              <p className="text-xs text-slate-500">
-                Katalog temuan audit teknis pengawasan per kategori, matriks tingkat keparahan, dan pemantauan status penyelesaian.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Rekapitulasi Temuan Pengawasan
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* GRAFIK 3: Temuan Pengawasan per Kategori & Tingkat Keparahan */}
-          <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    3. Temuan Pengawasan per Kategori &amp; Keparahan
-                  </h3>
-                  <UsulanBadge />
-                </div>
               </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Stacked bar horizontal: Kategori (Mutu Pekerjaan, K3, Administrasi, Lingkungan, Waktu) vs Tingkat Keparahan.
-              </p>
 
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={masterData.rekapTemuanKategoriKeparahan}
-                    layout="vertical"
-                    margin={{ top: 10, right: 20, left: 10, bottom: 5 }}
+              {/* Filters: Subdit, Bulan, Tahun */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Subdit Kartu 1"
+                  value={filterSubdit1}
+                  onChange={(e) => setFilterSubdit1(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.subditList.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Bulan Kartu 1"
+                  value={filterBulan1}
+                  onChange={(e) => setFilterBulan1(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.bulanList.map((b) => (
+                    <option key={b} value={b}>
+                      {b}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Tahun Kartu 1"
+                  value={filterTahun1}
+                  onChange={(e) => setFilterTahun1(Number(e.target.value))}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-mono text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.tahunList.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* List Progress Bar Horizontal (10 Paket Terendah) */}
+            <div className="space-y-2 pt-0.5">
+              {kartu1Data.paketList10.map((paket, idx) => {
+                const isHovered = hoveredPaketId1 === paket.id;
+                return (
+                  <div
+                    key={paket.id}
+                    className={`relative rounded-lg p-1.5 transition-all cursor-default border ${
+                      isHovered
+                        ? 'bg-blue-50/70 border-blue-200 shadow-2xs'
+                        : 'bg-slate-50/50 border-slate-100 hover:bg-slate-50'
+                    }`}
+                    onMouseEnter={() => setHoveredPaketId1(paket.id)}
+                    onMouseLeave={() => setHoveredPaketId1(null)}
                   >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
-                    <XAxis type="number" tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                    <YAxis
-                      type="category"
-                      dataKey="kategori"
-                      width={105}
-                      tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
-                    />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          const total = payload.reduce((acc, curr) => acc + (Number(curr.value) || 0), 0);
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">{label}</p>
-                              {payload.map((entry, idx) => (
-                                <div key={idx} className="flex justify-between gap-3 text-[11px]">
-                                  <span style={{ color: entry.color }} className="font-medium">
-                                    {entry.name}:
-                                  </span>
-                                  <span className="font-bold text-slate-800">{entry.value} Temuan</span>
-                                </div>
-                              ))}
-                              <div className="border-t border-slate-100 pt-1 flex justify-between font-bold text-blue-800 text-[11px]">
-                                <span>Total Temuan:</span>
-                                <span>{total} Temuan</span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '4px' }} />
-                    <Bar dataKey="Ringan" stackId="keparahan" fill="#60A5FA" />
-                    <Bar dataKey="Sedang" stackId="keparahan" fill="#2563EB" />
-                    <Bar dataKey="Berat" stackId="keparahan" fill="#1E3A8A" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Jumlah Temuan &bull; Sumbu Y: Kategori</span>
-              <span>Dataset: Rekapitulasi Temuan</span>
-            </div>
-          </div>
-
-          {/* GRAFIK 4: Status Tindak Lanjut Temuan per Bulan */}
-          <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    4. Status Tindak Lanjut Temuan per Bulan
-                  </h3>
-                  <UsulanBadge />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Stacked column chart rekap status resolusi temuan per bulan (Selesai, Proses, Belum Ditindaklanjuti).
-              </p>
-
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={masterData.statusTindakLanjutBulanan.slice(0, 9)}
-                    margin={{ top: 10, right: 15, left: -20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }} />
-                    <YAxis tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          const total = payload.reduce((acc, curr) => acc + (Number(curr.value) || 0), 0);
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                                Bulan {label}
-                              </p>
-                              {payload.map((entry, idx) => (
-                                <div key={idx} className="flex justify-between gap-3 text-[11px]">
-                                  <span style={{ color: entry.color }} className="font-medium">
-                                    {entry.name}:
-                                  </span>
-                                  <span className="font-bold text-slate-800">{entry.value} Temuan</span>
-                                </div>
-                              ))}
-                              <div className="border-t border-slate-100 pt-1 flex justify-between font-bold text-slate-900 text-[11px]">
-                                <span>Total Temuan:</span>
-                                <span>{total} Temuan</span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '4px' }} />
-                    <Bar dataKey="Selesai" stackId="status" fill="#10B981" />
-                    <Bar dataKey="Proses" stackId="status" fill="#2563EB" />
-                    <Bar dataKey="Belum" stackId="status" fill="#EF4444" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Bulan &bull; Sumbu Y: Jumlah Temuan</span>
-              <span>Dataset: Rekapitulasi Temuan</span>
-            </div>
-          </div>
-        </div>
-
-        {/* TABEL DI BAWAH GRAFIK 4: Daftar Temuan Lapangan */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm relative space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                  Tabel Rincian Temuan dan Status Tindak Lanjut
-                </h4>
-                <UsulanBadge />
-              </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Monitoring Paket, Uraian Temuan, Kategori, Tingkat Keparahan, Batas Waktu, dan Status Penanganan.
-              </p>
-            </div>
-
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Cari temuan, paket, status..."
-                value={searchTemuan}
-                onChange={(e) => setSearchTemuan(e.target.value)}
-                className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-blue-500 w-60"
-              />
-            </div>
-          </div>
-
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
-                  <th className="py-2.5 px-3 whitespace-nowrap">No</th>
-                  <th className="py-2.5 px-3 min-w-[160px]">Paket Pekerjaan</th>
-                  <th className="py-2.5 px-3 min-w-[240px]">Uraian Temuan</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Kategori</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Tingkat Keparahan</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Batas Waktu</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-[11px]">
-                {filteredTabelTemuan.map((item, index) => (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2 px-3 font-mono text-slate-500">{index + 1}</td>
-                    <td className="py-2 px-3 font-semibold text-slate-900">{item.paket}</td>
-                    <td className="py-2 px-3 text-slate-700">{item.temuan}</td>
-                    <td className="py-2 px-3 text-slate-600 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-slate-100 font-medium text-[10.5px]">
-                        {item.kategori}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                          item.tingkatKeparahan === 'Berat'
-                            ? 'bg-red-50 text-red-800 border-red-200'
-                            : item.tingkatKeparahan === 'Sedang'
-                            ? 'bg-amber-50 text-amber-800 border-amber-200'
-                            : 'bg-blue-50 text-blue-800 border-blue-200'
-                        }`}
-                      >
-                        {item.tingkatKeparahan}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-slate-600 whitespace-nowrap font-mono">{item.batasWaktu}</td>
-                    <td className="py-2 px-3 whitespace-nowrap">
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold ${
-                          item.status === 'Selesai'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : item.status === 'Proses'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION C. SUPERVISI DAN KENDALA                                         */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-800 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                C. SUPERVISI DAN KENDALA
-              </h2>
-              <p className="text-xs text-slate-500">
-                Peta beban pengawasan konsultan supervisi serta pola kendala konstruksi berulang antar subdirektorat.
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Supervisi &amp; Manajemen Risiko
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* GRAFIK 5: Beban Paket per Konsultan Supervisi */}
-          <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    5. Beban Paket per Konsultan Supervisi
-                  </h3>
-                  <UsulanBadge />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Bar horizontal jumlah paket diawasi per konsultan. Warna batang mencerminkan gradasi rata-rata progres paket.
-              </p>
-
-              <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={masterData.konsultanSupervisiBeban}
-                    layout="vertical"
-                    margin={{ top: 8, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
-                    <XAxis
-                      type="number"
-                      domain={[0, 3]}
-                      tick={{ fontSize: 9.5, fill: '#64748B' }}
-                      allowDecimals={false}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="supervisi"
-                      width={160}
-                      tick={{ fontSize: 9, fill: '#334155' }}
-                    />
-                    <Tooltip
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const item = payload[0].payload as (typeof masterData.konsultanSupervisiBeban)[0];
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900">{item.supervisi}</p>
-                              <p className="text-blue-700">
-                                Jumlah Paket Diawasi: <span className="font-bold">{item.jumlahPaket} Paket</span>
-                              </p>
-                              <p className="text-emerald-700">
-                                Rata-rata Progres Paket: <span className="font-bold">{item.rataRataProgres}%</span>
-                              </p>
-                              <div className="border-t border-slate-100 pt-1 text-[10px] text-slate-500">
-                                Paket: {item.daftarPaket.join(', ')}
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Bar dataKey="jumlahPaket" name="Jumlah Paket" radius={[0, 4, 4, 0]}>
-                      {masterData.konsultanSupervisiBeban.map((entry, index) => {
-                        // Gradasi warna biru berdasarkan rata-rata progres
-                        const fill =
-                          entry.rataRataProgres >= 80
-                            ? '#1E3A8A' // Biru Sangat Gelap
-                            : entry.rataRataProgres >= 60
-                            ? '#2563EB' // Biru Primer
-                            : entry.rataRataProgres >= 40
-                            ? '#60A5FA' // Biru Terang
-                            : '#93C5FD'; // Biru Muda
-                        return <Cell key={`cell-g5-${index}`} fill={fill} />;
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between items-center">
-              <span className="flex items-center gap-2">
-                <span className="text-[10px] text-slate-400">Gradasi Progres:</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-[#93C5FD] rounded-xs"></span>
-                  <span className="text-[10px]">&lt;40%</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-[#2563EB] rounded-xs"></span>
-                  <span className="text-[10px]">60-80%</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-[#1E3A8A] rounded-xs"></span>
-                  <span className="text-[10px]">&gt;80%</span>
-                </span>
-              </span>
-              <span>Dataset: Daftar Paket dan Supervisi</span>
-            </div>
-          </div>
-
-          {/* GRAFIK 6: Kendala Pekerjaan Berulang (Treemap) */}
-          <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    6. Kendala Pekerjaan Berulang (Treemap)
-                  </h3>
-                  <UsulanBadge />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Ukuran kotak proporsional dengan frekuensi kendala, disertai breakdown sebaran subdirektorat.
-              </p>
-
-              {/* Responsive Treemap Tiles */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
-                {kendalaBerulangData.map((item, idx) => {
-                  const palette = [
-                    'bg-blue-50 border-blue-300 text-blue-900',
-                    'bg-amber-50 border-amber-300 text-amber-900',
-                    'bg-sky-50 border-sky-300 text-sky-900',
-                    'bg-indigo-50 border-indigo-300 text-indigo-900',
-                    'bg-orange-50 border-orange-300 text-orange-900',
-                    'bg-emerald-50 border-emerald-300 text-emerald-900',
-                  ];
-                  const badges = [
-                    'bg-blue-600',
-                    'bg-amber-600',
-                    'bg-sky-600',
-                    'bg-indigo-600',
-                    'bg-orange-600',
-                    'bg-emerald-600',
-                  ];
-
-                  return (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded-xl border ${palette[idx % palette.length]} flex flex-col justify-between hover:shadow-md transition-shadow`}
-                    >
-                      <div>
-                        <div className="flex items-start justify-between gap-1 mb-2">
-                          <span className="text-xs font-bold leading-tight">{item.name}</span>
-                          <span
-                            className={`text-white text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
-                              badges[idx % badges.length]
-                            }`}
-                          >
-                            {item.totalPaket} Pkt
-                          </span>
-                        </div>
-
-                        <div className="space-y-1 text-[10.5px] text-slate-600 mt-2">
-                          {Object.entries(item.subditBreakdown).map(([subdit, count]) => (
-                            <div key={subdit} className="flex justify-between items-center">
-                              <span className="truncate pr-1 text-slate-700">
-                                {subdit === 'Pembangunan Jalan dan Jembatan'
-                                  ? 'Jalan'
-                                  : subdit === 'Pembangunan Drainase'
-                                  ? 'Drainase'
-                                  : subdit === 'Pembangunan Gedung'
-                                  ? 'Gedung'
-                                  : 'Pematangan'}
-                              </span>
-                              <span className="font-mono font-bold text-slate-900">{count}</span>
-                            </div>
-                          ))}
-                        </div>
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <div className="flex items-center gap-1.5 truncate pr-2">
+                        <span className="font-mono text-[10px] text-slate-400 font-semibold w-4">
+                          {idx + 1}.
+                        </span>
+                        <span className="font-semibold text-slate-800 truncate" title={paket.namaPaket}>
+                          {paket.namaPaket}
+                        </span>
                       </div>
-
-                      <div className="mt-2.5 pt-1.5 border-t border-slate-200/60 text-[9.5px] text-slate-500">
-                        {((item.totalPaket / 20) * 100).toFixed(0)}% Frekuensi Proyek
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          Renc: {paket.rencanaBulan}%
+                        </span>
+                        <span
+                          className={`font-mono font-bold text-xs ${
+                            paket.isAheadOrOnTrack ? 'text-emerald-700' : 'text-amber-700'
+                          }`}
+                        >
+                          {paket.realisasiBulan}%
+                        </span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
 
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Warna Kotak: Subdirektorat Pengampu &bull; Ukuran: Frekuensi Kendala</span>
-              <span>Dataset: Daftar Paket dan Supervisi</span>
-            </div>
-          </div>
-        </div>
-      </section>
+                    {/* Progress Track */}
+                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden flex items-center">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          paket.isAheadOrOnTrack ? 'bg-emerald-500' : 'bg-amber-500'
+                        }`}
+                        style={{ width: `${Math.min(100, Math.max(0, paket.realisasiBulan))}%` }}
+                      ></div>
+                    </div>
 
-      {/* ========================================================================= */}
-      {/* SECTION D. INSPEKSI DAN SERAH TERIMA                                     */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-6 bg-blue-900 rounded-sm"></div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                D. INSPEKSI DAN SERAH TERIMA
-              </h2>
-              <p className="text-xs text-slate-500">
-                Statistik giat inspeksi berkala di lapangan serta tahapan serah terima pekerjaan (PHO s.d. FHO).
-              </p>
-            </div>
-          </div>
-          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-            Inspeksi &amp; PHO / FHO
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* GRAFIK 7: Jumlah Inspeksi Lapangan per Bulan */}
-          <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    7. Jumlah Inspeksi Lapangan per Bulan
-                  </h3>
-                  <UsulanBadge />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Column chart rekapitulasi agenda inspeksi kepatuhan spesifikasi dan mutu fisik pekerjaan per bulan.
-              </p>
-
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={masterData.inspeksiBulanan.slice(0, 9)}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="bulan" tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 500 }} />
-                    <YAxis tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          const val = payload[0].value;
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900">Bulan {label}</p>
-                              <p className="text-blue-700">
-                                Total Inspeksi: <span className="font-bold">{val} Kali Kunjungan Lapangan</span>
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Bar
-                      dataKey="jumlahInspeksi"
-                      name="Jumlah Inspeksi Lapangan"
-                      fill="#2563EB"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Bulan &bull; Sumbu Y: Jumlah Inspeksi</span>
-              <span>Dataset: Daftar Inspeksi Lapangan</span>
+                    {/* Tooltip Hover Overlay */}
+                    {isHovered && (
+                      <div className="absolute left-6 right-6 -top-24 z-30 bg-slate-900/95 text-white text-[10.5px] p-2.5 rounded-lg shadow-xl backdrop-blur-xs border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+                        <p className="font-bold text-blue-300 pb-1 border-b border-slate-800">
+                          {paket.kode} - {paket.namaPaket}
+                        </p>
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1 text-[10px]">
+                          <div>
+                            <span className="text-slate-400">Kategori: </span>
+                            <span className="font-semibold text-slate-200">{paket.kategoriPekerjaan}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Volume: </span>
+                            <span className="font-semibold text-slate-200">{paket.volumePekerjaan}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Kontraktor: </span>
+                            <span className="text-slate-300 truncate">{paket.kontraktor}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Supervisi: </span>
+                            <span className="text-slate-300 truncate">{paket.supervisi}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Periode: </span>
+                            <span className="text-slate-300">
+                              {paket.tglMulai} s.d. {paket.tglSelesai}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Nilai Kontrak: </span>
+                            <span className="text-amber-300 font-semibold font-mono">
+                              {paket.nilaiKontrakDisplay}
+                            </span>
+                          </div>
+                          <div className="col-span-2 pt-0.5 border-t border-slate-800/80 flex justify-between">
+                            <span>
+                              Status:{' '}
+                              <span
+                                className={
+                                  paket.isAheadOrOnTrack ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'
+                                }
+                              >
+                                {paket.isAheadOrOnTrack ? 'On Track / Ahead' : 'Terlambat'} (Deviasi:{' '}
+                                {paket.deviasiBulan > 0 ? `+${paket.deviasiBulan.toFixed(1)}` : paket.deviasiBulan.toFixed(1)}%)
+                              </span>
+                            </span>
+                            <span className="text-slate-400">Kendala: {paket.kendalaBulan}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* GRAFIK 8: Status Serah Terima Pekerjaan per Tahun */}
-          <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between relative">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                    8. Status Serah Terima Pekerjaan per Tahun
-                  </h3>
-                  <UsulanBadge />
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-3">
-                Stacked column chart tahapan serah terima: PHO Selesai, Masa Pemeliharaan, dan FHO Akhir per tahun.
-              </p>
-
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={masterData.rekapSerahTerimaTahunan}
-                    margin={{ top: 10, right: 15, left: -20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="tahun" tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }} />
-                    <YAxis tick={{ fontSize: 9.5, fill: '#64748B' }} />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          const total = payload.reduce((acc, curr) => acc + (Number(curr.value) || 0), 0);
-                          return (
-                            <div className="bg-white border border-slate-200 rounded-lg shadow-md p-2.5 text-xs space-y-1">
-                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                                Tahun {label}
-                              </p>
-                              {payload.map((entry, idx) => (
-                                <div key={idx} className="flex justify-between gap-3 text-[11px]">
-                                  <span style={{ color: entry.color }} className="font-medium">
-                                    {entry.name}:
-                                  </span>
-                                  <span className="font-bold text-slate-800">{entry.value} Paket</span>
-                                </div>
-                              ))}
-                              <div className="border-t border-slate-100 pt-1 flex justify-between font-bold text-slate-900 text-[11px]">
-                                <span>Total Paket:</span>
-                                <span>{total} Paket</span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '10.5px', paddingTop: '4px' }} />
-                    <Bar dataKey="phoSelesai" name="PHO Selesai" stackId="serahTerima" fill="#3B82F6" />
-                    <Bar dataKey="masaPemeliharaan" name="Masa Pemeliharaan" stackId="serahTerima" fill="#F59E0B" />
-                    <Bar dataKey="fhoSelesai" name="FHO Selesai" stackId="serahTerima" fill="#10B981" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 flex justify-between">
-              <span>Sumbu X: Tahun &bull; Sumbu Y: Jumlah Paket</span>
-              <span>Dataset: Rekapitulasi Serah Terima</span>
-            </div>
-          </div>
-        </div>
-
-        {/* TABEL DI BAWAH GRAFIK 7: Log Hasil Inspeksi Lapangan */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm relative space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                  Tabel Log Agenda &amp; Hasil Inspeksi Lapangan Terkini
-                </h4>
-                <UsulanBadge />
-              </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Rincian Tanggal, Paket Pekerjaan, Lokasi Fisik, dan Catatan Hasil Uji Teknis di Lapangan.
-              </p>
-            </div>
-            <span className="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded font-mono">
-              7 Entri Terakhir
+          {/* Footer Card 1 */}
+          <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              Terbatas
+            </span>
+            <span className="truncate ml-2">
+              Laporan Progres Pekerjaan Konstruksi Tahun Berjalan (Terbatas, perbulan)
             </span>
           </div>
+        </div>
 
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
-                  <th className="py-2.5 px-3 whitespace-nowrap">Tanggal</th>
-                  <th className="py-2.5 px-3 min-w-[170px]">Paket Pekerjaan</th>
-                  <th className="py-2.5 px-3 min-w-[150px]">Lokasi Inspeksi</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Kategori Uji</th>
-                  <th className="py-2.5 px-3 min-w-[280px]">Catatan Hasil Inspeksi Lapangan</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-[11px]">
-                {masterData.daftarInspeksiTabel.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2 px-3 font-mono text-slate-600 whitespace-nowrap font-medium">
-                      {item.tanggal}
-                    </td>
-                    <td className="py-2 px-3 font-semibold text-slate-900">{item.paket}</td>
-                    <td className="py-2 px-3 text-slate-700">{item.lokasi}</td>
-                    <td className="py-2 px-3 text-slate-600 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-800 font-medium text-[10.5px]">
-                        {item.kategori}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-slate-700">{item.hasilInspeksi}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* ============================================================ */}
+        {/* BARIS 1 / KARTU 2 - Kurva Progres Rencana vs Realisasi       */}
+        {/* ============================================================ */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between">
+          <div>
+            {/* Header: Judul Kiri & Angka Ringkasan Kanan */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                  Kurva Progres Rencana vs Realisasi
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Komparasi kurva S progres kumulatif (%) dengan area defisit keterlambatan
+                </p>
+              </div>
+
+              {/* Angka Ringkasan: Deviasi Terakhir */}
+              <div className="text-right shrink-0">
+                <span
+                  className={`text-xl sm:text-2xl font-black font-mono tracking-tight ${
+                    kartu2Data.lastDeviasi >= 0 ? 'text-emerald-600' : 'text-amber-600'
+                  }`}
+                >
+                  {kartu2Data.lastDeviasi > 0
+                    ? `+${kartu2Data.lastDeviasi}`
+                    : kartu2Data.lastDeviasi}
+                  %
+                </span>
+                <span className="block text-[10px] text-blue-600 font-semibold mt-0.5">
+                  Deviasi Progres ({kartu2Data.lastMonth})
+                </span>
+              </div>
+            </div>
+
+            {/* Filter Controls & Legenda */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
+              {/* Legenda Kurva S */}
+              <div className="flex items-center gap-3 text-[10px] text-slate-600 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3.5 h-0.5 bg-blue-600 inline-block"></span>
+                  <span>Realisasi</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3.5 h-0.5 border-t border-dashed border-slate-400 inline-block"></span>
+                  <span>Rencana</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-xs bg-amber-200 border border-amber-300"></span>
+                  <span>Defisit</span>
+                </span>
+              </div>
+
+              {/* Filters: Subdit, Kategori, Tahun */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Subdit Kartu 2"
+                  value={filterSubdit2}
+                  onChange={(e) => setFilterSubdit2(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.subditList.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Kategori Kartu 2"
+                  value={filterKategori2}
+                  onChange={(e) => setFilterKategori2(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.kategoriList.map((k) => (
+                    <option key={k} value={k}>
+                      {k}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Tahun Kartu 2"
+                  value={filterTahun2}
+                  onChange={(e) => setFilterTahun2(Number(e.target.value))}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-mono text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.tahunList.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Line Chart Kurva S dengan Area Defisit */}
+            <div className="h-68 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart
+                  data={kartu2Data.curveData}
+                  margin={{ top: 12, right: 15, left: -15, bottom: 5 }}
+                >
+                  <defs>
+                    <linearGradient id="deficitGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.35} />
+                      <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.08} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis
+                    dataKey="bulanKey"
+                    tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 9.5, fill: '#64748B' }}
+                    tickFormatter={(v) => `${v}%`}
+                  />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const cur = payload[0].payload;
+                        const rnc = cur.rencana;
+                        const rls = cur.realisasi;
+                        const dev =
+                          rls !== null && rls !== undefined ? (rls - rnc).toFixed(1) : null;
+                        return (
+                          <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1">
+                            <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
+                              Bulan {cur.bulanFull}
+                            </p>
+                            <div className="flex justify-between gap-4 text-slate-600">
+                              <span>Rencana Kumulatif:</span>
+                              <span className="font-mono font-bold text-slate-800">{rnc}%</span>
+                            </div>
+                            <div className="flex justify-between gap-4 text-blue-600">
+                              <span>Realisasi Lapangan:</span>
+                              <span className="font-mono font-bold">
+                                {rls !== null ? `${rls}%` : 'Proyeksi'}
+                              </span>
+                            </div>
+                            {dev !== null && (
+                              <div
+                                className={`flex justify-between gap-4 font-semibold pt-1 border-t border-slate-100 ${
+                                  Number(dev) >= 0 ? 'text-emerald-600' : 'text-amber-600'
+                                }`}
+                              >
+                                <span>Deviasi:</span>
+                                <span className="font-mono">
+                                  {Number(dev) > 0 ? `+${dev}` : dev}%
+                                  {Number(dev) < 0 ? ' (Tertinggal)' : ' (Ahead/On Track)'}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+
+                  {/* Shading Area Defisit: saat realisasi < rencana */}
+                  <Area
+                    type="monotone"
+                    dataKey="gapRange"
+                    fill="url(#deficitGradient)"
+                    stroke="none"
+                    connectNulls={false}
+                  />
+
+                  {/* Garis Rencana */}
+                  <Line
+                    type="monotone"
+                    dataKey="rencana"
+                    name="Rencana (%)"
+                    stroke="#94A3B8"
+                    strokeWidth={2}
+                    strokeDasharray="4 4"
+                    dot={{ r: 2.5, fill: '#94A3B8' }}
+                  />
+
+                  {/* Garis Realisasi */}
+                  <Line
+                    type="monotone"
+                    dataKey="realisasi"
+                    name="Realisasi (%)"
+                    stroke="#2563EB"
+                    strokeWidth={2.5}
+                    dot={{ r: 3.5, fill: '#2563EB' }}
+                    connectNulls={false}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Footer Card 2 */}
+          <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              Terbatas
+            </span>
+            <span className="truncate ml-2">
+              Laporan Progres Pekerjaan Konstruksi Tahun Berjalan (Terbatas, perbulan)
+            </span>
           </div>
         </div>
-      </section>
+
+        {/* ============================================================ */}
+        {/* BARIS 2 / KARTU 3 - Kendala Pelaksanaan Pekerjaan             */}
+        {/* ============================================================ */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between">
+          <div>
+            {/* Header: Judul Kiri & Angka Ringkasan Kanan */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                  Kendala Pelaksanaan Pekerjaan
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Distribusi isu kritis penghambat progres fisik pekerjaan konstruksi
+                </p>
+              </div>
+
+              {/* Angka Ringkasan: Paket Berkendala & % */}
+              <div className="text-right shrink-0">
+                <span className="text-xl sm:text-2xl font-black font-mono tracking-tight text-amber-600">
+                  {kartu3Data.paketBerkendalaCount} Paket
+                </span>
+                <span className="block text-[10px] text-blue-600 font-semibold mt-0.5">
+                  {kartu3Data.persentaseBerkendala}% Paket Terkendala
+                </span>
+              </div>
+            </div>
+
+            {/* Filter Controls & Legenda */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
+              {/* Legenda */}
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-600 font-medium">
+                <span className="w-2.5 h-2.5 rounded-xs bg-amber-500"></span>
+                <span>Frekuensi Paket Berkendala (Urut Terbanyak)</span>
+              </div>
+
+              {/* Filters: Subdit, Bulan, Tahun */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Subdit Kartu 3"
+                  value={filterSubdit3}
+                  onChange={(e) => setFilterSubdit3(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.subditList.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Bulan Kartu 3"
+                  value={filterBulan3}
+                  onChange={(e) => setFilterBulan3(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.bulanList.map((b) => (
+                    <option key={b} value={b}>
+                      {b}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Tahun Kartu 3"
+                  value={filterTahun3}
+                  onChange={(e) => setFilterTahun3(Number(e.target.value))}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-mono text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.tahunList.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Horizontal Bar Chart (Oranye, Urut Terbanyak) */}
+            <div className="h-68 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={kartu3Data.chartData}
+                  layout="vertical"
+                  margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B' }}
+                    allowDecimals={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="kategori"
+                    width={130}
+                    tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
+                  />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const item = payload[0].payload as (typeof kartu3Data.chartData)[0];
+                        return (
+                          <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1.5 max-w-xs">
+                            <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
+                              {item.kategori}
+                            </p>
+                            <div className="flex justify-between text-slate-700 text-[11px]">
+                              <span>Jumlah Paket Terdampak:</span>
+                              <span className="font-mono font-bold text-amber-600">
+                                {item.jumlahPaket} Paket
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100 space-y-0.5">
+                              <p>
+                                <span className="font-semibold text-slate-700">Subdit Terkait: </span>
+                                {item.subditTerkait}
+                              </p>
+                              <p>
+                                <span className="font-semibold text-slate-700">Contoh Paket: </span>
+                                {item.contohPaket}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="jumlahPaket" name="Jumlah Paket" fill="#F59E0B" radius={[0, 4, 4, 0]}>
+                    {kartu3Data.chartData.map((_, index) => (
+                      <Cell key={`cell-k3-${index}`} fill={index === 0 ? '#EA580C' : '#F59E0B'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Footer Card 3 */}
+          <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              Terbatas
+            </span>
+            <span className="truncate ml-2">
+              Laporan Progres Pekerjaan Konstruksi Tahun Berjalan (Terbatas, perbulan)
+            </span>
+          </div>
+        </div>
+
+        {/* ============================================================ */}
+        {/* BARIS 2 / KARTU 4 - Beban Supervisi per Konsultan/Pengawas   */}
+        {/* ============================================================ */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between">
+          <div>
+            {/* Header: Judul Kiri & Angka Ringkasan Kanan */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                  Beban Supervisi per Konsultan/Pengawas
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Distribusi beban pengawasan paket per konsultan serta status capaian
+                </p>
+              </div>
+
+              {/* Angka Ringkasan: Pengawas Aktif & Rata-rata Paket */}
+              <div className="text-right shrink-0">
+                <span className="text-xl sm:text-2xl font-black font-mono tracking-tight text-slate-900">
+                  {kartu4Data.totalPengawas} Pengawas
+                </span>
+                <span className="block text-[10px] text-blue-600 font-semibold mt-0.5">
+                  Rata-rata {kartu4Data.avgPaketPerPengawas} Paket / Konsultan
+                </span>
+              </div>
+            </div>
+
+            {/* Filter Controls & Legenda */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
+              {/* Legenda Tumpukan */}
+              <div className="flex items-center gap-3 text-[10px] text-slate-600 font-medium">
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-xs bg-emerald-500"></span>
+                  <span>Sesuai Rencana</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-xs bg-amber-500"></span>
+                  <span>Terlambat</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-xs bg-blue-600"></span>
+                  <span>Selesai</span>
+                </span>
+              </div>
+
+              {/* Filters: Subdit, Tahun */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Subdit Kartu 4"
+                  value={filterSubdit4}
+                  onChange={(e) => setFilterSubdit4(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-medium text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.subditList.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter Tahun Kartu 4"
+                  value={filterTahun4}
+                  onChange={(e) => setFilterTahun4(Number(e.target.value))}
+                  className="bg-slate-50 border border-slate-200 rounded-md px-2 py-1 text-[11px] font-mono text-slate-700 outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.tahunList.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Stacked Horizontal Bar Chart */}
+            <div className="h-68 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={kartu4Data.chartData}
+                  layout="vertical"
+                  margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B' }}
+                    allowDecimals={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="supervisi"
+                    width={145}
+                    tick={{ fontSize: 9, fill: '#334155', fontWeight: 500 }}
+                  />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const item = payload[0].payload as (typeof kartu4Data.chartData)[0];
+                        return (
+                          <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1.5 max-w-xs">
+                            <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
+                              {item.supervisi}
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
+                              <span className="text-slate-500">Total Paket:</span>
+                              <span className="font-bold text-slate-800">{item.totalPaket} Paket</span>
+                              <span className="text-emerald-600">Sesuai Rencana:</span>
+                              <span className="font-bold text-emerald-700">{item.sesuaiRencana}</span>
+                              <span className="text-amber-600">Terlambat:</span>
+                              <span className="font-bold text-amber-700">{item.terlambat}</span>
+                              <span className="text-blue-600">Selesai:</span>
+                              <span className="font-bold text-blue-700">{item.selesai}</span>
+                              <span className="text-slate-500">Rata-rata Progres:</span>
+                              <span className="font-bold font-mono text-slate-800">{item.rataProgres}%</span>
+                              <span className="text-slate-500">Total Nilai Kontrak:</span>
+                              <span className="font-bold font-mono text-amber-600">
+                                {item.nilaiKontrakDisplay}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+                              <span className="font-semibold text-slate-700">Volume: </span>
+                              {item.volumeDisplay}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar
+                    dataKey="sesuaiRencana"
+                    name="Sesuai Rencana"
+                    stackId="supervisiStack"
+                    fill="#10B981"
+                  />
+                  <Bar
+                    dataKey="terlambat"
+                    name="Terlambat"
+                    stackId="supervisiStack"
+                    fill="#F59E0B"
+                  />
+                  <Bar
+                    dataKey="selesai"
+                    name="Selesai"
+                    stackId="supervisiStack"
+                    fill="#2563EB"
+                    radius={[0, 4, 4, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Footer Card 4 */}
+          <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              Terbatas
+            </span>
+            <span className="truncate ml-2">
+              Laporan Progres Pekerjaan Konstruksi &amp; Pembangunan BP Batam (Terbatas, pertahun)
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

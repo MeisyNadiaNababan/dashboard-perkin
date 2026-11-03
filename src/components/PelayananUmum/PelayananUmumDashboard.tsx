@@ -26,7 +26,7 @@ export const PelayananUmumDashboard: React.FC<PelayananUmumDashboardProps> = ({
 }) => {
   // Filter State - Persis Model Filter Dashboard DEP-A3
   const [selectedYear, setSelectedYear] = useState<string>('2026');
-  const [selectedDeepDiveUnit, setSelectedDeepDiveUnit] = useState<string>('bu-rumah-sakit');
+  const [selectedDeepDiveUnit, setSelectedDeepDiveUnit] = useState<string>('dit-diseminasi');
 
   // Formula Modal State
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState(false);

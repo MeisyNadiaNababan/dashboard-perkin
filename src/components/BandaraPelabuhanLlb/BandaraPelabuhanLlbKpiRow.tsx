@@ -40,6 +40,8 @@ const SPARKLINE_TOTAL = [
   { v: 486.8 }, { v: 503.95 }, { v: 520.1 }, { v: 537.2 }, { v: 551.35 }, { v: 565.33 },
 ];
 
+import { DeputiKpiCard } from '../DeputiKpiCard';
+
 export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps> = ({
   onOpenFormulaModal,
   onSelectUnit,
@@ -51,133 +53,53 @@ export const BandaraPelabuhanLlbKpiRow: React.FC<BandaraPelabuhanLlbKpiRowProps>
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A5 (KOMPAK, GRADIENT & EKSEKUTIF) */}
-      {/* Model Persis DEP-A4: 4 Kolom dengan Sparkline Area Chart           */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A5 (SESUAI REFERENSI DESAIN)   */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {/* IKP 1: Rata-rata Nilai IKM Layanan Gabungan */}
-        <div
+        <DeputiKpiCard
+          title="IKP 1 • Rata-rata IKM Layanan"
+          value={String(ikp1.realization)}
+          unitLabel="Mutu A"
+          targetLabel="Target 86,30 (102,5%)"
+          yoyLabel="+3,8% YoY"
+          icon={Award}
           onClick={() => onOpenFormulaModal(ikp1.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Rata-rata IKM Layanan Gabungan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Award className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Rata-rata IKM Layanan</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Rata-rata IKM Layanan Gabungan Bandara & Pelabuhan"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                {ikp1.realization}
-              </span>
-              <span className="text-xs font-bold text-blue-100">Mutu A (Sangat Baik)</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 86,30</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 85,20 (+3,8%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 2: Realisasi PNBP Bandara & Kepelabuhanan - BLUE CARD */}
-        <div
+        {/* IKP 2: Realisasi PNBP Bandara & Kepelabuhanan */}
+        <DeputiKpiCard
+          title="IKP 2 • PNBP Bandara & Pelabuhan"
+          value="Rp 562,85 M"
+          targetLabel="Target Rp 518,21 M (108,6%)"
+          yoyLabel="+12,9% YoY"
+          icon={Plane}
           onClick={() => onOpenFormulaModal(ikp2.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Realisasi PNBP Bandara & Kepelabuhanan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Plane className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">PNBP Bandara &amp; Pelabuhan</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <Anchor className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Realisasi PNBP Badan Pengelolaan Kawasan Bandara & Pelabuhan"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Rp 562,85
-              </span>
-              <span className="text-xs font-bold text-blue-100">Miliar</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target Rp 518,21 M</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 498,40 M (+12,9%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 3: Realisasi PNBP Dit. Lalu Lintas Barang - BLUE CARD */}
-        <div
+        {/* IKP 3: Realisasi PNBP Dit. Lalu Lintas Barang */}
+        <DeputiKpiCard
+          title="IKP 3 • PNBP Lalu Lintas Barang"
+          value="Rp 2,48 M"
+          targetLabel="Target Rp 2,20 M (112,7%)"
+          yoyLabel="+15,3% YoY"
+          icon={Truck}
           onClick={() => onOpenFormulaModal(ikp3.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 3 Realisasi PNBP Lalu Lintas Barang"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Truck className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">PNBP Lalu Lintas Barang</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <Truck className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 3 Realisasi PNBP Direktorat Lalu Lintas Barang"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Rp 2,48
-              </span>
-              <span className="text-xs font-bold text-blue-100">Miliar</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target Rp 2,20 M</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 2,15 M (+15,3%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* KONSOLIDASI TOTAL PNBP DEP-A5 (3 SATKER) - BLUE CARD */}
-        <div
+        {/* KONSOLIDASI TOTAL PNBP DEP-A5 */}
+        <DeputiKpiCard
+          title="Total • PNBP Konsolidasi A5"
+          value="Rp 565,33 M"
+          targetLabel="Target Rp 520,41 M (108,6%)"
+          yoyLabel="+12,9% YoY"
+          icon={DollarSign}
           onClick={() => onOpenFormulaModal('ikp-2-pnbp-bandara-pelabuhan')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Total PNBP Gabungan 3 Satker Perkin A5"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <DollarSign className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Total PNBP Konsolidasi A5</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <TrendingUp className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
-
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Rp 565,33
-              </span>
-              <span className="text-xs font-bold text-blue-100">Miliar</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target Rp 520,41 M</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 500,55 M (+12,9%)</span>
-            </div>
-          </div>
-        </div>
+          tooltip="Total PNBP Gabungan 3 Satker Perkin A5 (Bandara, Pelabuhan, Lalu Lintas Barang)"
+        />
       </div>
 
       {/* ================================================================== */}

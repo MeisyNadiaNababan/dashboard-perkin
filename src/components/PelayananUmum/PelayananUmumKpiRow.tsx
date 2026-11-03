@@ -42,6 +42,8 @@ const SPARKLINE_TOTAL = [
   { v: 228.4 }, { v: 236.8 }, { v: 245.2 }, { v: 252.6 }, { v: 258.9 }, { v: 264.3 },
 ];
 
+import { DeputiKpiCard } from '../DeputiKpiCard';
+
 export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
   onOpenFormulaModal,
   onSelectUnit,
@@ -53,133 +55,53 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A6 (KOMPAK, GRADIENT & EKSEKUTIF) */}
-      {/* Model Persis DEP-A4: 4 Kolom dengan Sparkline Area Chart           */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A6 (SESUAI REFERENSI DESAIN)   */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {/* IKP 1: Peningkatan Kinerja Badan Usaha */}
-        <div
+        <DeputiKpiCard
+          title="IKP 1 • Peningkatan Kinerja BU"
+          value={ikp1.realisasiDisplay || '124,5%'}
+          targetLabel="Target 100,0% (124,5%)"
+          yoyLabel="+11,2% YoY"
+          icon={Percent}
           onClick={() => onOpenFormulaModal('ikp-1')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Peningkatan Kinerja Badan Usaha"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Percent className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Peningkatan Kinerja BU</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Peningkatan Kinerja Badan Usaha Pelayanan Umum"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                {ikp1.realisasiDisplay}
-              </span>
-              <span className="text-xs font-bold text-blue-100">Pertumbuhan</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 100,0%</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 112,0% (+11,2%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 2: Rasio PNBP BU terhadap PNBP BP Batam - BLUE CARD */}
-        <div
+        {/* IKP 2: Rasio PNBP BU terhadap PNBP BP Batam */}
+        <DeputiKpiCard
+          title="IKP 2 • Rasio PNBP BU : BP Batam"
+          value={ikp2.realisasiDisplay || '71,2%'}
+          targetLabel="Target 68,0% (104,7%)"
+          yoyLabel="+8,5% YoY"
+          icon={Scale}
           onClick={() => onOpenFormulaModal('ikp-2')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Rasio PNBP BU thd BP Batam"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Scale className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Rasio PNBP BU : BP Batam</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <Scale className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Rasio Realisasi PNBP Badan Usaha terhadap BP Batam"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                {ikp2.realisasiDisplay}
-              </span>
-              <span className="text-xs font-bold text-blue-100">Rasio Kontribusi</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 68,0%</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 65,8% (+8,5%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 3: Rata-rata IKM Pengguna Layanan Badan Usaha - BLUE CARD */}
-        <div
+        {/* IKP 3: Rata-rata IKM Pengguna Layanan Badan Usaha */}
+        <DeputiKpiCard
+          title="IKP 3 • Rata-rata IKM Layanan"
+          value={ikp3.realisasiDisplay || '88,66'}
+          unitLabel="Mutu A"
+          targetLabel="Target 86,00 (103,1%)"
+          yoyLabel="+3,8% YoY"
+          icon={Award}
           onClick={() => onOpenFormulaModal('ikp-3')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 3 Rata-rata IKM Layanan BU"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Award className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Rata-rata IKM Layanan</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <Award className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 3 Rata-rata Indeks Kepuasan Masyarakat Pengguna Layanan Badan Usaha"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                {ikp3.realisasiDisplay}
-              </span>
-              <span className="text-xs font-bold text-blue-100">Mutu A (Sangat Baik)</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 86,00</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 85,40 (+3,8%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* KONSOLIDASI TOTAL PNBP 2 BADAN USAHA - BLUE CARD */}
-        <div
+        {/* KONSOLIDASI TOTAL PNBP 2 BADAN USAHA */}
+        <DeputiKpiCard
+          title="Total • PNBP 2 Badan Usaha"
+          value="Rp 264,30 M"
+          targetLabel="Target Rp 252,40 M (104,7%)"
+          yoyLabel="+14,2% YoY"
+          icon={DollarSign}
           onClick={() => onOpenFormulaModal('ikp-2')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Total Realisasi PNBP Gabungan 2 Badan Usaha DEP-A6"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <DollarSign className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Total PNBP 2 Badan Usaha</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <TrendingUp className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
-
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Rp 264,30
-              </span>
-              <span className="text-xs font-bold text-blue-100">Miliar</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target Rp 252,40 M</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 231,50 M (+14,2%)</span>
-            </div>
-          </div>
-        </div>
+          tooltip="Total Realisasi PNBP Gabungan 2 Badan Usaha DEP-A6 (Rumah Sakit & SPAM/Fasilitas)"
+        />
       </div>
 
       {/* ================================================================== */}

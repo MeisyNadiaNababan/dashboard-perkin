@@ -57,12 +57,12 @@ const DATA_LOGISTIK_BULANAN = [
 
 // 2. Ketahanan 6 Waduk Air Baku (Buku Satu Data Hal. 28-37)
 const DATA_6_WADUK_DONUT = [
-  { name: 'Duriangkang', volume: 78.56, persen: 98.2, color: '#2563EB' },
-  { name: 'Tembesi', volume: 56.40, persen: 96.5, color: '#0284C7' },
-  { name: 'Mukakuning', volume: 13.20, persen: 95.0, color: '#4F46E5' },
-  { name: 'Sei Ladi', volume: 9.45, persen: 86.4, color: '#F59E0B' }, // Waspada
-  { name: 'Sei Harapan', volume: 3.63, persen: 94.1, color: '#10B981' },
-  { name: 'Nongsa', volume: 0.72, persen: 92.0, color: '#9333EA' },
+  { name: 'Duriangkang', volume: 78.56, kapasitasDesain: 80.0, elevasiM: '18.4 m', persen: 98.2, status: 'Normal', color: '#2563EB' },
+  { name: 'Tembesi', volume: 56.40, kapasitasDesain: 58.5, elevasiM: '14.2 m', persen: 96.5, status: 'Normal', color: '#0284C7' },
+  { name: 'Mukakuning', volume: 13.20, kapasitasDesain: 13.9, elevasiM: '26.8 m', persen: 95.0, status: 'Normal', color: '#4F46E5' },
+  { name: 'Sei Ladi', volume: 9.45, kapasitasDesain: 10.9, elevasiM: '19.1 m', persen: 86.4, status: 'Waspada', color: '#F59E0B' }, // Waspada
+  { name: 'Sei Harapan', volume: 3.63, kapasitasDesain: 3.85, elevasiM: '22.3 m', persen: 94.1, status: 'Normal', color: '#10B981' },
+  { name: 'Nongsa', volume: 0.72, kapasitasDesain: 0.78, elevasiM: '11.5 m', persen: 92.0, status: 'Normal', color: '#9333EA' },
 ];
 
 // 3. Ketersediaan Lahan 7 SWP Batam (Buku Satu Data Hal. 6-8)
@@ -149,6 +149,15 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
 }) => {
   // Sheet swap state untuk Card 1 (Arus Petikemas)
   const [petikemasViewMode, setPetikemasViewMode] = useState<'grafik' | 'tabel'>('grafik');
+
+  // Sheet swap state untuk Card 2 (Kapasitas 6 Waduk)
+  const [wadukViewMode, setWadukViewMode] = useState<'grafik' | 'tabel'>('grafik');
+
+  // Sheet swap state untuk Card 3 (Ketersediaan Lahan 7 SWP)
+  const [lahanViewMode, setLahanViewMode] = useState<'grafik' | 'tabel'>('grafik');
+
+  // Sheet swap state untuk Card 4 (Kurva S 14 Megaproyek)
+  const [proyekViewMode, setProyekViewMode] = useState<'grafik' | 'tabel'>('grafik');
 
   // Sheet swap state untuk Card 5 (Serapan Belanja Multi-Unit)
   const [serapanViewMode, setSerapanViewMode] = useState<'grafik' | 'tabel'>('grafik');
@@ -308,10 +317,10 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
           </div>
         </div>
 
-        {/* CARD 2: Ketahanan 6 Waduk Air Baku (MODEL ANGKA PERSIS ARUS PETIKEMAS) */}
+        {/* CARD 2: Ketahanan 6 Waduk Air Baku (WITH SHEET SWAP) */}
         <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-3 sm:p-3.5 shadow-2xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-100">
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
                   Kapasitas 6 Waduk Air Baku
@@ -322,62 +331,148 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
               </div>
 
               {/* TAMPILAN MODEL SEPERTI 612.400 DI ARUS PETIKEMAS */}
-              <div className="text-right shrink-0">
-                <span className="text-lg sm:text-xl font-black text-slate-900 leading-none font-mono">
-                  96,8%
-                </span>
-                <span className="text-xs text-emerald-600 font-bold ml-1.5">
-                  Siaga Aman (161,9 Juta m³)
-                </span>
-              </div>
-            </div>
-
-            {/* Donut Chart with Center Metric */}
-            <div className="relative h-28 flex items-center justify-center my-0.5">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={DATA_6_WADUK_DONUT}
-                    innerRadius={36}
-                    outerRadius={50}
-                    paddingAngle={2.5}
-                    dataKey="volume"
-                  >
-                    {DATA_6_WADUK_DONUT.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${val} Juta m³ (${item.payload.persen}%)`,
-                      name,
-                    ]}
-                    contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
-                  161,9M
-                </span>
-                <span className="text-[10px] text-slate-500 font-semibold">m³ efektif</span>
-              </div>
-            </div>
-
-            {/* Mini Legend List per Waduk */}
-            <div className="grid grid-cols-3 gap-x-2.5 gap-y-1.5 text-xs pt-2 border-t border-slate-100">
-              {DATA_6_WADUK_DONUT.map((w, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-slate-700 truncate font-medium">
-                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.color }} />
-                    {w.name}
+              <div className="flex items-center gap-2.5">
+                <div className="text-right shrink-0">
+                  <span className="text-lg sm:text-xl font-black text-slate-900 leading-none font-mono">
+                    96,8%
                   </span>
-                  <span className={`font-mono font-bold ${w.persen < 90 ? 'text-amber-700' : 'text-slate-800'}`}>
-                    {w.persen}%
+                  <span className="text-xs text-emerald-600 font-bold ml-1.5">
+                    Siaga Aman
                   </span>
                 </div>
-              ))}
+
+                {/* Sheet Swap Toggle */}
+                <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-lg shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setWadukViewMode('grafik')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      wadukViewMode === 'grafik'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan grafik lingkaran"
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWadukViewMode('tabel')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      wadukViewMode === 'tabel'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan tabel rincian 6 waduk"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Tabel Detail</span>
+                  </button>
+                </div>
+              </div>
             </div>
+
+            {/* Konten Sheet Swap Card 2 */}
+            {wadukViewMode === 'grafik' ? (
+              <div>
+                {/* Donut Chart with Center Metric */}
+                <div className="relative h-28 flex items-center justify-center my-0.5">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={DATA_6_WADUK_DONUT}
+                        innerRadius={36}
+                        outerRadius={50}
+                        paddingAngle={2.5}
+                        dataKey="volume"
+                      >
+                        {DATA_6_WADUK_DONUT.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(val: any, name: any, item: any) => [
+                          `${val} Juta m³ (${item.payload.persen}%)`,
+                          name,
+                        ]}
+                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                      161,9M
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-semibold">m³ efektif</span>
+                  </div>
+                </div>
+
+                {/* Mini Legend List per Waduk */}
+                <div className="grid grid-cols-3 gap-x-2.5 gap-y-1.5 text-xs pt-2 border-t border-slate-100">
+                  {DATA_6_WADUK_DONUT.map((w, idx) => (
+                    <div key={idx} className="flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-slate-700 truncate font-medium">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.color }} />
+                        {w.name}
+                      </span>
+                      <span className={`font-mono font-bold ${w.persen < 90 ? 'text-amber-700' : 'text-slate-800'}`}>
+                        {w.persen}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* TABEL DETAIL 6 WADUK AIR BAKU */
+              <div className="h-36 sm:h-40 w-full overflow-y-auto rounded-lg border border-slate-200 mt-1 scrollbar-thin">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[11px]">
+                    <tr>
+                      <th className="py-1.5 px-3">Nama Waduk</th>
+                      <th className="py-1.5 px-2 text-right">Vol. Efektif</th>
+                      <th className="py-1.5 px-2 text-right">Kapasitas</th>
+                      <th className="py-1.5 px-2 text-right">Elevasi</th>
+                      <th className="py-1.5 px-2 text-center">Isi (%)</th>
+                      <th className="py-1.5 px-2.5 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs">
+                    {DATA_6_WADUK_DONUT.map((row) => (
+                      <tr key={row.name} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-1.5 px-3 font-bold text-slate-900 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: row.color }} />
+                          {row.name}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700">
+                          {row.volume.toFixed(1)} Juta m³
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-600">
+                          {row.kapasitasDesain.toFixed(1)} Juta m³
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">
+                          {row.elevasiM}
+                        </td>
+                        <td className="py-1.5 px-2 text-center">
+                          <span className={`font-mono font-bold px-1.5 py-0.5 rounded text-[10.5px] border ${
+                            row.persen >= 95
+                              ? 'text-emerald-700 bg-emerald-50 border-emerald-100'
+                              : 'text-blue-700 bg-blue-50 border-blue-100'
+                          }`}>
+                            {row.persen.toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="py-1.5 px-2.5 text-center">
+                          <span className="font-bold text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            {row.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -386,91 +481,255 @@ export const KonsolidasiMultiUnitSummary: React.FC<KonsolidasiMultiUnitSummaryPr
       {/* GRID 2: TIGA KARTU VISUAL MENENGAH (LEBIH RINGKAS & PADAT)           */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {/* CARD 3: Ketersediaan Lahan 7 SWP (Grouped Bar Chart) */}
+        {/* CARD 3: Ketersediaan Lahan 7 SWP (WITH SHEET SWAP) */}
         <div className="bg-white rounded-xl border border-slate-200/90 p-3 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-100">
               <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                 Lahan 7 Wilayah SWP
               </h3>
-              <div className="text-right shrink-0">
-                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
-                  3.250 Ha
-                </span>
-                <span className="text-xs text-blue-600 font-bold ml-1.5">
-                  Cadangan Lahan
-                </span>
+
+              <div className="flex items-center gap-2">
+                <div className="text-right shrink-0">
+                  <span className="text-sm sm:text-base font-black text-slate-900 leading-none font-mono">
+                    3.250 Ha
+                  </span>
+                  <span className="text-[10px] text-blue-600 font-bold ml-1">
+                    Cadangan
+                  </span>
+                </div>
+
+                {/* Sheet Swap Toggle */}
+                <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setLahanViewMode('grafik')}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-all cursor-pointer ${
+                      lahanViewMode === 'grafik'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan grafik batang"
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    <span>Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLahanViewMode('tabel')}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-all cursor-pointer ${
+                      lahanViewMode === 'tabel'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan tabel rincian 7 SWP"
+                  >
+                    <FileText className="w-3 h-3" />
+                    <span>Tabel Detail</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 text-xs text-slate-600 mb-1 font-medium">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-xs bg-blue-600" /> Terisi (12.382 Ha)
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-xs bg-emerald-500" /> Cadangan (3.250 Ha)
-              </span>
-            </div>
+            {/* Konten Sheet Swap Card 3 */}
+            {lahanViewMode === 'grafik' ? (
+              <div>
+                <div className="flex items-center gap-3 text-xs text-slate-600 mb-1 font-medium">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-xs bg-blue-600" /> Terisi (12.382 Ha)
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-xs bg-emerald-500" /> Cadangan (3.250 Ha)
+                  </span>
+                </div>
 
-            <div className="h-28 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={DATA_LAHAN_7_SWP} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="swp" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 500 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    formatter={(val: any, name: any) => [`${val} Ha`, name === 'terisi' ? 'Alokasi Terisi' : 'Cadangan Lahan']}
-                    contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                  />
-                  <Bar dataKey="terisi" fill="#2563EB" radius={[2, 2, 0, 0]} barSize={9} />
-                  <Bar dataKey="cadangan" fill="#10B981" radius={[2, 2, 0, 0]} barSize={9} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                <div className="h-28 sm:h-32 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={DATA_LAHAN_7_SWP} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                      <XAxis dataKey="swp" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 500 }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                      <Tooltip
+                        formatter={(val: any, name: any) => [`${val} Ha`, name === 'terisi' ? 'Alokasi Terisi' : 'Cadangan Lahan']}
+                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                      />
+                      <Bar dataKey="terisi" fill="#2563EB" radius={[2, 2, 0, 0]} barSize={9} />
+                      <Bar dataKey="cadangan" fill="#10B981" radius={[2, 2, 0, 0]} barSize={9} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ) : (
+              /* TABEL DETAIL LAHAN 7 SWP */
+              <div className="h-28 sm:h-32 w-full overflow-y-auto rounded-lg border border-slate-200 mt-1 scrollbar-thin">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                    <tr>
+                      <th className="py-1 px-1.5 whitespace-nowrap">Wilayah SWP</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap">Terisi</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap">Cadangan</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap font-black">Total</th>
+                      <th className="py-1 px-1 text-center whitespace-nowrap">Rasio</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs">
+                    {DATA_LAHAN_7_SWP.map((row) => {
+                      const total = row.terisi + row.cadangan;
+                      const persenCadangan = ((row.cadangan / total) * 100).toFixed(1);
+                      return (
+                        <tr key={row.swp} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="py-1 px-1.5 font-bold text-slate-800 text-[10.5px]">
+                            {row.swp}
+                          </td>
+                          <td className="py-1 px-1 text-right font-mono text-blue-700 font-semibold text-[10px]">
+                            {row.terisi.toLocaleString('id-ID')} Ha
+                          </td>
+                          <td className="py-1 px-1 text-right font-mono text-emerald-700 font-semibold text-[10px]">
+                            {row.cadangan.toLocaleString('id-ID')} Ha
+                          </td>
+                          <td className="py-1 px-1 text-right font-mono font-black text-slate-900 text-[10px]">
+                            {total.toLocaleString('id-ID')} Ha
+                          </td>
+                          <td className="py-1 px-1 text-center">
+                            <span className="font-mono font-bold text-[9.5px] text-blue-700 bg-blue-50 px-1 py-0.2 rounded border border-blue-100">
+                              {persenCadangan}%
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* CARD 4: Kurva S 14 Megaproyek Fisik (Double Line Spline) */}
+        {/* CARD 4: Kurva S 14 Megaproyek Fisik (WITH SHEET SWAP) */}
         <div className="bg-white rounded-xl border border-slate-200/90 p-3 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-100">
               <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                 Kurva S 14 Megaproyek
               </h3>
-              <div className="text-right shrink-0">
-                <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
-                  96,8%
-                </span>
-                <span className="text-xs text-emerald-600 font-bold ml-1.5">
-                  (Ahead +0,8%)
-                </span>
+
+              <div className="flex items-center gap-2">
+                <div className="text-right shrink-0">
+                  <span className="text-sm sm:text-base font-black text-slate-900 leading-none font-mono">
+                    96,8%
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-bold ml-1">
+                    Ahead +0,8%
+                  </span>
+                </div>
+
+                {/* Sheet Swap Toggle */}
+                <div className="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-md shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setProyekViewMode('grafik')}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-all cursor-pointer ${
+                      proyekViewMode === 'grafik'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan grafik garis"
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    <span>Grafik</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProyekViewMode('tabel')}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-all cursor-pointer ${
+                      proyekViewMode === 'tabel'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tampilkan tabel rincian kurva S"
+                  >
+                    <FileText className="w-3 h-3" />
+                    <span>Tabel Detail</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 text-xs text-slate-600 mb-1 font-medium">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-0.5 bg-slate-400 inline-block" /> Target Rencana
-              </span>
-              <span className="flex items-center gap-1.5 font-bold text-blue-600">
-                <span className="w-2.5 h-1 bg-blue-600 inline-block rounded-full" /> Realisasi Lapangan
-              </span>
-            </div>
+            {/* Konten Sheet Swap Card 4 */}
+            {proyekViewMode === 'grafik' ? (
+              <div>
+                <div className="flex items-center gap-3 text-xs text-slate-600 mb-1 font-medium">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-0.5 bg-slate-400 inline-block" /> Target Rencana
+                  </span>
+                  <span className="flex items-center gap-1.5 font-bold text-blue-600">
+                    <span className="w-2.5 h-1 bg-blue-600 inline-block rounded-full" /> Realisasi Lapangan
+                  </span>
+                </div>
 
-            <div className="h-28 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={DATA_KURVA_S_PROYEK} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="bln" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
-                  <Tooltip
-                    formatter={(val: any, name: any) => [`${val}%`, name === 'target' ? 'Rencana' : 'Realisasi']}
-                    contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                  />
-                  <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
-                  <Line type="monotone" dataKey="aktual" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 3, fill: '#2563EB' }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+                <div className="h-28 sm:h-32 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={DATA_KURVA_S_PROYEK} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                      <XAxis dataKey="bln" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
+                      <Tooltip
+                        formatter={(val: any, name: any) => [`${val}%`, name === 'target' ? 'Rencana' : 'Realisasi']}
+                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                      />
+                      <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} />
+                      <Line type="monotone" dataKey="aktual" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 3, fill: '#2563EB' }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ) : (
+              /* TABEL DETAIL KURVA S 14 MEGAPROYEK */
+              <div className="h-28 sm:h-32 w-full overflow-y-auto rounded-lg border border-slate-200 mt-1 scrollbar-thin">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-700 font-bold text-[10px]">
+                    <tr>
+                      <th className="py-1 px-1.5 whitespace-nowrap">Bulan</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap">Rencana</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap font-black">Realisasi</th>
+                      <th className="py-1 px-1 text-right whitespace-nowrap">Deviasi</th>
+                      <th className="py-1 px-1 text-center whitespace-nowrap">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs">
+                    {DATA_KURVA_S_PROYEK.map((row) => {
+                      const deviasi = (row.aktual - row.target).toFixed(1);
+                      const isAhead = Number(deviasi) >= 0;
+                      return (
+                        <tr key={row.bln} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="py-1 px-1.5 font-bold text-slate-900 text-[10.5px]">
+                            {row.bln} 2026
+                          </td>
+                          <td className="py-1 px-1 text-right font-mono text-slate-600 text-[10px]">
+                            {row.target.toFixed(1)}%
+                          </td>
+                          <td className="py-1 px-1 text-right font-mono font-bold text-blue-700 text-[10.5px]">
+                            {row.aktual.toFixed(1)}%
+                          </td>
+                          <td className={`py-1 px-1 text-right font-mono font-bold text-[10px] ${isAhead ? 'text-emerald-700' : 'text-amber-700'}`}>
+                            {isAhead ? `+${deviasi}` : deviasi}%
+                          </td>
+                          <td className="py-1 px-1 text-center">
+                            <span className={`font-mono font-bold text-[9.5px] px-1 py-0.2 rounded border ${
+                              isAhead
+                                ? 'text-emerald-700 bg-emerald-50 border-emerald-100'
+                                : 'text-amber-700 bg-amber-50 border-amber-100'
+                            }`}>
+                              {isAhead ? 'Ahead' : 'Delay'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 

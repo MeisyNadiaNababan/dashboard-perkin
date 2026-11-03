@@ -25,10 +25,12 @@ interface InfrastrukturPerkinA7KpiRowProps {
   selectedQuarter?: string;
 }
 
+import { DeputiKpiCard } from '../DeputiKpiCard';
+
 export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowProps> = ({
   onOpenFormulaModal,
   onSelectUnit,
-  selectedKpiId,
+  selectedKpiId: _selectedKpiId,
 }) => {
   const ikp1 = PERKIN_A7_KPIS[0];
   const ikp2 = PERKIN_A7_KPIS[1];
@@ -36,122 +38,59 @@ export const InfrastrukturPerkinA7KpiRow: React.FC<InfrastrukturPerkinA7KpiRowPr
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS PERTAMA: 4 KARTU KPI UTAMA EKSEKUTIF (POLOS KOTAK TANPA GARIS) */}
+      {/* 1. BARIS PERTAMA: 4 KARTU KPI UTAMA EKSEKUTIF (SESUAI REFERENSI DESAIN) */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {/* KARTU 1: IKP 1 - PENYELENGGARAAN INFRASTRUKTUR */}
-        <div
+        <DeputiKpiCard
+          title="IKP 1 • Pembangunan Fisik"
+          value="92,40%"
+          targetLabel="Target 100,0% (92,4%)"
+          yoyLabel="+6,8% YoY"
+          icon={HardHat}
           onClick={() => {
             onOpenFormulaModal(ikp1.id);
             onSelectUnit?.('dit-pembangunan-infrastruktur');
           }}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Penyelenggaraan Infrastruktur"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <HardHat className="w-3.5 h-3.5 text-cyan-200" />
-                Pembangunan Fisik
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <HardHat className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Persentase Penyelenggaraan Infrastruktur yang Sesuai Rencana"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              92,40%
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 100% Rencana</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 86,50% (+6,8%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* KARTU 2: NILAI REALISASI PNBP - BLUE CARD */}
-        <div
+        {/* KARTU 2: NILAI REALISASI PNBP */}
+        <DeputiKpiCard
+          title="IKP 2 • Penerimaan PNBP"
+          value="Rp 7,45 M"
+          targetLabel="Target Rp 6,82 M (109,2%)"
+          yoyLabel="+16,4% YoY"
+          icon={Coins}
           onClick={() => {
             onOpenFormulaModal(ikp2.id);
             onSelectUnit?.('dit-pembangunan-infrastruktur');
           }}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Nilai Realisasi PNBP"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <Coins className="w-3.5 h-3.5 text-cyan-200" />
-                Penerimaan PNBP
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Coins className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Nilai Realisasi Penerimaan PNBP Infrastruktur"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              Rp 7,45 M
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target Rp 6,82 M</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 6,40 M (+16,4%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* KARTU 3: PAGU & SERAPAN BELANJA MODAL INFRASTRUKTUR - BLUE CARD */}
-        <div
+        {/* KARTU 3: PAGU & SERAPAN BELANJA MODAL INFRASTRUKTUR */}
+        <DeputiKpiCard
+          title="IKP 3 • Belanja Modal Fisik"
+          value="Rp 682,4 M"
+          targetLabel="Target Rp 842,5 M (81,0%)"
+          yoyLabel="+14,1% YoY"
+          icon={Building2}
           onClick={() => onSelectUnit?.('dit-pembangunan-infrastruktur')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Belanja Modal Fisik Pembangunan & Perencanaan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-cyan-200" />
-                Belanja Modal Fisik
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Building2 className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Realisasi Belanja Modal Fisik Pembangunan & Perencanaan Infrastruktur"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              Rp 682,4 M
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Pagu Rp 842,5 M</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 598,2 M (+14,1%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* KARTU 4: KEMANTAPAN JARINGAN JALAN & PAKET STRATEGIS - BLUE CARD */}
-        <div
+        {/* KARTU 4: KEMANTAPAN JARINGAN JALAN & PAKET STRATEGIS */}
+        <DeputiKpiCard
+          title="IKP 4 • Paket Strategis & Jalan"
+          value="14 Paket"
+          unitLabel="91,4%"
+          targetLabel="Target 14 Paket (100,0%)"
+          yoyLabel="+16,7% YoY"
+          icon={Route}
           onClick={() => onSelectUnit?.('dit-pembangunan-infrastruktur')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Paket Strategis & Kelaikan Jalan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <Route className="w-3.5 h-3.5 text-cyan-200" />
-                Paket Strategis &amp; Jalan
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Route className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
-
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              14 Paket / 91,4%
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 14 Paket</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 12 Paket (+16,7%)</span>
-            </div>
-          </div>
-        </div>
+          tooltip="Realisasi Penyelesaian Paket Strategis & Kemantapan Jaringan Jalan"
+        />
       </div>
 
       {/* ================================================================== */}

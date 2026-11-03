@@ -17,6 +17,8 @@ interface AdministrasiKeuanganKpiRowProps {
 }
 
 
+import { DeputiKpiCard } from '../DeputiKpiCard';
+
 export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProps> = ({
   onOpenFormulaModal,
   selectedKpiId: _selectedKpiId,
@@ -29,104 +31,52 @@ export const AdministrasiKeuanganKpiRow: React.FC<AdministrasiKeuanganKpiRowProp
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A1 (KOMPAK & EKSEKUTIF)        */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A1 (SESUAI REFERENSI DESAIN)   */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {/* IKP 1: Indeks Reformasi Birokrasi */}
-        <div
+        <DeputiKpiCard
+          title="IKP 1 • Reformasi Birokrasi"
+          value="78,45 / BB"
+          targetLabel="Target 75,00 BB (104,6%)"
+          yoyLabel="+3,0% YoY"
+          icon={ShieldCheck}
           onClick={() => onOpenFormulaModal('ikp-1-rb')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Reformasi Birokrasi"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">Reformasi RB</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Indeks Reformasi Birokrasi (KemenPAN-RB)"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              78,45 / BB
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target BB (75,00)</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 76,20 (+3,0%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 2: Indeks Sistem Merit - BLUE CARD */}
-        <div
+        {/* IKP 2: Indeks Sistem Merit */}
+        <DeputiKpiCard
+          title="IKP 2 • Indeks Sistem Merit"
+          value="342,5 / IV"
+          targetLabel="Target 280,0 (122,3%)"
+          yoyLabel="+5,1% YoY"
+          icon={Users}
           onClick={() => onOpenFormulaModal('ikp-2-merit')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Sistem Merit"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">Sistem Merit</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Users className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Penerapan Sistem Merit Manajemen ASN (KASN)"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              342,5 / IV
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 280 (Baik)</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 326,0 (+5,1%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 3: Indeks Maturitas SPIP - BLUE CARD */}
-        <div
+        {/* IKP 3: Indeks Maturitas SPIP */}
+        <DeputiKpiCard
+          title="IKP 3 • Maturitas SPIP"
+          value="3,42 / Level 3"
+          targetLabel="Target 3,20 (106,9%)"
+          yoyLabel="+7,5% YoY"
+          icon={ShieldAlert}
           onClick={() => onOpenFormulaModal('ikp-3-spip')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 3 Maturitas SPIP"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">Maturitas SPIP</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <ShieldAlert className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 3 Tingkat Maturitas Penyelenggaraan SPIP (BPKP)"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              3,42 / Level 3
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 3,20</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 3,18 (+7,5%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 4: Opini BPK Laporan Keuangan - BLUE CARD */}
-        <div
+        {/* IKP 4: Opini BPK Laporan Keuangan */}
+        <DeputiKpiCard
+          title="IKP 4 • Opini BPK RI"
+          value="WTP"
+          targetLabel="Target WTP (100,0%)"
+          yoyLabel="+0,0% YoY"
+          icon={Award}
           onClick={() => onOpenFormulaModal('ikp-4-wtp')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 4 Opini BPK WTP"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">Opini BPK RI</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Award className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
-
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              WTP
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target WTP (SAP)</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: WTP (Konsisten 8x)</span>
-            </div>
-          </div>
-        </div>
+          tooltip="Buka detail IKP 4 Opini BPK RI atas Laporan Keuangan (8x WTP Berturut-turut)"
+        />
       </div>
 
       {/* ================================================================== */}

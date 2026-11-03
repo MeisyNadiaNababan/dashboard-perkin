@@ -306,7 +306,7 @@ export const InfrastrukturPerkinA7DeepDiveCenter: React.FC<
             Unit Deep-Dive Center: Pembangunan, Perencanaan &amp; Pengamanan Infrastruktur
           </h3>
           <p className="text-[11px] text-slate-500 mt-0.5">
-            Analisis granular 3 unit kerja pengampu Perkin DEP-A7 (Dit. Pembangunan Infrastruktur, Dit. Perencanaan Infrastruktur, Dit. Pengamanan Aset)
+            Analisis granular 3 unit kerja pengampu Perkin DEP-A7 (Dit. Pembangunan Infrastruktur, Dit. Perencanaan Infrastruktur, Dit. Pengawasan Infrastruktur)
           </p>
         </div>
 

@@ -20,6 +20,7 @@ import {
   MapPin,
   TrendingUp,
   ShieldCheck,
+  Megaphone,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -36,6 +37,7 @@ import {
 } from 'recharts';
 import { DirektoratPengamananAsetVisualizer } from '../PengamananAset/DirektoratPengamananAsetVisualizer';
 import { RumahSakitVisualizer } from '../RumahSakit/RumahSakitVisualizer';
+import { DirektoratDiseminasiInformasiVisualizer } from './DirektoratDiseminasiInformasiVisualizer';
 
 interface UnitDeepDiveCenterProps {
   selectedUnitId: string;
@@ -192,11 +194,13 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
   onNavigateToFullDashboard,
   onOpenFormulaModal: _onOpenFormulaModal,
 }) => {
-  // Normalize unit: 'bu-rumah-sakit' | 'bu-spam-fasling' | 'dit-pam-aset'
+  // Normalize unit: 'dit-diseminasi' | 'bu-rumah-sakit' | 'bu-spam-fasling' | 'dit-pam-aset'
   const activeUnit =
-    selectedUnitId === 'bu-spam-fasling' || selectedUnitId === 'dit-pam-aset'
+    selectedUnitId === 'bu-rumah-sakit' ||
+    selectedUnitId === 'bu-spam-fasling' ||
+    selectedUnitId === 'dit-pam-aset'
       ? selectedUnitId
-      : 'bu-rumah-sakit';
+      : 'dit-diseminasi';
 
   return (
     <div
@@ -204,20 +208,33 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
       className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3.5 font-sans"
     >
       {/* ================================================================== */}
-      {/* 1. HEADER SECTION & UNIT TABS (PERSIS MODEL DEP-A1)                 */}
+      {/* 1. HEADER SECTION & UNIT TABS                                      */}
       {/* ================================================================== */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div>
           <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
-            Unit Deep-Dive Center: Rumah Sakit, SPAM Fasling &amp; Pengamanan Aset
+            Unit Deep-Dive Center: Diseminasi Informasi, RSBP, SPAM Fasling &amp; Ditpam
           </h3>
           <p className="text-[11px] text-slate-500 mt-0.5">
-            Analisis granular 3 unit operasional pengampu Perkin DEP-A6 (BU Rumah Sakit, BU SPAM Fasling, Dit. Pengamanan Aset)
+            Analisis granular 4 unit pengampu Perkin DEP-A6 (Dit. Diseminasi Informasi &amp; Hubungan Antar Lembaga, BU Rumah Sakit, BU SPAM Fasling, Dit. Pengamanan Aset)
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="inline-flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80">
+        <div className="inline-flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80 flex-wrap">
+          <button
+            type="button"
+            onClick={() => onSelectUnit('dit-diseminasi')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              activeUnit === 'dit-diseminasi'
+                ? 'bg-blue-600 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Megaphone className="w-3.5 h-3.5" />
+            <span>Dit. Diseminasi Informasi</span>
+          </button>
+
           <button
             type="button"
             onClick={() => onSelectUnit('bu-rumah-sakit')}
@@ -258,6 +275,13 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
           </button>
         </div>
       </div>
+
+      {/* ================================================================== */}
+      {/* 2. TAB CONTENT: DIT. DISEMINASI INFORMASI & HUBUNGAN ANTAR LEMBAGA */}
+      {/* ================================================================== */}
+      {activeUnit === 'dit-diseminasi' && (
+        <DirektoratDiseminasiInformasiVisualizer />
+      )}
 
       {/* ================================================================== */}
       {/* 2. TAB CONTENT: BU RUMAH SAKIT (RSBP BATAM) (10 KARTU VISUALISASI) */}

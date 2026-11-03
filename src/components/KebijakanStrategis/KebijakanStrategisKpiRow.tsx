@@ -43,6 +43,8 @@ const SPARKLINE_IKP4 = [
   { v: 82.5 }, { v: 84.1 }, { v: 85.6 }, { v: 86.8 }, { v: 87.5 }, { v: 88.42 },
 ];
 
+import { DeputiKpiCard } from '../DeputiKpiCard';
+
 export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> = ({
   onOpenFormulaModal,
   selectedUnit: _selectedUnit,
@@ -56,105 +58,53 @@ export const KebijakanStrategisKpiRow: React.FC<KebijakanStrategisKpiRowProps> =
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A2 (KOMPAK, GRADIENT & EKSEKUTIF) */}
-      {/* Model Persis DEP-A1: 4 Kolom dengan Sparkline Area Chart               */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A2 (SESUAI REFERENSI DESAIN)   */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-        {/* IKP 1: Indeks Perencanaan Pembangunan (IPPN) - PUSREN (KPI UTAMA - BLUE CARD) */}
-        <div
+        {/* IKP 1: Indeks Perencanaan Pembangunan (IPPN) */}
+        <DeputiKpiCard
+          title="IKP 1 • Indeks Perencanaan (IPPN)"
+          value="94,20 / 100"
+          targetLabel="Target 92,00 (102,4%)"
+          yoyLabel="+5,3% YoY"
+          icon={Compass}
           onClick={() => onOpenFormulaModal('ikp-1-perencanaan')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Indeks Perencanaan Pembangunan (IPPN)"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">Pusren (IPPN)</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Compass className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Indeks Perencanaan Pembangunan (Pusren)"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              94,20 / 100
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 92,00</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 89,50 (+5,3%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 2: Indeks Kualitas Kebijakan (IKK) - BLUE CARD */}
-        <div
+        {/* IKP 2: Indeks Kualitas Kebijakan (IKK) */}
+        <DeputiKpiCard
+          title="IKP 2 • Kualitas Kebijakan (IKK)"
+          value="71,80 / 100"
+          targetLabel="Target 65,00 (110,5%)"
+          yoyLabel="+11,8% YoY"
+          icon={Scale}
           onClick={() => onOpenFormulaModal('ikp-2-kebijakan')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Indeks Kualitas Kebijakan (IKK)"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">Harmonisasi (IKK)</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Scale className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Indeks Kualitas Kebijakan (Pusat Harmonisasi)"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              71,80 / 100
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 65,00</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 64,20 (+11,8%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 3: Tingkat Kematangan SPBE - BLUE CARD */}
-        <div
+        {/* IKP 3: Tingkat Kematangan SPBE */}
+        <DeputiKpiCard
+          title="IKP 3 • Kematangan SPBE"
+          value="4,12 / Level 4"
+          targetLabel="Target 3,90 (105,6%)"
+          yoyLabel="+9,0% YoY"
+          icon={ShieldCheck}
           onClick={() => onOpenFormulaModal('ikp-3-spbe')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 3 Tingkat Kematangan SPBE"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">SPBE (PDSI)</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 3 Tingkat Kematangan SPBE (Pusat PDSI)"
+        />
 
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              4,12 / Level 4
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 3,90</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 3,78 (+9,0%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 4: IKM Pengguna Layanan PTSP - BLUE CARD */}
-        <div
+        {/* IKP 4: IKM Pengguna Layanan PTSP */}
+        <DeputiKpiCard
+          title="IKP 4 • Kepuasan IKM PTSP"
+          value="88,42"
+          unitLabel="Mutu A"
+          targetLabel="Target 86,50 (102,2%)"
+          yoyLabel="+2,9% YoY"
+          icon={Award}
           onClick={() => onOpenFormulaModal('ikp-4-ikm-ptsp')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 4 IKM Layanan PTSP"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100">IKM PTSP</span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Award className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
-
-            <span className="text-lg sm:text-xl font-black text-white tracking-tight block">
-              88,42 / Mutu A
-            </span>
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 86,50</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 85,90 (+2,9%)</span>
-            </div>
-          </div>
-        </div>
+          tooltip="Buka detail IKP 4 Indeks Kepuasan Masyarakat PTSP"
+        />
       </div>
 
       {/* ================================================================== */}

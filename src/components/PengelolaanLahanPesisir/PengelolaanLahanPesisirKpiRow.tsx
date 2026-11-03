@@ -13,6 +13,7 @@ import {
   Layers,
   ArrowUpRight,
   TrendingUp,
+  DollarSign,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -20,6 +21,7 @@ import {
   Area,
 } from 'recharts';
 import { PERKIN_A3_KPIS } from './pengelolaanLahanPesisirData';
+import { DeputiKpiCard } from '../DeputiKpiCard';
 
 interface PengelolaanLahanPesisirKpiRowProps {
   onOpenFormulaModal: (kpiId: string) => void;
@@ -48,102 +50,52 @@ export const PengelolaanLahanPesisirKpiRow: React.FC<PengelolaanLahanPesisirKpiR
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS ATAS: 3 KARTU IKP UTAMA DEP-A3 (KOMPAK, GRADIENT & EKSEKUTIF) */}
-      {/* Model Persis DEP-A2: 3 Kolom dengan Sparkline Area Chart           */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A3 (SESUAI REFERENSI DESAIN)   */}
       {/* ================================================================== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-        {/* IKP 1: Luas Alokasi Lahan untuk Investasi - DIT. PENGELOLAAN LAHAN */}
-        <div
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        {/* IKP 1: Luas Alokasi Lahan untuk Investasi */}
+        <DeputiKpiCard
+          title="IKP 1 • Alokasi Lahan Investasi"
+          value="248,5 Ha"
+          targetLabel="Target 200,0 Ha (124,3%)"
+          yoyLabel="+15,5% YoY"
+          icon={MapPin}
           onClick={() => onOpenFormulaModal('ikp-1-lahan-investasi')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Luas Alokasi Lahan untuk Investasi"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-cyan-200" />
-                Dit. Pertanahan (Alokasi Investasi)
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Luas Lahan yang Dialokasikan untuk Investasi (Dit. Pengelolaan Lahan)"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                248,5
-              </span>
-              <span className="text-xs font-bold text-blue-100">Hektar</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 200,0 Ha</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 215,2 Ha (+15,5%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 2: Luas Izin Pengelolaan Kawasan Pesisir & Reklamasi - BLUE CARD */}
-        <div
+        {/* IKP 2: Luas Izin Pengelolaan Kawasan Pesisir & Reklamasi */}
+        <DeputiKpiCard
+          title="IKP 2 • Izin Pesisir & Reklamasi"
+          value="162,8 Ha"
+          targetLabel="Target 150,0 Ha (108,5%)"
+          yoyLabel="+14,2% YoY"
+          icon={Anchor}
           onClick={() => onOpenFormulaModal('ikp-2-pesisir-reklamasi')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Luas Izin Pesisir & Reklamasi"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <Anchor className="w-3.5 h-3.5 text-cyan-200" />
-                Dit. Pesisir (Izin &amp; Reklamasi)
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <Anchor className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Luas Izin Kawasan Pesisir & Reklamasi (Dit. Pesisir & Reklamasi)"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                162,8
-              </span>
-              <span className="text-xs font-bold text-blue-100">Hektar</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 150,0 Ha</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 142,5 Ha (+14,2%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 3: Keberhasilan Pengawasan & Pengendalian Lahan - BLUE CARD */}
-        <div
+        {/* IKP 3: Keberhasilan Pengawasan & Pengendalian Lahan */}
+        <DeputiKpiCard
+          title="IKP 3 • Pengawasan Lahan"
+          value="89,40%"
+          targetLabel="Target 80,00% (111,8%)"
+          yoyLabel="+8,9% YoY"
+          icon={ShieldCheck}
           onClick={() => onOpenFormulaModal('ikp-3-pengawasan-pengendalian')}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 3 Keberhasilan Pengawasan & Pengendalian Lahan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-cyan-200" />
-                Dit. Pengendalian (Pengawasan)
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 3 Tingkat Keberhasilan Pengawasan & Pengendalian Lahan"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                89,40%
-              </span>
-              <span className="text-xs font-bold text-blue-100">Keberhasilan</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 80,00%</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 82,10% (+8,9%)</span>
-            </div>
-          </div>
-        </div>
+        {/* IKP 4 / Operasional: Penerimaan PNBP Pengelolaan Lahan */}
+        <DeputiKpiCard
+          title="Total • PNBP Pengelolaan Lahan"
+          value="Rp 482,5 M"
+          targetLabel="Target Rp 450,0 M (107,2%)"
+          yoyLabel="+9,8% YoY"
+          icon={DollarSign}
+          onClick={() => onSelectUnit?.('dit-pertanahan')}
+          tooltip="Total Realisasi PNBP Sektor Pengelolaan Pertanahan & Lahan"
+        />
       </div>
 
       {/* ================================================================== */}

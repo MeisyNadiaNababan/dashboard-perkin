@@ -1,554 +1,557 @@
 /**
  * Master Data Dummy Visualisasi Direktorat Pembangunan Infrastruktur BP Batam
+ * (Deputi Bidang Infrastruktur - DEP A7)
+ *
  * Tersimpan dalam satu objek JSON terpadu agar mudah disubstitusi dengan data riil API/database.
+ *
+ * PERINGATAN INTEGRITAS & PRIVASI:
+ * - Tidak menampilkan nilai PNBP rupiah dari perizinan.
+ * - Tidak menampilkan data pribadi pemohon (nama, NIK, NIB, kontak).
+ * - Dataset spasial hanya digunakan atribut tabularnya, tanpa visualisasi peta.
  */
 
-export interface PaketPekerjaanItem {
-  id: string;
-  kode: string;
-  namaPaket: string;
-  subdirektorat:
-    | 'Pembangunan Jalan dan Jembatan'
-    | 'Pembangunan Drainase'
-    | 'Pembangunan Gedung'
-    | 'Pematangan Tanah';
-  kategoriPekerjaan:
-    | 'Konektivitas & Transportasi'
-    | 'Pengendalian Banjir'
-    | 'Fasilitas Publik & Gedung'
-    | 'Pengembangan Kawasan Industri';
-  jenisPekerjaan:
-    | 'Pelebaran Jalan'
-    | 'Flyover & Jembatan'
-    | 'Saluran Drainase Primer'
-    | 'Kolam Retensi'
-    | 'Gedung Kantor / Arsip'
-    | 'Gedung Layanan Publik'
-    | 'Cut and Fill BSW'
-    | 'Pematangan Lahan';
-  kontraktor: string;
-  supervisi: string;
-  tanggalMulai: string;
-  tanggalSelesai: string;
-  bulan: 'Januari' | 'Februari' | 'Maret' | 'April' | 'Mei' | 'Juni' | 'Juli' | 'Agustus' | 'September' | 'Oktober' | 'November' | 'Desember';
-  nilaiPagu: number; // Dalam Juta Rupiah
-  nilaiHps: number; // Dalam Juta Rupiah
-  nilaiKontrak: number; // Dalam Juta Rupiah
-  progresPersen: number; // 0 - 100 %
-  jenisKendala:
-    | 'Cuaca'
-    | 'Pembebasan Lahan'
-    | 'Ketersediaan Material'
-    | 'Perizinan'
-    | 'Utilitas Eksisting'
-    | 'Tidak Ada Kendala';
-  kendalaDetail: string;
-}
-
-export interface PematanganTanahBulananItem {
+// KARTU 1 & 2: Row Utilitas
+export interface RowUtilitasBulananItem {
   bulan: string;
-  volumeM3: number;
-  progresKumulatifPersen: number;
+  fiberOptik: number;
+  listrik: number;
+  air: number;
+  gas: number;
+  telekomunikasi: number;
+  totalIzin: number;
+  totalGalianMeter: number;
+  lokasiTerbanyak: string;
 }
 
-export interface JaringanJalanItem {
-  wilayah: string;
-  kelasJalan: 'Arteri' | 'Kolektor' | 'Lokal' | 'Lingkungan';
-  aspalKm: number;
-  betonKm: number;
-  pavingKm: number;
-  tanahKerikilKm: number;
+export interface RowGalianJenisItem {
+  jenisUtilitas: 'Fiber Optik' | 'Jaringan Listrik' | 'Pipa Air Bersih' | 'Pipa Gas Bumi' | 'Telekomunikasi Seluler';
+  galianTerbukaM: number;
+  galianCrossingM: number;
+  totalGalianM: number;
+  lokasiDominan: string;
+  izinAkanBerakhir90Hari: number; // Jumlah izin yang akan berakhir dalam 90 hari
 }
 
-export interface LebarJalanStatusItem {
-  statusJalan: string;
-  rataRataLebarMeter: number;
-  jumlahRuas: number;
+// KARTU 3: Row Penghijauan
+export interface RowPenghijauanBulananItem {
+  bulan: string;
+  tamanM2: number;
+  medianM2: number;
+  potGantungM2: number;
+  pohonPeneduhM2: number;
+  totalLuasM2: number;
+  jumlahIzin: number;
+  lokasiTerbanyak: string;
+}
+
+// KARTU 4: Jaringan Jalan Eksisting
+export interface KondisiJalanItem {
+  kelasJalan: 'Jalan Arteri' | 'Jalan Kolektor' | 'Jalan Lokal' | 'Jalan Lingkungan';
+  baikKm: number;
+  sedangKm: number;
+  rusakRinganKm: number;
+  rusakBeratKm: number;
   totalPanjangKm: number;
+  lebarRataRataMeter: number;
+  materialPerkerasan: string;
 }
 
-export interface PembangunanInfrastrukturMasterData {
-  paketPekerjaan: PaketPekerjaanItem[];
-  pematanganTanahBulanan: PematanganTanahBulananItem[];
-  jaringanJalanData: JaringanJalanItem[];
-  lebarJalanStatusData: LebarJalanStatusItem[];
+// KARTU 5: Paket Pembangunan Infrastruktur per Kategori
+export interface PaketKategoriPekerjaanItem {
+  kategoriPekerjaan: 'Konektivitas & Transportasi' | 'Pengendalian Banjir' | 'Fasilitas Publik & Gedung' | 'Pengembangan Kawasan Industri';
+  subdit: 'Pembangunan Jalan dan Jembatan' | 'Pembangunan Drainase' | 'Pembangunan Gedung' | 'Pematangan Tanah';
+  nilaiPaguM: number;
+  nilaiHpsM: number;
+  nilaiKontrakM: number;
+  jumlahPaket: number;
+  jenisPekerjaanUtama: string;
+  efisiensiTenderPct: number; // Selisih pagu thd kontrak (%)
 }
 
-export const PEMBANGUNAN_INFRASTRUKTUR_MASTER_DATA: PembangunanInfrastrukturMasterData = {
-  // =========================================================================
-  // DATASET 1: LAPORAN PROGRES PEKERJAAN KONSTRUKSI TAHUN BERJALAN (20 PAKET)
-  // Sifat Data: TERBATAS (Perbulan)
-  // =========================================================================
-  paketPekerjaan: [
-    {
-      id: 'PK-01',
-      kode: 'PK-01',
-      namaPaket: 'Pembangunan Flyover Sei Ladi & Penataan Simpang',
-      subdirektorat: 'Pembangunan Jalan dan Jembatan',
-      kategoriPekerjaan: 'Konektivitas & Transportasi',
-      jenisPekerjaan: 'Flyover & Jembatan',
-      kontraktor: 'PT Wijaya Karya (Persero) Tbk',
-      supervisi: 'PT Virama Karya (Persero)',
-      tanggalMulai: '15 Jan 2026',
-      tanggalSelesai: '15 Des 2026',
-      bulan: 'April',
-      nilaiPagu: 132000,
-      nilaiHps: 128500,
-      nilaiKontrak: 124800,
-      progresPersen: 92.4,
-      jenisKendala: 'Utilitas Eksisting',
-      kendalaDetail: 'Relokasi utilitas pipa transmisi gas dan kabel FO pada bentang tengah pier P3 selesai 100%.',
-    },
-    {
-      id: 'PK-02',
-      kode: 'PK-02',
-      namaPaket: 'Pelebaran Jalan Sudirman Tahap 4 (Jalur Lambat & Cepat)',
-      subdirektorat: 'Pembangunan Jalan dan Jembatan',
-      kategoriPekerjaan: 'Konektivitas & Transportasi',
-      jenisPekerjaan: 'Pelebaran Jalan',
-      kontraktor: 'PT Adhi Karya (Persero) Tbk',
-      supervisi: 'PT Yodya Karya',
-      tanggalMulai: '01 Feb 2026',
-      tanggalSelesai: '30 Okt 2026',
-      bulan: 'April',
-      nilaiPagu: 98500,
-      nilaiHps: 95000,
-      nilaiKontrak: 92400,
-      progresPersen: 78.5,
-      jenisKendala: 'Cuaca',
-      kendalaDetail: 'Presipitasi hujan sore hari memperlambat pemadatan lapisan base course A STA 3+200.',
-    },
-    {
-      id: 'PK-03',
-      kode: 'PK-03',
-      namaPaket: 'Pembangunan Kolam Retensi Baloi & Saluran Primer',
-      subdirektorat: 'Pembangunan Drainase',
-      kategoriPekerjaan: 'Pengendalian Banjir',
-      jenisPekerjaan: 'Kolam Retensi',
-      kontraktor: 'PT Brantas Abipraya (Persero)',
-      supervisi: 'PT Bina Karya (Persero)',
-      tanggalMulai: '10 Feb 2026',
-      tanggalSelesai: '25 Nov 2026',
-      bulan: 'April',
-      nilaiPagu: 48000,
-      nilaiHps: 46200,
-      nilaiKontrak: 44500,
-      progresPersen: 68.2,
-      jenisKendala: 'Pembebasan Lahan',
-      kendalaDetail: 'Negosiasi relokasi 3 unit kios semi-permanen pada bibir saluran masuk inlet kolam.',
-    },
-    {
-      id: 'PK-04',
-      kode: 'PK-04',
-      namaPaket: 'Normalisasi Drainase Primer Batam Center (Hilir Sukajadi)',
-      subdirektorat: 'Pembangunan Drainase',
-      kategoriPekerjaan: 'Pengendalian Banjir',
-      jenisPekerjaan: 'Saluran Drainase Primer',
-      kontraktor: 'PT Hutama Karya Infrastruktur',
-      supervisi: 'PT Indah Karya',
-      tanggalMulai: '05 Jan 2026',
-      tanggalSelesai: '15 Sep 2026',
-      bulan: 'April',
-      nilaiPagu: 36500,
-      nilaiHps: 35100,
-      nilaiKontrak: 33800,
-      progresPersen: 84.1,
-      jenisKendala: 'Tidak Ada Kendala',
-      kendalaDetail: 'Pemasangan sheet pile CCSP W-325 dan dredging sedimen berjalan sesuai schedule.',
-    },
-    {
-      id: 'PK-05',
-      kode: 'PK-05',
-      namaPaket: 'Pematangan Lahan Rempang Eco-City Zona A (280 Ha)',
-      subdirektorat: 'Pematangan Tanah',
-      kategoriPekerjaan: 'Pengembangan Kawasan Industri',
-      jenisPekerjaan: 'Cut and Fill BSW',
-      kontraktor: 'PT Pembangunan Perumahan (Persero) Tbk',
-      supervisi: 'PT Ciriajasa Cipta Mandiri',
-      tanggalMulai: '12 Jan 2026',
-      tanggalSelesai: '30 Des 2026',
-      bulan: 'April',
-      nilaiPagu: 185000,
-      nilaiHps: 180000,
-      nilaiKontrak: 174500,
-      progresPersen: 86.8,
-      jenisKendala: 'Cuaca',
-      kendalaDetail: 'Kondisi track hauling licin saat hujan lebat; penambahan grader dan compactor aktif.',
-    },
-    {
-      id: 'PK-06',
-      kode: 'PK-06',
-      namaPaket: 'Pematangan Lahan KEK Batam Aero Technic Tahap 3',
-      subdirektorat: 'Pematangan Tanah',
-      kategoriPekerjaan: 'Pengembangan Kawasan Industri',
-      jenisPekerjaan: 'Pematangan Lahan',
-      kontraktor: 'PT Jaya Konstruksi MP Tbk',
-      supervisi: 'PT Delta Buana Konsultan',
-      tanggalMulai: '20 Jan 2026',
-      tanggalSelesai: '15 Nov 2026',
-      bulan: 'April',
-      nilaiPagu: 82000,
-      nilaiHps: 79500,
-      nilaiKontrak: 78900, // Rasio 96.2% (>95%)
-      progresPersen: 42.5, // <50% (Aksen)
-      jenisKendala: 'Ketersediaan Material',
-      kendalaDetail: 'Keterlambatan tongkang agregat batu pecah dari quarry Karimun karena ombak tinggi selat.',
-    },
-    {
-      id: 'PK-07',
-      kode: 'PK-07',
-      namaPaket: 'Pembangunan Gedung Pusat Logistik & Arsip BP Batam',
-      subdirektorat: 'Pembangunan Gedung',
-      kategoriPekerjaan: 'Fasilitas Publik & Gedung',
-      jenisPekerjaan: 'Gedung Kantor / Arsip',
-      kontraktor: 'PT Nindya Karya (Persero)',
-      supervisi: 'PT Artefak Arkindo',
-      tanggalMulai: '01 Mar 2026',
-      tanggalSelesai: '15 Des 2026',
-      bulan: 'April',
-      nilaiPagu: 62000,
-      nilaiHps: 60500,
-      nilaiKontrak: 59800, // Rasio 96.5% (>95%)
-      progresPersen: 38.0, // <50% (Aksen)
-      jenisKendala: 'Perizinan',
-      kendalaDetail: 'Revisi rekomendasi proteksi kebakaran dan kajian teknis PBG gedung arsip bernilai tinggi.',
-    },
-    {
-      id: 'PK-08',
-      kode: 'PK-08',
-      namaPaket: 'Revitalisasi Gedung Klinik Rawat Inap RSBP Sekupang',
-      subdirektorat: 'Pembangunan Gedung',
-      kategoriPekerjaan: 'Fasilitas Publik & Gedung',
-      jenisPekerjaan: 'Gedung Layanan Publik',
-      kontraktor: 'PT Total Bangun Persada Tbk',
-      supervisi: 'PT Cipta Multi Kreasi',
-      tanggalMulai: '15 Jan 2026',
-      tanggalSelesai: '30 Ags 2026',
-      bulan: 'April',
-      nilaiPagu: 41000,
-      nilaiHps: 39800,
-      nilaiKontrak: 38200,
-      progresPersen: 71.5,
-      jenisKendala: 'Tidak Ada Kendala',
-      kendalaDetail: 'Instalasi gas medik dan finishing lantai vinyl antibakteri rampung sesuai spesifikasi.',
-    },
-    {
-      id: 'PK-09',
-      kode: 'PK-09',
-      namaPaket: 'Peningkatan Jalan Akses Kargo Pelabuhan Batu Ampar',
-      subdirektorat: 'Pembangunan Jalan dan Jembatan',
-      kategoriPekerjaan: 'Konektivitas & Transportasi',
-      jenisPekerjaan: 'Pelebaran Jalan',
-      kontraktor: 'PT Waskita Karya (Persero) Tbk',
-      supervisi: 'PT Seecons Engineering',
-      tanggalMulai: '18 Jan 2026',
-      tanggalSelesai: '20 Okt 2026',
-      bulan: 'April',
-      nilaiPagu: 74500,
-      nilaiHps: 72000,
-      nilaiKontrak: 68900,
-      progresPersen: 63.8,
-      jenisKendala: 'Utilitas Eksisting',
-      kendalaDetail: 'Penataan kabel bawah tanah SKTM 20kV PLN dan crossing drainase jalan pelabuhan.',
-    },
-    {
-      id: 'PK-10',
-      kode: 'PK-10',
-      namaPaket: 'Pembangunan JPO Ikonik Penghubung Batam Center',
-      subdirektorat: 'Pembangunan Jalan dan Jembatan',
-      kategoriPekerjaan: 'Konektivitas & Transportasi',
-      jenisPekerjaan: 'Flyover & Jembatan',
-      kontraktor: 'PT Sumber Rancang Bangun',
-      supervisi: 'PT Multi Konsultan',
-      tanggalMulai: '10 Feb 2026',
-      tanggalSelesai: '10 Okt 2026',
-      bulan: 'April',
-      nilaiPagu: 28500,
-      nilaiHps: 27800,
-      nilaiKontrak: 27400, // Rasio 96.1% (>95%)
-      progresPersen: 34.5, // <50% (Aksen)
-      jenisKendala: 'Perizinan',
-      kendalaDetail: 'Izin rekayasa lalu lintas malam hari (traffic diversion) sedang sinkronisasi bersama Dishub.',
-    },
-    {
-      id: 'PK-11',
-      kode: 'PK-11',
-      namaPaket: 'Normalisasi Sungai Jodoh & Penguatan Dinding Beton',
-      subdirektorat: 'Pembangunan Drainase',
-      kategoriPekerjaan: 'Pengendalian Banjir',
-      jenisPekerjaan: 'Saluran Drainase Primer',
-      kontraktor: 'PT Bumi Karsa',
-      supervisi: 'PT Duta Graha Konsultan',
-      tanggalMulai: '22 Jan 2026',
-      tanggalSelesai: '15 Nov 2026',
-      bulan: 'April',
-      nilaiPagu: 52000,
-      nilaiHps: 50400,
-      nilaiKontrak: 49200,
-      progresPersen: 46.2, // <50% (Aksen)
-      jenisKendala: 'Pembebasan Lahan',
-      kendalaDetail: 'Sisa 4 persil lahan belum steril di tikungan sungai arah outlet laut Kampung Nelayan.',
-    },
-    {
-      id: 'PK-12',
-      kode: 'PK-12',
-      namaPaket: 'Pembangunan Pintu Air & Rumah Pompa Banjir Marina',
-      subdirektorat: 'Pembangunan Drainase',
-      kategoriPekerjaan: 'Pengendalian Banjir',
-      jenisPekerjaan: 'Kolam Retensi',
-      kontraktor: 'PT Minarta Dutahutama',
-      supervisi: 'PT Prima Desain Konsulindo',
-      tanggalMulai: '05 Feb 2026',
-      tanggalSelesai: '30 Nov 2026',
-      bulan: 'April',
-      nilaiPagu: 33000,
-      nilaiHps: 32000,
-      nilaiKontrak: 30800,
-      progresPersen: 58.0,
-      jenisKendala: 'Ketersediaan Material',
-      kendalaDetail: 'Pengapalan mechanical pump unit debit 2.500 liter/detik dalam pengawasan bea cukai pelabuhan.',
-    },
-    {
-      id: 'PK-13',
-      kode: 'PK-13',
-      namaPaket: 'Pematangan Lahan Kawasan Industri Kabil Terpadu',
-      subdirektorat: 'Pematangan Tanah',
-      kategoriPekerjaan: 'Pengembangan Kawasan Industri',
-      jenisPekerjaan: 'Pematangan Lahan',
-      kontraktor: 'PT Bangun Cipta Kontraktor',
-      supervisi: 'PT Geodinamik Konsultan',
-      tanggalMulai: '15 Jan 2026',
-      tanggalSelesai: '28 Okt 2026',
-      bulan: 'April',
-      nilaiPagu: 67000,
-      nilaiHps: 64800,
-      nilaiKontrak: 63100,
-      progresPersen: 82.0,
-      jenisKendala: 'Tidak Ada Kendala',
-      kendalaDetail: 'Elevasi cut & fill zona fabrikasi pipa minyak mencapai leveling +14.50 mdpl.',
-    },
-    {
-      id: 'PK-14',
-      kode: 'PK-14',
-      namaPaket: 'Pematangan Tanah Relokasi Warga Dapur 6 Rempang',
-      subdirektorat: 'Pematangan Tanah',
-      kategoriPekerjaan: 'Pengembangan Kawasan Industri',
-      jenisPekerjaan: 'Cut and Fill BSW',
-      kontraktor: 'PT Modern Surya Jaya',
-      supervisi: 'PT Bina Mandiri Rekayasa',
-      tanggalMulai: '01 Feb 2026',
-      tanggalSelesai: '30 Nov 2026',
-      bulan: 'April',
-      nilaiPagu: 55000,
-      nilaiHps: 53500,
-      nilaiKontrak: 51200,
-      progresPersen: 49.0, // <50% (Aksen)
-      jenisKendala: 'Cuaca',
-      kendalaDetail: 'Tanah ekspansif memerlukan penambahan stabilisasi semen saat musim basah awal triwulan.',
-    },
-    {
-      id: 'PK-15',
-      kode: 'PK-15',
-      namaPaket: 'Pembangunan Gedung Lab Uji Lingkungan BP Batam',
-      subdirektorat: 'Pembangunan Gedung',
-      kategoriPekerjaan: 'Fasilitas Publik & Gedung',
-      jenisPekerjaan: 'Gedung Kantor / Arsip',
-      kontraktor: 'PT Pulauintan Bajaperkasa Konstruksi',
-      supervisi: 'PT Pola Data Konsultan',
-      tanggalMulai: '25 Jan 2026',
-      tanggalSelesai: '10 Des 2026',
-      bulan: 'April',
-      nilaiPagu: 38000,
-      nilaiHps: 37100,
-      nilaiKontrak: 36500, // Rasio 96.1% (>95%)
-      progresPersen: 61.5,
-      jenisKendala: 'Perizinan',
-      kendalaDetail: 'Sertifikasi akreditasi ruang isolasi kimia menunggu verifikasi standar KAN.',
-    },
-    {
-      id: 'PK-16',
-      kode: 'PK-16',
-      namaPaket: 'Pembangunan Terminal Penumpang Telaga Punggur Tahap 2',
-      subdirektorat: 'Pembangunan Gedung',
-      kategoriPekerjaan: 'Fasilitas Publik & Gedung',
-      jenisPekerjaan: 'Gedung Layanan Publik',
-      kontraktor: 'PT Tripatra Engineering',
-      supervisi: 'PT Surya Abadi Mandiri',
-      tanggalMulai: '12 Feb 2026',
-      tanggalSelesai: '20 Des 2026',
-      bulan: 'April',
-      nilaiPagu: 47500,
-      nilaiHps: 46000,
-      nilaiKontrak: 43900,
-      progresPersen: 53.2,
-      jenisKendala: 'Tidak Ada Kendala',
-      kendalaDetail: 'Pengecoran plat lantai 2 dan instalasi struktur baja canopy ruang tunggu selesai tepat waktu.',
-    },
-    {
-      id: 'PK-17',
-      kode: 'PK-17',
-      namaPaket: 'Pembangunan Jalan Lingkar Luar Sei Lekop - Sagulung',
-      subdirektorat: 'Pembangunan Jalan dan Jembatan',
-      kategoriPekerjaan: 'Konektivitas & Transportasi',
-      jenisPekerjaan: 'Pelebaran Jalan',
-      kontraktor: 'PT Nusa Raya Cipta Tbk',
-      supervisi: 'PT Prisma Engineering',
-      tanggalMulai: '05 Feb 2026',
-      tanggalSelesai: '15 Des 2026',
-      bulan: 'April',
-      nilaiPagu: 58000,
-      nilaiHps: 56500,
-      nilaiKontrak: 54200,
-      progresPersen: 65.0,
-      jenisKendala: 'Utilitas Eksisting',
-      kendalaDetail: 'Pergeseran 18 titik tiang PJU dan pipa air bersih SPAM di bahu jalan segmen barat.',
-    },
-    {
-      id: 'PK-18',
-      kode: 'PK-18',
-      namaPaket: 'Saluran Sekunder Tiban Kampung Pengendali Genangan',
-      subdirektorat: 'Pembangunan Drainase',
-      kategoriPekerjaan: 'Pengendalian Banjir',
-      jenisPekerjaan: 'Saluran Drainase Primer',
-      kontraktor: 'PT Jaya Mandiri Konstruksi',
-      supervisi: 'PT Griya Teknika',
-      tanggalMulai: '15 Jan 2026',
-      tanggalSelesai: '30 Sep 2026',
-      bulan: 'April',
-      nilaiPagu: 24500,
-      nilaiHps: 23800,
-      nilaiKontrak: 23100,
-      progresPersen: 76.5,
-      jenisKendala: 'Tidak Ada Kendala',
-      kendalaDetail: 'Ekskavasi dan perkuatan dinding pasangan batu kali dengan mortar K-225 berjalan mulus.',
-    },
-    {
-      id: 'PK-19',
-      kode: 'PK-19',
-      namaPaket: 'Pematangan Lahan Terminal Kargo Bandara Hang Nadim',
-      subdirektorat: 'Pematangan Tanah',
-      kategoriPekerjaan: 'Pengembangan Kawasan Industri',
-      jenisPekerjaan: 'Pematangan Lahan',
-      kontraktor: 'PT Tunas Baru Konstruksi',
-      supervisi: 'PT Wahana Konsultan Cipta',
-      tanggalMulai: '01 Mar 2026',
-      tanggalSelesai: '30 Nov 2026',
-      bulan: 'April',
-      nilaiPagu: 43000,
-      nilaiHps: 42000,
-      nilaiKontrak: 41200, // Rasio 95.8% (>95%)
-      progresPersen: 29.0, // <50% (Aksen)
-      jenisKendala: 'Ketersediaan Material',
-      kendalaDetail: 'Dua unit dozer D85 overhaul suku cadang mesin, relokasi alat sewa pengganti segera tiba.',
-    },
-    {
-      id: 'PK-20',
-      kode: 'PK-20',
-      namaPaket: 'Pembangunan Jembatan Sei Tiram Pengganti Gelagar Baja',
-      subdirektorat: 'Pembangunan Jalan dan Jembatan',
-      kategoriPekerjaan: 'Konektivitas & Transportasi',
-      jenisPekerjaan: 'Flyover & Jembatan',
-      kontraktor: 'PT Krakatau Engineering',
-      supervisi: 'PT Rekayasa Rekanindo',
-      tanggalMulai: '20 Jan 2026',
-      tanggalSelesai: '15 Okt 2026',
-      bulan: 'April',
-      nilaiPagu: 32000,
-      nilaiHps: 31000,
-      nilaiKontrak: 29500,
-      progresPersen: 73.0,
-      jenisKendala: 'Cuaca',
-      kendalaDetail: 'Pasang air rob laut di muara sungai mempersempit jendela waktu pemasangan bore pile abutmen.',
-    },
-  ],
+// KARTU 6: Paket Pematangan Tanah (BSW)
+export interface PaketBswItem {
+  id: string;
+  namaPaket: string;
+  kategoriPekerjaan: 'Kawasan Industri' | 'Pemukiman Relokasi' | 'Pelabuhan & Logistik' | 'Fasilitas Bandara';
+  ppk: string;
+  kontraktor: string;
+  nilaiKontrakM: number;
+  volumePekerjaanM3: number;
+  progresPersen: number;
+}
+
+export interface MasterPembangunanInfrastrukturData {
+  metadata: {
+    unit: string;
+    deputi: string;
+    tahunList: string[];
+    wilayahList: string[];
+    subditList: string[];
+    kategoriBswList: string[];
+  };
+
+  // BARIS 1
+  rowUtilitasPerTahun: Record<string, RowUtilitasBulananItem[]>;
+  panjangGalianPerTahun: Record<string, Record<string, RowGalianJenisItem[]>>; // [tahun][bulan]
+
+  // BARIS 2
+  rowPenghijauanPerTahun: Record<string, RowPenghijauanBulananItem[]>;
+  kondisiJalanPerWilayah: Record<string, KondisiJalanItem[]>;
+
+  // BARIS 3
+  paketInfrastrukturPerTahun: Record<string, PaketKategoriPekerjaanItem[]>;
+  paketBswPerTahun: Record<string, PaketBswItem[]>;
+}
+
+export const PEMBANGUNAN_INFRASTRUKTUR_MASTER_DATA: MasterPembangunanInfrastrukturData = {
+  metadata: {
+    unit: 'Direktorat Pembangunan Infrastruktur',
+    deputi: 'Anggota/Deputi Bidang Infrastruktur (DEP A7)',
+    tahunList: ['2026', '2025', '2024'],
+    wilayahList: ['Semua Wilayah', 'Batam Kota', 'Batu Ampar', 'Sekupang', 'Nongsa', 'Batu Aji', 'Sagulung'],
+    subditList: ['Semua Subdit', 'Pembangunan Jalan dan Jembatan', 'Pembangunan Drainase', 'Pembangunan Gedung', 'Pematangan Tanah'],
+    kategoriBswList: ['Semua Kategori', 'Kawasan Industri', 'Pemukiman Relokasi', 'Pelabuhan & Logistik', 'Fasilitas Bandara'],
+  },
 
   // =========================================================================
-  // DATASET 2: PEMATANGAN TANAH (BSW) BULANAN TAHUN BERJALAN
-  // Sifat Data: TERBATAS (Perbulan)
+  // BARIS 1 - KARTU 1: Perizinan Pemanfaatan ROW untuk Utilitas (Bulanan)
   // =========================================================================
-  pematanganTanahBulanan: [
-    { bulan: 'Januari', volumeM3: 340000, progresKumulatifPersen: 7.2 },
-    { bulan: 'Februari', volumeM3: 460000, progresKumulatifPersen: 17.0 },
-    { bulan: 'Maret', volumeM3: 580000, progresKumulatifPersen: 29.3 },
-    { bulan: 'April', volumeM3: 720000, progresKumulatifPersen: 44.6 },
-    { bulan: 'Mei', volumeM3: 690000, progresKumulatifPersen: 59.3 },
-    { bulan: 'Juni', volumeM3: 540000, progresKumulatifPersen: 70.8 },
-    { bulan: 'Juli', volumeM3: 470000, progresKumulatifPersen: 80.8 },
-    { bulan: 'Agustus', volumeM3: 410000, progresKumulatifPersen: 89.5 },
-    { bulan: 'September', volumeM3: 310000, progresKumulatifPersen: 96.1 },
-    { bulan: 'Oktober', volumeM3: 185000, progresKumulatifPersen: 100.0 },
-  ],
-
-  // =========================================================================
-  // DATASET 3: JARINGAN JALAN EKSISTING PER KELAS & MATERIAL
-  // Sifat Data: TERBUKA (Jika update)
-  // =========================================================================
-  jaringanJalanData: [
-    // Batam Center
-    { wilayah: 'Batam Center', kelasJalan: 'Arteri', aspalKm: 42.5, betonKm: 18.2, pavingKm: 1.5, tanahKerikilKm: 0.0 },
-    { wilayah: 'Batam Center', kelasJalan: 'Kolektor', aspalKm: 34.0, betonKm: 12.5, pavingKm: 3.2, tanahKerikilKm: 0.8 },
-    { wilayah: 'Batam Center', kelasJalan: 'Lokal', aspalKm: 28.5, betonKm: 8.4, pavingKm: 5.6, tanahKerikilKm: 1.2 },
-    { wilayah: 'Batam Center', kelasJalan: 'Lingkungan', aspalKm: 19.0, betonKm: 14.5, pavingKm: 12.0, tanahKerikilKm: 2.5 },
-
-    // Batu Ampar & Bengkong
-    { wilayah: 'Batu Ampar & Bengkong', kelasJalan: 'Arteri', aspalKm: 26.0, betonKm: 15.4, pavingKm: 0.5, tanahKerikilKm: 0.0 },
-    { wilayah: 'Batu Ampar & Bengkong', kelasJalan: 'Kolektor', aspalKm: 21.5, betonKm: 9.8, pavingKm: 1.8, tanahKerikilKm: 0.5 },
-    { wilayah: 'Batu Ampar & Bengkong', kelasJalan: 'Lokal', aspalKm: 18.0, betonKm: 7.2, pavingKm: 4.1, tanahKerikilKm: 1.0 },
-    { wilayah: 'Batu Ampar & Bengkong', kelasJalan: 'Lingkungan', aspalKm: 14.5, betonKm: 11.0, pavingKm: 9.5, tanahKerikilKm: 3.0 },
-
-    // Nongsa
-    { wilayah: 'Nongsa', kelasJalan: 'Arteri', aspalKm: 38.5, betonKm: 10.2, pavingKm: 0.8, tanahKerikilKm: 0.0 },
-    { wilayah: 'Nongsa', kelasJalan: 'Kolektor', aspalKm: 29.0, betonKm: 8.5, pavingKm: 2.4, tanahKerikilKm: 1.5 },
-    { wilayah: 'Nongsa', kelasJalan: 'Lokal', aspalKm: 24.5, betonKm: 6.8, pavingKm: 3.8, tanahKerikilKm: 2.8 },
-    { wilayah: 'Nongsa', kelasJalan: 'Lingkungan', aspalKm: 16.0, betonKm: 9.2, pavingKm: 7.4, tanahKerikilKm: 5.2 },
-
-    // Sekupang
-    { wilayah: 'Sekupang', kelasJalan: 'Arteri', aspalKm: 31.0, betonKm: 12.0, pavingKm: 0.4, tanahKerikilKm: 0.0 },
-    { wilayah: 'Sekupang', kelasJalan: 'Kolektor', aspalKm: 25.5, betonKm: 9.0, pavingKm: 2.0, tanahKerikilKm: 1.0 },
-    { wilayah: 'Sekupang', kelasJalan: 'Lokal', aspalKm: 22.0, betonKm: 7.5, pavingKm: 3.5, tanahKerikilKm: 1.8 },
-    { wilayah: 'Sekupang', kelasJalan: 'Lingkungan', aspalKm: 15.0, betonKm: 10.5, pavingKm: 8.2, tanahKerikilKm: 3.5 },
-
-    // Batu Aji & Sagulung
-    { wilayah: 'Batu Aji & Sagulung', kelasJalan: 'Arteri', aspalKm: 35.0, betonKm: 16.8, pavingKm: 0.8, tanahKerikilKm: 0.0 },
-    { wilayah: 'Batu Aji & Sagulung', kelasJalan: 'Kolektor', aspalKm: 28.5, betonKm: 11.2, pavingKm: 2.8, tanahKerikilKm: 1.2 },
-    { wilayah: 'Batu Aji & Sagulung', kelasJalan: 'Lokal', aspalKm: 24.0, betonKm: 8.5, pavingKm: 4.5, tanahKerikilKm: 2.5 },
-    { wilayah: 'Batu Aji & Sagulung', kelasJalan: 'Lingkungan', aspalKm: 18.5, betonKm: 13.0, pavingKm: 11.5, tanahKerikilKm: 4.8 },
-
-    // Rempang & Galang
-    { wilayah: 'Rempang & Galang', kelasJalan: 'Arteri', aspalKm: 48.0, betonKm: 8.5, pavingKm: 0.0, tanahKerikilKm: 0.0 },
-    { wilayah: 'Rempang & Galang', kelasJalan: 'Kolektor', aspalKm: 32.5, betonKm: 6.0, pavingKm: 1.2, tanahKerikilKm: 3.8 },
-    { wilayah: 'Rempang & Galang', kelasJalan: 'Lokal', aspalKm: 21.0, betonKm: 4.5, pavingKm: 2.0, tanahKerikilKm: 6.5 },
-    { wilayah: 'Rempang & Galang', kelasJalan: 'Lingkungan', aspalKm: 12.0, betonKm: 5.8, pavingKm: 4.2, tanahKerikilKm: 11.0 },
-  ],
+  rowUtilitasPerTahun: {
+    '2026': [
+      { bulan: 'Jan', fiberOptik: 8, listrik: 5, air: 4, gas: 2, telekomunikasi: 3, totalIzin: 22, totalGalianMeter: 3850, lokasiTerbanyak: 'Jl. Sudirman & Batam Centre' },
+      { bulan: 'Feb', fiberOptik: 9, listrik: 6, air: 3, gas: 2, telekomunikasi: 4, totalIzin: 24, totalGalianMeter: 4120, lokasiTerbanyak: 'Kawasan KEK Nongsa Digital' },
+      { bulan: 'Mar', fiberOptik: 11, listrik: 7, air: 5, gas: 3, telekomunikasi: 4, totalIzin: 30, totalGalianMeter: 5240, lokasiTerbanyak: 'Jl. Ahmad Yani & Panbil' },
+      { bulan: 'Apr', fiberOptik: 10, listrik: 6, air: 4, gas: 3, telekomunikasi: 5, totalIzin: 28, totalGalianMeter: 4890, lokasiTerbanyak: 'Batu Ampar - Seraya' },
+      { bulan: 'Mei', fiberOptik: 8, listrik: 5, air: 4, gas: 2, telekomunikasi: 3, totalIzin: 22, totalGalianMeter: 3750, lokasiTerbanyak: 'Sei Ladi - Sekupang' },
+      { bulan: 'Jun', fiberOptik: 12, listrik: 8, air: 5, gas: 4, telekomunikasi: 4, totalIzin: 33, totalGalianMeter: 5800, lokasiTerbanyak: 'Kabil Industrial Estate' },
+      { bulan: 'Jul', fiberOptik: 10, listrik: 7, air: 4, gas: 3, telekomunikasi: 5, totalIzin: 29, totalGalianMeter: 5120, lokasiTerbanyak: 'Jl. Gajah Mada Tiban' },
+      { bulan: 'Agu', fiberOptik: 9, listrik: 6, air: 5, gas: 2, telekomunikasi: 4, totalIzin: 26, totalGalianMeter: 4450, lokasiTerbanyak: 'Batu Aji - Tanjung Uncang' },
+      { bulan: 'Sep', fiberOptik: 11, listrik: 7, air: 4, gas: 3, telekomunikasi: 4, totalIzin: 29, totalGalianMeter: 5020, lokasiTerbanyak: 'Bandara Hang Nadim Koridor' },
+      { bulan: 'Okt', fiberOptik: 13, listrik: 8, air: 6, gas: 3, telekomunikasi: 5, totalIzin: 35, totalGalianMeter: 6150, lokasiTerbanyak: 'Batam Centre - Engku Putri' },
+      { bulan: 'Nov', fiberOptik: 9, listrik: 5, air: 4, gas: 2, telekomunikasi: 4, totalIzin: 24, totalGalianMeter: 4180, lokasiTerbanyak: 'Piayu & Mukakuning' },
+      { bulan: 'Des', fiberOptik: 10, listrik: 6, air: 5, gas: 3, telekomunikasi: 4, totalIzin: 28, totalGalianMeter: 4900, lokasiTerbanyak: 'Kawasan Barelang Simpang' },
+    ],
+    '2025': [
+      { bulan: 'Jan', fiberOptik: 7, listrik: 4, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 19, totalGalianMeter: 3300, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Feb', fiberOptik: 8, listrik: 5, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 21, totalGalianMeter: 3650, lokasiTerbanyak: 'Nongsa' },
+      { bulan: 'Mar', fiberOptik: 9, listrik: 6, air: 4, gas: 2, telekomunikasi: 4, totalIzin: 25, totalGalianMeter: 4300, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Apr', fiberOptik: 9, listrik: 5, air: 4, gas: 2, telekomunikasi: 4, totalIzin: 24, totalGalianMeter: 4150, lokasiTerbanyak: 'Batu Ampar' },
+      { bulan: 'Mei', fiberOptik: 7, listrik: 4, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 19, totalGalianMeter: 3250, lokasiTerbanyak: 'Sekupang' },
+      { bulan: 'Jun', fiberOptik: 10, listrik: 6, air: 4, gas: 3, telekomunikasi: 4, totalIzin: 27, totalGalianMeter: 4700, lokasiTerbanyak: 'Kabil' },
+      { bulan: 'Jul', fiberOptik: 9, listrik: 6, air: 4, gas: 2, telekomunikasi: 4, totalIzin: 25, totalGalianMeter: 4350, lokasiTerbanyak: 'Tiban' },
+      { bulan: 'Agu', fiberOptik: 8, listrik: 5, air: 4, gas: 2, telekomunikasi: 3, totalIzin: 22, totalGalianMeter: 3800, lokasiTerbanyak: 'Batu Aji' },
+      { bulan: 'Sep', fiberOptik: 9, listrik: 6, air: 3, gas: 2, telekomunikasi: 4, totalIzin: 24, totalGalianMeter: 4100, lokasiTerbanyak: 'Hang Nadim' },
+      { bulan: 'Okt', fiberOptik: 11, listrik: 7, air: 5, gas: 3, telekomunikasi: 4, totalIzin: 30, totalGalianMeter: 5200, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Nov', fiberOptik: 8, listrik: 4, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 20, totalGalianMeter: 3450, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Des', fiberOptik: 9, listrik: 5, air: 4, gas: 2, telekomunikasi: 4, totalIzin: 24, totalGalianMeter: 4100, lokasiTerbanyak: 'Barelang' },
+    ],
+    '2024': [
+      { bulan: 'Jan', fiberOptik: 6, listrik: 4, air: 3, gas: 1, telekomunikasi: 2, totalIzin: 16, totalGalianMeter: 2800, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Feb', fiberOptik: 7, listrik: 4, air: 3, gas: 1, telekomunikasi: 3, totalIzin: 18, totalGalianMeter: 3100, lokasiTerbanyak: 'Sekupang' },
+      { bulan: 'Mar', fiberOptik: 8, listrik: 5, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 21, totalGalianMeter: 3600, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Apr', fiberOptik: 8, listrik: 5, air: 4, gas: 2, telekomunikasi: 3, totalIzin: 22, totalGalianMeter: 3750, lokasiTerbanyak: 'Batu Ampar' },
+      { bulan: 'Mei', fiberOptik: 6, listrik: 4, air: 3, gas: 1, telekomunikasi: 3, totalIzin: 17, totalGalianMeter: 2900, lokasiTerbanyak: 'Tiban' },
+      { bulan: 'Jun', fiberOptik: 9, listrik: 5, air: 4, gas: 2, telekomunikasi: 3, totalIzin: 23, totalGalianMeter: 3950, lokasiTerbanyak: 'Kabil' },
+      { bulan: 'Jul', fiberOptik: 8, listrik: 5, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 21, totalGalianMeter: 3600, lokasiTerbanyak: 'Nongsa' },
+      { bulan: 'Agu', fiberOptik: 7, listrik: 4, air: 3, gas: 1, telekomunikasi: 3, totalIzin: 18, totalGalianMeter: 3100, lokasiTerbanyak: 'Batu Aji' },
+      { bulan: 'Sep', fiberOptik: 8, listrik: 5, air: 4, gas: 2, telekomunikasi: 3, totalIzin: 22, totalGalianMeter: 3750, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Okt', fiberOptik: 10, listrik: 6, air: 4, gas: 2, telekomunikasi: 4, totalIzin: 26, totalGalianMeter: 4450, lokasiTerbanyak: 'Sudirman' },
+      { bulan: 'Nov', fiberOptik: 7, listrik: 4, air: 3, gas: 1, telekomunikasi: 3, totalIzin: 18, totalGalianMeter: 3050, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Des', fiberOptik: 8, listrik: 5, air: 3, gas: 2, telekomunikasi: 3, totalIzin: 21, totalGalianMeter: 3550, lokasiTerbanyak: 'Barelang' },
+    ],
+  },
 
   // =========================================================================
-  // DATASET 4: LEBAR JALAN RATA-RATA PER STATUS JALAN
-  // Sifat Data: TERBUKA (Jika update)
+  // BARIS 1 - KARTU 2: Panjang Galian per Jenis Utilitas (Terbuka vs Crossing)
   // =========================================================================
-  lebarJalanStatusData: [
-    {
-      statusJalan: 'Jalan Nasional',
-      rataRataLebarMeter: 24.5,
-      jumlahRuas: 18,
-      totalPanjangKm: 112.4,
+  panjangGalianPerTahun: {
+    '2026': {
+      Semua: [
+        { jenisUtilitas: 'Fiber Optik', galianTerbukaM: 18450, galianCrossingM: 4200, totalGalianM: 22650, lokasiDominan: 'Jl. Sudirman, Nongsa Digital & Batam Centre', izinAkanBerakhir90Hari: 8 },
+        { jenisUtilitas: 'Jaringan Listrik', galianTerbukaM: 9800, galianCrossingM: 2650, totalGalianM: 12450, lokasiDominan: 'Kabil Industrial Estate & Mukakuning', izinAkanBerakhir90Hari: 5 },
+        { jenisUtilitas: 'Pipa Air Bersih', galianTerbukaM: 7200, galianCrossingM: 1850, totalGalianM: 9050, lokasiDominan: 'Sei Ladi - Tiban & Batu Aji', izinAkanBerakhir90Hari: 4 },
+        { jenisUtilitas: 'Telekomunikasi Seluler', galianTerbukaM: 4600, galianCrossingM: 1120, totalGalianM: 5720, lokasiDominan: 'Batu Ampar & Nagoya', izinAkanBerakhir90Hari: 3 },
+        { jenisUtilitas: 'Pipa Gas Bumi', galianTerbukaM: 2900, galianCrossingM: 850, totalGalianM: 3750, lokasiDominan: 'Kawasan Industri Tanjung Uncang', izinAkanBerakhir90Hari: 2 },
+      ],
+      Januari: [
+        { jenisUtilitas: 'Fiber Optik', galianTerbukaM: 1550, galianCrossingM: 350, totalGalianM: 1900, lokasiDominan: 'Jl. Sudirman', izinAkanBerakhir90Hari: 1 },
+        { jenisUtilitas: 'Jaringan Listrik', galianTerbukaM: 820, galianCrossingM: 220, totalGalianM: 1040, lokasiDominan: 'Kabil', izinAkanBerakhir90Hari: 0 },
+        { jenisUtilitas: 'Pipa Air Bersih', galianTerbukaM: 610, galianCrossingM: 150, totalGalianM: 760, lokasiDominan: 'Sei Ladi', izinAkanBerakhir90Hari: 1 },
+        { jenisUtilitas: 'Telekomunikasi Seluler', galianTerbukaM: 380, galianCrossingM: 100, totalGalianM: 480, lokasiDominan: 'Batam Centre', izinAkanBerakhir90Hari: 0 },
+        { jenisUtilitas: 'Pipa Gas Bumi', galianTerbukaM: 240, galianCrossingM: 70, totalGalianM: 310, lokasiDominan: 'Tanjung Uncang', izinAkanBerakhir90Hari: 0 },
+      ],
+      Februari: [
+        { jenisUtilitas: 'Fiber Optik', galianTerbukaM: 1680, galianCrossingM: 380, totalGalianM: 2060, lokasiDominan: 'Nongsa Digital', izinAkanBerakhir90Hari: 1 },
+        { jenisUtilitas: 'Jaringan Listrik', galianTerbukaM: 880, galianCrossingM: 240, totalGalianM: 1120, lokasiDominan: 'Mukakuning', izinAkanBerakhir90Hari: 1 },
+        { jenisUtilitas: 'Pipa Air Bersih', galianTerbukaM: 650, galianCrossingM: 170, totalGalianM: 820, lokasiDominan: 'Tiban', izinAkanBerakhir90Hari: 0 },
+        { jenisUtilitas: 'Telekomunikasi Seluler', galianTerbukaM: 410, galianCrossingM: 110, totalGalianM: 520, lokasiDominan: 'Batu Ampar', izinAkanBerakhir90Hari: 1 },
+        { jenisUtilitas: 'Pipa Gas Bumi', galianTerbukaM: 260, galianCrossingM: 80, totalGalianM: 340, lokasiDominan: 'Panbil', izinAkanBerakhir90Hari: 0 },
+      ],
     },
-    {
-      statusJalan: 'Jalan Strategis BP Batam',
-      rataRataLebarMeter: 19.8,
-      jumlahRuas: 46,
-      totalPanjangKm: 248.6,
+    '2025': {
+      Semua: [
+        { jenisUtilitas: 'Fiber Optik', galianTerbukaM: 15800, galianCrossingM: 3600, totalGalianM: 19400, lokasiDominan: 'Batam Centre & Nagoya', izinAkanBerakhir90Hari: 6 },
+        { jenisUtilitas: 'Jaringan Listrik', galianTerbukaM: 8400, galianCrossingM: 2200, totalGalianM: 10600, lokasiDominan: 'Kabil & Batamindo', izinAkanBerakhir90Hari: 4 },
+        { jenisUtilitas: 'Pipa Air Bersih', galianTerbukaM: 6100, galianCrossingM: 1600, totalGalianM: 7700, lokasiDominan: 'Duriangkang - Mukakuning', izinAkanBerakhir90Hari: 3 },
+        { jenisUtilitas: 'Telekomunikasi Seluler', galianTerbukaM: 3900, galianCrossingM: 950, totalGalianM: 4850, lokasiDominan: 'Sekupang & Tiban', izinAkanBerakhir90Hari: 2 },
+        { jenisUtilitas: 'Pipa Gas Bumi', galianTerbukaM: 2400, galianCrossingM: 700, totalGalianM: 3100, lokasiDominan: 'Kabil', izinAkanBerakhir90Hari: 1 },
+      ],
     },
-    {
-      statusJalan: 'Jalan Provinsi',
-      rataRataLebarMeter: 14.2,
-      jumlahRuas: 22,
-      totalPanjangKm: 86.5,
-    },
-    {
-      statusJalan: 'Jalan Kawasan Industri / Khusus',
-      rataRataLebarMeter: 12.0,
-      jumlahRuas: 38,
-      totalPanjangKm: 95.3,
-    },
-  ],
+  },
+
+  // =========================================================================
+  // BARIS 2 - KARTU 3: Perizinan Pemanfaatan ROW untuk Penghijauan (Bulanan)
+  // =========================================================================
+  rowPenghijauanPerTahun: {
+    '2026': [
+      { bulan: 'Jan', tamanM2: 5400, medianM2: 6800, potGantungM2: 1200, pohonPeneduhM2: 2400, totalLuasM2: 15800, jumlahIzin: 14, lokasiTerbanyak: 'Jl. Sudirman & Bundaran Madani' },
+      { bulan: 'Feb', tamanM2: 5800, medianM2: 7200, potGantungM2: 1300, pohonPeneduhM2: 2600, totalLuasM2: 16900, jumlahIzin: 15, lokasiTerbanyak: 'Simpang Jam - Flyover Laluan Madani' },
+      { bulan: 'Mar', tamanM2: 6400, medianM2: 7900, potGantungM2: 1450, pohonPeneduhM2: 2900, totalLuasM2: 18650, jumlahIzin: 17, lokasiTerbanyak: 'Koridor Bandara Hang Nadim' },
+      { bulan: 'Apr', tamanM2: 6100, medianM2: 7500, potGantungM2: 1400, pohonPeneduhM2: 2750, totalLuasM2: 17750, jumlahIzin: 16, lokasiTerbanyak: 'Jl. Ahmad Yani Mukakuning' },
+      { bulan: 'Mei', tamanM2: 5200, medianM2: 6600, potGantungM2: 1150, pohonPeneduhM2: 2350, totalLuasM2: 15300, jumlahIzin: 13, lokasiTerbanyak: 'Dataran Engku Putri Batam Centre' },
+      { bulan: 'Jun', tamanM2: 6900, medianM2: 8400, potGantungM2: 1600, pohonPeneduhM2: 3200, totalLuasM2: 20100, jumlahIzin: 18, lokasiTerbanyak: 'Taman Rusa Sekupang & Marina' },
+      { bulan: 'Jul', tamanM2: 6500, medianM2: 8000, potGantungM2: 1500, pohonPeneduhM2: 3000, totalLuasM2: 19000, jumlahIzin: 17, lokasiTerbanyak: 'Kawasan Pariwisata Nongsa' },
+      { bulan: 'Agu', tamanM2: 5900, medianM2: 7300, potGantungM2: 1350, pohonPeneduhM2: 2700, totalLuasM2: 17250, jumlahIzin: 15, lokasiTerbanyak: 'Batu Aji - Sagulung Hijau' },
+      { bulan: 'Sep', tamanM2: 6200, medianM2: 7700, potGantungM2: 1400, pohonPeneduhM2: 2850, totalLuasM2: 18150, jumlahIzin: 16, lokasiTerbanyak: 'Jl. Yos Sudarso Batu Ampar' },
+      { bulan: 'Okt', tamanM2: 7200, medianM2: 8900, potGantungM2: 1700, pohonPeneduhM2: 3400, totalLuasM2: 21200, jumlahIzin: 19, lokasiTerbanyak: 'Taman Aspirasi & BIDA' },
+      { bulan: 'Nov', tamanM2: 5600, medianM2: 7000, potGantungM2: 1250, pohonPeneduhM2: 2550, totalLuasM2: 16400, jumlahIzin: 14, lokasiTerbanyak: 'Tiban Raya Boulevard' },
+      { bulan: 'Des', tamanM2: 6300, medianM2: 7800, potGantungM2: 1450, pohonPeneduhM2: 2950, totalLuasM2: 18500, jumlahIzin: 16, lokasiTerbanyak: 'Simpang Barelang Jembatan 1' },
+    ],
+    '2025': [
+      { bulan: 'Jan', tamanM2: 4600, medianM2: 5800, potGantungM2: 1000, pohonPeneduhM2: 2000, totalLuasM2: 13400, jumlahIzin: 12, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Feb', tamanM2: 4900, medianM2: 6100, potGantungM2: 1100, pohonPeneduhM2: 2200, totalLuasM2: 14300, jumlahIzin: 13, lokasiTerbanyak: 'Nongsa' },
+      { bulan: 'Mar', tamanM2: 5400, medianM2: 6700, potGantungM2: 1200, pohonPeneduhM2: 2450, totalLuasM2: 15750, jumlahIzin: 14, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Apr', tamanM2: 5200, medianM2: 6400, potGantungM2: 1150, pohonPeneduhM2: 2350, totalLuasM2: 15100, jumlahIzin: 13, lokasiTerbanyak: 'Batu Ampar' },
+      { bulan: 'Mei', tamanM2: 4500, medianM2: 5600, potGantungM2: 950, pohonPeneduhM2: 2000, totalLuasM2: 13050, jumlahIzin: 11, lokasiTerbanyak: 'Sekupang' },
+      { bulan: 'Jun', tamanM2: 5800, medianM2: 7200, potGantungM2: 1350, pohonPeneduhM2: 2700, totalLuasM2: 17050, jumlahIzin: 15, lokasiTerbanyak: 'Kabil' },
+      { bulan: 'Jul', tamanM2: 5500, medianM2: 6800, potGantungM2: 1250, pohonPeneduhM2: 2550, totalLuasM2: 16100, jumlahIzin: 14, lokasiTerbanyak: 'Tiban' },
+      { bulan: 'Agu', tamanM2: 5000, medianM2: 6200, potGantungM2: 1100, pohonPeneduhM2: 2300, totalLuasM2: 14600, jumlahIzin: 13, lokasiTerbanyak: 'Batu Aji' },
+      { bulan: 'Sep', tamanM2: 5300, medianM2: 6500, potGantungM2: 1200, pohonPeneduhM2: 2400, totalLuasM2: 15400, jumlahIzin: 14, lokasiTerbanyak: 'Hang Nadim' },
+      { bulan: 'Okt', tamanM2: 6100, medianM2: 7600, potGantungM2: 1400, pohonPeneduhM2: 2850, totalLuasM2: 17950, jumlahIzin: 16, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Nov', tamanM2: 4800, medianM2: 5900, potGantungM2: 1050, pohonPeneduhM2: 2150, totalLuasM2: 13900, jumlahIzin: 12, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Des', tamanM2: 5300, medianM2: 6600, potGantungM2: 1200, pohonPeneduhM2: 2450, totalLuasM2: 15550, jumlahIzin: 14, lokasiTerbanyak: 'Barelang' },
+    ],
+    '2024': [
+      { bulan: 'Jan', tamanM2: 4100, medianM2: 5100, potGantungM2: 850, pohonPeneduhM2: 1800, totalLuasM2: 11850, jumlahIzin: 10, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Feb', tamanM2: 4300, medianM2: 5300, potGantungM2: 900, pohonPeneduhM2: 1900, totalLuasM2: 12400, jumlahIzin: 11, lokasiTerbanyak: 'Sekupang' },
+      { bulan: 'Mar', tamanM2: 4700, medianM2: 5800, potGantungM2: 1050, pohonPeneduhM2: 2100, totalLuasM2: 13650, jumlahIzin: 12, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Apr', tamanM2: 4500, medianM2: 5600, potGantungM2: 1000, pohonPeneduhM2: 2000, totalLuasM2: 13100, jumlahIzin: 11, lokasiTerbanyak: 'Batu Ampar' },
+      { bulan: 'Mei', tamanM2: 3900, medianM2: 4900, potGantungM2: 800, pohonPeneduhM2: 1750, totalLuasM2: 11350, jumlahIzin: 9, lokasiTerbanyak: 'Tiban' },
+      { bulan: 'Jun', tamanM2: 5000, medianM2: 6200, potGantungM2: 1150, pohonPeneduhM2: 2300, totalLuasM2: 14650, jumlahIzin: 13, lokasiTerbanyak: 'Kabil' },
+      { bulan: 'Jul', tamanM2: 4800, medianM2: 5900, potGantungM2: 1100, pohonPeneduhM2: 2200, totalLuasM2: 14000, jumlahIzin: 12, lokasiTerbanyak: 'Nongsa' },
+      { bulan: 'Agu', tamanM2: 4400, medianM2: 5400, potGantungM2: 950, pohonPeneduhM2: 1950, totalLuasM2: 12700, jumlahIzin: 11, lokasiTerbanyak: 'Batu Aji' },
+      { bulan: 'Sep', tamanM2: 4600, medianM2: 5700, potGantungM2: 1050, pohonPeneduhM2: 2050, totalLuasM2: 13400, jumlahIzin: 12, lokasiTerbanyak: 'Hang Nadim' },
+      { bulan: 'Okt', tamanM2: 5300, medianM2: 6600, potGantungM2: 1200, pohonPeneduhM2: 2450, totalLuasM2: 15550, jumlahIzin: 14, lokasiTerbanyak: 'Batam Centre' },
+      { bulan: 'Nov', tamanM2: 4200, medianM2: 5200, potGantungM2: 900, pohonPeneduhM2: 1850, totalLuasM2: 12150, jumlahIzin: 10, lokasiTerbanyak: 'Mukakuning' },
+      { bulan: 'Des', tamanM2: 4600, medianM2: 5700, potGantungM2: 1050, pohonPeneduhM2: 2100, totalLuasM2: 13450, jumlahIzin: 12, lokasiTerbanyak: 'Barelang' },
+    ],
+  },
+
+  // =========================================================================
+  // BARIS 2 - KARTU 4: Kondisi Jaringan Jalan Eksisting (Tabular Spasial)
+  // =========================================================================
+  kondisiJalanPerWilayah: {
+    'Semua Wilayah': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 184.2, sedangKm: 28.5, rusakRinganKm: 12.1, rusakBeratKm: 4.2, totalPanjangKm: 229.0, lebarRataRataMeter: 24.5, materialPerkerasan: 'Aspal Hotmix (AC-WC) 88%, Rigid Beton 12%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 142.8, sedangKm: 24.2, rusakRinganKm: 14.5, rusakBeratKm: 6.8, totalPanjangKm: 188.3, lebarRataRataMeter: 16.0, materialPerkerasan: 'Aspal Hotmix 82%, Rigid Beton 18%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 98.4, sedangKm: 18.6, rusakRinganKm: 11.2, rusakBeratKm: 5.4, totalPanjangKm: 133.6, lebarRataRataMeter: 9.5, materialPerkerasan: 'Aspal 74%, Rigid Beton 22%, Paving 4%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 66.8, sedangKm: 14.1, rusakRinganKm: 8.4, rusakBeratKm: 3.4, totalPanjangKm: 92.7, lebarRataRataMeter: 6.0, materialPerkerasan: 'Rigid Beton 62%, Paving Block 38%' },
+    ],
+    'Batam Kota': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 54.2, sedangKm: 6.5, rusakRinganKm: 2.1, rusakBeratKm: 0.6, totalPanjangKm: 63.4, lebarRataRataMeter: 28.0, materialPerkerasan: 'Aspal Hotmix 95%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 42.1, sedangKm: 5.2, rusakRinganKm: 2.8, rusakBeratKm: 1.2, totalPanjangKm: 51.3, lebarRataRataMeter: 18.0, materialPerkerasan: 'Aspal Hotmix 89%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 28.6, sedangKm: 3.8, rusakRinganKm: 2.1, rusakBeratKm: 0.9, totalPanjangKm: 35.4, lebarRataRataMeter: 10.0, materialPerkerasan: 'Aspal 80%, Beton 20%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 19.5, sedangKm: 2.8, rusakRinganKm: 1.5, rusakBeratKm: 0.5, totalPanjangKm: 24.3, lebarRataRataMeter: 7.0, materialPerkerasan: 'Rigid Beton 70%' },
+    ],
+    'Batu Ampar': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 32.5, sedangKm: 5.8, rusakRinganKm: 3.2, rusakBeratKm: 1.4, totalPanjangKm: 42.9, lebarRataRataMeter: 24.0, materialPerkerasan: 'Rigid Beton Pelabuhan 60%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 24.8, sedangKm: 4.6, rusakRinganKm: 3.1, rusakBeratKm: 1.5, totalPanjangKm: 34.0, lebarRataRataMeter: 14.0, materialPerkerasan: 'Aspal Hotmix 75%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 16.2, sedangKm: 3.4, rusakRinganKm: 2.4, rusakBeratKm: 1.1, totalPanjangKm: 23.1, lebarRataRataMeter: 8.5, materialPerkerasan: 'Aspal 70%, Beton 30%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 11.2, sedangKm: 2.5, rusakRinganKm: 1.8, rusakBeratKm: 0.8, totalPanjangKm: 16.3, lebarRataRataMeter: 5.5, materialPerkerasan: 'Paving & Beton' },
+    ],
+    'Sekupang': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 35.8, sedangKm: 5.2, rusakRinganKm: 2.4, rusakBeratKm: 0.8, totalPanjangKm: 44.2, lebarRataRataMeter: 22.0, materialPerkerasan: 'Aspal Hotmix 90%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 26.5, sedangKm: 4.1, rusakRinganKm: 2.5, rusakBeratKm: 1.1, totalPanjangKm: 34.2, lebarRataRataMeter: 15.0, materialPerkerasan: 'Aspal Hotmix 85%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 18.4, sedangKm: 3.2, rusakRinganKm: 2.0, rusakBeratKm: 0.9, totalPanjangKm: 24.5, lebarRataRataMeter: 9.0, materialPerkerasan: 'Aspal 75%, Beton 25%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 12.8, sedangKm: 2.6, rusakRinganKm: 1.4, rusakBeratKm: 0.6, totalPanjangKm: 17.4, lebarRataRataMeter: 6.0, materialPerkerasan: 'Rigid Beton 65%' },
+    ],
+    'Nongsa': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 28.4, sedangKm: 4.5, rusakRinganKm: 1.8, rusakBeratKm: 0.5, totalPanjangKm: 35.2, lebarRataRataMeter: 26.0, materialPerkerasan: 'Aspal Hotmix 92%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 21.2, sedangKm: 3.8, rusakRinganKm: 2.0, rusakBeratKm: 0.9, totalPanjangKm: 27.9, lebarRataRataMeter: 16.0, materialPerkerasan: 'Aspal Hotmix 86%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 14.5, sedangKm: 2.8, rusakRinganKm: 1.7, rusakBeratKm: 0.7, totalPanjangKm: 19.7, lebarRataRataMeter: 9.0, materialPerkerasan: 'Aspal 70%, Beton 30%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 9.8, sedangKm: 2.1, rusakRinganKm: 1.2, rusakBeratKm: 0.4, totalPanjangKm: 13.5, lebarRataRataMeter: 6.0, materialPerkerasan: 'Rigid Beton 60%' },
+    ],
+    'Batu Aji': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 18.5, sedangKm: 3.8, rusakRinganKm: 1.6, rusakBeratKm: 0.5, totalPanjangKm: 24.4, lebarRataRataMeter: 24.0, materialPerkerasan: 'Aspal Hotmix 85%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 15.2, sedangKm: 3.4, rusakRinganKm: 2.2, rusakBeratKm: 1.2, totalPanjangKm: 22.0, lebarRataRataMeter: 15.0, materialPerkerasan: 'Aspal Hotmix 80%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 11.2, sedangKm: 2.8, rusakRinganKm: 1.8, rusakBeratKm: 0.9, totalPanjangKm: 16.7, lebarRataRataMeter: 8.5, materialPerkerasan: 'Aspal 70%, Beton 30%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 7.5, sedangKm: 2.0, rusakRinganKm: 1.3, rusakBeratKm: 0.6, totalPanjangKm: 11.4, lebarRataRataMeter: 5.5, materialPerkerasan: 'Beton & Paving' },
+    ],
+    'Sagulung': [
+      { kelasJalan: 'Jalan Arteri', baikKm: 14.8, sedangKm: 2.7, rusakRinganKm: 1.0, rusakBeratKm: 0.4, totalPanjangKm: 18.9, lebarRataRataMeter: 22.0, materialPerkerasan: 'Aspal Hotmix 88%' },
+      { kelasJalan: 'Jalan Kolektor', baikKm: 13.0, sedangKm: 3.1, rusakRinganKm: 1.9, rusakBeratKm: 1.0, totalPanjangKm: 19.0, lebarRataRataMeter: 14.0, materialPerkerasan: 'Aspal Hotmix 82%' },
+      { kelasJalan: 'Jalan Lokal', baikKm: 9.5, sedangKm: 2.6, rusakRinganKm: 1.2, rusakBeratKm: 0.9, totalPanjangKm: 14.2, lebarRataRataMeter: 8.0, materialPerkerasan: 'Aspal 72%, Beton 28%' },
+      { kelasJalan: 'Jalan Lingkungan', baikKm: 6.0, sedangKm: 2.1, rusakRinganKm: 1.2, rusakBeratKm: 0.5, totalPanjangKm: 9.8, lebarRataRataMeter: 5.5, materialPerkerasan: 'Beton & Paving' },
+    ],
+  },
+
+  // =========================================================================
+  // BARIS 3 - KARTU 5: Paket Pembangunan Infrastruktur per Kategori Pekerjaan
+  // =========================================================================
+  paketInfrastrukturPerTahun: {
+    '2026': [
+      {
+        kategoriPekerjaan: 'Konektivitas & Transportasi',
+        subdit: 'Pembangunan Jalan dan Jembatan',
+        nilaiPaguM: 230.5,
+        nilaiHpsM: 222.8,
+        nilaiKontrakM: 216.4,
+        jumlahPaket: 10,
+        jenisPekerjaanUtama: 'Flyover Sei Ladi, Pelebaran Sudirman 5 Lajur, Akses Hang Nadim',
+        efisiensiTenderPct: 6.1,
+      },
+      {
+        kategoriPekerjaan: 'Pengendalian Banjir',
+        subdit: 'Pembangunan Drainase',
+        nilaiPaguM: 115.0,
+        nilaiHpsM: 110.2,
+        nilaiKontrakM: 106.5,
+        jumlahPaket: 8,
+        jenisPekerjaanUtama: 'Kolam Retensi Baloi Indah, Saluran Primer Batam Centre U-Ditch',
+        efisiensiTenderPct: 7.4,
+      },
+      {
+        kategoriPekerjaan: 'Fasilitas Publik & Gedung',
+        subdit: 'Pembangunan Gedung',
+        nilaiPaguM: 88.0,
+        nilaiHpsM: 84.5,
+        nilaiKontrakM: 81.2,
+        jumlahPaket: 6,
+        jenisPekerjaanUtama: 'Gedung Arsip Record Centre, Renovasi Terminal Feri, JPO Estetik',
+        efisiensiTenderPct: 7.7,
+      },
+      {
+        kategoriPekerjaan: 'Pengembangan Kawasan Industri',
+        subdit: 'Pematangan Tanah',
+        nilaiPaguM: 130.0,
+        nilaiHpsM: 124.6,
+        nilaiKontrakM: 120.7,
+        jumlahPaket: 4,
+        jenisPekerjaanUtama: 'Pematangan Lahan Rempang Eco-City Zona A (280 Ha) & KPLI Kabil',
+        efisiensiTenderPct: 7.2,
+      },
+    ],
+    '2025': [
+      {
+        kategoriPekerjaan: 'Konektivitas & Transportasi',
+        subdit: 'Pembangunan Jalan dan Jembatan',
+        nilaiPaguM: 195.0,
+        nilaiHpsM: 188.5,
+        nilaiKontrakM: 182.8,
+        jumlahPaket: 9,
+        jenisPekerjaanUtama: 'Pelebaran Jalan Gajah Mada & Bundaran Punggur',
+        efisiensiTenderPct: 6.3,
+      },
+      {
+        kategoriPekerjaan: 'Pengendalian Banjir',
+        subdit: 'Pembangunan Drainase',
+        nilaiPaguM: 98.0,
+        nilaiHpsM: 94.2,
+        nilaiKontrakM: 91.0,
+        jumlahPaket: 7,
+        jenisPekerjaanUtama: 'Normalisasi Sungai Jodoh & Drainase Sei Tiram',
+        efisiensiTenderPct: 7.1,
+      },
+      {
+        kategoriPekerjaan: 'Fasilitas Publik & Gedung',
+        subdit: 'Pembangunan Gedung',
+        nilaiPaguM: 74.0,
+        nilaiHpsM: 71.2,
+        nilaiKontrakM: 68.5,
+        jumlahPaket: 5,
+        jenisPekerjaanUtama: 'Klinik Layanan Kesehatan & Shelter Logistik',
+        efisiensiTenderPct: 7.4,
+      },
+      {
+        kategoriPekerjaan: 'Pengembangan Kawasan Industri',
+        subdit: 'Pematangan Tanah',
+        nilaiPaguM: 105.0,
+        nilaiHpsM: 100.8,
+        nilaiKontrakM: 97.5,
+        jumlahPaket: 4,
+        jenisPekerjaanUtama: 'Cut & Fill Batam Centre Tahap 2 & Kabil Barat',
+        efisiensiTenderPct: 7.1,
+      },
+    ],
+  },
+
+  // =========================================================================
+  // BARIS 3 - KARTU 6: Paket Pematangan Tanah (BSW) - 8 Paket Terbesar
+  // =========================================================================
+  paketBswPerTahun: {
+    '2026': [
+      {
+        id: 'BSW-01',
+        namaPaket: 'Pematangan Lahan Rempang Eco-City Zona Industri A (280 Ha)',
+        kategoriPekerjaan: 'Kawasan Industri',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Wijaya Karya (Persero) Tbk',
+        nilaiKontrakM: 58.4,
+        volumePekerjaanM3: 1420000,
+        progresPersen: 86.8,
+      },
+      {
+        id: 'BSW-02',
+        namaPaket: 'Cut and Fill Kawasan Pemukiman Baru Tanjung Banon (120 Ha)',
+        kategoriPekerjaan: 'Pemukiman Relokasi',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Adhi Karya (Persero) Tbk',
+        nilaiKontrakM: 34.2,
+        volumePekerjaanM3: 980000,
+        progresPersen: 91.5,
+      },
+      {
+        id: 'BSW-03',
+        namaPaket: 'Perluasan Lahan KPLI Pengolahan Limbah Industri B3 Kabil',
+        kategoriPekerjaan: 'Kawasan Industri',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Nindya Karya',
+        nilaiKontrakM: 26.5,
+        volumePekerjaanM3: 650000,
+        progresPersen: 94.2,
+      },
+      {
+        id: 'BSW-04',
+        namaPaket: 'Pematangan Lahan Terminal Peti Kemas Baru Batu Ampar Utara',
+        kategoriPekerjaan: 'Pelabuhan & Logistik',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Hutama Karya (Persero)',
+        nilaiKontrakM: 22.8,
+        volumePekerjaanM3: 540000,
+        progresPersen: 78.5,
+      },
+      {
+        id: 'BSW-05',
+        namaPaket: 'Pematangan Site MRO dan Hanggar Bandara Hang Nadim',
+        kategoriPekerjaan: 'Fasilitas Bandara',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT PP (Persero) Tbk',
+        nilaiKontrakM: 19.4,
+        volumePekerjaanM3: 460000,
+        progresPersen: 88.0,
+      },
+      {
+        id: 'BSW-06',
+        namaPaket: 'Penataan Kontur Tanah & Lereng Bukit Senimba Sekupang',
+        kategoriPekerjaan: 'Pemukiman Relokasi',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Waskita Karya (Persero) Tbk',
+        nilaiKontrakM: 14.8,
+        volumePekerjaanM3: 380000,
+        progresPersen: 95.0,
+      },
+      {
+        id: 'BSW-07',
+        namaPaket: 'Pematangan Area Logistik Hub KEK Nongsa Digital Park',
+        kategoriPekerjaan: 'Kawasan Industri',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Total Bangun Persada',
+        nilaiKontrakM: 12.5,
+        volumePekerjaanM3: 310000,
+        progresPersen: 89.4,
+      },
+      {
+        id: 'BSW-08',
+        namaPaket: 'Pematangan Tanah Fasilitas Integrasi Pelabuhan Telaga Punggur',
+        kategoriPekerjaan: 'Pelabuhan & Logistik',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Jaya Konstruksi MP Tbk',
+        nilaiKontrakM: 9.6,
+        volumePekerjaanM3: 210000,
+        progresPersen: 96.0,
+      },
+    ],
+    '2025': [
+      {
+        id: 'BSW-01',
+        namaPaket: 'Pematangan Lahan Rempang Eco-City Zona Industri A (Tahap Awal)',
+        kategoriPekerjaan: 'Kawasan Industri',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Wijaya Karya (Persero) Tbk',
+        nilaiKontrakM: 46.5,
+        volumePekerjaanM3: 1100000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-02',
+        namaPaket: 'Pematangan Tanah Tahap 1 Tanjung Banon',
+        kategoriPekerjaan: 'Pemukiman Relokasi',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Adhi Karya (Persero) Tbk',
+        nilaiKontrakM: 28.0,
+        volumePekerjaanM3: 750000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-03',
+        namaPaket: 'Perluasan Lahan KPLI Kabil Tahap 2',
+        kategoriPekerjaan: 'Kawasan Industri',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Nindya Karya',
+        nilaiKontrakM: 21.0,
+        volumePekerjaanM3: 520000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-04',
+        namaPaket: 'Pematangan Depo Peti Kemas Batu Ampar Barat',
+        kategoriPekerjaan: 'Pelabuhan & Logistik',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Hutama Karya (Persero)',
+        nilaiKontrakM: 18.5,
+        volumePekerjaanM3: 430000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-05',
+        namaPaket: 'Pematangan Apron Kargo Hang Nadim',
+        kategoriPekerjaan: 'Fasilitas Bandara',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT PP (Persero) Tbk',
+        nilaiKontrakM: 16.2,
+        volumePekerjaanM3: 390000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-06',
+        namaPaket: 'Penataan Lahan Sempadan Waduk Sei Harapan',
+        kategoriPekerjaan: 'Pemukiman Relokasi',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Waskita Karya (Persero) Tbk',
+        nilaiKontrakM: 11.8,
+        volumePekerjaanM3: 290000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-07',
+        namaPaket: 'Cut & Fill Nongsa Digital Park Tahap 2',
+        kategoriPekerjaan: 'Kawasan Industri',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Total Bangun Persada',
+        nilaiKontrakM: 10.2,
+        volumePekerjaanM3: 250000,
+        progresPersen: 100.0,
+      },
+      {
+        id: 'BSW-08',
+        namaPaket: 'Pematangan Tanah Dermaga Telaga Punggur',
+        kategoriPekerjaan: 'Pelabuhan & Logistik',
+        ppk: 'PPK Pematangan Tanah & BSW',
+        kontraktor: 'PT Jaya Konstruksi MP Tbk',
+        nilaiKontrakM: 8.2,
+        volumePekerjaanM3: 180000,
+        progresPersen: 100.0,
+      },
+    ],
+  },
 };

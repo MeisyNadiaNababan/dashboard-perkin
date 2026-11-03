@@ -42,6 +42,8 @@ const SPARKLINE_IKP4 = [
   { v: 88.5 }, { v: 90.2 }, { v: 92.1 }, { v: 93.8 }, { v: 94.6 }, { v: 95.45 },
 ];
 
+import { DeputiKpiCard } from '../DeputiKpiCard';
+
 export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProps> = ({
   onOpenFormulaModal,
   onSelectUnit,
@@ -54,133 +56,52 @@ export const InvestasiPengusahaanKpiRow: React.FC<InvestasiPengusahaanKpiRowProp
   return (
     <div className="space-y-2.5 font-sans">
       {/* ================================================================== */}
-      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A4 (KOMPAK, GRADIENT & EKSEKUTIF) */}
-      {/* Model Persis DEP-A3: 4 Kolom dengan Sparkline Area Chart           */}
+      {/* 1. BARIS ATAS: 4 KARTU IKP UTAMA DEP-A4 (SESUAI REFERENSI DESAIN)   */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-        {/* IKP 1: Realisasi Penanaman Modal di KPBPB - DIT. INVESTASI */}
-        <div
+        {/* IKP 1: Realisasi Penanaman Modal di KPBPB */}
+        <DeputiKpiCard
+          title="IKP 1 • Investasi KPBPB"
+          value="Rp 63,85 T"
+          targetLabel="Target Rp 60,00 T (106,4%)"
+          yoyLabel="+15,2% YoY"
+          icon={TrendingUp}
           onClick={() => onOpenFormulaModal(ikpInvestasi.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 1 Realisasi Investasi KPBPB"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Briefcase className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Dir. Promosi &amp; Fasilitasi (Realisasi)</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 1 Realisasi Investasi KPBPB (Dir. Promosi & Fasilitasi)"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Rp 63,85
-              </span>
-              <span className="text-xs font-bold text-blue-100">Triliun</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target Rp 60,00 T</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: Rp 55,40 T (+15,2%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 2: Minat Investasi dari Promosi - BLUE CARD */}
-        <div
+        {/* IKP 2: Minat Investasi dari Promosi */}
+        <DeputiKpiCard
+          title="IKP 2 • Minat Investasi Promosi"
+          value="218 Minat"
+          targetLabel="Target 200 Minat (109,0%)"
+          yoyLabel="+18,5% YoY"
+          icon={Globe}
           onClick={() => onOpenFormulaModal(ikpPromosi.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 2 Minat Investasi Promosi"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Globe className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Dir. Promosi &amp; Fasilitasi (Leads)</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <Globe className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 2 Minat Investasi dari Kegiatan Promosi & Fasilitasi"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                218
-              </span>
-              <span className="text-xs font-bold text-blue-100">Minat Leads</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 200 Minat</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 184 Minat (+18,5%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 3: Kajian Pengembangan & KEK Berkelanjutan - BLUE CARD */}
-        <div
+        {/* IKP 3: Kajian Pengembangan & KEK Berkelanjutan */}
+        <DeputiKpiCard
+          title="IKP 3 • Kajian KEK Berkelanjutan"
+          value="100,0%"
+          targetLabel="Target 100,0% (100,0%)"
+          yoyLabel="+5,3% YoY"
+          icon={Building2}
           onClick={() => onOpenFormulaModal(ikpKek.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 3 Kajian KEK Berkelanjutan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <Building2 className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Dir. Perencanaan &amp; Pengemb.</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <Award className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
+          tooltip="Buka detail IKP 3 Kajian Pengembangan Kawasan & KEK Berkelanjutan"
+        />
 
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                100,0%
-              </span>
-              <span className="text-xs font-bold text-blue-100">Selesai</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 100%</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 95,0% (+5,3%)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* IKP 4: Pengendalian Pengusahaan & Kerja Sama BU - BLUE CARD */}
-        <div
+        {/* IKP 4: Pengendalian Pengusahaan & Kerja Sama BU */}
+        <DeputiKpiCard
+          title="IKP 4 • Pengendalian Pengusahaan"
+          value="95,45%"
+          targetLabel="Target 90,00% (106,1%)"
+          yoyLabel="+8,2% YoY"
+          icon={ShieldCheck}
           onClick={() => onOpenFormulaModal(ikpPengendalian.id)}
-          className="bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white rounded-xl p-3 shadow-xs hover:shadow-sm transition-all cursor-pointer group flex flex-col justify-between border border-blue-500/40"
-          title="Buka detail IKP 4 Pengendalian Pengusahaan"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold text-blue-100 flex items-center gap-1.5 truncate">
-                <ShieldCheck className="w-3.5 h-3.5 text-cyan-200 shrink-0" />
-                <span className="truncate">Dir. Pengendalian Pengusahaan</span>
-              </span>
-              <div className="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold backdrop-blur-xs shrink-0">
-                <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              </div>
-            </div>
-
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                95,45%
-              </span>
-              <span className="text-xs font-bold text-blue-100">Kepatuhan</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[10.5px] mt-0.5">
-              <span className="text-blue-100/90">Target 90,00%</span>
-              <span className="text-blue-100/90 font-mono">vs 2025: 88,20% (+8,2%)</span>
-            </div>
-          </div>
-        </div>
+          tooltip="Buka detail IKP 4 Tingkat Kepatuhan Pengendalian Pengusahaan & Kerja Sama BU"
+        />
       </div>
 
       {/* ================================================================== */}
