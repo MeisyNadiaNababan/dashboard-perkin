@@ -12,6 +12,13 @@ import {
 import { BIRO_OKMR_MASTER_DATA } from './biroOkmrData';
 
 export const BiroOkmrDeepDive: React.FC = () => {
+  // Sheet Swap View Mode States ('chart' | 'table') for all 5 cards
+  const [sakipViewMode, setSakipViewMode] = useState<'chart' | 'table'>('chart');
+  const [ikuViewMode, setIkuViewMode] = useState<'chart' | 'table'>('chart');
+  const [risikoViewMode, setRisikoViewMode] = useState<'chart' | 'table'>('chart');
+  const [pengaduanViewMode, setPengaduanViewMode] = useState<'chart' | 'table'>('chart');
+  const [skmViewMode, setSkmViewMode] = useState<'chart' | 'table'>('chart');
+
   // ==========================================================================
   // KARTU 1 - SAKIP STATES
   // ==========================================================================
@@ -143,7 +150,7 @@ export const BiroOkmrDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Legenda & Filter Tahun */}
+            {/* Legenda & Controls */}
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-3 text-xs">
                 <span className="flex items-center gap-1.5">
@@ -156,89 +163,160 @@ export const BiroOkmrDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filter Tahun */}
-              <select
-                aria-label="Filter Tahun SAKIP"
-                value={sakipTahun}
-                onChange={(e) => setSakipTahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-              >
-                {BIRO_OKMR_MASTER_DATA.sakipPerKomponen.filterTahunList.map((t) => (
-                  <option key={t} value={t}>
-                    Th {t}
-                  </option>
-                ))}
-              </select>
+              {/* Controls: Filter & Sheet Swap */}
+              <div className="flex items-center gap-2">
+                <select
+                  aria-label="Filter Tahun SAKIP"
+                  value={sakipTahun}
+                  onChange={(e) => setSakipTahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                >
+                  {BIRO_OKMR_MASTER_DATA.sakipPerKomponen.filterTahunList.map((t) => (
+                    <option key={t} value={t}>
+                      Th {t}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setSakipViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      sakipViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSakipViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      sakipViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Clustered Bar Horizontal Chart */}
+          {/* Clustered Bar Horizontal Chart or Detail Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={dataSakip.komponen}
-                margin={{ top: 5, right: 35, left: 95, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  domain={[0, 35]}
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `${val} Poin`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="komponen"
-                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={95}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => {
-                    const num = Number(val);
-                    const pct = item.payload.persen;
-                    const grade = item.payload.tingkat;
-                    if (name === 'nilai') {
-                      return [
-                        `${num.toFixed(2)} Poin (${pct}% • Predikat ${grade})`,
-                        'Nilai Diperoleh',
-                      ];
-                    }
-                    return [`${num.toFixed(1)} Poin Maksimal`, 'Bobot Komponen'];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const desc = items && items[0]?.payload?.keterangan;
-                    return desc ? `${label} • ${desc}` : label;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar
-                  dataKey="bobot"
-                  name="bobot"
-                  fill="#94a3b8"
-                  radius={[0, 2, 2, 0]}
-                  barSize={10}
-                />
-                <Bar
-                  dataKey="nilai"
-                  name="nilai"
-                  fill="#2563eb"
-                  radius={[0, 2, 2, 0]}
-                  barSize={10}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            {sakipViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={dataSakip.komponen}
+                  margin={{ top: 5, right: 35, left: 95, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    domain={[0, 35]}
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `${val} Poin`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="komponen"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={95}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => {
+                      const num = Number(val);
+                      const pct = item.payload.persen;
+                      const grade = item.payload.tingkat;
+                      if (name === 'nilai') {
+                        return [
+                          `${num.toFixed(2)} Poin (${pct}% • Predikat ${grade})`,
+                          'Nilai Diperoleh',
+                        ];
+                      }
+                      return [`${num.toFixed(1)} Poin Maksimal`, 'Bobot Komponen'];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const desc = items && items[0]?.payload?.keterangan;
+                      return desc ? `${label} • ${desc}` : label;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar
+                    dataKey="bobot"
+                    name="bobot"
+                    fill="#94a3b8"
+                    radius={[0, 2, 2, 0]}
+                    barSize={10}
+                  />
+                  <Bar
+                    dataKey="nilai"
+                    name="nilai"
+                    fill="#2563eb"
+                    radius={[0, 2, 2, 0]}
+                    barSize={10}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Komponen Evaluasi SAKIP</th>
+                      <th className="py-1.5 px-2 text-right">Bobot</th>
+                      <th className="py-1.5 px-2 text-right">Nilai Diperoleh</th>
+                      <th className="py-1.5 px-2 text-right">Capaian (%)</th>
+                      <th className="py-1.5 px-2 text-center">Predikat</th>
+                      <th className="py-1.5 px-2">Keterangan / Fokus</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataSakip.komponen.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{row.komponen}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{row.bobot.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-700 font-bold">{row.nilai.toFixed(2)}</td>
+                        <td className="py-1.5 px-2 text-right text-emerald-700 font-semibold">{row.persen.toFixed(1)}%</td>
+                        <td className="py-1.5 px-2 text-center font-sans">
+                          <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            Predikat {row.tingkat}
+                          </span>
+                        </td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 text-[9.5px] truncate max-w-[140px]">{row.keterangan}</td>
+                      </tr>
+                    ))}
+                    {/* Baris Total Nilai Akhir SAKIP */}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900">Total Nilai SAKIP ({sakipTahun})</td>
+                      <td className="py-1.5 px-2 text-right text-slate-800">100.0</td>
+                      <td className="py-1.5 px-2 text-right text-blue-800 font-black">{dataSakip.nilaiAkhir.toFixed(2)}</td>
+                      <td className="py-1.5 px-2 text-right text-emerald-700 font-black">{dataSakip.nilaiAkhir.toFixed(1)}%</td>
+                      <td className="py-1.5 px-2 text-center font-sans text-blue-900 font-black">
+                        {dataSakip.predikat}
+                      </td>
+                      <td className="py-1.5 px-2 font-sans text-slate-600 text-[9.5px]">Kategori Akuntabilitas Tertinggi</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -288,98 +366,185 @@ export const BiroOkmrDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filters: Triwulan & Tahun */}
-              <div className="flex items-center gap-1.5 text-[11px]">
-                <select
-                  aria-label="Filter Triwulan IKU"
-                  value={ikuTriwulan}
-                  onChange={(e) => setIkuTriwulan(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-                >
-                  {BIRO_OKMR_MASTER_DATA.capaianIkuUnit.filterTriwulanList.map((tw) => (
-                    <option key={tw} value={tw}>
-                      {tw}
-                    </option>
-                  ))}
-                </select>
+              {/* Controls: Filters & Sheet Swap */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-[11px]">
+                  <select
+                    aria-label="Filter Triwulan IKU"
+                    value={ikuTriwulan}
+                    onChange={(e) => setIkuTriwulan(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                  >
+                    {BIRO_OKMR_MASTER_DATA.capaianIkuUnit.filterTriwulanList.map((tw) => (
+                      <option key={tw} value={tw}>
+                        {tw}
+                      </option>
+                    ))}
+                  </select>
 
-                <select
-                  aria-label="Filter Tahun IKU"
-                  value={ikuTahun}
-                  onChange={(e) => setIkuTahun(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-                >
-                  {BIRO_OKMR_MASTER_DATA.capaianIkuUnit.filterTahunList.map((t) => (
-                    <option key={t} value={t}>
-                      Th {t}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    aria-label="Filter Tahun IKU"
+                    value={ikuTahun}
+                    onChange={(e) => setIkuTahun(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                  >
+                    {BIRO_OKMR_MASTER_DATA.capaianIkuUnit.filterTahunList.map((t) => (
+                      <option key={t} value={t}>
+                        Th {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setIkuViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      ikuViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIkuViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      ikuViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Progress Bar List Section */}
-          <div className="flex-1 w-full min-h-0 my-1 overflow-y-auto space-y-2 pr-1">
-            {dataIkuList.map((item, idx) => {
-              const isTargetAchieved = item.persen >= 90;
-              const barColor = isTargetAchieved ? '#10b981' : '#f59e0b';
-              const isHovered = activeIkuIndex === idx;
+          {/* Progress Bar List Section or Detail Table */}
+          <div className="flex-1 w-full min-h-0 my-1">
+            {ikuViewMode === 'chart' ? (
+              <div className="h-full overflow-y-auto space-y-2 pr-1">
+                {dataIkuList.map((item, idx) => {
+                  const isTargetAchieved = item.persen >= 90;
+                  const barColor = isTargetAchieved ? '#10b981' : '#f59e0b';
+                  const isHovered = activeIkuIndex === idx;
 
-              return (
-                <div
-                  key={idx}
-                  onMouseEnter={() => setActiveIkuIndex(idx)}
-                  onMouseLeave={() => setActiveIkuIndex(null)}
-                  className="group relative p-1.5 rounded-lg border border-slate-100 hover:border-blue-200 hover:bg-blue-50/20 transition-all cursor-default"
-                >
-                  <div className="flex items-center justify-between text-[11px] mb-1">
-                    <span className="font-semibold text-slate-900 truncate max-w-[200px] sm:max-w-[230px]">
-                      {item.unit}
-                    </span>
-                    <div className="flex items-center gap-1.5 shrink-0 font-mono">
-                      <span className="text-[10px] text-slate-500 font-sans">
-                        Realisasi: {item.realisasi}%
-                      </span>
-                      <span
-                        className={`text-xs font-bold px-1.5 py-0.2 rounded ${
-                          isTargetAchieved
-                            ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
-                            : 'text-amber-700 bg-amber-50 border border-amber-200'
-                        }`}
-                      >
-                        {item.persen.toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Progress Bar Container */}
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  return (
                     <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: `${Math.min(item.persen, 100)}%`,
-                        backgroundColor: barColor,
-                      }}
-                    />
-                  </div>
+                      key={idx}
+                      onMouseEnter={() => setActiveIkuIndex(idx)}
+                      onMouseLeave={() => setActiveIkuIndex(null)}
+                      className="group relative p-1.5 rounded-lg border border-slate-100 hover:border-blue-200 hover:bg-blue-50/20 transition-all cursor-default"
+                    >
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <span className="font-semibold text-slate-900 truncate max-w-[200px] sm:max-w-[230px]">
+                          {item.unit}
+                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0 font-mono">
+                          <span className="text-[10px] text-slate-500 font-sans">
+                            Realisasi: {item.realisasi}%
+                          </span>
+                          <span
+                            className={`text-xs font-bold px-1.5 py-0.2 rounded ${
+                              isTargetAchieved
+                                ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
+                                : 'text-amber-700 bg-amber-50 border border-amber-200'
+                            }`}
+                          >
+                            {item.persen.toFixed(1)}%
+                          </span>
+                        </div>
+                      </div>
 
-                  {/* Interactive Tooltip Banner on Hover */}
-                  {isHovered && (
-                    <div className="mt-1.5 pt-1.5 border-t border-blue-100 text-[10px] text-slate-600 space-y-0.5 animate-fadeIn">
-                      <div>
-                        <strong className="text-slate-800">Sasaran: </strong>
-                        {item.sasaranStrategis}
+                      {/* Progress Bar Container */}
+                      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${Math.min(item.persen, 100)}%`,
+                            backgroundColor: barColor,
+                          }}
+                        />
                       </div>
-                      <div>
-                        <strong className="text-blue-700">IKU: </strong>
-                        {item.iku}
-                      </div>
+
+                      {/* Interactive Tooltip Banner on Hover */}
+                      {isHovered && (
+                        <div className="mt-1.5 pt-1.5 border-t border-blue-100 text-[10px] text-slate-600 space-y-0.5 animate-fadeIn">
+                          <div>
+                            <strong className="text-slate-800">Sasaran: </strong>
+                            {item.sasaranStrategis}
+                          </div>
+                          <div>
+                            <strong className="text-blue-700">IKU: </strong>
+                            {item.iku}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Unit Kerja / Satker</th>
+                      <th className="py-1.5 px-2">Sasaran Strategis</th>
+                      <th className="py-1.5 px-2">Indikator Kinerja Utama (IKU)</th>
+                      <th className="py-1.5 px-2 text-right">Target</th>
+                      <th className="py-1.5 px-2 text-right">Realisasi</th>
+                      <th className="py-1.5 px-2 text-right">Capaian (%)</th>
+                      <th className="py-1.5 px-2 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataIkuList.map((row, idx) => {
+                      const isPassing = row.persen >= 90;
+                      return (
+                        <tr key={idx} className="hover:bg-blue-50/40">
+                          <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{row.unit}</td>
+                          <td className="py-1.5 px-2 font-sans text-slate-600 text-[9.5px] truncate max-w-[120px]">{row.sasaranStrategis}</td>
+                          <td className="py-1.5 px-2 font-sans text-slate-700 text-[9.5px] truncate max-w-[140px]">{row.iku}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-600">{row.target}%</td>
+                          <td className="py-1.5 px-2 text-right text-slate-800">{row.realisasi}%</td>
+                          <td className="py-1.5 px-2 text-right font-bold text-blue-700">{row.persen.toFixed(1)}%</td>
+                          <td className="py-1.5 px-2 text-center font-sans">
+                            <span
+                              className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
+                                isPassing
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+                              }`}
+                            >
+                              {isPassing ? 'Tercapai' : 'Perhatian'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {/* Baris Rata-rata IKU */}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900" colSpan={3}>
+                        Rata-rata Capaian IKU ({dataIkuList.length} Satker - {ikuTriwulan} {ikuTahun})
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-slate-600">100.0%</td>
+                      <td className="py-1.5 px-2 text-right text-slate-800">{rerataCapaianIku.toFixed(1)}%</td>
+                      <td className="py-1.5 px-2 text-right text-blue-800 font-black">{rerataCapaianIku.toFixed(1)}%</td>
+                      <td className="py-1.5 px-2 text-center font-sans">
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-100 text-blue-800">
+                          {rerataCapaianIku >= 90 ? 'OPTIMAL' : 'MONITORING'}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -432,105 +597,178 @@ export const BiroOkmrDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filter Tahun */}
-              <select
-                aria-label="Filter Tahun Piagam Risiko"
-                value={risikoTahun}
-                onChange={(e) => setRisikoTahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-              >
-                {BIRO_OKMR_MASTER_DATA.perubahanRisikoUnit.filterTahunList.map((t) => (
-                  <option key={t} value={t}>
-                    Th {t}
-                  </option>
-                ))}
-              </select>
+              {/* Controls: Filter & Sheet Swap */}
+              <div className="flex items-center gap-2">
+                <select
+                  aria-label="Filter Tahun Piagam Risiko"
+                  value={risikoTahun}
+                  onChange={(e) => setRisikoTahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                >
+                  {BIRO_OKMR_MASTER_DATA.perubahanRisikoUnit.filterTahunList.map((t) => (
+                    <option key={t} value={t}>
+                      Th {t}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setRisikoViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      risikoViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRisikoViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      risikoViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Dumbbell Chart Section */}
-          <div className="flex-1 w-full min-h-0 my-1 overflow-y-auto space-y-2.5 pr-1 py-1">
-            {dataRisiko.records.map((r, idx) => {
-              // Scale: 0 to 25 -> mapped to percentage (0% to 100%)
-              const leftPercent = (r.risikoAkhir / 25) * 100;
-              const rightPercent = (r.risikoAwal / 25) * 100;
-              const isHovered = activeRisikoIndex === idx;
+          {/* Dumbbell Chart Section or Detail Table */}
+          <div className="flex-1 w-full min-h-0 my-1">
+            {risikoViewMode === 'chart' ? (
+              <div className="h-full overflow-y-auto space-y-2.5 pr-1 py-1">
+                {dataRisiko.records.map((r, idx) => {
+                  // Scale: 0 to 25 -> mapped to percentage (0% to 100%)
+                  const leftPercent = (r.risikoAkhir / 25) * 100;
+                  const rightPercent = (r.risikoAwal / 25) * 100;
+                  const isHovered = activeRisikoIndex === idx;
 
-              return (
-                <div
-                  key={idx}
-                  onMouseEnter={() => setActiveRisikoIndex(idx)}
-                  onMouseLeave={() => setActiveRisikoIndex(null)}
-                  className="group p-1.5 rounded-lg border border-slate-100 hover:border-blue-200 hover:bg-blue-50/20 transition-all cursor-default"
-                >
-                  <div className="flex items-center justify-between text-[11px] mb-1">
-                    <span className="font-semibold text-slate-900 truncate max-w-[210px]">
-                      {r.unit}
-                    </span>
-                    <div className="flex items-center gap-2 text-[10px] font-mono">
-                      <span className="text-rose-600 font-bold">Awal: {r.risikoAwal}</span>
-                      <span className="text-slate-400">&rarr;</span>
-                      <span className="text-emerald-700 font-bold">Akhir: {r.risikoAkhir}</span>
-                      <span className="text-blue-700 font-bold bg-blue-50 px-1 py-0.2 rounded border border-blue-200">
-                        -{r.penurunan}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Dumbbell visual track */}
-                  <div className="relative w-full h-5 flex items-center bg-slate-50 rounded px-2">
-                    {/* Background scale reference lines */}
-                    <div className="absolute inset-0 flex justify-between px-2 pointer-events-none opacity-20">
-                      <span className="border-r border-slate-400 h-full" />
-                      <span className="border-r border-slate-400 h-full" />
-                      <span className="border-r border-slate-400 h-full" />
-                      <span className="border-r border-slate-400 h-full" />
-                    </div>
-
-                    {/* Connecting Bar */}
+                  return (
                     <div
-                      className="absolute h-1.5 bg-gradient-to-r from-emerald-500 to-rose-500 rounded-full"
-                      style={{
-                        left: `${leftPercent}%`,
-                        width: `${Math.max(rightPercent - leftPercent, 4)}%`,
-                      }}
-                    />
-
-                    {/* Green Dot (Risiko Akhir) */}
-                    <div
-                      className="absolute w-3.5 h-3.5 bg-emerald-600 rounded-full border-2 border-white shadow-xs -translate-x-1/2 flex items-center justify-center cursor-pointer transition-transform group-hover:scale-125"
-                      style={{ left: `${leftPercent}%` }}
-                      title={`Risiko Akhir: ${r.risikoAkhir}`}
-                    />
-
-                    {/* Red Dot (Risiko Awal) */}
-                    <div
-                      className="absolute w-3.5 h-3.5 bg-rose-600 rounded-full border-2 border-white shadow-xs -translate-x-1/2 flex items-center justify-center cursor-pointer transition-transform group-hover:scale-125"
-                      style={{ left: `${rightPercent}%` }}
-                      title={`Risiko Awal: ${r.risikoAwal}`}
-                    />
-                  </div>
-
-                  {/* Tooltip Details on Hover */}
-                  {isHovered && (
-                    <div className="mt-1.5 pt-1.5 border-t border-blue-100 text-[10px] text-slate-600 space-y-0.5 animate-fadeIn">
-                      <div>
-                        <strong className="text-slate-800">Sasaran: </strong>
-                        {r.sasaranOrganisasi}
+                      key={idx}
+                      onMouseEnter={() => setActiveRisikoIndex(idx)}
+                      onMouseLeave={() => setActiveRisikoIndex(null)}
+                      className="group p-1.5 rounded-lg border border-slate-100 hover:border-blue-200 hover:bg-blue-50/20 transition-all cursor-default"
+                    >
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <span className="font-semibold text-slate-900 truncate max-w-[210px]">
+                          {r.unit}
+                        </span>
+                        <div className="flex items-center gap-2 text-[10px] font-mono">
+                          <span className="text-rose-600 font-bold">Awal: {r.risikoAwal}</span>
+                          <span className="text-slate-400">&rarr;</span>
+                          <span className="text-emerald-700 font-bold">Akhir: {r.risikoAkhir}</span>
+                          <span className="text-blue-700 font-bold bg-blue-50 px-1 py-0.2 rounded border border-blue-200">
+                            -{r.penurunan}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <strong className="text-rose-700">Kejadian Risiko: </strong>
-                        {r.kejadianRisiko}
+
+                      {/* Dumbbell visual track */}
+                      <div className="relative w-full h-5 flex items-center bg-slate-50 rounded px-2">
+                        {/* Background scale reference lines */}
+                        <div className="absolute inset-0 flex justify-between px-2 pointer-events-none opacity-20">
+                          <span className="border-r border-slate-400 h-full" />
+                          <span className="border-r border-slate-400 h-full" />
+                          <span className="border-r border-slate-400 h-full" />
+                          <span className="border-r border-slate-400 h-full" />
+                        </div>
+
+                        {/* Connecting Bar */}
+                        <div
+                          className="absolute h-1.5 bg-gradient-to-r from-emerald-500 to-rose-500 rounded-full"
+                          style={{
+                            left: `${leftPercent}%`,
+                            width: `${Math.max(rightPercent - leftPercent, 4)}%`,
+                          }}
+                        />
+
+                        {/* Green Dot (Risiko Akhir) */}
+                        <div
+                          className="absolute w-3.5 h-3.5 bg-emerald-600 rounded-full border-2 border-white shadow-xs -translate-x-1/2 flex items-center justify-center cursor-pointer transition-transform group-hover:scale-125"
+                          style={{ left: `${leftPercent}%` }}
+                          title={`Risiko Akhir: ${r.risikoAkhir}`}
+                        />
+
+                        {/* Red Dot (Risiko Awal) */}
+                        <div
+                          className="absolute w-3.5 h-3.5 bg-rose-600 rounded-full border-2 border-white shadow-xs -translate-x-1/2 flex items-center justify-center cursor-pointer transition-transform group-hover:scale-125"
+                          style={{ left: `${rightPercent}%` }}
+                          title={`Risiko Awal: ${r.risikoAwal}`}
+                        />
                       </div>
-                      <div>
-                        <strong className="text-emerald-700">Mitigasi: </strong>
-                        {r.mitigasi}
-                      </div>
+
+                      {/* Tooltip Details on Hover */}
+                      {isHovered && (
+                        <div className="mt-1.5 pt-1.5 border-t border-blue-100 text-[10px] text-slate-600 space-y-0.5 animate-fadeIn">
+                          <div>
+                            <strong className="text-slate-800">Sasaran: </strong>
+                            {r.sasaranOrganisasi}
+                          </div>
+                          <div>
+                            <strong className="text-rose-700">Kejadian Risiko: </strong>
+                            {r.kejadianRisiko}
+                          </div>
+                          <div>
+                            <strong className="text-emerald-700">Mitigasi: </strong>
+                            {r.mitigasi}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Unit Kerja</th>
+                      <th className="py-1.5 px-2">Kejadian Risiko Utama</th>
+                      <th className="py-1.5 px-2 text-right">Skor Awal</th>
+                      <th className="py-1.5 px-2 text-right">Skor Akhir</th>
+                      <th className="py-1.5 px-2 text-right">Penurunan</th>
+                      <th className="py-1.5 px-2">Rencana Mitigasi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataRisiko.records.map((r, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{r.unit}</td>
+                        <td className="py-1.5 px-2 font-sans text-rose-700 text-[9.5px] truncate max-w-[150px]">{r.kejadianRisiko}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-rose-600">{r.risikoAwal}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-600">{r.risikoAkhir}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-700">-{r.penurunan}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 text-[9.5px] truncate max-w-[180px]">{r.mitigasi}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900" colSpan={2}>
+                        Total Unit dengan Penurunan Risiko ({risikoTahun})
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-rose-600">
+                        Rerata {(dataRisiko.records.reduce((acc, c) => acc + c.risikoAwal, 0) / (dataRisiko.records.length || 1)).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-emerald-600">
+                        Rerata {(dataRisiko.records.reduce((acc, c) => acc + c.risikoAkhir, 0) / (dataRisiko.records.length || 1)).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right font-black text-blue-800">
+                        {dataRisiko.totalUnitTurun} Unit ({dataRisiko.persenUnitTurun.toFixed(0)}%)
+                      </td>
+                      <td className="py-1.5 px-2 font-sans text-emerald-700 font-bold">100% Mitigasi Berjalan</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -585,111 +823,180 @@ export const BiroOkmrDeepDive: React.FC = () => {
               </div>
 
               {/* Filters: Periode & Tahun */}
-              <div className="flex items-center gap-1.5 text-[11px]">
-                <select
-                  aria-label="Filter Periode Pengaduan"
-                  value={pengaduanPeriode}
-                  onChange={(e) => setPengaduanPeriode(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-                >
-                  {BIRO_OKMR_MASTER_DATA.pengaduanMasyarakat.filterPeriodeList.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-[11px]">
+                  <select
+                    aria-label="Filter Periode Pengaduan"
+                    value={pengaduanPeriode}
+                    onChange={(e) => setPengaduanPeriode(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                  >
+                    {BIRO_OKMR_MASTER_DATA.pengaduanMasyarakat.filterPeriodeList.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
 
-                <select
-                  aria-label="Filter Tahun Pengaduan"
-                  value={pengaduanTahun}
-                  onChange={(e) => setPengaduanTahun(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-                >
-                  {BIRO_OKMR_MASTER_DATA.pengaduanMasyarakat.filterTahunList.map((t) => (
-                    <option key={t} value={t}>
-                      Th {t}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    aria-label="Filter Tahun Pengaduan"
+                    value={pengaduanTahun}
+                    onChange={(e) => setPengaduanTahun(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                  >
+                    {BIRO_OKMR_MASTER_DATA.pengaduanMasyarakat.filterTahunList.map((t) => (
+                      <option key={t} value={t}>
+                        Th {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setPengaduanViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      pengaduanViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPengaduanViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      pengaduanViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Clustered Bar Horizontal Chart */}
+          {/* Clustered Bar Horizontal Chart or Detail Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={dataPengaduanList}
-                margin={{ top: 5, right: 35, left: 95, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="unit"
-                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={95}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => {
-                    const num = Number(val);
-                    const sla = item.payload.slaHari;
-                    const pct = item.payload.persenSelesai;
-                    if (name === 'selesai') {
-                      return [
-                        `${num} Laporan (${pct.toFixed(1)}% • Rerata SLA: ${sla} Hari)`,
-                        'Selesai Ditindaklanjuti',
-                      ];
-                    }
-                    if (name === 'diproses') {
-                      return [`${num} Laporan`, 'Sedang Diproses'];
-                    }
-                    return [`${num} Laporan Masuk`, 'Total Pengaduan Diterima'];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const saluran = items && items[0]?.payload?.saluranTerbanyak;
-                    return saluran ? `${label} • Saluran Utama: ${saluran}` : label;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar
-                  dataKey="diterima"
-                  name="diterima"
-                  fill="#94a3b8"
-                  radius={[0, 2, 2, 0]}
-                  barSize={8}
-                />
-                <Bar
-                  dataKey="diproses"
-                  name="diproses"
-                  fill="#f59e0b"
-                  radius={[0, 2, 2, 0]}
-                  barSize={8}
-                />
-                <Bar
-                  dataKey="selesai"
-                  name="selesai"
-                  fill="#10b981"
-                  radius={[0, 2, 2, 0]}
-                  barSize={8}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            {pengaduanViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={dataPengaduanList}
+                  margin={{ top: 5, right: 35, left: 95, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="unit"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={95}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => {
+                      const num = Number(val);
+                      const sla = item.payload.slaHari;
+                      const pct = item.payload.persenSelesai;
+                      if (name === 'selesai') {
+                        return [
+                          `${num} Laporan (${pct.toFixed(1)}% • Rerata SLA: ${sla} Hari)`,
+                          'Selesai Ditindaklanjuti',
+                        ];
+                      }
+                      if (name === 'diproses') {
+                        return [`${num} Laporan`, 'Sedang Diproses'];
+                      }
+                      return [`${num} Laporan Masuk`, 'Total Pengaduan Diterima'];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const saluran = items && items[0]?.payload?.saluranTerbanyak;
+                      return saluran ? `${label} • Saluran Utama: ${saluran}` : label;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar
+                    dataKey="diterima"
+                    name="diterima"
+                    fill="#94a3b8"
+                    radius={[0, 2, 2, 0]}
+                    barSize={8}
+                  />
+                  <Bar
+                    dataKey="diproses"
+                    name="diproses"
+                    fill="#f59e0b"
+                    radius={[0, 2, 2, 0]}
+                    barSize={8}
+                  />
+                  <Bar
+                    dataKey="selesai"
+                    name="selesai"
+                    fill="#10b981"
+                    radius={[0, 2, 2, 0]}
+                    barSize={8}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Unit Layanan</th>
+                      <th className="py-1.5 px-2 text-right">Diterima</th>
+                      <th className="py-1.5 px-2 text-right">Diproses</th>
+                      <th className="py-1.5 px-2 text-right">Selesai</th>
+                      <th className="py-1.5 px-2 text-right">Tingkat (%)</th>
+                      <th className="py-1.5 px-2 text-right">SLA (Hari)</th>
+                      <th className="py-1.5 px-2">Saluran Terbanyak</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataPengaduanList.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{row.unit}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{row.diterima}</td>
+                        <td className="py-1.5 px-2 text-right text-amber-600 font-bold">{row.diproses}</td>
+                        <td className="py-1.5 px-2 text-right text-emerald-600 font-bold">{row.selesai}</td>
+                        <td className="py-1.5 px-2 text-right font-black text-blue-700">{row.persenSelesai.toFixed(1)}%</td>
+                        <td className="py-1.5 px-2 text-right text-slate-700">{row.slaHari}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 text-[9.5px]">{row.saluranTerbanyak}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900">
+                        Total ({pengaduanPeriode} {pengaduanTahun})
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-slate-700">{ringkasanPengaduan.totalDiterima}</td>
+                      <td className="py-1.5 px-2 text-right text-amber-700">{ringkasanPengaduan.totalDiproses}</td>
+                      <td className="py-1.5 px-2 text-right text-emerald-700">{ringkasanPengaduan.totalSelesai}</td>
+                      <td className="py-1.5 px-2 text-right text-blue-800 font-black">{ringkasanPengaduan.persenSelesai.toFixed(1)}%</td>
+                      <td className="py-1.5 px-2 text-right text-slate-700 font-sans">Rerata 1.5</td>
+                      <td className="py-1.5 px-2 font-sans text-emerald-700 font-semibold">Terkendali</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -739,96 +1046,167 @@ export const BiroOkmrDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filters: Unit Usaha & Tahun */}
-              <div className="flex items-center gap-1.5 text-[11px]">
-                <select
-                  aria-label="Filter Unit Usaha SKM"
-                  value={skmUnitUsaha}
-                  onChange={(e) => setSkmUnitUsaha(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs max-w-[130px] truncate"
-                >
-                  {BIRO_OKMR_MASTER_DATA.surveiKepuasanMasyarakat.filterUnitUsahaList.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
+              {/* Filters: Unit Usaha & Tahun + Sheet Swap */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-[11px]">
+                  <select
+                    aria-label="Filter Unit Usaha SKM"
+                    value={skmUnitUsaha}
+                    onChange={(e) => setSkmUnitUsaha(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs max-w-[130px] truncate"
+                  >
+                    {BIRO_OKMR_MASTER_DATA.surveiKepuasanMasyarakat.filterUnitUsahaList.map((u) => (
+                      <option key={u} value={u}>
+                        {u}
+                      </option>
+                    ))}
+                  </select>
 
-                <select
-                  aria-label="Filter Tahun SKM"
-                  value={skmTahun}
-                  onChange={(e) => setSkmTahun(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-                >
-                  {BIRO_OKMR_MASTER_DATA.surveiKepuasanMasyarakat.filterTahunList.map((t) => (
-                    <option key={t} value={t}>
-                      Th {t}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    aria-label="Filter Tahun SKM"
+                    value={skmTahun}
+                    onChange={(e) => setSkmTahun(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                  >
+                    {BIRO_OKMR_MASTER_DATA.surveiKepuasanMasyarakat.filterTahunList.map((t) => (
+                      <option key={t} value={t}>
+                        Th {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setSkmViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      skmViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSkmViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      skmViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Sorted Horizontal Bar Chart */}
+          {/* Sorted Horizontal Bar Chart or Detail Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={sortedSkmData}
-                margin={{ top: 5, right: 35, left: 115, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  domain={[75, 100]}
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `${val}%`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="kategori"
-                  tick={{ fontSize: 8.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={110}
-                />
-                <ReferenceLine
-                  x={90}
-                  stroke="#10b981"
-                  strokeDasharray="3 3"
-                  strokeWidth={1.5}
-                  label={{ value: '90% (Mutu A)', fill: '#10b981', fontSize: 9, position: 'top' }}
-                />
-                <Tooltip
-                  formatter={(val: any, _name: any, item: any) => [
-                    `${Number(val).toFixed(2)}% (Skor: ${item.payload.skor} • ${item.payload.mutu})`,
-                    'Capaian Indeks',
-                  ]}
-                  labelFormatter={(label, items) => {
-                    const detail = items && items[0]?.payload?.detail;
-                    return detail ? `${label} • ${detail}` : label;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar
-                  dataKey="persen"
-                  name="persen"
-                  fill="#2563eb"
-                  radius={[0, 2, 2, 0]}
-                  barSize={12}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            {skmViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={sortedSkmData}
+                  margin={{ top: 5, right: 35, left: 115, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    domain={[75, 100]}
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `${val}%`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="kategori"
+                    tick={{ fontSize: 8.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={110}
+                  />
+                  <ReferenceLine
+                    x={90}
+                    stroke="#10b981"
+                    strokeDasharray="3 3"
+                    strokeWidth={1.5}
+                    label={{ value: '90% (Mutu A)', fill: '#10b981', fontSize: 9, position: 'top' }}
+                  />
+                  <Tooltip
+                    formatter={(val: any, _name: any, item: any) => [
+                      `${Number(val).toFixed(2)}% (Skor: ${item.payload.skor} • ${item.payload.mutu})`,
+                      'Capaian Indeks',
+                    ]}
+                    labelFormatter={(label, items) => {
+                      const detail = items && items[0]?.payload?.detail;
+                      return detail ? `${label} • ${detail}` : label;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar
+                    dataKey="persen"
+                    name="persen"
+                    fill="#2563eb"
+                    radius={[0, 2, 2, 0]}
+                    barSize={12}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Unit Usaha / Layanan</th>
+                      <th className="py-1.5 px-2 text-right">Skor (Skala 4.0)</th>
+                      <th className="py-1.5 px-2 text-right">Konversi (%)</th>
+                      <th className="py-1.5 px-2 text-center">Mutu Layanan</th>
+                      <th className="py-1.5 px-2">Keterangan / Unsur Dominan</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {sortedSkmData.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{row.kategori}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-700">{row.skor.toFixed(2)}</td>
+                        <td className="py-1.5 px-2 text-right font-black text-slate-800">{row.persen.toFixed(2)}%</td>
+                        <td className="py-1.5 px-2 text-center font-sans">
+                          <span className="px-1.5 py-0.2 rounded text-[9.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            {row.mutu}
+                          </span>
+                        </td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 text-[9.5px]">{row.detail}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900">
+                        Rata-rata Konsolidasi ({skmUnitUsaha} - Th {skmTahun})
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-blue-800 font-bold">{rerataSkm.skor.toFixed(2)}</td>
+                      <td className="py-1.5 px-2 text-right text-slate-900 font-black">{rerataSkm.persen.toFixed(2)}%</td>
+                      <td className="py-1.5 px-2 text-center font-sans">
+                        <span className="px-1.5 py-0.2 rounded text-[9.5px] font-black bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          Mutu A
+                        </span>
+                      </td>
+                      <td className="py-1.5 px-2 font-sans text-emerald-700 font-semibold">Sangat Baik (Di atas standar 90%)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}

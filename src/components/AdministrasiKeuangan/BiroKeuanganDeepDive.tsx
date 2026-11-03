@@ -123,10 +123,17 @@ export const BiroKeuanganDeepDive: React.FC = () => {
     return filteredSurplusData.reduce((acc, curr) => acc + curr.belanja, 0);
   }, [filteredSurplusData]);
 
+  // States for Kartu 1: YTD Belanja (View Toggle: Grafik vs Tabel)
+  const [ytdViewMode, setYtdViewMode] = useState<'chart' | 'table'>('chart');
+
+  // States for Kartu 2: Anggaran vs Realisasi (View Toggle: Grafik vs Tabel)
+  const [anggaranViewMode, setAnggaranViewMode] = useState<'chart' | 'table'>('chart');
+
   // --------------------------------------------------------------------------
   // Filter States for Kartu 4: Penerimaan per Sumber Dana
   // --------------------------------------------------------------------------
   const [sumberDanaUnit, setSumberDanaUnit] = useState<string>('Semua Unit Kerja');
+  const [sumberDanaViewMode, setSumberDanaViewMode] = useState<'chart' | 'table'>('chart');
 
   const dataPenerimaanBulanan = useMemo(() => {
     const dict = BIRO_KEUANGAN_MASTER_DATA.penerimaanSumberDana.monthlyRecords;
@@ -148,6 +155,7 @@ export const BiroKeuanganDeepDive: React.FC = () => {
   // --------------------------------------------------------------------------
   const [saldoKategoriUnit, setSaldoKategoriUnit] = useState<string>('Semua Kategori Unit');
   const [saldoTanggal, setSaldoTanggal] = useState<string>('31 Oktober 2026');
+  const [saldoBankViewMode, setSaldoBankViewMode] = useState<'chart' | 'table'>('chart');
 
   const dataSaldoBank = useMemo(() => {
     const key = `${saldoKategoriUnit}-${saldoTanggal}`;
@@ -201,86 +209,149 @@ export const BiroKeuanganDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Legenda di Bawah Judul */}
-            <div className="flex flex-wrap items-center gap-3 text-xs mb-2">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-1 rounded-xs bg-[#2563eb]" />
-                <span className="text-slate-700 font-medium text-[11px]">% YTD Capaian Belanja</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-1 rounded-xs bg-[#10b981]" />
-                <span className="text-slate-700 font-medium text-[11px]">% YTD Capaian Penerimaan</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-0.5 border-t border-dashed border-[#ef4444]" />
-                <span className="text-slate-600 font-medium text-[10px]">Target Acuan (100%)</span>
-              </span>
+            {/* Legenda & Toggle Sheet Swap */}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 text-xs">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-1 rounded-xs bg-[#2563eb]" />
+                  <span className="text-slate-700 font-medium text-[11px]">% YTD Belanja</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-1 rounded-xs bg-[#10b981]" />
+                  <span className="text-slate-700 font-medium text-[11px]">% YTD Penerimaan</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-0.5 border-t border-dashed border-[#ef4444]" />
+                  <span className="text-slate-600 font-medium text-[10px]">Target (100%)</span>
+                </span>
+              </div>
+
+              {/* Sheet Swap Toggle Buttons: Grafik vs Tabel Detail */}
+              <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => setYtdViewMode('chart')}
+                  className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                    ytdViewMode === 'chart'
+                      ? 'bg-blue-600 text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Grafik
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setYtdViewMode('table')}
+                  className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                    ytdViewMode === 'table'
+                      ? 'bg-blue-600 text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Tabel Detail
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Line Chart Section */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={BIRO_KEUANGAN_MASTER_DATA.capaianRealisasiYtd.quarterlyRecords}
-                margin={{ top: 12, right: 20, left: -10, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="triwulanTahun"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  domain={[0, 115]}
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `${val}%`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <ReferenceLine
-                  y={100}
-                  stroke="#ef4444"
-                  strokeDasharray="3 3"
-                  strokeWidth={1.5}
-                  label={{ value: '100%', fill: '#ef4444', fontSize: 9.5, position: 'top' }}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => [
-                    `${Number(val).toFixed(1)}%`,
-                    name === 'capaianBelanja' ? '% YTD Capaian Belanja' : '% YTD Capaian Penerimaan',
-                  ]}
-                  labelFormatter={(label) => `Periode: ${label}`}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="capaianBelanja"
-                  name="capaianBelanja"
-                  stroke="#2563eb"
-                  strokeWidth={2.5}
-                  dot={{ r: 3.5, fill: '#2563eb' }}
-                  activeDot={{ r: 5.5 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="capaianPenerimaan"
-                  name="capaianPenerimaan"
-                  stroke="#10b981"
-                  strokeWidth={2.5}
-                  dot={{ r: 3.5, fill: '#10b981' }}
-                  activeDot={{ r: 5.5 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          {/* Line Chart Section vs Tabel Detail */}
+          <div className="flex-1 w-full min-h-0 my-1 overflow-hidden">
+            {ytdViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={BIRO_KEUANGAN_MASTER_DATA.capaianRealisasiYtd.quarterlyRecords}
+                  margin={{ top: 12, right: 20, left: -10, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="triwulanTahun"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    domain={[0, 115]}
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `${val}%`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <ReferenceLine
+                    y={100}
+                    stroke="#ef4444"
+                    strokeDasharray="3 3"
+                    strokeWidth={1.5}
+                    label={{ value: '100%', fill: '#ef4444', fontSize: 9.5, position: 'top' }}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => [
+                      `${Number(val).toFixed(1)}%`,
+                      name === 'capaianBelanja' ? '% YTD Capaian Belanja' : '% YTD Capaian Penerimaan',
+                    ]}
+                    labelFormatter={(label) => `Periode: ${label}`}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="capaianBelanja"
+                    name="capaianBelanja"
+                    stroke="#2563eb"
+                    strokeWidth={2.5}
+                    dot={{ r: 3.5, fill: '#2563eb' }}
+                    activeDot={{ r: 5.5 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="capaianPenerimaan"
+                    name="capaianPenerimaan"
+                    stroke="#10b981"
+                    strokeWidth={2.5}
+                    dot={{ r: 3.5, fill: '#10b981' }}
+                    activeDot={{ r: 5.5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Triwulan / Periode</th>
+                      <th className="py-1.5 px-2 text-right">Belanja (Rp Miliar)</th>
+                      <th className="py-1.5 px-2 text-right">% Capaian Belanja</th>
+                      <th className="py-1.5 px-2 text-right">Penerimaan (Rp Miliar)</th>
+                      <th className="py-1.5 px-2 text-right">% Capaian PNBP</th>
+                      <th className="py-1.5 px-2 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {BIRO_KEUANGAN_MASTER_DATA.capaianRealisasiYtd.quarterlyRecords.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{row.triwulanTahun}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-700">{formatRupiahMiliar(row.nominalBelanjaMiliar)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-700">{row.capaianBelanja.toFixed(1)}%</td>
+                        <td className="py-1.5 px-2 text-right text-slate-700">{formatRupiahMiliar(row.nominalPenerimaanMiliar)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-700">{row.capaianPenerimaan.toFixed(1)}%</td>
+                        <td className="py-1.5 px-2 text-center font-sans">
+                          <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
+                            row.capaianBelanja >= 80 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
+                          }`}>
+                            {row.capaianBelanja >= 80 ? 'Optimal' : 'Waspada'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -330,7 +401,7 @@ export const BiroKeuanganDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filters: Jenis, Triwulan, Tahun */}
+              {/* Filters: Jenis, Triwulan, Tahun & Sheet Swap Toggle */}
               <div className="flex items-center gap-1.5 text-[11px]">
                 <select
                   aria-label="Filter Tahun Anggaran"
@@ -362,7 +433,7 @@ export const BiroKeuanganDeepDive: React.FC = () => {
                   aria-label="Filter Jenis Belanja"
                   value={anggaranJenis}
                   onChange={(e) => setAnggaranJenis(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer max-w-[120px] truncate"
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer max-w-[110px] truncate"
                 >
                   {BIRO_KEUANGAN_MASTER_DATA.anggaranVsRealisasi.filterJenisList.map((j) => (
                     <option key={j} value={j}>
@@ -370,72 +441,158 @@ export const BiroKeuanganDeepDive: React.FC = () => {
                     </option>
                   ))}
                 </select>
+
+                {/* Sheet Swap Toggle Buttons: Grafik vs Tabel Detail */}
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setAnggaranViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      anggaranViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAnggaranViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      anggaranViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Clustered Bar Horizontal Chart */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={dataAnggaranRealisasi}
-                margin={{ top: 2, right: 35, left: 110, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `Rp ${val}M`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="uraian"
-                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={105}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => {
-                    const num = Number(val);
-                    const pct = item.payload.persentase;
-                    if (name === 'realisasi') {
-                      return [`${formatRupiahMiliar(num)} (${pct}%)`, 'Realisasi Aktual'];
-                    }
-                    return [formatRupiahMiliar(num), 'Pagu Anggaran'];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const pct = items && items[0]?.payload?.persentase;
-                    return pct ? `${label} • Capaian: ${pct}%` : label;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar
-                  dataKey="anggaran"
-                  name="anggaran"
-                  fill="#94a3b8"
-                  radius={[0, 2, 2, 0]}
-                  barSize={10}
-                />
-                <Bar
-                  dataKey="realisasi"
-                  name="realisasi"
-                  fill="#2563eb"
-                  radius={[0, 2, 2, 0]}
-                  barSize={10}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+          {/* Clustered Bar Horizontal Chart vs Tabel Detail */}
+          <div className="flex-1 w-full min-h-0 my-1 overflow-hidden">
+            {anggaranViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={dataAnggaranRealisasi}
+                  margin={{ top: 2, right: 35, left: 110, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `Rp ${val}M`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="uraian"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={105}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => {
+                      const num = Number(val);
+                      const pct = item.payload.persentase;
+                      if (name === 'realisasi') {
+                        return [`${formatRupiahMiliar(num)} (${pct}%)`, 'Realisasi Aktual'];
+                      }
+                      return [formatRupiahMiliar(num), 'Pagu Anggaran'];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const pct = items && items[0]?.payload?.persentase;
+                      return pct ? `${label} • Capaian: ${pct}%` : label;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar
+                    dataKey="anggaran"
+                    name="anggaran"
+                    fill="#94a3b8"
+                    radius={[0, 2, 2, 0]}
+                    barSize={10}
+                  />
+                  <Bar
+                    dataKey="realisasi"
+                    name="realisasi"
+                    fill="#2563eb"
+                    radius={[0, 2, 2, 0]}
+                    barSize={10}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Uraian / Jenis Belanja</th>
+                      <th className="py-1.5 px-2 text-right">Pagu Anggaran</th>
+                      <th className="py-1.5 px-2 text-right">Realisasi Aktual</th>
+                      <th className="py-1.5 px-2 text-right">Sisa Anggaran</th>
+                      <th className="py-1.5 px-2 text-right">% Capaian</th>
+                      <th className="py-1.5 px-2 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataAnggaranRealisasi.map((row, idx) => {
+                      const sisa = row.anggaran - row.realisasi;
+                      return (
+                        <tr key={idx} className="hover:bg-blue-50/40">
+                          <td className="py-1.5 px-2 font-sans font-semibold text-slate-900 truncate max-w-[140px]">{row.uraian}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-600">{formatRupiahMiliar(row.anggaran)}</td>
+                          <td className="py-1.5 px-2 text-right font-bold text-blue-700">{formatRupiahMiliar(row.realisasi)}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-500">{formatRupiahMiliar(sisa)}</td>
+                          <td className="py-1.5 px-2 text-right font-bold text-emerald-700">{row.persentase.toFixed(1)}%</td>
+                          <td className="py-1.5 px-2 text-center font-sans">
+                            <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
+                              row.persentase >= 80 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
+                            }`}>
+                              {row.persentase >= 90 ? 'Optimal' : row.persentase >= 80 ? 'Baik' : 'On Track'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                  <tfoot className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                    <tr>
+                      <td className="py-1.5 px-2 font-sans text-slate-900">Total Belanja</td>
+                      <td className="py-1.5 px-2 text-right text-slate-800">
+                        {formatRupiahMiliar(dataAnggaranRealisasi.reduce((a, b) => a + b.anggaran, 0))}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-blue-800">
+                        {formatRupiahMiliar(dataAnggaranRealisasi.reduce((a, b) => a + b.realisasi, 0))}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-slate-600">
+                        {formatRupiahMiliar(dataAnggaranRealisasi.reduce((a, b) => a + (b.anggaran - b.realisasi), 0))}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-emerald-700 font-black">
+                        {rerataPersentaseRealisasi.toFixed(1)}%
+                      </td>
+                      <td className="py-1.5 px-2 text-center font-sans">
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-100 text-blue-800">
+                          RERATA
+                        </span>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -837,76 +994,156 @@ export const BiroKeuanganDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filter Unit Kerja */}
-              <select
-                aria-label="Filter Unit Kerja Penerimaan"
-                value={sumberDanaUnit}
-                onChange={(e) => setSumberDanaUnit(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs max-w-[130px] truncate"
-              >
-                {BIRO_KEUANGAN_MASTER_DATA.penerimaanSumberDana.filterUnitList.map((u) => (
-                  <option key={u} value={u}>
-                    {u}
-                  </option>
-                ))}
-              </select>
+              {/* Controls: Filter & Sheet Swap */}
+              <div className="flex items-center gap-2">
+                <select
+                  aria-label="Filter Unit Kerja Penerimaan"
+                  value={sumberDanaUnit}
+                  onChange={(e) => setSumberDanaUnit(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs max-w-[130px] truncate"
+                >
+                  {BIRO_KEUANGAN_MASTER_DATA.penerimaanSumberDana.filterUnitList.map((u) => (
+                    <option key={u} value={u}>
+                      {u}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setSumberDanaViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      sumberDanaViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSumberDanaViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      sumberDanaViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Stacked Column Chart Section */}
+          {/* Stacked Column Chart or Table Section */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={dataPenerimaanBulanan}
-                margin={{ top: 8, right: 15, left: -10, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="bulan"
-                  tick={{ fontSize: 10, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `Rp ${val}M`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => {
-                    const num = Number(val);
-                    const total = item.payload.total;
-                    const pct = total > 0 ? ((num / total) * 100).toFixed(1) : '0';
-                    const map: Record<string, string> = {
-                      pelabuhan: 'Jasa Pelabuhan',
-                      uwtLahan: 'UWT Pertanahan',
-                      bandara: 'Jasa Bandara',
-                      rsbpMedis: 'Layanan RSBP',
-                      spamAir: 'Air Minum SPAM',
-                    };
-                    return [`${formatRupiahMiliar(num)} (${pct}%)`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const total = items && items[0]?.payload?.total;
-                    return total ? `Bulan ${label} • Total Penerimaan: ${formatRupiahMiliar(total)}` : `Bulan ${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="pelabuhan" name="pelabuhan" stackId="dana" fill="#1e40af" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="uwtLahan" name="uwtLahan" stackId="dana" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="bandara" name="bandara" stackId="dana" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="rsbpMedis" name="rsbpMedis" stackId="dana" fill="#10b981" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="spamAir" name="spamAir" stackId="dana" fill="#94a3b8" radius={[3, 3, 0, 0]} barSize={18} />
-              </BarChart>
-            </ResponsiveContainer>
+            {sumberDanaViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={dataPenerimaanBulanan}
+                  margin={{ top: 8, right: 15, left: -10, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="bulan"
+                    tick={{ fontSize: 10, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `Rp ${val}M`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => {
+                      const num = Number(val);
+                      const total = item.payload.total;
+                      const pct = total > 0 ? ((num / total) * 100).toFixed(1) : '0';
+                      const map: Record<string, string> = {
+                        pelabuhan: 'Jasa Pelabuhan',
+                        uwtLahan: 'UWT Pertanahan',
+                        bandara: 'Jasa Bandara',
+                        rsbpMedis: 'Layanan RSBP',
+                        spamAir: 'Air Minum SPAM',
+                      };
+                      return [`${formatRupiahMiliar(num)} (${pct}%)`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const total = items && items[0]?.payload?.total;
+                      return total ? `Bulan ${label} • Total Penerimaan: ${formatRupiahMiliar(total)}` : `Bulan ${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="pelabuhan" name="pelabuhan" stackId="dana" fill="#1e40af" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="uwtLahan" name="uwtLahan" stackId="dana" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="bandara" name="bandara" stackId="dana" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="rsbpMedis" name="rsbpMedis" stackId="dana" fill="#10b981" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="spamAir" name="spamAir" stackId="dana" fill="#94a3b8" radius={[3, 3, 0, 0]} barSize={18} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Bulan</th>
+                      <th className="py-1.5 px-2 text-right">Pelabuhan (Rp M)</th>
+                      <th className="py-1.5 px-2 text-right">Lahan UWT (Rp M)</th>
+                      <th className="py-1.5 px-2 text-right">Bandara (Rp M)</th>
+                      <th className="py-1.5 px-2 text-right">RSBP (Rp M)</th>
+                      <th className="py-1.5 px-2 text-right">SPAM Air (Rp M)</th>
+                      <th className="py-1.5 px-2 text-right">Total (Rp M)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataPenerimaanBulanan.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">Bulan {row.bulan}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-900">{row.pelabuhan.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-700">{row.uwtLahan.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-sky-700">{row.bandara.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-emerald-700">{row.rsbpMedis.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{row.spamAir.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900 bg-slate-50/70">{row.total.toFixed(1)}</td>
+                      </tr>
+                    ))}
+                    {/* Baris Total Kumulatif */}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900">Total Kumulatif YTD</td>
+                      <td className="py-1.5 px-2 text-right text-blue-900">
+                        {dataPenerimaanBulanan.reduce((sum, r) => sum + r.pelabuhan, 0).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-blue-700">
+                        {dataPenerimaanBulanan.reduce((sum, r) => sum + r.uwtLahan, 0).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-sky-700">
+                        {dataPenerimaanBulanan.reduce((sum, r) => sum + r.bandara, 0).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-emerald-700">
+                        {dataPenerimaanBulanan.reduce((sum, r) => sum + r.rsbpMedis, 0).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-slate-600">
+                        {dataPenerimaanBulanan.reduce((sum, r) => sum + r.spamAir, 0).toFixed(1)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-blue-700 font-black bg-blue-50/80">
+                        {totalPenerimaanYtd.toFixed(1)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}
@@ -1128,66 +1365,159 @@ export const BiroKeuanganDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              {/* Filters */}
-              <div className="flex items-center gap-1.5 text-[11px]">
-                <select
-                  aria-label="Filter Kategori Unit Saldo Bank"
-                  value={saldoKategoriUnit}
-                  onChange={(e) => setSaldoKategoriUnit(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs max-w-[130px] truncate"
-                >
-                  {BIRO_KEUANGAN_MASTER_DATA.saldoBankRealTime.filterKategoriUnitList.map((k) => (
-                    <option key={k} value={k}>
-                      {k}
-                    </option>
-                  ))}
-                </select>
+              {/* Filters & Sheet Swap */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-[11px]">
+                  <select
+                    aria-label="Filter Kategori Unit Saldo Bank"
+                    value={saldoKategoriUnit}
+                    onChange={(e) => setSaldoKategoriUnit(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs max-w-[130px] truncate"
+                  >
+                    {BIRO_KEUANGAN_MASTER_DATA.saldoBankRealTime.filterKategoriUnitList.map((k) => (
+                      <option key={k} value={k}>
+                        {k}
+                      </option>
+                    ))}
+                  </select>
 
-                <select
-                  aria-label="Filter Tanggal Rekap Saldo Bank"
-                  value={saldoTanggal}
-                  onChange={(e) => setSaldoTanggal(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
-                >
-                  {BIRO_KEUANGAN_MASTER_DATA.saldoBankRealTime.filterTanggalList.map((d) => (
-                    <option key={d} value={d}>
-                      {d.replace('2026', '26')}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    aria-label="Filter Tanggal Rekap Saldo Bank"
+                    value={saldoTanggal}
+                    onChange={(e) => setSaldoTanggal(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[10.5px] font-medium outline-none hover:bg-slate-100 cursor-pointer shadow-2xs"
+                  >
+                    {BIRO_KEUANGAN_MASTER_DATA.saldoBankRealTime.filterTanggalList.map((d) => (
+                      <option key={d} value={d}>
+                        {d.replace('2026', '26')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setSaldoBankViewMode('chart')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      saldoBankViewMode === 'chart'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Grafik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSaldoBankViewMode('table')}
+                    className={`px-2 py-0.5 rounded font-semibold transition-all cursor-pointer ${
+                      saldoBankViewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Tabel Detail
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bank Treemap Section */}
+          {/* Bank Treemap or Table Section */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <Treemap
-                data={bankTreemapFormattedData}
-                dataKey="size"
-                aspectRatio={4 / 3}
-                stroke="#fff"
-                content={<CustomBankTreemapNode />}
-              >
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => {
-                    const p = item.payload;
-                    return [
-                      `${formatRupiahMiliar(p.saldoMiliar || val)} (${p.porsiPersen}%) • ${p.kategoriRekening} • ${p.kegunaanRekening}`,
-                      p.name,
-                    ];
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-              </Treemap>
-            </ResponsiveContainer>
+            {saldoBankViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <Treemap
+                  data={bankTreemapFormattedData}
+                  dataKey="size"
+                  aspectRatio={4 / 3}
+                  stroke="#fff"
+                  content={<CustomBankTreemapNode />}
+                >
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => {
+                      const p = item.payload;
+                      return [
+                        `${formatRupiahMiliar(p.saldoMiliar || val)} (${p.porsiPersen}%) • ${p.kategoriRekening} • ${p.kegunaanRekening}`,
+                        p.name,
+                      ];
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                </Treemap>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Nama Bank Mitra</th>
+                      <th className="py-1.5 px-2">Kategori Rekening</th>
+                      <th className="py-1.5 px-2">Kegunaan Operasional</th>
+                      <th className="py-1.5 px-2 text-right">Saldo Kas</th>
+                      <th className="py-1.5 px-2 text-right">Porsi</th>
+                      <th className="py-1.5 px-2 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                    {dataSaldoBank.banks.map((bank, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900 flex items-center gap-1.5">
+                          <span
+                            className="w-2.5 h-2.5 rounded-xs shrink-0"
+                            style={{ backgroundColor: bank.color }}
+                          />
+                          <span className="truncate">{bank.name}</span>
+                        </td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 text-[10px]">
+                          <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 inline-block">
+                            {bank.kategoriRekening}
+                          </span>
+                        </td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 text-[10px] truncate max-w-[120px]">
+                          {bank.kegunaanRekening}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">
+                          {formatRupiahMiliar(bank.saldoMiliar)}
+                        </td>
+                        <td className="py-1.5 px-2 text-right text-blue-700 font-semibold">
+                          {bank.porsiPersen.toFixed(1)}%
+                        </td>
+                        <td className="py-1.5 px-2 text-center font-sans">
+                          <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Aktif
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    {/* Baris Total Saldo Konsolidasi */}
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 sticky bottom-0 text-[10px]">
+                      <td className="py-1.5 px-2 font-sans text-slate-900" colSpan={3}>
+                        Total Saldo Kas Konsolidasi ({dataSaldoBank.jumlahBank} Bank Mitra)
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-blue-800 font-black">
+                        {formatRupiahMiliar(dataSaldoBank.totalSaldoMiliar)}
+                      </td>
+                      <td className="py-1.5 px-2 text-right text-blue-700 font-black">
+                        100.0%
+                      </td>
+                      <td className="py-1.5 px-2 text-center font-sans">
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-100 text-blue-800">
+                          Reconciled
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Kecil */}

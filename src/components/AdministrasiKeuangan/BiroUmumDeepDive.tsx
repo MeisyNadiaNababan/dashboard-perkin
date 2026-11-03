@@ -29,6 +29,14 @@ const formatRupiahJuta = (valJuta: number): string => {
 };
 
 export const BiroUmumDeepDive: React.FC = () => {
+  // Sheet Swap State Modes
+  const [bmnViewMode, setBmnViewMode] = useState<'chart' | 'table'>('chart');
+  const [penghapusanViewMode, setPenghapusanViewMode] = useState<'chart' | 'table'>('chart');
+  const [hpsViewMode, setHpsViewMode] = useState<'chart' | 'table'>('chart');
+  const [dokumenViewMode, setDokumenViewMode] = useState<'chart' | 'table'>('chart');
+  const [arsipViewMode, setArsipViewMode] = useState<'chart' | 'table'>('chart');
+  const [kunjunganViewMode, setKunjunganViewMode] = useState<'chart' | 'table'>('chart');
+
   // --------------------------------------------------------------------------
   // Filter States for Kartu 1: Inventarisasi Aset BMN
   // --------------------------------------------------------------------------

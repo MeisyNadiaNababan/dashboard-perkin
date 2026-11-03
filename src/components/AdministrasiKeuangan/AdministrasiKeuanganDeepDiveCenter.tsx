@@ -25,6 +25,7 @@ import {
   Archive,
 } from 'lucide-react';
 import { BiroKeuanganDeepDive } from './BiroKeuanganDeepDive';
+import { BiroSdmDeepDive } from './BiroSdmDeepDive';
 import { BiroOkmrDeepDive } from './BiroOkmrDeepDive';
 import { BiroUmumDeepDive } from './BiroUmumDeepDive';
 import { BiroHukumDeepDive } from './BiroHukumDeepDive';
@@ -716,157 +717,9 @@ export const AdministrasiKeuanganDeepDiveCenter: React.FC<
       )}
 
       {/* ==================================================================== */}
-      {/* 3. TAB KONTEN: BIRO SDM (KUALIFIKASI PENDIDIKAN & STATUS KEPEGAWAIAN) */}
-      {/* Sesuai instruksi: Tren Skor Sistem Merit, Distribusi Jabatan, dan      */}
-      {/* Pemenuhan 20 JP Pelatihan telah DIHAPUS. Tampilan lebih rapi 2 kolom. */}
+      {/* 3. TAB KONTEN: BIRO SDM (6 GRAFIK SESUAI SPESIFIKASI GRID 2 KOLOM)   */}
       {/* ==================================================================== */}
-      {selectedUnitId === 'biro-sdm' && (
-        <div className="space-y-3.5">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
-            {/* CARD 1: Kualifikasi Pendidikan SDM - WHITE CARD */}
-            <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
-                      <GraduationCap className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Kualifikasi Pendidikan Pegawai
-                      </h3>
-                      <p className="text-[10px] text-slate-500">
-                        Sebaran 2.978 Pegawai BP Batam berdasarkan Jenjang Ijazah
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none">64,5%</span>
-                    <span className="text-[10px] text-blue-600 font-medium block">Sarjana &amp; Pascasarjana</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center my-2">
-                  <div className="sm:col-span-5 relative h-36 flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={DATA_PENDIDIKAN_DONUT}
-                          innerRadius={42}
-                          outerRadius={62}
-                          paddingAngle={2.5}
-                          dataKey="total"
-                        >
-                          {DATA_PENDIDIKAN_DONUT.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          formatter={(val: any, name: any) => [`${val} Pegawai`, name]}
-                          contentStyle={{ fontSize: '10.5px', borderRadius: '8px' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                      <span className="text-base font-black text-slate-900 leading-none">2.978</span>
-                      <span className="text-[9px] text-slate-500 font-medium">Pegawai</span>
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-7 space-y-1.5">
-                    {DATA_PENDIDIKAN_DONUT.map((b, idx) => (
-                      <div key={idx} className="group hover:bg-slate-50 p-1 rounded transition-colors">
-                        <div className="flex items-center justify-between text-[10.5px] mb-0.5">
-                          <span className="flex items-center gap-1.5 text-slate-700 font-medium truncate">
-                            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: b.color }} />
-                            {b.name}
-                          </span>
-                          <div className="flex items-center gap-2 shrink-0 font-mono">
-                            <span className="text-slate-500 text-[10px]">{b.total} Org</span>
-                            <span className="font-bold text-slate-900 text-[10px]">{b.persen.toFixed(1)}%</span>
-                          </div>
-                        </div>
-                        <div className="w-full bg-slate-100 rounded-full h-1 overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${b.persen}%`, backgroundColor: b.color }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-600">
-                <span className="font-medium text-blue-800">
-                  S1/D4: 1.584 Org (53,2%) &bull; S2/S3: 336 Org (11,3%)
-                </span>
-                <span className="text-slate-500">Dataset #9 Buku Satu Data</span>
-              </div>
-            </div>
-
-            {/* CARD 2: Status Kepegawaian & Gender - WHITE CARD */}
-            <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
-                      <Users className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Status Kepegawaian &amp; Rasio Gender
-                      </h3>
-                      <p className="text-[10px] text-slate-500">
-                        Komposisi Formasi ASN, Pegawai Tetap, PPPK &amp; Tenaga Kontrak
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none">60,3% : 39,7%</span>
-                    <span className="text-[10px] text-slate-600 font-medium block">Pria : Wanita (1.796 : 1.182)</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-[10px] text-slate-500 mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-blue-600" />
-                    <span className="font-medium text-slate-700">Laki-laki (1.796 Org)</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-rose-500" />
-                    <span className="font-semibold text-rose-600">Perempuan (1.182 Org)</span>
-                  </span>
-                </div>
-
-                <div className="h-40 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={DATA_STATUS_PEGAWAI} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="kategori" tick={{ fontSize: 9.5, fill: '#334155' }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [`${val} Pegawai`, name === 'pria' ? 'Laki-laki' : 'Perempuan']}
-                        contentStyle={{ fontSize: '10.5px', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="pria" fill="#2563EB" radius={[2, 2, 0, 0]} barSize={12} />
-                      <Bar dataKey="wanita" fill="#F43F5E" radius={[2, 2, 0, 0]} barSize={12} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-600">
-                <span className="font-medium text-slate-700">
-                  PNS: 1.042 (35,0%) &bull; P2K Tetap: 872 (29,3%) &bull; PPPK: 485 (16,3%)
-                </span>
-                <span className="text-slate-500">Dataset #7 &amp; #8 Buku Satu Data</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {selectedUnitId === 'biro-sdm' && <BiroSdmDeepDive />}
 
       {/* ==================================================================== */}
       {/* 4. TAB KONTEN: BIRO OKMR                                             */}
