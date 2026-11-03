@@ -35,9 +35,17 @@ import {
   TrenRekomendasiTahunanItem,
   RekomendasiItem,
 } from './pengendalianInvestasiData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 export const DirektoratPengendalianInvestasiDeepDive: React.FC = () => {
   const db = PENGENDALIAN_INVESTASI_DATA;
+
+  // --------------------------------------------------------------------------
+  // SHEET SWAP STATES
+  // --------------------------------------------------------------------------
+  const [k1ViewMode, setK1ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k2ViewMode, setK2ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k3ViewMode, setK3ViewMode] = useState<'chart' | 'table'>('chart');
 
   // --------------------------------------------------------------------------
   // FILTER STATES TIAP KARTU
@@ -187,101 +195,148 @@ export const DirektoratPengendalianInvestasiDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Filter Toolbar: Tahun */}
-            <div className="flex items-center justify-between gap-2 py-1.5 mb-2.5 border-y border-slate-100 text-xs">
-              <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
-                <Filter className="w-3.5 h-3.5 text-slate-400" />
-                <span>Filter Tahun:</span>
+            {/* Filter Toolbar: Tahun & Sheet Swap */}
+            <div className="flex items-center justify-between gap-2 py-1.5 mb-2.5 border-y border-slate-100 text-xs flex-wrap">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+                  <Filter className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Filter Tahun:</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {['2026', '2025'].map((thn) => (
+                    <button
+                      key={thn}
+                      type="button"
+                      onClick={() => setK1Tahun(thn)}
+                      className={`px-2.5 py-0.5 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+                        k1Tahun === thn
+                          ? 'bg-[#2563eb] text-white font-bold shadow-2xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      {thn}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                {['2026', '2025'].map((thn) => (
-                  <button
-                    key={thn}
-                    type="button"
-                    onClick={() => setK1Tahun(thn)}
-                    className={`px-2.5 py-0.5 rounded text-[11px] font-mono transition-colors cursor-pointer ${
-                      k1Tahun === thn
-                        ? 'bg-[#2563eb] text-white font-bold shadow-2xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {thn}
-                  </button>
-                ))}
-              </div>
+              <SheetSwapToggle mode={k1ViewMode} onChange={setK1ViewMode} />
             </div>
 
-            {/* Column Chart */}
+            {/* Container Visual: Chart atau Tabel Detail */}
             <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k1FilteredRecords}
-                  margin={{ top: 10, right: 15, left: -20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'monospace' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    allowDecimals={false}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload as RekomendasiBulananItem;
-                        return (
-                          <div className="bg-slate-900/95 backdrop-blur-xs text-white p-3 rounded-xl shadow-xl border border-slate-700/80 text-[11px] max-w-sm space-y-2 z-50">
-                            <div className="font-bold text-sky-300 border-b border-slate-700 pb-1.5 flex justify-between items-center">
-                              <span>Bulan {data.bulanNama} {data.tahun}</span>
-                              <span className="text-white font-mono bg-blue-900/70 border border-blue-700 px-1.5 py-0.5 rounded text-[10px]">
-                                {data.jumlahRekomendasi} Rekomendasi Terbit
-                              </span>
-                            </div>
+              {k1ViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k1FilteredRecords}
+                    margin={{ top: 10, right: 15, left: -20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'monospace' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload as RekomendasiBulananItem;
+                          return (
+                            <div className="bg-slate-900/95 backdrop-blur-xs text-white p-3 rounded-xl shadow-xl border border-slate-700/80 text-[11px] max-w-sm space-y-2 z-50">
+                              <div className="font-bold text-sky-300 border-b border-slate-700 pb-1.5 flex justify-between items-center">
+                                <span>Bulan {data.bulanNama} {data.tahun}</span>
+                                <span className="text-white font-mono bg-blue-900/70 border border-blue-700 px-1.5 py-0.5 rounded text-[10px]">
+                                  {data.jumlahRekomendasi} Rekomendasi Terbit
+                                </span>
+                              </div>
 
-                            <div className="space-y-1.5 text-[10.5px]">
-                              <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">
-                                Judul &amp; Rekomendasi pada Bulan Ini:
-                              </span>
-                              {data.items.map((item, idx) => (
-                                <div
-                                  key={idx}
-                                  className="p-1.5 rounded bg-slate-800/80 border border-slate-700/60 space-y-0.5"
-                                >
-                                  <div className="font-bold text-white flex items-start gap-1">
-                                    <span className="text-[#2563eb]">&bull;</span>
-                                    <span>{item.judul}</span>
+                              <div className="space-y-1.5 text-[10.5px]">
+                                <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">
+                                  Judul &amp; Rekomendasi pada Bulan Ini:
+                                </span>
+                                {data.items.map((item, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="p-1.5 rounded bg-slate-800/80 border border-slate-700/60 space-y-0.5"
+                                  >
+                                    <div className="font-bold text-white flex items-start gap-1">
+                                      <span className="text-[#2563eb]">&bull;</span>
+                                      <span>{item.judul}</span>
+                                    </div>
+                                    <div className="text-[10px] text-slate-300 pl-2">
+                                      <span className="text-slate-400">Rekomendasi: </span>
+                                      <span className="text-emerald-300 font-medium">{item.rekomendasi}</span>
+                                    </div>
+                                    <div className="text-[9.5px] text-slate-400 pl-2">
+                                      Mitra: <span className="text-sky-200">{item.mitra}</span>
+                                    </div>
                                   </div>
-                                  <div className="text-[10px] text-slate-300 pl-2">
-                                    <span className="text-slate-400">Rekomendasi: </span>
-                                    <span className="text-emerald-300 font-medium">{item.rekomendasi}</span>
-                                  </div>
-                                  <div className="text-[9.5px] text-slate-400 pl-2">
-                                    Mitra: <span className="text-sky-200">{item.mitra}</span>
-                                  </div>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar
-                    dataKey="jumlahRekomendasi"
-                    name="Jumlah Rekomendasi"
-                    fill="#2563eb"
-                    radius={[4, 4, 0, 0]}
-                    barSize={24}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar
+                      dataKey="jumlahRekomendasi"
+                      name="Jumlah Rekomendasi"
+                      fill="#2563eb"
+                      radius={[4, 4, 0, 0]}
+                      barSize={24}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left border-collapse text-[10.5px]">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                      <tr>
+                        <th className="py-2 px-2.5">Bulan &amp; Tahun</th>
+                        <th className="py-2 px-2 text-center">Jml Rekomendasi</th>
+                        <th className="py-2 px-2">Judul &amp; Rincian Rekomendasi</th>
+                        <th className="py-2 px-2">Mitra Terkait</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {k1FilteredRecords.map((item, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40 transition-colors">
+                          <td className="py-2 px-2.5 font-bold text-slate-800 whitespace-nowrap align-top">
+                            {item.bulanNama} {item.tahun}
+                          </td>
+                          <td className="py-2 px-2 text-center font-mono font-bold text-blue-700 align-top">
+                            {item.jumlahRekomendasi}
+                          </td>
+                          <td className="py-2 px-2 align-top space-y-1">
+                            {item.items && item.items.length > 0 ? (
+                              item.items.map((it, itIdx) => (
+                                <div key={itIdx} className="text-[10px]">
+                                  <div className="font-semibold text-slate-800">{it.judul}</div>
+                                  <div className="text-slate-500 text-[9.5px]">{it.rekomendasi}</div>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-slate-400 italic">-</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-2 align-top text-slate-600">
+                            {item.items && item.items.length > 0
+                              ? item.items.map((it) => it.mitra).filter(Boolean).join(', ')
+                              : '-'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 
@@ -339,105 +394,152 @@ export const DirektoratPengendalianInvestasiDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Filter Toolbar: Tahun */}
-            <div className="flex items-center justify-between gap-2 py-1.5 mb-2.5 border-y border-slate-100 text-xs">
-              <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
-                <Filter className="w-3.5 h-3.5 text-slate-400" />
-                <span>Filter Tahun Terbit:</span>
+            {/* Filter Toolbar: Tahun & Sheet Swap */}
+            <div className="flex items-center justify-between gap-2 py-1.5 mb-2.5 border-y border-slate-100 text-xs flex-wrap">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+                  <Filter className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Filter Tahun Terbit:</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {['2026', '2025'].map((thn) => (
+                    <button
+                      key={thn}
+                      type="button"
+                      onClick={() => setK2Tahun(thn)}
+                      className={`px-2.5 py-0.5 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+                        k2Tahun === thn
+                          ? 'bg-[#2563eb] text-white font-bold shadow-2xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      {thn}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                {['2026', '2025'].map((thn) => (
-                  <button
-                    key={thn}
-                    type="button"
-                    onClick={() => setK2Tahun(thn)}
-                    className={`px-2.5 py-0.5 rounded text-[11px] font-mono transition-colors cursor-pointer ${
-                      k2Tahun === thn
-                        ? 'bg-[#2563eb] text-white font-bold shadow-2xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {thn}
-                  </button>
-                ))}
-              </div>
+              <SheetSwapToggle mode={k2ViewMode} onChange={setK2ViewMode} />
             </div>
 
-            {/* Line Chart dengan Marker */}
+            {/* Container Visual: Chart atau Tabel Detail */}
             <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={k2FilteredRecords}
-                  margin={{ top: 10, right: 20, left: -20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    domain={[0, 3]}
-                    tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'monospace' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    allowDecimals={false}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload as LaporanPengawasanItem;
-                        return (
-                          <div className="bg-slate-900/95 backdrop-blur-xs text-white p-3 rounded-xl shadow-xl border border-slate-700/80 text-[11px] max-w-sm space-y-2 z-50">
-                            <div className="font-bold text-sky-300 border-b border-slate-700 pb-1.5 flex justify-between items-center">
-                              <span>Bulan {data.bulanNama} {data.tahun}</span>
-                              <span className="text-white font-mono bg-blue-900/70 border border-blue-700 px-1.5 py-0.5 rounded text-[10px]">
-                                {data.jumlahLaporan} Laporan Terbit
-                              </span>
-                            </div>
+              {k2ViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={k2FilteredRecords}
+                    margin={{ top: 10, right: 20, left: -20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      domain={[0, 3]}
+                      tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'monospace' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload as LaporanPengawasanItem;
+                          return (
+                            <div className="bg-slate-900/95 backdrop-blur-xs text-white p-3 rounded-xl shadow-xl border border-slate-700/80 text-[11px] max-w-sm space-y-2 z-50">
+                              <div className="font-bold text-sky-300 border-b border-slate-700 pb-1.5 flex justify-between items-center">
+                                <span>Bulan {data.bulanNama} {data.tahun}</span>
+                                <span className="text-white font-mono bg-blue-900/70 border border-blue-700 px-1.5 py-0.5 rounded text-[10px]">
+                                  {data.jumlahLaporan} Laporan Terbit
+                                </span>
+                              </div>
 
-                            {/* Tooltip: Judul Laporan */}
-                            <div className="space-y-1.5 text-[10.5px]">
-                              <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">
-                                Judul Laporan Pengawasan:
-                              </span>
-                              {data.laporanList.map((lap, idx) => (
-                                <div
-                                  key={idx}
-                                  className="p-2 rounded bg-slate-800/80 border border-slate-700/60 space-y-1"
-                                >
-                                  <div className="font-bold text-white leading-snug">
-                                    {lap.judulLaporan}
+                              {/* Tooltip: Judul Laporan */}
+                              <div className="space-y-1.5 text-[10.5px]">
+                                <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">
+                                  Judul Laporan Pengawasan:
+                                </span>
+                                {data.laporanList.map((lap, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="p-2 rounded bg-slate-800/80 border border-slate-700/60 space-y-1"
+                                  >
+                                    <div className="font-bold text-white leading-snug">
+                                      {lap.judulLaporan}
+                                    </div>
+                                    <div className="text-[10px] text-slate-300">
+                                      <span className="text-slate-400">Objek Pengawasan: </span>
+                                      <span className="text-emerald-300">{lap.objekPengawasan}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-[9.5px] text-slate-400 font-mono pt-0.5 border-t border-slate-700/50">
+                                      <span>No: {lap.nomorDokumen}</span>
+                                      <span>Tgl: {lap.tanggalTerbit}</span>
+                                    </div>
                                   </div>
-                                  <div className="text-[10px] text-slate-300">
-                                    <span className="text-slate-400">Objek Pengawasan: </span>
-                                    <span className="text-emerald-300">{lap.objekPengawasan}</span>
-                                  </div>
-                                  <div className="flex justify-between items-center text-[9.5px] text-slate-400 font-mono pt-0.5 border-t border-slate-700/50">
-                                    <span>No: {lap.nomorDokumen}</span>
-                                    <span>Tgl: {lap.tanggalTerbit}</span>
-                                  </div>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="jumlahLaporan"
-                    name="Jumlah Laporan"
-                    stroke="#2563eb"
-                    strokeWidth={2.5}
-                    dot={{ r: 4.5, fill: '#2563eb', stroke: '#ffffff', strokeWidth: 2 }}
-                    activeDot={{ r: 6.5, fill: '#1d4ed8' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="jumlahLaporan"
+                      name="Jumlah Laporan"
+                      stroke="#2563eb"
+                      strokeWidth={2.5}
+                      dot={{ r: 4.5, fill: '#2563eb', stroke: '#ffffff', strokeWidth: 2 }}
+                      activeDot={{ r: 6.5, fill: '#1d4ed8' }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left border-collapse text-[10.5px]">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                      <tr>
+                        <th className="py-2 px-2.5">Bulan &amp; Tahun</th>
+                        <th className="py-2 px-2 text-center">Jml Laporan</th>
+                        <th className="py-2 px-2">Judul Laporan &amp; Objek</th>
+                        <th className="py-2 px-2">No. Dokumen &amp; Tgl</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {k2FilteredRecords.map((item, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40 transition-colors">
+                          <td className="py-2 px-2.5 font-bold text-slate-800 whitespace-nowrap align-top">
+                            {item.bulanNama} {item.tahun}
+                          </td>
+                          <td className="py-2 px-2 text-center font-mono font-bold text-blue-700 align-top">
+                            {item.jumlahLaporan}
+                          </td>
+                          <td className="py-2 px-2 align-top space-y-1">
+                            {item.laporanList && item.laporanList.length > 0 ? (
+                              item.laporanList.map((lap, lapIdx) => (
+                                <div key={lapIdx} className="text-[10px]">
+                                  <div className="font-semibold text-slate-800">{lap.judulLaporan}</div>
+                                  <div className="text-slate-500 text-[9.5px]">Objek: {lap.objekPengawasan}</div>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-slate-400 italic">Nihil / Belum Ada Terbit</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-2 align-top text-slate-600 font-mono text-[9.5px]">
+                            {item.laporanList && item.laporanList.length > 0
+                              ? item.laporanList.map((lap) => `${lap.nomorDokumen} (${lap.tanggalTerbit})`).join('; ')
+                              : '-'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 
@@ -511,94 +613,136 @@ export const DirektoratPengendalianInvestasiDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Sub-Header Toolbar: Label 5 Tahun */}
-            <div className="flex items-center justify-between gap-2 py-1.5 mb-2.5 border-y border-slate-100 text-xs">
-              <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>Periode Evaluasi Multi-Tahun:</span>
+            {/* Sub-Header Toolbar: Label 5 Tahun & Sheet Swap */}
+            <div className="flex items-center justify-between gap-2 py-1.5 mb-2.5 border-y border-slate-100 text-xs flex-wrap">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Periode Evaluasi Multi-Tahun:</span>
+                </div>
+                <div className="text-[11px] font-mono text-slate-600 font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
+                  2022 &rarr; 2026 (Konsisten Naik)
+                </div>
               </div>
-              <div className="text-[11px] font-mono text-slate-600 font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
-                2022 &rarr; 2026 (Konsisten Naik)
-              </div>
+              <SheetSwapToggle mode={k3ViewMode} onChange={setK3ViewMode} />
             </div>
 
-            {/* Column Chart Tren Tahunan */}
+            {/* Container Visual: Chart atau Tabel Detail */}
             <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k3Records}
-                  margin={{ top: 10, right: 20, left: -20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="tahun"
-                    tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'monospace' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    allowDecimals={false}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload as TrenRekomendasiTahunanItem;
-                        return (
-                          <div className="bg-slate-900/95 backdrop-blur-xs text-white p-3 rounded-xl shadow-xl border border-slate-700/80 text-[11px] max-w-sm space-y-2 z-50">
-                            <div className="font-bold text-sky-300 border-b border-slate-700 pb-1.5 flex justify-between items-center">
-                              <span>Tahun Anggaran {data.tahun}</span>
-                              <span className="text-white font-mono bg-blue-900/70 border border-blue-700 px-1.5 py-0.5 rounded text-[10px]">
-                                {data.jumlahRekomendasi} Rekomendasi
-                              </span>
-                            </div>
-
-                            <div className="space-y-1 text-slate-300 font-mono text-[10.5px]">
-                              <div className="flex justify-between items-center">
-                                <span>Perubahan vs Thn Lalu:</span>
-                                <span
-                                  className={`font-bold flex items-center gap-0.5 ${
-                                    data.isPositive ? 'text-emerald-400' : 'text-amber-400'
-                                  }`}
-                                >
-                                  {data.isPositive ? '+' : ''}
-                                  {data.perubahanCount} Rekomendasi ({data.isPositive ? '+' : ''}
-                                  {data.perubahanPersen.toFixed(1)}%)
+              {k3ViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k3Records}
+                    margin={{ top: 10, right: 20, left: -20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="tahun"
+                      tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'monospace' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload as TrenRekomendasiTahunanItem;
+                          return (
+                            <div className="bg-slate-900/95 backdrop-blur-xs text-white p-3 rounded-xl shadow-xl border border-slate-700/80 text-[11px] max-w-sm space-y-2 z-50">
+                              <div className="font-bold text-sky-300 border-b border-slate-700 pb-1.5 flex justify-between items-center">
+                                <span>Tahun Anggaran {data.tahun}</span>
+                                <span className="text-white font-mono bg-blue-900/70 border border-blue-700 px-1.5 py-0.5 rounded text-[10px]">
+                                  {data.jumlahRekomendasi} Rekomendasi
                                 </span>
                               </div>
-                              <div className="flex justify-between text-slate-400 text-[10px]">
-                                <span>Tahun Sebelumnya:</span>
-                                <span>{data.jumlahTahunLalu} Rekomendasi</span>
+
+                              <div className="space-y-1 text-slate-300 font-mono text-[10.5px]">
+                                <div className="flex justify-between items-center">
+                                  <span>Perubahan vs Thn Lalu:</span>
+                                  <span
+                                    className={`font-bold flex items-center gap-0.5 ${
+                                      data.isPositive ? 'text-emerald-400' : 'text-amber-400'
+                                    }`}
+                                  >
+                                    {data.isPositive ? '+' : ''}
+                                    {data.perubahanCount} Rekomendasi ({data.isPositive ? '+' : ''}
+                                    {data.perubahanPersen.toFixed(1)}%)
+                                  </span>
+                                </div>
+                                <div className="flex justify-between text-slate-400 text-[10px]">
+                                  <span>Tahun Sebelumnya:</span>
+                                  <span>{data.jumlahTahunLalu} Rekomendasi</span>
+                                </div>
+                              </div>
+
+                              <div className="pt-1.5 border-t border-slate-800 text-[10px] text-slate-300">
+                                <span className="text-slate-400 font-semibold block mb-0.5">Fokus Evaluasi &amp; Pengendalian:</span>
+                                <span className="text-slate-200">{data.fokusEvaluasi}</span>
                               </div>
                             </div>
-
-                            <div className="pt-1.5 border-t border-slate-800 text-[10px] text-slate-300">
-                              <span className="text-slate-400 font-semibold block mb-0.5">Fokus Evaluasi &amp; Pengendalian:</span>
-                              <span className="text-slate-200">{data.fokusEvaluasi}</span>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar
-                    dataKey="jumlahRekomendasi"
-                    name="Jumlah Rekomendasi"
-                    radius={[4, 4, 0, 0]}
-                    barSize={32}
-                  >
-                    {k3Records.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={entry.tahun === 2026 ? '#2563eb' : '#94a3b8'}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar
+                      dataKey="jumlahRekomendasi"
+                      name="Jumlah Rekomendasi"
+                      radius={[4, 4, 0, 0]}
+                      barSize={32}
+                    >
+                      {k3Records.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.tahun === 2026 ? '#2563eb' : '#94a3b8'}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left border-collapse text-[10.5px]">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                      <tr>
+                        <th className="py-2 px-2.5">Tahun</th>
+                        <th className="py-2 px-2 text-center">Jml Rekomendasi</th>
+                        <th className="py-2 px-2 text-center">Thn Sebelumnya</th>
+                        <th className="py-2 px-2 text-right">Perubahan</th>
+                        <th className="py-2 px-2">Fokus Evaluasi &amp; Pengendalian</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {k3Records.map((item, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40 transition-colors">
+                          <td className="py-2 px-2.5 font-bold text-slate-800 whitespace-nowrap">
+                            TA {item.tahun}
+                          </td>
+                          <td className="py-2 px-2 text-center font-mono font-bold text-blue-700">
+                            {item.jumlahRekomendasi}
+                          </td>
+                          <td className="py-2 px-2 text-center font-mono text-slate-500">
+                            {item.jumlahTahunLalu}
+                          </td>
+                          <td className="py-2 px-2 text-right font-mono font-bold whitespace-nowrap">
+                            <span className={item.isPositive ? 'text-emerald-700' : 'text-amber-700'}>
+                              {item.isPositive ? '+' : ''}{item.perubahanCount} ({item.perubahanPersen.toFixed(1)}%)
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 text-slate-600">
+                            {item.fokusEvaluasi}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 

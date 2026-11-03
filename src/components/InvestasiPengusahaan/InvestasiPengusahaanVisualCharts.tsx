@@ -31,6 +31,7 @@ import {
   Bar,
 } from 'recharts';
 import { PERKIN_A4_KPIS } from './investasiPengusahaanData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface InvestasiPengusahaanVisualChartsProps {
   onOpenFormulaModal: (kpiId: string) => void;
@@ -123,6 +124,7 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
 > = ({ onOpenFormulaModal }) => {
   // Tab state: ikp-1, ikp-2, ikp-3, ikp-4
   const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3' | 'ikp-4'>('ikp-1');
+  const [radarViewMode, setRadarViewMode] = useState<'chart' | 'table'>('chart');
 
   const ikpInvestasi = PERKIN_A4_KPIS[0];
   const ikpPromosi = PERKIN_A4_KPIS[1];
@@ -134,11 +136,11 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
       {/* Two Column Grid: Left is Radar Chart (NO MINI CARDS BELOW IT AS REQUESTED), Right is Detailed Table + Trend Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
         {/* ================================================================== */}
-        {/* KOLOM KIRI: RADAR CHART CAPAIAN 4 IKP (TANPA KARTU MINI DI BAWAHNYA) */}
+        {/* KOLOM KIRI: RADAR CHART CAPAIAN 4 IKP (DENGAN SHEET SWAP TOGGLE)   */}
         {/* ================================================================== */}
         <div className="lg:col-span-3 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
           <div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-1 mb-1.5 flex-wrap">
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                   Radar Capaian 4 IKP DEP-A4
@@ -147,54 +149,82 @@ export const InvestasiPengusahaanVisualCharts: React.FC<
                   Realisasi Aktual vs Target Penetapan Perkin A4 2025
                 </p>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60 font-mono">
-                  0-130%
-                </span>
-              </div>
+              <SheetSwapToggle mode={radarViewMode} onChange={setRadarViewMode} />
             </div>
 
-            {/* Radar Visual */}
-            <div className="h-36 sm:h-40 w-full mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_4_IKP_A4} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <PolarGrid stroke="#CBD5E1" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                  <Radar
-                    name="Target Perkin (100%)"
-                    dataKey="target"
-                    stroke="#94A3B8"
-                    fill="#94A3B8"
-                    fillOpacity={0.12}
-                    strokeDasharray="4 4"
-                  />
-                  <Radar
-                    name="Realisasi Aktual"
-                    dataKey="realisasi"
-                    stroke="#0284C7"
-                    fill="#0284C7"
-                    fillOpacity={0.35}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      fontSize: '11px',
-                      borderRadius: '8px',
-                      backgroundColor: '#0F172A',
-                      color: '#FFFFFF',
-                      border: 'none',
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+            {/* Container Visual: Radar Chart atau Tabel Detail */}
+            <div className="h-44 sm:h-48 w-full mt-1">
+              {radarViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={RADAR_4_IKP_A4} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                    <PolarGrid stroke="#CBD5E1" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
+                    />
+                    <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
+                    <Radar
+                      name="Target Perkin (100%)"
+                      dataKey="target"
+                      stroke="#94A3B8"
+                      fill="#94A3B8"
+                      fillOpacity={0.12}
+                      strokeDasharray="4 4"
+                    />
+                    <Radar
+                      name="Realisasi Aktual"
+                      dataKey="realisasi"
+                      stroke="#0284C7"
+                      fill="#0284C7"
+                      fillOpacity={0.35}
+                    />
+                    <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                    <Tooltip
+                      formatter={(val: any, name: any, item: any) => [
+                        `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                        name,
+                      ]}
+                      contentStyle={{
+                        fontSize: '11px',
+                        borderRadius: '8px',
+                        backgroundColor: '#0F172A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg bg-white">
+                  <table className="w-full text-left border-collapse text-[10px]">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[9px] z-10 border-b border-slate-200">
+                      <tr>
+                        <th className="py-1.5 px-2">Indikator Kinerja (IKP)</th>
+                        <th className="py-1.5 px-1.5 text-right">Target</th>
+                        <th className="py-1.5 px-1.5 text-right">Capaian</th>
+                        <th className="py-1.5 px-1.5 text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {RADAR_4_IKP_A4.map((r, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40 transition-colors">
+                          <td className="py-1.5 px-2">
+                            <span className="font-semibold text-slate-800 block text-[10px] leading-tight">{r.subject}</span>
+                            <span className="text-[9px] text-slate-400 font-mono">{r.skorAsli}</span>
+                          </td>
+                          <td className="py-1.5 px-1.5 text-right font-mono text-slate-500 whitespace-nowrap">{r.target}%</td>
+                          <td className="py-1.5 px-1.5 text-right font-mono font-bold text-blue-700 whitespace-nowrap">{r.realisasi.toFixed(1)}%</td>
+                          <td className="py-1.5 px-1.5 text-center whitespace-nowrap">
+                            <span className="inline-block px-1 py-0.2 rounded text-[8.5px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              Optimal
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 

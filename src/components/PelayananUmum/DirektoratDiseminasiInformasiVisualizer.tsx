@@ -26,6 +26,7 @@ import {
   MouTriwulanItem,
 } from './diseminasiInformasiData';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 // Formatters
 const formatNumberId = (val: number): string => {
@@ -39,29 +40,37 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
 
   // Kartu 1: Filter Tahun
   const [k1Tahun, setK1Tahun] = useState<string>('2026');
+  const [k1ViewMode, setK1ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 2: Filter Tahun
   const [k2Tahun, setK2Tahun] = useState<string>('Semua Tahun');
+  const [k2ViewMode, setK2ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 3: Filter Tahun
   const [k3Tahun, setK3Tahun] = useState<string>('2026');
+  const [k3ViewMode, setK3ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 4: Filter Tahun
   const [k4Tahun, setK4Tahun] = useState<string>('2026');
+  const [k4ViewMode, setK4ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 5: Filter Tahun
   const [k5Tahun, setK5Tahun] = useState<string>('2026');
+  const [k5ViewMode, setK5ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 6: Filter Tahun & Kategori Bantuan
   const [k6Tahun, setK6Tahun] = useState<string>('Semua Tahun');
   const [k6Kategori, setK6Kategori] = useState<string>('Semua Kategori');
+  const [k6ViewMode, setK6ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 7: Filter Tahun
   const [k7Tahun, setK7Tahun] = useState<string>('2026');
+  const [k7ViewMode, setK7ViewMode] = useState<'chart' | 'table'>('chart');
 
   // Kartu 8: Tab Aktif & Filter Tahun
   const [k8Tab, setK8Tab] = useState<'A' | 'B' | 'C'>('A');
   const [k8Tahun, setK8Tahun] = useState<string>('2026');
+  const [k8ViewMode, setK8ViewMode] = useState<'chart' | 'table'>('chart');
 
   // =========================================================================
   // DATA PROCESSING: KARTU 1 - Kegiatan Publikasi & Tentatif
@@ -285,8 +294,8 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun Kegiatan"
                 value={k1Tahun}
@@ -299,64 +308,92 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                   </option>
                 ))}
               </select>
+              <SheetSwapToggle mode={k1ViewMode} onChange={setK1ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Clustered Column + Garis */}
+          {/* Chart Section or Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={k1Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="bulan"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      publikasi: 'Kegiatan Dipublikasikan',
-                      dokumentasi: 'Kegiatan Terdokumentasi',
-                      tentatif: 'Tentatif Kegiatan (Agenda)',
-                    };
-                    return [`${num} Kegiatan`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `Bulan ${label} • Contoh: "${p.contohNamaKegiatan}" (${p.lokasi})`;
-                    }
-                    return `Bulan ${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="publikasi" name="publikasi" fill="#2563eb" radius={[2, 2, 0, 0]} barSize={11} />
-                <Bar dataKey="dokumentasi" name="dokumentasi" fill="#94a3b8" radius={[2, 2, 0, 0]} barSize={11} />
-                <Line
-                  type="monotone"
-                  dataKey="tentatif"
-                  name="tentatif"
-                  stroke="#f59e0b"
-                  strokeWidth={2}
-                  dot={{ r: 2.5, fill: '#f59e0b' }}
-                  activeDot={{ r: 4.5 }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
+            {k1ViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={k1Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="bulan"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        publikasi: 'Kegiatan Dipublikasikan',
+                        dokumentasi: 'Kegiatan Terdokumentasi',
+                        tentatif: 'Tentatif Kegiatan (Agenda)',
+                      };
+                      return [`${num} Kegiatan`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `Bulan ${label} • Contoh: "${p.contohNamaKegiatan}" (${p.lokasi})`;
+                      }
+                      return `Bulan ${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="publikasi" name="publikasi" fill="#2563eb" radius={[2, 2, 0, 0]} barSize={11} />
+                  <Bar dataKey="dokumentasi" name="dokumentasi" fill="#94a3b8" radius={[2, 2, 0, 0]} barSize={11} />
+                  <Line
+                    type="monotone"
+                    dataKey="tentatif"
+                    name="tentatif"
+                    stroke="#f59e0b"
+                    strokeWidth={2}
+                    dot={{ r: 2.5, fill: '#f59e0b' }}
+                    activeDot={{ r: 4.5 }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-2.5">Bulan</th>
+                      <th className="py-2 px-2 text-right">Publikasi</th>
+                      <th className="py-2 px-2 text-right">Dokumentasi</th>
+                      <th className="py-2 px-2 text-right">Tentatif</th>
+                      <th className="py-2 px-2.5">Contoh Agenda</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k1Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-2 px-2.5 font-bold text-slate-900">{row.bulan}</td>
+                        <td className="py-2 px-2 text-right font-mono font-bold text-blue-700">{row.publikasi}</td>
+                        <td className="py-2 px-2 text-right font-mono text-slate-600">{row.dokumentasi}</td>
+                        <td className="py-2 px-2 text-right font-mono text-amber-600">{row.tentatif}</td>
+                        <td className="py-2 px-2.5 text-slate-600 truncate max-w-xs">{row.contohNamaKegiatan}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -410,8 +447,8 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun Iklan"
                 value={k2Tahun}
@@ -425,53 +462,83 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                   </option>
                 ))}
               </select>
+              <SheetSwapToggle mode={k2ViewMode} onChange={setK2ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Stacked Column */}
+          {/* Chart Section or Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={k2Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="semester"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    return [
-                      `${num} Tayangan`,
-                      name === 'nasionalLokal' ? 'Media Nasional & Lokal' : 'Media Asing / Berbahasa Asing',
-                    ];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `${label} • Media: ${p.namaMedia}\nJudul: "${p.contohJudul}"`;
-                    }
-                    return `${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="nasionalLokal" name="nasionalLokal" stackId="advertorial" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={24} />
-                <Bar dataKey="asing" name="asing" stackId="advertorial" fill="#60a5fa" radius={[3, 3, 0, 0]} barSize={24} />
-              </BarChart>
-            </ResponsiveContainer>
+            {k2ViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={k2Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="semester"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      return [
+                        `${num} Tayangan`,
+                        name === 'nasionalLokal' ? 'Media Nasional & Lokal' : 'Media Asing / Berbahasa Asing',
+                      ];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `${label} • Media: ${p.namaMedia}\nJudul: "${p.contohJudul}"`;
+                      }
+                      return `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="nasionalLokal" name="nasionalLokal" stackId="advertorial" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={24} />
+                  <Bar dataKey="asing" name="asing" stackId="advertorial" fill="#60a5fa" radius={[3, 3, 0, 0]} barSize={24} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-2.5">Semester / Periode</th>
+                      <th className="py-2 px-2 text-right">Nasional/Lokal</th>
+                      <th className="py-2 px-2 text-right">Asing</th>
+                      <th className="py-2 px-2 text-right">Total</th>
+                      <th className="py-2 px-2.5">Media Utama &amp; Judul</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k2Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-2 px-2.5 font-bold text-slate-900">{row.semester}</td>
+                        <td className="py-2 px-2 text-right font-mono font-bold text-blue-700">{row.nasionalLokal}</td>
+                        <td className="py-2 px-2 text-right font-mono text-sky-600">{row.asing}</td>
+                        <td className="py-2 px-2 text-right font-mono font-black text-slate-800">{row.nasionalLokal + row.asing}</td>
+                        <td className="py-2 px-2.5 text-slate-600 truncate max-w-xs" title={`${row.namaMedia} - ${row.contohJudul}`}>
+                          <span className="font-semibold text-slate-800">{row.namaMedia}:</span> {row.contohJudul}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -527,8 +594,8 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun Kunjungan Website"
                 value={k3Tahun}
@@ -538,61 +605,91 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                 <option value="2026">Tahun 2026</option>
                 <option value="2025">Tahun 2025</option>
               </select>
+              <SheetSwapToggle mode={k3ViewMode} onChange={setK3ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Stacked Area */}
+          {/* Chart Section or Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={k3Data} margin={{ top: 10, right: 15, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="bulan"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(v) => `${Math.round(v / 1000)}k`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      portalBerita: 'Portal Berita Utama',
-                      layananPerizinan: 'Layanan Perizinan IBOSS',
-                      potensiInvestasi: 'Kanal Potensi Investasi',
-                      ppidPublik: 'Keterbukaan Informasi PPID',
-                    };
-                    return [`${formatNumberId(num)} sesi`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      const isUp = p.growthPct >= 0;
-                      const sign = isUp ? '+' : '';
-                      return `Bulan ${label} • Total: ${formatNumberId(p.total)} (${sign}${p.growthPct}% MoM)`;
-                    }
-                    return `Bulan ${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Area type="monotone" dataKey="portalBerita" name="portalBerita" stackId="web" stroke="#2563eb" fill="#2563eb" fillOpacity={0.7} />
-                <Area type="monotone" dataKey="layananPerizinan" name="layananPerizinan" stackId="web" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                <Area type="monotone" dataKey="potensiInvestasi" name="potensiInvestasi" stackId="web" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.5} />
-                <Area type="monotone" dataKey="ppidPublik" name="ppidPublik" stackId="web" stroke="#94a3b8" fill="#94a3b8" fillOpacity={0.4} />
-              </AreaChart>
-            </ResponsiveContainer>
+            {k3ViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={k3Data} margin={{ top: 10, right: 15, left: -10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="bulan"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(v) => `${Math.round(v / 1000)}k`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        portalBerita: 'Portal Berita Utama',
+                        layananPerizinan: 'Layanan Perizinan IBOSS',
+                        potensiInvestasi: 'Kanal Potensi Investasi',
+                        ppidPublik: 'Keterbukaan Informasi PPID',
+                      };
+                      return [`${formatNumberId(num)} sesi`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        const isUp = p.growthPct >= 0;
+                        const sign = isUp ? '+' : '';
+                        return `Bulan ${label} • Total: ${formatNumberId(p.total)} (${sign}${p.growthPct}% MoM)`;
+                      }
+                      return `Bulan ${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Area type="monotone" dataKey="portalBerita" name="portalBerita" stackId="web" stroke="#2563eb" fill="#2563eb" fillOpacity={0.7} />
+                  <Area type="monotone" dataKey="layananPerizinan" name="layananPerizinan" stackId="web" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
+                  <Area type="monotone" dataKey="potensiInvestasi" name="potensiInvestasi" stackId="web" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.5} />
+                  <Area type="monotone" dataKey="ppidPublik" name="ppidPublik" stackId="web" stroke="#94a3b8" fill="#94a3b8" fillOpacity={0.4} />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-2.5">Bulan</th>
+                      <th className="py-2 px-2 text-right">Portal Berita</th>
+                      <th className="py-2 px-2 text-right">Perizinan</th>
+                      <th className="py-2 px-2 text-right">Investasi</th>
+                      <th className="py-2 px-2 text-right">PPID</th>
+                      <th className="py-2 px-2 text-right">Total Sesi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k3Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-2 px-2.5 font-bold text-slate-900">{row.bulan}</td>
+                        <td className="py-2 px-2 text-right font-mono text-blue-700">{formatNumberId(row.portalBerita)}</td>
+                        <td className="py-2 px-2 text-right font-mono text-sky-600">{formatNumberId(row.layananPerizinan)}</td>
+                        <td className="py-2 px-2 text-right font-mono text-cyan-600">{formatNumberId(row.potensiInvestasi)}</td>
+                        <td className="py-2 px-2 text-right font-mono text-slate-500">{formatNumberId(row.ppidPublik)}</td>
+                        <td className="py-2 px-2 text-right font-mono font-black text-slate-800">{formatNumberId(row.total)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -656,8 +753,8 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun Kunjungan Tamu"
                 value={k4Tahun}
@@ -667,66 +764,92 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                 <option value="2026">Tahun 2026</option>
                 <option value="2025">Tahun 2025</option>
               </select>
+              <SheetSwapToggle mode={k4ViewMode} onChange={setK4ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Horizontal Stacked Bar */}
+          {/* Chart Section or Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart layout="vertical" data={k4Data} margin={{ top: 2, right: 15, left: 110, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => formatNumberId(val)}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="kategori"
-                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={105}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      investasiKek: 'Dit. Investasi & KEK',
-                      kantorPimpinan: 'Kantor Pimpinan / BPH',
-                      pelabuhanBandara: 'Dit. Pelabuhan & Bandara',
-                      pengelolaanLahan: 'Dit. Pengelolaan Lahan',
-                      humasProtokol: 'Biro Humas & Protokol',
-                      lainnya: 'Unit Kerja Lainnya',
-                    };
-                    return [`${formatNumberId(num)} tamu`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `${label} • Total: ${formatNumberId(p.total)}\nJabatan: ${p.pekerjaanJabatan}\nAcara: "${p.contohAcara}"`;
-                    }
-                    return `${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="investasiKek" name="investasiKek" stackId="tamu" fill="#2563eb" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="kantorPimpinan" name="kantorPimpinan" stackId="tamu" fill="#3b82f6" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="pelabuhanBandara" name="pelabuhanBandara" stackId="tamu" fill="#60a5fa" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="pengelolaanLahan" name="pengelolaanLahan" stackId="tamu" fill="#93c5fd" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="humasProtokol" name="humasProtokol" stackId="tamu" fill="#0284c7" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="lainnya" name="lainnya" stackId="tamu" fill="#94a3b8" radius={[0, 2, 2, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {k4ViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart layout="vertical" data={k4Data} margin={{ top: 2, right: 15, left: 110, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => formatNumberId(val)}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="kategori"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={105}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        investasiKek: 'Dit. Investasi & KEK',
+                        kantorPimpinan: 'Kantor Pimpinan / BPH',
+                        pelabuhanBandara: 'Dit. Pelabuhan & Bandara',
+                        pengelolaanLahan: 'Dit. Pengelolaan Lahan',
+                        humasProtokol: 'Biro Humas & Protokol',
+                        lainnya: 'Unit Kerja Lainnya',
+                      };
+                      return [`${formatNumberId(num)} tamu`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `${label} • Total: ${formatNumberId(p.total)}\nJabatan: ${p.pekerjaanJabatan}\nAcara: "${p.contohAcara}"`;
+                      }
+                      return `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="investasiKek" name="investasiKek" stackId="tamu" fill="#2563eb" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="kantorPimpinan" name="kantorPimpinan" stackId="tamu" fill="#3b82f6" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="pelabuhanBandara" name="pelabuhanBandara" stackId="tamu" fill="#60a5fa" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="pengelolaanLahan" name="pengelolaanLahan" stackId="tamu" fill="#93c5fd" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="humasProtokol" name="humasProtokol" stackId="tamu" fill="#0284c7" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="lainnya" name="lainnya" stackId="tamu" fill="#94a3b8" radius={[0, 2, 2, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-2.5">Kategori Tamu / Instansi</th>
+                      <th className="py-2 px-2 text-right">Total Tamu</th>
+                      <th className="py-2 px-2.5">Jabatan / Delegasi</th>
+                      <th className="py-2 px-2.5">Agenda / Topik Acara</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k4Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-2 px-2.5 font-bold text-slate-900">{row.kategori}</td>
+                        <td className="py-2 px-2 text-right font-mono font-black text-blue-700">{formatNumberId(row.total)}</td>
+                        <td className="py-2 px-2.5 text-slate-700 font-medium">{row.pekerjaanJabatan}</td>
+                        <td className="py-2 px-2.5 text-slate-600 truncate max-w-xs" title={row.contohAcara}>{row.contohAcara}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -778,8 +901,8 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun Keprotokolan"
                 value={k5Tahun}
@@ -789,70 +912,100 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                 <option value="2026">Tahun 2026</option>
                 <option value="2025">Tahun 2025</option>
               </select>
+              <SheetSwapToggle mode={k5ViewMode} onChange={setK5ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Column + Line (Dual Axis) */}
+          {/* Chart Section or Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={k5Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="bulan"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  yAxisId="left"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  domain={[90, 100]}
-                  tick={{ fontSize: 9.5, fill: '#10B981', fontFamily: 'monospace' }}
-                  tickFormatter={(v) => `${v}%`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    if (name === 'dilayani') return [`${num} Kegiatan`, 'Jumlah Kegiatan Dilayani'];
-                    return [`${num.toFixed(1)}%`, 'Persentase Terlaksana'];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `Bulan ${label} • ${p.hariTanggal}\nUraian: "${p.contohUraian}"`;
-                    }
-                    return `Bulan ${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar yAxisId="left" dataKey="dilayani" name="dilayani" fill="#2563eb" radius={[3, 3, 0, 0]} barSize={16} />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="persentase"
-                  name="persentase"
-                  stroke="#10b981"
-                  strokeWidth={2.5}
-                  dot={{ r: 3, fill: '#10b981' }}
-                  activeDot={{ r: 5 }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
+            {k5ViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={k5Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="bulan"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    yAxisId="left"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    domain={[90, 100]}
+                    tick={{ fontSize: 9.5, fill: '#10B981', fontFamily: 'monospace' }}
+                    tickFormatter={(v) => `${v}%`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      if (name === 'dilayani') return [`${num} Kegiatan`, 'Jumlah Kegiatan Dilayani'];
+                      return [`${num.toFixed(1)}%`, 'Persentase Terlaksana'];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `Bulan ${label} • ${p.hariTanggal}\nUraian: "${p.contohUraian}"`;
+                      }
+                      return `Bulan ${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar yAxisId="left" dataKey="dilayani" name="dilayani" fill="#2563eb" radius={[3, 3, 0, 0]} barSize={16} />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="persentase"
+                    name="persentase"
+                    stroke="#10b981"
+                    strokeWidth={2.5}
+                    dot={{ r: 3, fill: '#10b981' }}
+                    activeDot={{ r: 5 }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-2.5">Bulan</th>
+                      <th className="py-2 px-2 text-right">Dilayani</th>
+                      <th className="py-2 px-2 text-right">Terlaksana</th>
+                      <th className="py-2 px-2 text-right">% Terlaksana</th>
+                      <th className="py-2 px-2.5">Agenda / Uraian Protokol</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k5Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-2 px-2.5 font-bold text-slate-900">{row.bulan}</td>
+                        <td className="py-2 px-2 text-right font-mono font-bold text-blue-700">{row.dilayani}</td>
+                        <td className="py-2 px-2 text-right font-mono text-emerald-600">{row.terlaksana}</td>
+                        <td className="py-2 px-2 text-right font-mono font-black text-emerald-700">{row.persentase.toFixed(1)}%</td>
+                        <td className="py-2 px-2.5 text-slate-600 truncate max-w-xs" title={`${row.hariTanggal} - ${row.contohUraian}`}>
+                          <span className="font-semibold text-slate-800">{row.hariTanggal}:</span> {row.contohUraian}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -916,91 +1069,125 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar: Tahun & Kategori Bantuan */}
-            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
-              <select
-                aria-label="Filter Tahun Bantuan"
-                value={k6Tahun}
-                onChange={(e) => setK6Tahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                <option value="Semua Tahun">Semua Tahun</option>
-                {DISEMINASI_INFORMASI_DATA.tahunTersedia.map((th) => (
-                  <option key={th} value={th}>
-                    Tahun {th}
-                  </option>
-                ))}
-              </select>
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1 text-[11px]">
+              <div className="flex items-center gap-1.5">
+                <select
+                  aria-label="Filter Tahun Bantuan"
+                  value={k6Tahun}
+                  onChange={(e) => setK6Tahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  <option value="Semua Tahun">Semua Tahun</option>
+                  {DISEMINASI_INFORMASI_DATA.tahunTersedia.map((th) => (
+                    <option key={th} value={th}>
+                      Tahun {th}
+                    </option>
+                  ))}
+                </select>
 
-              <select
-                aria-label="Filter Kategori Bantuan"
-                value={k6Kategori}
-                onChange={(e) => setK6Kategori(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                <option value="Semua Kategori">Semua Kategori</option>
-                <option value="Sosial">Sosial</option>
-                <option value="Keagamaan">Keagamaan</option>
-                <option value="Olahraga">Olahraga</option>
-                <option value="Pendidikan">Pendidikan</option>
-                <option value="Kebencanaan">Kebencanaan</option>
-                <option value="Lainnya">Lainnya</option>
-              </select>
+                <select
+                  aria-label="Filter Kategori Bantuan"
+                  value={k6Kategori}
+                  onChange={(e) => setK6Kategori(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  <option value="Semua Kategori">Semua Kategori</option>
+                  <option value="Sosial">Sosial</option>
+                  <option value="Keagamaan">Keagamaan</option>
+                  <option value="Olahraga">Olahraga</option>
+                  <option value="Pendidikan">Pendidikan</option>
+                  <option value="Kebencanaan">Kebencanaan</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
+              <SheetSwapToggle mode={k6ViewMode} onChange={setK6ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Stacked Column */}
+          {/* Chart Section or Table */}
           <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={k6Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="semester"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any, item: any) => {
-                    const num = Number(val);
-                    const total = item.payload.total;
-                    const pct = total > 0 ? ((num / total) * 100).toFixed(1) : '0';
-                    const map: Record<string, string> = {
-                      sosial: 'Bantuan Sosial',
-                      keagamaan: 'Bantuan Keagamaan',
-                      olahraga: 'Bantuan Olahraga',
-                      pendidikan: 'Bantuan Pendidikan',
-                      kebencanaan: 'Bantuan Kebencanaan',
-                      lainnya: 'Bantuan Lainnya',
-                    };
-                    return [`${num} (${pct}%)`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const total = items && items[0]?.payload?.total;
-                    return total ? `${label} • Total: ${total} permohonan` : `${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="sosial" name="sosial" stackId="bantuan" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={22} />
-                <Bar dataKey="keagamaan" name="keagamaan" stackId="bantuan" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={22} />
-                <Bar dataKey="olahraga" name="olahraga" stackId="bantuan" fill="#10b981" radius={[0, 0, 0, 0]} barSize={22} />
-                <Bar dataKey="pendidikan" name="pendidikan" stackId="bantuan" fill="#6366f1" radius={[0, 0, 0, 0]} barSize={22} />
-                <Bar dataKey="kebencanaan" name="kebencanaan" stackId="bantuan" fill="#ef4444" radius={[0, 0, 0, 0]} barSize={22} />
-                <Bar dataKey="lainnya" name="lainnya" stackId="bantuan" fill="#94a3b8" radius={[2, 2, 0, 0]} barSize={22} />
-              </BarChart>
-            </ResponsiveContainer>
+            {k6ViewMode === 'chart' ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={k6Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="semester"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any, item: any) => {
+                      const num = Number(val);
+                      const total = item.payload.total;
+                      const pct = total > 0 ? ((num / total) * 100).toFixed(1) : '0';
+                      const map: Record<string, string> = {
+                        sosial: 'Bantuan Sosial',
+                        keagamaan: 'Bantuan Keagamaan',
+                        olahraga: 'Bantuan Olahraga',
+                        pendidikan: 'Bantuan Pendidikan',
+                        kebencanaan: 'Bantuan Kebencanaan',
+                        lainnya: 'Bantuan Lainnya',
+                      };
+                      return [`${num} (${pct}%)`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const total = items && items[0]?.payload?.total;
+                      return total ? `${label} • Total: ${total} permohonan` : `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="sosial" name="sosial" stackId="bantuan" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={22} />
+                  <Bar dataKey="keagamaan" name="keagamaan" stackId="bantuan" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={22} />
+                  <Bar dataKey="olahraga" name="olahraga" stackId="bantuan" fill="#10b981" radius={[0, 0, 0, 0]} barSize={22} />
+                  <Bar dataKey="pendidikan" name="pendidikan" stackId="bantuan" fill="#6366f1" radius={[0, 0, 0, 0]} barSize={22} />
+                  <Bar dataKey="kebencanaan" name="kebencanaan" stackId="bantuan" fill="#ef4444" radius={[0, 0, 0, 0]} barSize={22} />
+                  <Bar dataKey="lainnya" name="lainnya" stackId="bantuan" fill="#94a3b8" radius={[2, 2, 0, 0]} barSize={22} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2 px-2.5">Semester</th>
+                      <th className="py-2 px-2 text-right">Sosial</th>
+                      <th className="py-2 px-2 text-right">Keagamaan</th>
+                      <th className="py-2 px-2 text-right">Olahraga</th>
+                      <th className="py-2 px-2 text-right">Pendidikan</th>
+                      <th className="py-2 px-2 text-right">Bencana</th>
+                      <th className="py-2 px-2 text-right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k6Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-blue-50/40">
+                        <td className="py-2 px-2.5 font-bold text-slate-900">{row.semester}</td>
+                        <td className="py-2 px-2 text-right font-mono text-blue-700">{row.sosial}</td>
+                        <td className="py-2 px-2 text-right font-mono text-sky-600">{row.keagamaan}</td>
+                        <td className="py-2 px-2 text-right font-mono text-emerald-600">{row.olahraga}</td>
+                        <td className="py-2 px-2 text-right font-mono text-indigo-600">{row.pendidikan}</td>
+                        <td className="py-2 px-2 text-right font-mono text-red-600">{row.kebencanaan}</td>
+                        <td className="py-2 px-2 text-right font-mono font-black text-slate-900">{row.total}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -1052,8 +1239,8 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
 
-            {/* Filter Bar */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar & Sheet Swap */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun Permohonan Informasi"
                 value={k7Tahun}
@@ -1063,10 +1250,12 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                 <option value="2026">Tahun 2026</option>
                 <option value="2025">Tahun 2025</option>
               </select>
+              <SheetSwapToggle mode={k7ViewMode} onChange={setK7ViewMode} />
             </div>
           </div>
 
-          {/* DUA SISI DALAM KARTU 7: Sisi Kiri (Column Bulanan) & Sisi Kanan (Mini Line 5 Tahun) */}
+          {/* DUA SISI DALAM KARTU 7 or Table */}
+          {k7ViewMode === 'chart' ? (
           <div className="flex-1 w-full min-h-0 my-1 grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
             {/* Kolom Kiri: Column per Bulan */}
             <div className="md:col-span-8 h-full min-h-[190px]">
@@ -1183,6 +1372,36 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
               </span>
             </div>
           </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-left border-collapse text-[10.5px]">
+                <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                  <tr>
+                    <th className="py-2 px-2.5">Bulan</th>
+                    <th className="py-2 px-2 text-right">Permohonan</th>
+                    <th className="py-2 px-2 text-right">Selesai</th>
+                    <th className="py-2 px-2 text-right">% Selesai</th>
+                    <th className="py-2 px-2.5">Contoh Informasi Diminta</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {k7Data.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-blue-50/40">
+                      <td className="py-2 px-2.5 font-bold text-slate-900">{row.bulan}</td>
+                      <td className="py-2 px-2 text-right font-mono font-bold text-blue-700">{row.permohonan}</td>
+                      <td className="py-2 px-2 text-right font-mono font-bold text-emerald-600">{row.selesai}</td>
+                      <td className="py-2 px-2 text-right font-mono text-emerald-700 font-bold">
+                        {Math.round((row.selesai / (row.permohonan || 1)) * 100)}%
+                      </td>
+                      <td className="py-2 px-2.5 text-slate-600 truncate max-w-xs" title={row.contohInformasiDiminta}>
+                        {row.contohInformasiDiminta}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
@@ -1267,6 +1486,7 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
                     <option value="2026">Tahun 2026</option>
                     <option value="2025">Tahun 2025</option>
                   </select>
+                  <SheetSwapToggle mode={k8ViewMode} onChange={setK8ViewMode} />
                 </div>
               )}
             </div>
@@ -1294,108 +1514,162 @@ export const DirektoratDiseminasiInformasiVisualizer: React.FC = () => {
             )}
           </div>
 
-          {/* TAB CONTENT: TAB A (MoU Stacked Column) */}
+          {/* TAB CONTENT: TAB A (MoU Stacked Column or Table) */}
           {k8Tab === 'A' && (
             <div className="flex-1 w-full min-h-0 my-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={k8MouData} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis
-                    dataKey="triwulan"
-                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                    axisLine={{ stroke: '#E2E8F0' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                    axisLine={{ stroke: '#E2E8F0' }}
-                    tickLine={false}
-                  />
-                  <Tooltip
-                    formatter={(val: any, name: any) => {
-                      const num = Number(val);
-                      const map: Record<string, string> = {
-                        infrastruktur: 'Klaster Infrastruktur',
-                        investasiKek: 'Klaster Investasi & KEK',
-                        pengusahaan: 'Klaster Pengusahaan',
-                        pelayananUmum: 'Klaster Pelayanan Umum',
-                      };
-                      return [`${num} MoU`, map[name] || name];
-                    }}
-                    labelFormatter={(label, items) => {
-                      const p = items && items[0]?.payload;
-                      if (p) {
-                        const isWarning = p.sisaHari < 90;
-                        const warningText = isWarning
-                          ? `\n⚠️ PERINGATAN: Sisa masa berlaku < 90 hari (${p.sisaHari} hari tersisa)!`
-                          : '';
-                        return `${label} • Total: ${p.total} MoU\nNomor: ${p.nomorMou}\nUraian: "${p.uraian}"\nKurun Waktu: ${p.kurunWaktu}${warningText}`;
-                      }
-                      return `${label}`;
-                    }}
-                    contentStyle={{
-                      backgroundColor: '#FFFFFF',
-                      borderColor: '#E2E8F0',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                      fontSize: '11px',
-                      fontFamily: 'monospace',
-                    }}
-                  />
-                  <Bar dataKey="infrastruktur" name="infrastruktur" stackId="mou" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={26} />
-                  <Bar dataKey="investasiKek" name="investasiKek" stackId="mou" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={26} />
-                  <Bar dataKey="pengusahaan" name="pengusahaan" stackId="mou" fill="#60a5fa" radius={[0, 0, 0, 0]} barSize={26} />
-                  <Bar dataKey="pelayananUmum" name="pelayananUmum" stackId="mou" fill="#94a3b8" radius={[2, 2, 0, 0]} barSize={26} />
-                </BarChart>
-              </ResponsiveContainer>
+              {k8ViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={k8MouData} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                    <XAxis
+                      dataKey="triwulan"
+                      tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                      axisLine={{ stroke: '#E2E8F0' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                      axisLine={{ stroke: '#E2E8F0' }}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      formatter={(val: any, name: any) => {
+                        const num = Number(val);
+                        const map: Record<string, string> = {
+                          infrastruktur: 'Klaster Infrastruktur',
+                          investasiKek: 'Klaster Investasi & KEK',
+                          pengusahaan: 'Klaster Pengusahaan',
+                          pelayananUmum: 'Klaster Pelayanan Umum',
+                        };
+                        return [`${num} MoU`, map[name] || name];
+                      }}
+                      labelFormatter={(label, items) => {
+                        const p = items && items[0]?.payload;
+                        if (p) {
+                          const isWarning = p.sisaHari < 90;
+                          const warningText = isWarning
+                            ? `\n⚠️ PERINGATAN: Sisa masa berlaku < 90 hari (${p.sisaHari} hari tersisa)!`
+                            : '';
+                          return `${label} • Total: ${p.total} MoU\nNomor: ${p.nomorMou}\nUraian: "${p.uraian}"\nKurun Waktu: ${p.kurunWaktu}${warningText}`;
+                        }
+                        return `${label}`;
+                      }}
+                      contentStyle={{
+                        backgroundColor: '#FFFFFF',
+                        borderColor: '#E2E8F0',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                        fontSize: '11px',
+                        fontFamily: 'monospace',
+                      }}
+                    />
+                    <Bar dataKey="infrastruktur" name="infrastruktur" stackId="mou" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={26} />
+                    <Bar dataKey="investasiKek" name="investasiKek" stackId="mou" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={26} />
+                    <Bar dataKey="pengusahaan" name="pengusahaan" stackId="mou" fill="#60a5fa" radius={[0, 0, 0, 0]} barSize={26} />
+                    <Bar dataKey="pelayananUmum" name="pelayananUmum" stackId="mou" fill="#94a3b8" radius={[2, 2, 0, 0]} barSize={26} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left border-collapse text-[10.5px]">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                      <tr>
+                        <th className="py-2 px-2.5">Triwulan</th>
+                        <th className="py-2 px-2 text-right">Infrastruktur</th>
+                        <th className="py-2 px-2 text-right">Investasi</th>
+                        <th className="py-2 px-2 text-right">Pengusahaan</th>
+                        <th className="py-2 px-2 text-right">Pelayanan</th>
+                        <th className="py-2 px-2 text-right">Total MoU</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {k8MouData.map((row, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40">
+                          <td className="py-2 px-2.5 font-bold text-slate-900">{row.triwulan}</td>
+                          <td className="py-2 px-2 text-right font-mono text-blue-700">{row.infrastruktur}</td>
+                          <td className="py-2 px-2 text-right font-mono text-sky-600">{row.investasiKek}</td>
+                          <td className="py-2 px-2 text-right font-mono text-cyan-600">{row.pengusahaan}</td>
+                          <td className="py-2 px-2 text-right font-mono text-slate-500">{row.pelayananUmum}</td>
+                          <td className="py-2 px-2 text-right font-mono font-black text-slate-900">{row.total}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
-          {/* TAB CONTENT: TAB B (Horizontal Bar per Kategori Kegiatan) */}
+          {/* TAB CONTENT: TAB B (Horizontal Bar per Kategori Kegiatan or Table) */}
           {k8Tab === 'B' && (
             <div className="flex-1 w-full min-h-0 my-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  layout="vertical"
-                  data={k8KoordinasiData}
-                  margin={{ top: 5, right: 15, left: 145, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                    axisLine={{ stroke: '#E2E8F0' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="kategori"
-                    tick={{ fontSize: 8.5, fill: '#1E293B', fontWeight: 600 }}
-                    axisLine={{ stroke: '#E2E8F0' }}
-                    tickLine={false}
-                    width={140}
-                  />
-                  <Tooltip
-                    formatter={(val: any) => [`${val} Kegiatan`, 'Jumlah Kegiatan']}
-                    labelFormatter={(label, items) => {
-                      const p = items && items[0]?.payload;
-                      if (p) {
-                        return `${label}\nLokasi: ${p.lokasi}\nJadwal/Waktu: ${p.tanggalKegiatan}`;
-                      }
-                      return `${label}`;
-                    }}
-                    contentStyle={{
-                      backgroundColor: '#FFFFFF',
-                      borderColor: '#E2E8F0',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                      fontSize: '11px',
-                      fontFamily: 'monospace',
-                    }}
-                  />
-                  <Bar dataKey="jumlah" name="jumlah" fill="#2563eb" radius={[0, 3, 3, 0]} barSize={16} />
-                </BarChart>
-              </ResponsiveContainer>
+              {k8ViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    layout="vertical"
+                    data={k8KoordinasiData}
+                    margin={{ top: 5, right: 15, left: 145, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                      axisLine={{ stroke: '#E2E8F0' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="kategori"
+                      tick={{ fontSize: 8.5, fill: '#1E293B', fontWeight: 600 }}
+                      axisLine={{ stroke: '#E2E8F0' }}
+                      tickLine={false}
+                      width={140}
+                    />
+                    <Tooltip
+                      formatter={(val: any) => [`${val} Kegiatan`, 'Jumlah Kegiatan']}
+                      labelFormatter={(label, items) => {
+                        const p = items && items[0]?.payload;
+                        if (p) {
+                          return `${label}\nLokasi: ${p.lokasi}\nJadwal/Waktu: ${p.tanggalKegiatan}`;
+                        }
+                        return `${label}`;
+                      }}
+                      contentStyle={{
+                        backgroundColor: '#FFFFFF',
+                        borderColor: '#E2E8F0',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                        fontSize: '11px',
+                        fontFamily: 'monospace',
+                      }}
+                    />
+                    <Bar dataKey="jumlah" name="jumlah" fill="#2563eb" radius={[0, 3, 3, 0]} barSize={16} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left border-collapse text-[10.5px]">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                      <tr>
+                        <th className="py-2 px-2.5">Kategori Koordinasi</th>
+                        <th className="py-2 px-2 text-right">Jumlah</th>
+                        <th className="py-2 px-2.5">Lokasi</th>
+                        <th className="py-2 px-2.5">Jadwal / Waktu</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {k8KoordinasiData.map((row, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40">
+                          <td className="py-2 px-2.5 font-bold text-slate-900">{row.kategori}</td>
+                          <td className="py-2 px-2 text-right font-mono font-black text-blue-700">{row.jumlah}</td>
+                          <td className="py-2 px-2.5 text-slate-700 font-medium">{row.lokasi}</td>
+                          <td className="py-2 px-2.5 text-slate-600 font-mono text-[10px]">{row.tanggalKegiatan}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 

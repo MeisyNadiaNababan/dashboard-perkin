@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Stethoscope,
   Droplets,
@@ -38,6 +38,7 @@ import {
 import { DirektoratPengamananAsetVisualizer } from '../PengamananAset/DirektoratPengamananAsetVisualizer';
 import { RumahSakitVisualizer } from '../RumahSakit/RumahSakitVisualizer';
 import { DirektoratDiseminasiInformasiVisualizer } from './DirektoratDiseminasiInformasiVisualizer';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface UnitDeepDiveCenterProps {
   selectedUnitId: string;
@@ -202,6 +203,8 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
       ? selectedUnitId
       : 'dit-diseminasi';
 
+  const [wtpViewMode, setWtpViewMode] = useState<'chart' | 'table'>('chart');
+
   return (
     <div
       id="unit-deep-dive-section"
@@ -311,28 +314,64 @@ export const UnitDeepDiveCenter: React.FC<UnitDeepDiveCenterProps> = ({
                       Instalasi Pengolahan Air (IPA) Bersih dalam Liter per Detik (L/s)
                     </p>
                   </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
-                      3.420 L/dtk
-                    </span>
-                    <span className="text-[10px] text-cyan-700 font-bold ml-1.5">
-                      (Utilisasi 93,4% &bull; Kapasitas 3.660 L/s)
-                    </span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-right shrink-0">
+                      <span className="text-base sm:text-lg font-black text-slate-900 leading-none font-mono">
+                        3.420 L/dtk
+                      </span>
+                      <span className="text-[10px] text-cyan-700 font-bold ml-1.5">
+                        (Utilisasi 93,4%)
+                      </span>
+                    </div>
+                    <SheetSwapToggle mode={wtpViewMode} onChange={setWtpViewMode} />
                   </div>
                 </div>
 
                 <div className="h-56 w-full pt-1">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={SPAM_WTP_CAPACITY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                      <XAxis dataKey="wtp" tick={{ fontSize: 9.5 }} />
-                      <YAxis tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v} L/s`} />
-                      <Tooltip formatter={(v: any, name: any) => [`${v} L/detik`, name]} />
-                      <Legend wrapperStyle={{ fontSize: '10.5px' }} />
-                      <Bar dataKey="kapasitas" name="Kapasitas Desain" fill="#94A3B8" radius={[3, 3, 0, 0]} />
-                      <Bar dataKey="produksi" name="Produksi Aktual" fill="#0284C7" radius={[3, 3, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {wtpViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={SPAM_WTP_CAPACITY_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                        <XAxis dataKey="wtp" tick={{ fontSize: 9.5 }} />
+                        <YAxis tick={{ fontSize: 9.5 }} tickFormatter={(v) => `${v} L/s`} />
+                        <Tooltip formatter={(v: any, name: any) => [`${v} L/detik`, name]} />
+                        <Legend wrapperStyle={{ fontSize: '10.5px' }} />
+                        <Bar dataKey="kapasitas" name="Kapasitas Desain" fill="#94A3B8" radius={[3, 3, 0, 0]} />
+                        <Bar dataKey="produksi" name="Produksi Aktual" fill="#0284C7" radius={[3, 3, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10.5px]">
+                        <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[10px] z-10 border-b border-slate-200">
+                          <tr>
+                            <th className="py-2 px-2.5">WTP / IPA</th>
+                            <th className="py-2 px-2 text-right">Kapasitas Desain</th>
+                            <th className="py-2 px-2 text-right">Produksi Aktual</th>
+                            <th className="py-2 px-2 text-right">Utilisasi (%)</th>
+                            <th className="py-2 px-2.5 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {SPAM_WTP_CAPACITY_DATA.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-cyan-50/40">
+                              <td className="py-2 px-2.5 font-bold text-slate-900">{row.wtp}</td>
+                              <td className="py-2 px-2 text-right font-mono text-slate-500">{row.kapasitas.toLocaleString('id-ID')} L/s</td>
+                              <td className="py-2 px-2 text-right font-mono font-bold text-cyan-700">{row.produksi.toLocaleString('id-ID')} L/s</td>
+                              <td className="py-2 px-2 text-right font-mono font-bold text-emerald-600">{row.utilisasi}%</td>
+                              <td className="py-2 px-2.5 text-center">
+                                <span className={`px-1.5 py-0.5 rounded text-[9.5px] font-bold ${
+                                  row.utilisasi >= 90 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-cyan-50 text-cyan-700 border border-cyan-200'
+                                }`}>
+                                  {row.utilisasi >= 90 ? 'Optimal' : 'Siap Tingkat'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

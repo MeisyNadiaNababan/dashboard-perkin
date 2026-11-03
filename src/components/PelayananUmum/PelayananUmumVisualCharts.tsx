@@ -16,6 +16,7 @@ import {
   Radar,
   ResponsiveContainer,
   Legend,
+  Tooltip,
   BarChart,
   Bar,
   LineChart,
@@ -23,8 +24,8 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
 } from 'recharts';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface PelayananUmumVisualChartsProps {
   onOpenFormulaModal: (kpiId?: string) => void;
@@ -138,6 +139,11 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
   const [activeTab, setActiveTab] = useState<'kinerja' | 'rasio' | 'ikm' | 'sinergi'>('kinerja');
   // Fullscreen / Expanded Mode
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  // Sheet Swap View Modes
+  const [radarViewMode, setRadarViewMode] = useState<'chart' | 'table'>('chart');
+  const [trendViewMode, setTrendViewMode] = useState<'chart' | 'table'>('chart');
+  const [barViewMode, setBarViewMode] = useState<'chart' | 'table'>('chart');
 
   // Configuration mapper based on activeTab
   const currentTabConfig = {
@@ -315,49 +321,79 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                     Realisasi Aktual vs Target Perkin A6 2025
                   </p>
                 </div>
+                <SheetSwapToggle mode={radarViewMode} onChange={setRadarViewMode} />
               </div>
 
-              {/* Radar Chart */}
+              {/* Radar Chart or Sheet Swap Table */}
               <div className="h-44 w-full mt-2">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={RADAR_4_IKP_A6} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                    <PolarGrid stroke="#CBD5E1" />
-                    <PolarAngleAxis
-                      dataKey="subject"
-                      tick={{ fill: '#334155', fontSize: 8.5, fontWeight: 700 }}
-                    />
-                    <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                    <Radar
-                      name="Target Perkin (100%)"
-                      dataKey="target"
-                      stroke="#94A3B8"
-                      fill="#94A3B8"
-                      fillOpacity={0.12}
-                      strokeDasharray="4 4"
-                    />
-                    <Radar
-                      name="Realisasi Aktual"
-                      dataKey="realisasi"
-                      stroke="#2563EB"
-                      fill="#2563EB"
-                      fillOpacity={0.35}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                    <Tooltip
-                      formatter={(val: any, name: any, item: any) => [
-                        `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                        name,
-                      ]}
-                      contentStyle={{
-                        fontSize: '11px',
-                        borderRadius: '8px',
-                        backgroundColor: '#0F172A',
-                        color: '#FFFFFF',
-                        border: 'none',
-                      }}
-                    />
-                  </RadarChart>
-                </ResponsiveContainer>
+                {radarViewMode === 'chart' ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart data={RADAR_4_IKP_A6} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                      <PolarGrid stroke="#CBD5E1" />
+                      <PolarAngleAxis
+                        dataKey="subject"
+                        tick={{ fill: '#334155', fontSize: 8.5, fontWeight: 700 }}
+                      />
+                      <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
+                      <Radar
+                        name="Target Perkin (100%)"
+                        dataKey="target"
+                        stroke="#94A3B8"
+                        fill="#94A3B8"
+                        fillOpacity={0.12}
+                        strokeDasharray="4 4"
+                      />
+                      <Radar
+                        name="Realisasi Aktual"
+                        dataKey="realisasi"
+                        stroke="#2563EB"
+                        fill="#2563EB"
+                        fillOpacity={0.35}
+                      />
+                      <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                      <Tooltip
+                        formatter={(val: any, name: any, item: any) => [
+                          `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                          name,
+                        ]}
+                        contentStyle={{
+                          fontSize: '11px',
+                          borderRadius: '8px',
+                          backgroundColor: '#0F172A',
+                          color: '#FFFFFF',
+                          border: 'none',
+                        }}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                    <table className="w-full text-left border-collapse text-[10px]">
+                      <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[9px] z-10 border-b border-slate-200">
+                        <tr>
+                          <th className="py-1 px-1.5">Indikator</th>
+                          <th className="py-1 px-1 text-right">Target</th>
+                          <th className="py-1 px-1 text-right">Realisasi</th>
+                          <th className="py-1 px-1 text-center">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {RADAR_4_IKP_A6.map((r, idx) => (
+                          <tr key={idx} className="hover:bg-blue-50/40">
+                            <td className="py-1 px-1.5 font-medium text-slate-800">{r.subject}</td>
+                            <td className="py-1 px-1 text-right font-mono text-slate-500">{r.target}%</td>
+                            <td className="py-1 px-1 text-right font-mono font-bold text-blue-700">{r.realisasi}%</td>
+                            <td className="py-1 px-1 text-center">
+                              <span className="px-1 py-0.5 rounded text-[8.5px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                {r.realisasi >= 100 ? 'Melampaui' : 'Tercapai'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -561,38 +597,75 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
 
               {/* CHART 1 (ATAS): TREN LINE CHART (2021 - 2026) */}
               <div className="bg-slate-50/60 p-2.5 rounded-xl border border-slate-200/70 shadow-2xs">
-                <span className="text-[10.5px] font-bold text-slate-800 block mb-1">
-                  {currentTabConfig.trendTitle}
-                </span>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10.5px] font-bold text-slate-800">
+                    {currentTabConfig.trendTitle}
+                  </span>
+                  <SheetSwapToggle mode={trendViewMode} onChange={setTrendViewMode} />
+                </div>
                 <div className="h-28 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={currentTabConfig.trendData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis domain={currentTabConfig.lineDomain} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip
-                        formatter={(v: any) => [`${v} ${currentTabConfig.unitSatuan}`, 'Realisasi']}
-                        contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="target"
-                        stroke="#94A3B8"
-                        strokeDasharray="3 3"
-                        strokeWidth={1.5}
-                        dot={false}
-                        name="Target Perkin"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="skor"
-                        stroke="#2563EB"
-                        strokeWidth={2}
-                        dot={{ r: 3, fill: '#2563EB' }}
-                        name="Realisasi Aktual"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {trendViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={currentTabConfig.trendData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={currentTabConfig.lineDomain} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip
+                          formatter={(v: any) => [`${v} ${currentTabConfig.unitSatuan}`, 'Realisasi']}
+                          contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="target"
+                          stroke="#94A3B8"
+                          strokeDasharray="3 3"
+                          strokeWidth={1.5}
+                          dot={false}
+                          name="Target Perkin"
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="skor"
+                          stroke="#2563EB"
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: '#2563EB' }}
+                          name="Realisasi Aktual"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10px]">
+                        <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[9px] z-10 border-b border-slate-200">
+                          <tr>
+                            <th className="py-1 px-2">Tahun</th>
+                            <th className="py-1 px-2 text-right">Target</th>
+                            <th className="py-1 px-2 text-right">Realisasi Aktual</th>
+                            <th className="py-1 px-2 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {currentTabConfig.trendData.map((row, idx) => {
+                            const achieved = (row.skor / row.target) * 100;
+                            return (
+                              <tr key={idx} className="hover:bg-blue-50/40">
+                                <td className="py-1 px-2 font-bold text-slate-800 font-mono">{row.tahun}</td>
+                                <td className="py-1 px-2 text-right font-mono text-slate-500">{row.target} {currentTabConfig.unitSatuan}</td>
+                                <td className="py-1 px-2 text-right font-mono font-bold text-blue-700">{row.skor} {currentTabConfig.unitSatuan}</td>
+                                <td className="py-1 px-2 text-center">
+                                  <span className={`px-1 py-0.5 rounded text-[8.5px] font-bold ${
+                                    achieved >= 100 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  }`}>
+                                    {achieved >= 100 ? 'Melampaui' : 'Tercapai'}
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -602,40 +675,72 @@ export const PelayananUmumVisualCharts: React.FC<PelayananUmumVisualChartsProps>
                   <span className="text-[10.5px] font-bold text-slate-800 block">
                     {currentTabConfig.barTitle}
                   </span>
-                  <div className="flex items-center gap-2 text-[9.5px]">
-                    <span className="flex items-center gap-1 text-slate-500">
-                      <span className="w-2.5 h-2.5 rounded-xs bg-[#CBD5E1]" />
-                      <span>Bobot</span>
-                    </span>
-                    <span className="flex items-center gap-1 text-blue-700 font-semibold">
-                      <span className="w-2.5 h-2.5 rounded-xs bg-[#2563EB]" />
-                      <span>Nilai</span>
-                    </span>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-[9.5px]">
+                      <span className="flex items-center gap-1 text-slate-500">
+                        <span className="w-2.5 h-2.5 rounded-xs bg-[#CBD5E1]" />
+                        <span>Bobot</span>
+                      </span>
+                      <span className="flex items-center gap-1 text-blue-700 font-semibold">
+                        <span className="w-2.5 h-2.5 rounded-xs bg-[#2563EB]" />
+                        <span>Nilai</span>
+                      </span>
+                    </div>
+                    <SheetSwapToggle mode={barViewMode} onChange={setBarViewMode} />
                   </div>
                 </div>
                 <div className="h-28 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={currentTabConfig.tableData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="code" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis domain={currentTabConfig.barDomain} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [
-                          `${val}${name === 'Bobot (%)' ? '%' : ''}`,
-                          name,
-                        ]}
-                        labelFormatter={(_label, payload) => {
-                          if (payload && payload.length > 0) {
-                            return payload[0].payload.area;
-                          }
-                          return '';
-                        }}
-                        contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
-                      />
-                      <Bar dataKey="bobot" name="Bobot (%)" fill="#CBD5E1" radius={[2, 2, 0, 0]} maxBarSize={12} />
-                      <Bar dataKey="nilai" name="Nilai Capaian" fill="#2563EB" radius={[2, 2, 0, 0]} maxBarSize={12} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {barViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={currentTabConfig.tableData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="code" tick={{ fontSize: 8.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis domain={currentTabConfig.barDomain} tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [
+                            `${val}${name === 'Bobot (%)' ? '%' : ''}`,
+                            name,
+                          ]}
+                          labelFormatter={(_label, payload) => {
+                            if (payload && payload.length > 0) {
+                              return payload[0].payload.area;
+                            }
+                            return '';
+                          }}
+                          contentStyle={{ fontSize: '10px', borderRadius: '6px' }}
+                        />
+                        <Bar dataKey="bobot" name="Bobot (%)" fill="#CBD5E1" radius={[2, 2, 0, 0]} maxBarSize={12} />
+                        <Bar dataKey="nilai" name="Nilai Capaian" fill="#2563EB" radius={[2, 2, 0, 0]} maxBarSize={12} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10px]">
+                        <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[9px] z-10 border-b border-slate-200">
+                          <tr>
+                            <th className="py-1 px-1.5">Kode</th>
+                            <th className="py-1 px-2">Komponen / Area</th>
+                            <th className="py-1 px-2 text-right">Bobot</th>
+                            <th className="py-1 px-2 text-right">Nilai Capaian</th>
+                            <th className="py-1 px-2 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {currentTabConfig.tableData.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-blue-50/40">
+                              <td className="py-1 px-1.5 font-bold font-mono text-slate-600">{row.code}</td>
+                              <td className="py-1 px-2 font-medium text-slate-800 truncate max-w-[140px]">{row.area}</td>
+                              <td className="py-1 px-2 text-right font-mono text-slate-500">{row.bobot}%</td>
+                              <td className="py-1 px-2 text-right font-mono font-bold text-blue-700">{row.nilai.toFixed(2)}</td>
+                              <td className="py-1 px-2 text-center">
+                                {renderStatusBadge(row.status)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

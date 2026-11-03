@@ -30,6 +30,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface PengelolaanLahanPesisirVisualChartsProps {
   onOpenFormulaModal?: (kpiId: string) => void;
@@ -83,6 +84,7 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
 > = ({ onOpenFormulaModal }) => {
   // Tab state matching user reference: ikp-1, ikp-2, ikp-3, matriks
   const [activeTab, setActiveTab] = useState<'ikp-1' | 'ikp-2' | 'ikp-3' | 'matriks'>('ikp-1');
+  const [radarViewMode, setRadarViewMode] = useState<'chart' | 'table'>('chart');
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3.5 font-sans">
@@ -93,7 +95,7 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
         {/* ================================================================== */}
         <div className="lg:col-span-3 bg-slate-50/70 rounded-xl border border-slate-200/70 p-3 sm:p-3.5 space-y-2.5 flex flex-col justify-between self-stretch">
           <div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-1 mb-1">
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                   Radar Capaian 3 IKP DEP-A3
@@ -102,54 +104,73 @@ export const PengelolaanLahanPesisirVisualCharts: React.FC<
                   Realisasi Aktual vs Target Penetapan Perkin A3 2026
                 </p>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60 font-mono">
-                  0-130%
-                </span>
-              </div>
+              <SheetSwapToggle mode={radarViewMode} onChange={setRadarViewMode} />
             </div>
 
-            {/* Radar Visual */}
+            {/* Radar Visual / Tabel Detail (Sheet Swap) */}
             <div className="h-36 sm:h-40 w-full mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={RADAR_3_IKP_A3} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <PolarGrid stroke="#CBD5E1" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
-                  <Radar
-                    name="Target Perkin (100%)"
-                    dataKey="target"
-                    stroke="#94A3B8"
-                    fill="#94A3B8"
-                    fillOpacity={0.12}
-                    strokeDasharray="4 4"
-                  />
-                  <Radar
-                    name="Realisasi Aktual"
-                    dataKey="realisasi"
-                    stroke="#0284C7"
-                    fill="#0284C7"
-                    fillOpacity={0.35}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
-                  <Tooltip
-                    formatter={(val: any, name: any, item: any) => [
-                      `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      fontSize: '11px',
-                      borderRadius: '8px',
-                      backgroundColor: '#0F172A',
-                      color: '#FFFFFF',
-                      border: 'none',
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+              {radarViewMode === 'chart' ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={RADAR_3_IKP_A3} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+                    <PolarGrid stroke="#CBD5E1" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }}
+                    />
+                    <PolarRadiusAxis angle={30} domain={[0, 130]} stroke="#94A3B8" fontSize={7.5} />
+                    <Radar
+                      name="Target Perkin (100%)"
+                      dataKey="target"
+                      stroke="#94A3B8"
+                      fill="#94A3B8"
+                      fillOpacity={0.12}
+                      strokeDasharray="4 4"
+                    />
+                    <Radar
+                      name="Realisasi Aktual"
+                      dataKey="realisasi"
+                      stroke="#0284C7"
+                      fill="#0284C7"
+                      fillOpacity={0.35}
+                    />
+                    <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '2px' }} />
+                    <Tooltip
+                      formatter={(val: any, name: any, item: any) => [
+                        `${Number(val).toFixed(1)}% (${item.payload.skorAsli})`,
+                        name,
+                      ]}
+                      contentStyle={{
+                        fontSize: '11px',
+                        borderRadius: '8px',
+                        backgroundColor: '#0F172A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left border-collapse text-[10px]">
+                    <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                      <tr>
+                        <th className="py-1 px-1.5">Indikator</th>
+                        <th className="py-1 px-1.5 text-right">Skor Aktual</th>
+                        <th className="py-1 px-1.5 text-right">Capaian</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                      {RADAR_3_IKP_A3.map((r, idx) => (
+                        <tr key={idx} className="hover:bg-blue-50/40">
+                          <td className="py-1.5 px-1.5 font-sans font-semibold text-slate-900">{r.subject}</td>
+                          <td className="py-1.5 px-1.5 text-right text-slate-600">{r.skorAsli}</td>
+                          <td className="py-1.5 px-1.5 text-right font-bold text-emerald-700">{r.realisasi.toFixed(1)}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
 

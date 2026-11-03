@@ -40,6 +40,7 @@ import {
   ComposedChart,
 } from 'recharts';
 import { DirektoratPertanahanDeepDive } from './DirektoratPertanahanDeepDive';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface PengelolaanLahanPesisirDeepDiveCenterProps {
   selectedUnitId: string;
@@ -218,6 +219,14 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
       ? 'dit-pengendalian-lahan'
       : 'dit-pertanahan';
 
+  // Sheet Swap States for Dit. Pesisir & Reklamasi
+  const [pesisirIzinViewMode, setPesisirIzinViewMode] = useState<'chart' | 'table'>('chart');
+  const [pesisirTepatWaktuViewMode, setPesisirTepatWaktuViewMode] = useState<'chart' | 'table'>('chart');
+
+  // Sheet Swap States for Dit. Pengendalian Lahan
+  const [pengendalianKinerjaViewMode, setPengendalianKinerjaViewMode] = useState<'chart' | 'table'>('chart');
+  const [pengendalianPipelineViewMode, setPengendalianPipelineViewMode] = useState<'chart' | 'table'>('chart');
+
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3.5 font-sans">
       {/* 1. Header with Tab Switcher for 3 Units (Identical to Deputi A2) */}
@@ -309,38 +318,68 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-cyan-600" /> Luas Izin Terbit (Hektar)
-                  </span>
-                  <span className="text-slate-400">&bull;</span>
-                  <span>5 Proyek Investasi Pesisir Terbesar</span>
+                <div className="flex items-center justify-between gap-2 text-[10px] text-slate-600 mb-2 mt-1">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-cyan-600" /> Luas Izin Terbit (Hektar)
+                    </span>
+                    <span className="text-slate-400">&bull;</span>
+                    <span>5 Proyek Investasi Pesisir Terbesar</span>
+                  </div>
+                  <SheetSwapToggle mode={pesisirIzinViewMode} onChange={setPesisirIzinViewMode} />
                 </div>
 
                 <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      layout="vertical"
-                      data={IZIN_PESISIR_INVESTASI_DATA}
-                      margin={{ top: 5, right: 25, left: 10, bottom: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
-                      <XAxis type="number" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis
-                        type="category"
-                        dataKey="namaPerusahaan"
-                        tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
-                        axisLine={false}
-                        tickLine={false}
-                        width={140}
-                      />
-                      <Tooltip
-                        formatter={(val: any) => [`${val} Ha`, 'Luas Izin PKKPRL']}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="luasHa" name="luasHa" fill="#0891B2" radius={[0, 4, 4, 0]} barSize={12} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {pesisirIzinViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        layout="vertical"
+                        data={IZIN_PESISIR_INVESTASI_DATA}
+                        margin={{ top: 5, right: 25, left: 10, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
+                        <XAxis type="number" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis
+                          type="category"
+                          dataKey="namaPerusahaan"
+                          tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
+                          axisLine={false}
+                          tickLine={false}
+                          width={140}
+                        />
+                        <Tooltip
+                          formatter={(val: any) => [`${val} Ha`, 'Luas Izin PKKPRL']}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Bar dataKey="luasHa" name="luasHa" fill="#0891B2" radius={[0, 4, 4, 0]} barSize={12} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10px]">
+                        <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                          <tr>
+                            <th className="py-1 px-1.5">Nama Perusahaan</th>
+                            <th className="py-1 px-1.5">Nomor Izin PKKPRL</th>
+                            <th className="py-1 px-1.5">Wilayah</th>
+                            <th className="py-1 px-1.5 text-right">Luas (Ha)</th>
+                            <th className="py-1 px-1 text-center">Tahun</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                          {IZIN_PESISIR_INVESTASI_DATA.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-cyan-50/40">
+                              <td className="py-1 px-1.5 font-sans font-semibold text-slate-900 truncate max-w-[120px]">{item.namaPerusahaan}</td>
+                              <td className="py-1 px-1.5 text-slate-500 text-[9px]">{item.nomorIzin}</td>
+                              <td className="py-1 px-1.5 font-sans text-slate-600">{item.wilayah}</td>
+                              <td className="py-1 px-1.5 text-right font-bold text-cyan-700">{item.luasHa.toFixed(2)} Ha</td>
+                              <td className="py-1 px-1 text-center">{item.tahunPenerbitan}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -372,27 +411,61 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-slate-400" /> Permohonan
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-teal-600" /> % Tepat Waktu
-                  </span>
+                <div className="flex items-center justify-between gap-2 text-[10px] text-slate-600 mb-2 mt-1">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-slate-400" /> Permohonan
+                    </span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-teal-600" /> % Tepat Waktu
+                    </span>
+                  </div>
+                  <SheetSwapToggle mode={pesisirTepatWaktuViewMode} onChange={setPesisirTepatWaktuViewMode} />
                 </div>
 
                 <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={PERIZINAN_TEPAT_WAKTU_TREND} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="left" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="right" orientation="right" domain={[80, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip contentStyle={{ fontSize: '11px', borderRadius: '8px' }} />
-                      <Bar yAxisId="left" dataKey="jumlahPermohonan" name="Permohonan Masuk" fill="#CBD5E1" radius={[4, 4, 0, 0]} barSize={16} />
-                      <Line yAxisId="right" type="monotone" dataKey="persenTepatWaktu" name="% Tepat Waktu" stroke="#0D9488" strokeWidth={2.5} dot={{ r: 4 }} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                  {pesisirTepatWaktuViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={PERIZINAN_TEPAT_WAKTU_TREND} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="left" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="right" orientation="right" domain={[80, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip contentStyle={{ fontSize: '11px', borderRadius: '8px' }} />
+                        <Bar yAxisId="left" dataKey="jumlahPermohonan" name="Permohonan Masuk" fill="#CBD5E1" radius={[4, 4, 0, 0]} barSize={16} />
+                        <Line yAxisId="right" type="monotone" dataKey="persenTepatWaktu" name="% Tepat Waktu" stroke="#0D9488" strokeWidth={2.5} dot={{ r: 4 }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10px]">
+                        <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                          <tr>
+                            <th className="py-1 px-1.5">Tahun</th>
+                            <th className="py-1 px-1.5 text-right">Permohonan</th>
+                            <th className="py-1 px-1.5 text-right">Luasan (Ha)</th>
+                            <th className="py-1 px-1.5 text-right">% Tepat Waktu</th>
+                            <th className="py-1 px-1.5 text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                          {PERIZINAN_TEPAT_WAKTU_TREND.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-teal-50/40">
+                              <td className="py-1.5 px-1.5 font-sans font-bold text-slate-900">{item.tahun}</td>
+                              <td className="py-1.5 px-1.5 text-right font-bold text-slate-700">{item.jumlahPermohonan}</td>
+                              <td className="py-1.5 px-1.5 text-right text-teal-700">{item.totalLuasanHa.toFixed(1)} Ha</td>
+                              <td className="py-1.5 px-1.5 text-right font-bold text-emerald-700">{item.persenTepatWaktu.toFixed(1)}%</td>
+                              <td className="py-1.5 px-1.5 text-center font-sans">
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
+                                  {item.persenTepatWaktu >= 90 ? 'Tepat Waktu' : 'Perhatian'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -523,37 +596,73 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600" /> Pengawasan Kewajiban (DS #1)
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-blue-600" /> Evaluasi &amp; Pembatalan (DS #2)
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-amber-500" /> Dokumentasi Lahan (DS #3)
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-indigo-600" /> Rekomendasi Alokasi (DS #4)
-                  </span>
+                <div className="flex items-center justify-between gap-2 text-[10px] text-slate-600 mb-2 mt-1">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600" /> Pengawasan Kewajiban (DS #1)
+                    </span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-blue-600" /> Evaluasi &amp; Pembatalan (DS #2)
+                    </span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-amber-500" /> Dokumentasi Lahan (DS #3)
+                    </span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-indigo-600" /> Rekomendasi Alokasi (DS #4)
+                    </span>
+                  </div>
+                  <SheetSwapToggle mode={pengendalianKinerjaViewMode} onChange={setPengendalianKinerjaViewMode} />
                 </div>
 
                 <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={PENGENDALIAN_TRIWULAN_DATA} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                      <XAxis dataKey="triwulan" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
-                      <YAxis domain={[80, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [`${val}%`, name]}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Line type="monotone" dataKey="pengawasanKewajiban" name="Pengawasan Kewajiban" stroke="#059669" strokeWidth={2.5} dot={{ r: 4 }} />
-                      <Line type="monotone" dataKey="tindakanPembatalan" name="Evaluasi & Pembatalan" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} />
-                      <Line type="monotone" dataKey="dokumentasiLahan" name="Dokumentasi Lahan" stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} />
-                      <Line type="monotone" dataKey="rekomendasiPembaruan" name="Rekomendasi Pembaruan" stroke="#6366F1" strokeWidth={2} dot={{ r: 3 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {pengendalianKinerjaViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={PENGENDALIAN_TRIWULAN_DATA} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="triwulan" tick={{ fontSize: 9.5, fill: '#475569', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[80, 100]} tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [`${val}%`, name]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Line type="monotone" dataKey="pengawasanKewajiban" name="Pengawasan Kewajiban" stroke="#059669" strokeWidth={2.5} dot={{ r: 4 }} />
+                        <Line type="monotone" dataKey="tindakanPembatalan" name="Evaluasi & Pembatalan" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} />
+                        <Line type="monotone" dataKey="dokumentasiLahan" name="Dokumentasi Lahan" stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} />
+                        <Line type="monotone" dataKey="rekomendasiPembaruan" name="Rekomendasi Pembaruan" stroke="#6366F1" strokeWidth={2} dot={{ r: 3 }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10px]">
+                        <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                          <tr>
+                            <th className="py-1 px-1.5">Triwulan</th>
+                            <th className="py-1 px-1.5 text-right">Pengawasan (DS #1)</th>
+                            <th className="py-1 px-1.5 text-right">Pembatalan (DS #2)</th>
+                            <th className="py-1 px-1.5 text-right">Dokumentasi (DS #3)</th>
+                            <th className="py-1 px-1.5 text-right">Rekomendasi (DS #4)</th>
+                            <th className="py-1 px-1.5 text-center">Status Kepatuhan</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                          {PENGENDALIAN_TRIWULAN_DATA.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-emerald-50/40">
+                              <td className="py-1.5 px-1.5 font-sans font-bold text-slate-900">{item.triwulan}</td>
+                              <td className="py-1.5 px-1.5 text-right font-bold text-emerald-700">{item.pengawasanKewajiban.toFixed(1)}%</td>
+                              <td className="py-1.5 px-1.5 text-right text-blue-700">{item.tindakanPembatalan.toFixed(1)}%</td>
+                              <td className="py-1.5 px-1.5 text-right text-amber-700">{item.dokumentasiLahan.toFixed(1)}%</td>
+                              <td className="py-1.5 px-1.5 text-right text-indigo-700">{item.rekomendasiPembaruan.toFixed(1)}%</td>
+                              <td className="py-1.5 px-1.5 text-center font-sans">
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  Terlampaui
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -585,45 +694,73 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 text-[10px] text-slate-600 mb-2 mt-1">
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-blue-600" /> Jumlah Kasus
-                  </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600" /> Luas Lahan (Ha)
-                  </span>
-                  <span className="text-slate-400">&bull;</span>
-                  <span>4 Tahap Eskalasi</span>
+                <div className="flex items-center justify-between gap-2 text-[10px] text-slate-600 mb-2 mt-1">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-blue-600" /> Jumlah Kasus
+                    </span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600" /> Luas Lahan (Ha)
+                    </span>
+                    <span className="text-slate-400">&bull;</span>
+                    <span>4 Tahap Eskalasi</span>
+                  </div>
+                  <SheetSwapToggle mode={pengendalianPipelineViewMode} onChange={setPengendalianPipelineViewMode} />
                 </div>
 
                 <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      layout="vertical"
-                      data={PIPELINE_PENERTIBAN_DATA}
-                      margin={{ top: 5, right: 25, left: 10, bottom: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
-                      <XAxis type="number" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                      <YAxis
-                        type="category"
-                        dataKey="tahap"
-                        tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
-                        axisLine={false}
-                        tickLine={false}
-                        width={130}
-                      />
-                      <Tooltip
-                        formatter={(val: any, name: any) => [
-                          name === 'kasus' ? `${val} Kasus` : `${val} Ha`,
-                          name === 'kasus' ? 'Jumlah Kasus' : 'Luas Lahan',
-                        ]}
-                        contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="kasus" name="kasus" fill="#3B82F6" radius={[0, 4, 4, 0]} barSize={10} />
-                      <Bar dataKey="luasHa" name="luasHa" fill="#059669" radius={[0, 4, 4, 0]} barSize={10} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {pengendalianPipelineViewMode === 'chart' ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        layout="vertical"
+                        data={PIPELINE_PENERTIBAN_DATA}
+                        margin={{ top: 5, right: 25, left: 10, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
+                        <XAxis type="number" tick={{ fontSize: 9.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                        <YAxis
+                          type="category"
+                          dataKey="tahap"
+                          tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
+                          axisLine={false}
+                          tickLine={false}
+                          width={130}
+                        />
+                        <Tooltip
+                          formatter={(val: any, name: any) => [
+                            name === 'kasus' ? `${val} Kasus` : `${val} Ha`,
+                            name === 'kasus' ? 'Jumlah Kasus' : 'Luas Lahan',
+                          ]}
+                          contentStyle={{ fontSize: '11px', borderRadius: '8px' }}
+                        />
+                        <Bar dataKey="kasus" name="kasus" fill="#3B82F6" radius={[0, 4, 4, 0]} barSize={10} />
+                        <Bar dataKey="luasHa" name="luasHa" fill="#059669" radius={[0, 4, 4, 0]} barSize={10} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-left border-collapse text-[10px]">
+                        <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                          <tr>
+                            <th className="py-1 px-1.5">Tahapan Eskalasi</th>
+                            <th className="py-1 px-1.5 text-right">Kasus</th>
+                            <th className="py-1 px-1.5 text-right">Luas (Ha)</th>
+                            <th className="py-1 px-2">Status Penanganan</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white font-mono text-slate-700">
+                          {PIPELINE_PENERTIBAN_DATA.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-blue-50/40">
+                              <td className="py-1.5 px-1.5 font-sans font-semibold text-slate-900">{item.tahap}</td>
+                              <td className="py-1.5 px-1.5 text-right font-bold text-blue-700">{item.kasus} Kasus</td>
+                              <td className="py-1.5 px-1.5 text-right font-bold text-emerald-700">{item.luasHa.toFixed(1)} Ha</td>
+                              <td className="py-1.5 px-2 font-sans text-[9.5px] text-slate-600 truncate max-w-[150px]" title={item.status}>{item.status}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
 
