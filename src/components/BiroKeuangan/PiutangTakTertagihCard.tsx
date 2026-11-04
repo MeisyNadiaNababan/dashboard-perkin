@@ -302,9 +302,9 @@ export const PiutangTakTertagihCard: React.FC<PiutangTakTertagihCardProps> = ({
                     name="Total Hutang (Rp Miliar)"
                     radius={[6, 6, 0, 0]}
                     maxBarSize={48}
-                    onClick={(entry) =>
+                    onClick={(entry: any) =>
                       setSelectedDuration(
-                        selectedDuration === entry.durasi ? 'all' : entry.durasi
+                        selectedDuration === entry?.durasi ? 'all' : (entry?.durasi || 'all')
                       )
                     }
                     className="cursor-pointer"

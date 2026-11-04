@@ -272,7 +272,9 @@ export const MonitoringBiroTab: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
                       <span>{kpi.label}</span>
-                      <Info className="w-3.5 h-3.5 text-slate-400" title={kpi.tooltipRumus} />
+                      <span title={kpi.tooltipRumus} className="inline-flex">
+                        <Info className="w-3.5 h-3.5 text-slate-400" />
+                      </span>
                     </div>
                     <div className="text-2xl font-black text-slate-900 tracking-tight tabular-nums">
                       {kpi.nilai}
@@ -397,7 +399,9 @@ export const MonitoringBiroTab: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
                       <span>{kpi.label}</span>
-                      <Info className="w-3.5 h-3.5 text-slate-400" title={kpi.tooltipRumus} />
+                      <span title={kpi.tooltipRumus} className="inline-flex">
+                        <Info className="w-3.5 h-3.5 text-slate-400" />
+                      </span>
                     </div>
                     <div className="text-2xl font-black text-slate-900 tracking-tight tabular-nums">
                       {kpi.nilai}
@@ -490,7 +494,9 @@ export const MonitoringBiroTab: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
                       <span>{kpi.label}</span>
-                      <Info className="w-3.5 h-3.5 text-slate-400" title={kpi.tooltipRumus} />
+                      <span title={kpi.tooltipRumus} className="inline-flex">
+                        <Info className="w-3.5 h-3.5 text-slate-400" />
+                      </span>
                     </div>
                     <div className="text-2xl font-black text-slate-900 tracking-tight tabular-nums">
                       {kpi.nilai}
@@ -551,7 +557,9 @@ export const MonitoringBiroTab: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
                       <span>{kpi.label}</span>
-                      <Info className="w-3.5 h-3.5 text-slate-400" title={kpi.tooltipRumus} />
+                      <span title={kpi.tooltipRumus} className="inline-flex">
+                        <Info className="w-3.5 h-3.5 text-slate-400" />
+                      </span>
                     </div>
                     <div className="text-2xl font-black text-slate-900 tracking-tight tabular-nums">
                       {kpi.nilai}

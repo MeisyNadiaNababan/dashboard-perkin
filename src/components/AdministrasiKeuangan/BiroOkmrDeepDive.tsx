@@ -83,10 +83,12 @@ export const BiroOkmrDeepDive: React.FC = () => {
 
   const ringkasanPengaduan = useMemo(() => {
     const totalDiterima = dataPengaduanList.reduce((acc, curr) => acc + curr.diterima, 0);
+    const totalDiproses = dataPengaduanList.reduce((acc, curr) => acc + curr.diproses, 0);
     const totalSelesai = dataPengaduanList.reduce((acc, curr) => acc + curr.selesai, 0);
     const persenSelesai = totalDiterima > 0 ? (totalSelesai / totalDiterima) * 100 : 0;
     return {
       totalDiterima,
+      totalDiproses,
       totalSelesai,
       persenSelesai,
     };

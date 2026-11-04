@@ -2,6 +2,7 @@ export interface KebijakanStrategisFilterState {
   selectedYear: string;
   selectedMonth: string;
   selectedQuarter: string;
+  selectedPeriod?: string;
   selectedUnit: string;
   selectedSektor: string;
   viewMode: 'ikhtisar' | 'kpi_visual' | 'unit_kinerja' | 'deep_dive' | 'satu_data';

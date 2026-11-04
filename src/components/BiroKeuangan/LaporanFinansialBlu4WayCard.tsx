@@ -514,7 +514,7 @@ export const LaporanFinansialBlu4WayCard: React.FC<LaporanFinansialBlu4WayCardPr
 
             <div className="h-[220px] w-full bg-slate-50/70 border border-slate-200 rounded-xl p-2.5">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={activeChartData} margin={{ top: 10, right: 15, left: 10, bottom: 25 }}>
+                <BarChart data={activeChartData as any} margin={{ top: 10, right: 15, left: 10, bottom: 25 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                   <XAxis
                     dataKey="name"

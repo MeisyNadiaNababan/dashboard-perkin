@@ -8,6 +8,8 @@ export interface TableauShelvesProps {
   size?: string;
   detail?: string;
   text?: string;
+  marks?: string;
+  tooltip?: string;
   filters?: string;
   referenceLine?: string;
   showMe?: string;
@@ -23,6 +25,8 @@ export const TableauShelvesBadge: React.FC<TableauShelvesProps> = ({
   size,
   detail,
   text,
+  marks,
+  tooltip,
   filters,
   referenceLine,
   showMe,

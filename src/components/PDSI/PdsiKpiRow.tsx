@@ -235,7 +235,7 @@ export const PdsiKpiRow: React.FC<PdsiKpiRowProps> = ({ onSelectMetric, onOpenKa
                   {kpi.target}
                 </span>
                 <span className="text-[10.5px] font-bold text-emerald-700 font-mono">
-                  {kpi.badge}
+                  {kpi.badge?.text}
                 </span>
               </div>
             </div>

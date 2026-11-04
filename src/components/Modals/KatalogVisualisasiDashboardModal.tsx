@@ -25,15 +25,17 @@ interface KatalogVisualisasiDashboardModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultUnitId?: string;
+  initialFilterUnit?: string;
 }
 
 export const KatalogVisualisasiDashboardModal: React.FC<KatalogVisualisasiDashboardModalProps> = ({
   isOpen,
   onClose,
   defaultUnitId,
+  initialFilterUnit,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUnit, setSelectedUnit] = useState<string>(defaultUnitId || 'ALL');
+  const [selectedUnit, setSelectedUnit] = useState<string>(initialFilterUnit || defaultUnitId || 'ALL');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'katalog' | 'rekap_tipe' | 'panduan_tableau'>('katalog');

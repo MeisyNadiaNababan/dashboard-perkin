@@ -197,7 +197,7 @@ export const KpiMetricsRow: React.FC<KpiMetricsRowProps> = ({ metrics, onSelectM
                   {config.bottomText}
                 </span>
                 <span className="text-[10.5px] font-bold text-emerald-700 font-mono">
-                  {metric.badge}
+                  {metric.badge?.text}
                 </span>
               </div>
             </div>

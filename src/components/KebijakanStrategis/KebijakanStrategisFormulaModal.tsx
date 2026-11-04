@@ -6,14 +6,16 @@ interface KebijakanStrategisFormulaModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialKpiId?: string;
+  kpiId?: string;
 }
 
 export const KebijakanStrategisFormulaModal: React.FC<KebijakanStrategisFormulaModalProps> = ({
   isOpen,
   onClose,
   initialKpiId = 'ikp-1-perencanaan',
+  kpiId,
 }) => {
-  const [selectedIkpId, setSelectedIkpId] = useState(initialKpiId);
+  const [selectedIkpId, setSelectedIkpId] = useState(kpiId || initialKpiId);
 
   if (!isOpen) return null;
 
