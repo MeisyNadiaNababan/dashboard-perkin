@@ -24,6 +24,7 @@ import {
   LayananLimbahDomestikRecord,
   PengujianLabRecord,
 } from './spamPengelolaanLimbahData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 import {
   Droplets,
   Gauge,
@@ -79,6 +80,16 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
   const [filterZona7, setFilterZona7] = useState<string>('all');
   const [filterTahun8, setFilterTahun8] = useState<number>(2026);
   const [filterJenis8, setFilterJenis8] = useState<string>('all');
+
+  // Sheet Swap View Modes (Chart vs Table)
+  const [viewMode1, setViewMode1] = useState<'chart' | 'table'>('chart');
+  const [viewMode2, setViewMode2] = useState<'chart' | 'table'>('chart');
+  const [viewMode3, setViewMode3] = useState<'chart' | 'table'>('chart');
+  const [viewMode4, setViewMode4] = useState<'chart' | 'table'>('chart');
+  const [viewMode5, setViewMode5] = useState<'chart' | 'table'>('chart');
+  const [viewMode6, setViewMode6] = useState<'chart' | 'table'>('chart');
+  const [viewMode7, setViewMode7] = useState<'chart' | 'table'>('chart');
+  const [viewMode8, setViewMode8] = useState<'chart' | 'table'>('chart');
 
   // =========================================================================
   // CARD 1: VOLUME AIR BAKU, AIR CURAH, DAN PENYEDIAAN KE INDUSTRI
@@ -317,14 +328,17 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Summary Metric & Filter */}
+              {/* Summary Metric & Filter & Toggle */}
               <div className="flex sm:flex-col items-end justify-between sm:justify-start gap-1 shrink-0">
-                <div className="text-right">
-                  <div className="text-base sm:text-lg font-black font-mono text-slate-900 leading-tight">
-                    {formatDecimal(totalAirBakuTahun1 / 1_000_000, 2)} Juta m³
-                  </div>
-                  <div className="text-[10px] text-blue-600 font-semibold">
-                    Total Air Baku {filterTahun1}
+                <div className="flex items-center gap-2">
+                  <SheetSwapToggle mode={viewMode1} onChange={setViewMode1} />
+                  <div className="text-right">
+                    <div className="text-base sm:text-lg font-black font-mono text-slate-900 leading-tight">
+                      {formatDecimal(totalAirBakuTahun1 / 1_000_000, 2)} Juta m³
+                    </div>
+                    <div className="text-[10px] text-blue-600 font-semibold">
+                      Total Air Baku {filterTahun1}
+                    </div>
                   </div>
                 </div>
 
@@ -347,97 +361,128 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart Container */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart
-                  data={dataCard1}
-                  margin={{ top: 12, right: 14, left: -10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    yAxisId="left"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}`}
-                    domain={[0, 16]}
-                  />
-                  <YAxis
-                    yAxisId="right"
-                    orientation="right"
-                    tick={{ fontSize: 10, fill: '#10b981' }}
-                    axisLine={false}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}k`}
-                    domain={[250, 420]}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as BakuCurahBatamindoRecord & {
-                        airBakuJutaM3: number;
-                        airCurahJutaM3: number;
-                        penyediaanBatamindoRibuM3: number;
-                      };
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {label} {filterTahun1} &bull; <span className="text-blue-300 font-mono">{d.nomorBA}</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Volume Air Baku:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {formatNumber(d.airBakuM3)} m³
-                            </span>
-                            <span className="text-slate-300">Volume Air Curah:</span>
-                            <span className="font-mono font-bold text-right text-slate-300">
-                              {formatNumber(d.airCurahM3)} m³
-                            </span>
-                            <span className="text-slate-300">Penyediaan Batamindo:</span>
-                            <span className="font-mono font-bold text-right text-emerald-300">
-                              {formatNumber(d.penyediaanBatamindoM3)} m³
-                            </span>
+            {viewMode1 === 'chart' ? (
+              /* Chart Container */
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart
+                    data={dataCard1}
+                    margin={{ top: 12, right: 14, left: -10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}`}
+                      domain={[0, 16]}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tick={{ fontSize: 10, fill: '#10b981' }}
+                      axisLine={false}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}k`}
+                      domain={[250, 420]}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as BakuCurahBatamindoRecord & {
+                          airBakuJutaM3: number;
+                          airCurahJutaM3: number;
+                          penyediaanBatamindoRibuM3: number;
+                        };
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {label} {filterTahun1} &bull; <span className="text-blue-300 font-mono">{d.nomorBA}</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Volume Air Baku:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {formatNumber(d.airBakuM3)} m³
+                              </span>
+                              <span className="text-slate-300">Volume Air Curah:</span>
+                              <span className="font-mono font-bold text-right text-slate-300">
+                                {formatNumber(d.airCurahM3)} m³
+                              </span>
+                              <span className="text-slate-300">Penyediaan Batamindo:</span>
+                              <span className="font-mono font-bold text-right text-emerald-300">
+                                {formatNumber(d.penyediaanBatamindoM3)} m³
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="airBakuJutaM3"
-                    name="Volume Air Baku"
-                    fill="#2563eb"
-                    radius={[3, 3, 0, 0]}
-                    maxBarSize={18}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="airCurahJutaM3"
-                    name="Volume Air Curah"
-                    fill="#94a3b8"
-                    radius={[3, 3, 0, 0]}
-                    maxBarSize={18}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="penyediaanBatamindoRibuM3"
-                    name="Penyediaan Batamindo"
-                    stroke="#10b981"
-                    strokeWidth={2.2}
-                    dot={{ r: 3, fill: '#10b981' }}
-                    activeDot={{ r: 5 }}
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="airBakuJutaM3"
+                      name="Volume Air Baku"
+                      fill="#2563eb"
+                      radius={[3, 3, 0, 0]}
+                      maxBarSize={18}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="airCurahJutaM3"
+                      name="Volume Air Curah"
+                      fill="#94a3b8"
+                      radius={[3, 3, 0, 0]}
+                      maxBarSize={18}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="penyediaanBatamindoRibuM3"
+                      name="Penyediaan Batamindo"
+                      stroke="#10b981"
+                      strokeWidth={2.2}
+                      dot={{ r: 3, fill: '#10b981' }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Bulan</th>
+                      <th className="py-2 px-2">No. Berita Acara</th>
+                      <th className="py-2 px-2 text-right bg-blue-50/70 text-blue-900">Air Baku (m³)</th>
+                      <th className="py-2 px-2 text-right">Air Curah (m³)</th>
+                      <th className="py-2 px-2.5 text-right bg-emerald-50/70 text-emerald-900">Suplai Batamindo (m³)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {dataCard1.map((row) => (
+                      <tr key={row.bulan} className="hover:bg-slate-50">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-800">{row.bulan}</td>
+                        <td className="py-1.5 px-2 font-mono text-slate-600 text-[10px]">{row.nomorBA}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {formatNumber(row.airBakuM3)}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{formatNumber(row.airCurahM3)}</td>
+                        <td className="py-1.5 px-2.5 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          {formatNumber(row.penyediaanBatamindoM3)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -484,29 +529,32 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Summary Metric & Filter */}
+              {/* Summary Metric & Filter & Toggle */}
               <div className="flex sm:flex-col items-end justify-between sm:justify-start gap-1 shrink-0">
-                <div className="text-right">
-                  <div className="text-base sm:text-lg font-black font-mono text-slate-900 leading-tight flex items-center justify-end gap-1.5">
-                    <span>{formatDecimal(latestNrwItem.tahun2026, 1)}%</span>
-                    <span
-                      className={`inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                        latestNrwItem.deltaVsPrevQ <= 0
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-amber-50 text-amber-700 border border-amber-200'
-                      }`}
-                    >
-                      {latestNrwItem.deltaVsPrevQ <= 0 ? (
-                        <TrendingDown className="w-3 h-3 mr-0.5 text-emerald-600 inline" />
-                      ) : (
-                        <TrendingUp className="w-3 h-3 mr-0.5 text-amber-600 inline" />
-                      )}
-                      {latestNrwItem.deltaVsPrevQ > 0 ? '+' : ''}
-                      {formatDecimal(latestNrwItem.deltaVsPrevQ, 1)}%
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-blue-600 font-semibold">
-                    NRW Triwulan Terakhir vs Sebelumnya
+                <div className="flex items-center gap-2">
+                  <SheetSwapToggle mode={viewMode2} onChange={setViewMode2} />
+                  <div className="text-right">
+                    <div className="text-base sm:text-lg font-black font-mono text-slate-900 leading-tight flex items-center justify-end gap-1.5">
+                      <span>{formatDecimal(latestNrwItem.tahun2026, 1)}%</span>
+                      <span
+                        className={`inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                          latestNrwItem.deltaVsPrevQ <= 0
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        }`}
+                      >
+                        {latestNrwItem.deltaVsPrevQ <= 0 ? (
+                          <TrendingDown className="w-3 h-3 mr-0.5 text-emerald-600 inline" />
+                        ) : (
+                          <TrendingUp className="w-3 h-3 mr-0.5 text-amber-600 inline" />
+                        )}
+                        {latestNrwItem.deltaVsPrevQ > 0 ? '+' : ''}
+                        {formatDecimal(latestNrwItem.deltaVsPrevQ, 1)}%
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-blue-600 font-semibold">
+                      NRW Triwulan Terakhir vs Sebelumnya
+                    </div>
                   </div>
                 </div>
 
@@ -533,102 +581,135 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart Container */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={dataCard2}
-                  margin={{ top: 12, right: 16, left: -14, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="triwulan"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    domain={[21, 28]}
-                    tickFormatter={(v) => `${v}%`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload;
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {label} &bull; Batas Ambang 25.0%
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">NRW 2026:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {formatDecimal(d.nrw2026, 1)}%
-                            </span>
-                            <span className="text-slate-300">NRW 2025:</span>
-                            <span className="font-mono font-bold text-right text-slate-300">
-                              {formatDecimal(d.nrw2025, 1)}%
-                            </span>
-                            <span className="text-slate-300">Delta vs Q Lalu:</span>
-                            <span
-                              className={`font-mono font-bold text-right ${
-                                d.deltaVsPrevQ <= 0 ? 'text-emerald-400' : 'text-amber-400'
-                              }`}
-                            >
-                              {d.deltaVsPrevQ > 0 ? '+' : ''}
-                              {formatDecimal(d.deltaVsPrevQ, 1)}%
-                            </span>
-                          </div>
-                          {d.catatan && (
-                            <p className="text-[10px] text-slate-400 italic pt-1 border-t border-slate-800">
-                              {d.catatan}
+            {viewMode2 === 'chart' ? (
+              /* Chart Container */
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={dataCard2}
+                    margin={{ top: 12, right: 16, left: -14, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="triwulan"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      domain={[21, 28]}
+                      tickFormatter={(v) => `${v}%`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload;
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {label} &bull; Batas Ambang 25.0%
                             </p>
-                          )}
-                        </div>
-                      );
-                    }}
-                  />
-                  <ReferenceLine
-                    y={25.0}
-                    stroke="#ef4444"
-                    strokeDasharray="4 4"
-                    strokeWidth={1.5}
-                    label={{
-                      value: 'Target ≤ 25%',
-                      fill: '#ef4444',
-                      fontSize: 10,
-                      position: 'insideTopRight',
-                    }}
-                  />
-                  {(filterTahun2 === '2026' || filterTahun2 === 'komparasi') && (
-                    <Line
-                      type="monotone"
-                      dataKey="nrw2026"
-                      name="Realisasi 2026"
-                      stroke="#2563eb"
-                      strokeWidth={2.5}
-                      dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }}
-                      activeDot={{ r: 6 }}
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">NRW 2026:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {formatDecimal(d.nrw2026, 1)}%
+                              </span>
+                              <span className="text-slate-300">NRW 2025:</span>
+                              <span className="font-mono font-bold text-right text-slate-300">
+                                {formatDecimal(d.nrw2025, 1)}%
+                              </span>
+                              <span className="text-slate-300">Delta vs Q Lalu:</span>
+                              <span
+                                className={`font-mono font-bold text-right ${
+                                  d.deltaVsPrevQ <= 0 ? 'text-emerald-400' : 'text-amber-400'
+                                }`}
+                              >
+                                {d.deltaVsPrevQ > 0 ? '+' : ''}
+                                {formatDecimal(d.deltaVsPrevQ, 1)}%
+                              </span>
+                            </div>
+                            {d.catatan && (
+                              <p className="text-[10px] text-slate-400 italic pt-1 border-t border-slate-800">
+                                {d.catatan}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      }}
                     />
-                  )}
-                  {(filterTahun2 === '2025' || filterTahun2 === 'komparasi') && (
-                    <Line
-                      type="monotone"
-                      dataKey="nrw2025"
-                      name="Realisasi 2025"
-                      stroke="#94a3b8"
-                      strokeWidth={2.2}
-                      strokeDasharray={filterTahun2 === 'komparasi' ? '3 3' : undefined}
-                      dot={{ r: 3.5, fill: '#94a3b8', strokeWidth: 1.5, stroke: '#fff' }}
-                      activeDot={{ r: 5 }}
+                    <ReferenceLine
+                      y={25.0}
+                      stroke="#ef4444"
+                      strokeDasharray="4 4"
+                      strokeWidth={1.5}
+                      label={{
+                        value: 'Target ≤ 25%',
+                        fill: '#ef4444',
+                        fontSize: 10,
+                        position: 'insideTopRight',
+                      }}
                     />
-                  )}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+                    {(filterTahun2 === '2026' || filterTahun2 === 'komparasi') && (
+                      <Line
+                        type="monotone"
+                        dataKey="nrw2026"
+                        name="Realisasi 2026"
+                        stroke="#2563eb"
+                        strokeWidth={2.5}
+                        dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }}
+                        activeDot={{ r: 6 }}
+                      />
+                    )}
+                    {(filterTahun2 === '2025' || filterTahun2 === 'komparasi') && (
+                      <Line
+                        type="monotone"
+                        dataKey="nrw2025"
+                        name="Realisasi 2025"
+                        stroke="#94a3b8"
+                        strokeWidth={2.2}
+                        strokeDasharray={filterTahun2 === 'komparasi' ? '3 3' : undefined}
+                        dot={{ r: 3.5, fill: '#94a3b8', strokeWidth: 1.5, stroke: '#fff' }}
+                        activeDot={{ r: 5 }}
+                      />
+                    )}
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Triwulan</th>
+                      <th className="py-2 px-2 text-right bg-blue-50/70 text-blue-900">NRW 2026 (%)</th>
+                      <th className="py-2 px-2 text-right">NRW 2025 (%)</th>
+                      <th className="py-2 px-2 text-center text-red-600 font-bold">Target</th>
+                      <th className="py-2 px-2 text-right">Delta QoQ</th>
+                      <th className="py-2 px-2.5">Catatan Operasional</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {dataCard2.map((row) => (
+                      <tr key={row.triwulan} className="hover:bg-slate-50">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-800">{row.triwulan}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {formatDecimal(row.nrw2026, 1)}%
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-600">{formatDecimal(row.nrw2025, 1)}%</td>
+                        <td className="py-1.5 px-2 text-center font-mono font-semibold text-red-600">≤ 25.0%</td>
+                        <td className={`py-1.5 px-2 text-right font-mono font-bold ${row.deltaVsPrevQ <= 0 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                          {row.deltaVsPrevQ > 0 ? '+' : ''}{formatDecimal(row.deltaVsPrevQ, 1)}%
+                        </td>
+                        <td className="py-1.5 px-2.5 text-slate-600 text-[10px]">{row.catatan || '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -662,14 +743,17 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Summary Metric & Filters */}
+              {/* Summary Metric & Filters & Toggle */}
               <div className="flex sm:flex-col items-end justify-between sm:justify-start gap-1 shrink-0">
-                <div className="text-right">
-                  <div className="text-base sm:text-lg font-black font-mono text-slate-900 leading-tight">
-                    {formatDecimal(totalAirBacaCard3 / 1_000_000, 2)} Juta m³
-                  </div>
-                  <div className="text-[10px] text-blue-600 font-semibold">
-                    {formatNumber(totalPelangganCard3)} Pelanggan Aktif
+                <div className="flex items-center gap-2">
+                  <SheetSwapToggle mode={viewMode3} onChange={setViewMode3} />
+                  <div className="text-right">
+                    <div className="text-base sm:text-lg font-black font-mono text-slate-900 leading-tight">
+                      {formatDecimal(totalAirBacaCard3 / 1_000_000, 2)} Juta m³
+                    </div>
+                    <div className="text-[10px] text-blue-600 font-semibold">
+                      {formatNumber(totalPelangganCard3)} Pelanggan Aktif
+                    </div>
                   </div>
                 </div>
 
@@ -707,75 +791,110 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart Container - Horizontal Bar */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dataCard3}
-                  layout="vertical"
-                  margin={{ top: 8, right: 18, left: 35, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}k`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="dmz"
-                    tick={{ fontSize: 9.5, fill: '#334155' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    width={110}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as DmzAirBacaRecord;
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {d.dmz} &bull; <span className="text-blue-300">{d.kpp}</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Volume Baca:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {formatNumber(d.volumeAirBacaM3)} m³
-                            </span>
-                            <span className="text-slate-300">Volume Tagih:</span>
-                            <span className="font-mono font-bold text-right text-slate-300">
-                              {formatNumber(d.volumeTagihM3)} m³
-                            </span>
-                            <span className="text-slate-300">Selisih (Baca vs Tagih):</span>
-                            <span className="font-mono font-bold text-right text-amber-300">
-                              {formatDecimal(d.selisihPersen, 1)}%
-                            </span>
-                            <span className="text-slate-300">Jumlah Pelanggan:</span>
-                            <span className="font-mono font-bold text-right text-emerald-300">
-                              {formatNumber(d.jumlahPelanggan)} SL
-                            </span>
-                            <span className="text-slate-300">Kategori:</span>
-                            <span className="font-semibold text-right text-slate-200">
-                              {d.kategori}
-                            </span>
+            {viewMode3 === 'chart' ? (
+              /* Chart Container - Horizontal Bar */
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={dataCard3}
+                    layout="vertical"
+                    margin={{ top: 8, right: 18, left: 35, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}k`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="dmz"
+                      tick={{ fontSize: 9.5, fill: '#334155' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      width={110}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as DmzAirBacaRecord;
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {d.dmz} &bull; <span className="text-blue-300">{d.kpp}</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Volume Baca:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {formatNumber(d.volumeAirBacaM3)} m³
+                              </span>
+                              <span className="text-slate-300">Volume Tagih:</span>
+                              <span className="font-mono font-bold text-right text-slate-300">
+                                {formatNumber(d.volumeTagihM3)} m³
+                              </span>
+                              <span className="text-slate-300">Selisih (Baca vs Tagih):</span>
+                              <span className="font-mono font-bold text-right text-amber-300">
+                                {formatDecimal(d.selisihPersen, 1)}%
+                              </span>
+                              <span className="text-slate-300">Jumlah Pelanggan:</span>
+                              <span className="font-mono font-bold text-right text-emerald-300">
+                                {formatNumber(d.jumlahPelanggan)} SL
+                              </span>
+                              <span className="text-slate-300">Kategori:</span>
+                              <span className="font-semibold text-right text-slate-200">
+                                {d.kategori}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="volumeAirBacaRibuM3"
-                    name="Volume Air Baca"
-                    fill="#2563eb"
-                    radius={[0, 4, 4, 0]}
-                    maxBarSize={16}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="volumeAirBacaRibuM3"
+                      name="Volume Air Baca"
+                      fill="#2563eb"
+                      radius={[0, 4, 4, 0]}
+                      maxBarSize={16}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">DMZ / Wilayah</th>
+                      <th className="py-2 px-2">KPP</th>
+                      <th className="py-2 px-2 text-right bg-blue-50/70 text-blue-900">Vol Baca (m³)</th>
+                      <th className="py-2 px-2 text-right">Vol Tagih (m³)</th>
+                      <th className="py-2 px-2 text-right">Selisih (%)</th>
+                      <th className="py-2 px-2 text-center text-emerald-800">Pelanggan</th>
+                      <th className="py-2 px-2.5">Kategori</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {dataCard3.map((row) => (
+                      <tr key={row.dmz} className="hover:bg-slate-50">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-800">{row.dmz}</td>
+                        <td className="py-1.5 px-2 text-slate-600 font-medium">{row.kpp}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {formatNumber(row.volumeAirBacaM3)}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{formatNumber(row.volumeTagihM3)}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-semibold text-amber-700">{formatDecimal(row.selisihPersen, 1)}%</td>
+                        <td className="py-1.5 px-2 text-center font-mono font-bold text-emerald-700">
+                          {formatNumber(row.jumlahPelanggan)} SL
+                        </td>
+                        <td className="py-1.5 px-2.5 text-slate-600">{row.kategori}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -829,7 +948,8 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 mt-1">
+                <div className="flex items-center gap-1.5 mt-1">
+                  <SheetSwapToggle mode={viewMode4} onChange={setViewMode4} />
                   {/* Filter Tahun */}
                   <div className="inline-flex items-center bg-slate-100 p-0.5 rounded-md border border-slate-200">
                     {[2026, 2025].map((yr) => (
@@ -861,78 +981,107 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart Container - Horizontal Clustered Bar */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dataCard4}
-                  layout="vertical"
-                  margin={{ top: 8, right: 18, left: 30, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="wtp"
-                    tick={{ fontSize: 9.5, fill: '#334155' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    width={105}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as WtpProduksiRecord;
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {d.wtp} &bull; <span className="text-slate-300 font-normal">{d.periode}</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Kapasitas Terpasang:</span>
-                            <span className="font-mono font-bold text-right text-slate-300">
-                              {formatNumber(d.kapasitasTerpasangLps)} L/dtk
-                            </span>
-                            <span className="text-slate-300">Pemakaian Air Baku:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {formatNumber(d.pemakaianAirBakuLps)} L/dtk
-                            </span>
-                            <span className="text-slate-300">Tingkat Utilisasi:</span>
-                            <span className="font-mono font-bold text-right text-emerald-300">
-                              {formatDecimal(d.utilisasiPersen, 1)}%
-                            </span>
-                            <span className="text-slate-300">Teknologi:</span>
-                            <span className="text-right text-slate-200 font-semibold truncate">
-                              {d.teknologi}
-                            </span>
+            {/* Container - Chart or Detail Table */}
+            {viewMode4 === 'chart' ? (
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={dataCard4}
+                    layout="vertical"
+                    margin={{ top: 8, right: 18, left: 30, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="wtp"
+                      tick={{ fontSize: 9.5, fill: '#334155' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      width={105}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as WtpProduksiRecord;
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {d.wtp} &bull; <span className="text-slate-300 font-normal">{d.periode}</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Kapasitas Terpasang:</span>
+                              <span className="font-mono font-bold text-right text-slate-300">
+                                {formatNumber(d.kapasitasTerpasangLps)} L/dtk
+                              </span>
+                              <span className="text-slate-300">Pemakaian Air Baku:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {formatNumber(d.pemakaianAirBakuLps)} L/dtk
+                              </span>
+                              <span className="text-slate-300">Tingkat Utilisasi:</span>
+                              <span className="font-mono font-bold text-right text-emerald-300">
+                                {formatDecimal(d.utilisasiPersen, 1)}%
+                              </span>
+                              <span className="text-slate-300">Teknologi:</span>
+                              <span className="text-right text-slate-200 font-semibold truncate">
+                                {d.teknologi}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="kapasitasTerpasangLps"
-                    name="Kapasitas Terpasang"
-                    fill="#94a3b8"
-                    radius={[0, 3, 3, 0]}
-                    maxBarSize={14}
-                  />
-                  <Bar
-                    dataKey="pemakaianAirBakuLps"
-                    name="Pemakaian Air Baku"
-                    fill="#2563eb"
-                    radius={[0, 3, 3, 0]}
-                    maxBarSize={14}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="kapasitasTerpasangLps"
+                      name="Kapasitas Terpasang"
+                      fill="#94a3b8"
+                      radius={[0, 3, 3, 0]}
+                      maxBarSize={14}
+                    />
+                    <Bar
+                      dataKey="pemakaianAirBakuLps"
+                      name="Pemakaian Air Baku"
+                      fill="#2563eb"
+                      radius={[0, 3, 3, 0]}
+                      maxBarSize={14}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">WTP / Instalasi</th>
+                      <th className="py-1.5 px-2 text-center">Periode</th>
+                      <th className="py-1.5 px-2 text-right">Kapasitas (L/dtk)</th>
+                      <th className="py-1.5 px-2 text-right">Pemakaian (L/dtk)</th>
+                      <th className="py-1.5 px-2 text-right">Utilisasi (%)</th>
+                      <th className="py-1.5 px-2">Teknologi Pengolahan</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {dataCard4.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.wtp}</td>
+                        <td className="py-1.5 px-2 text-center text-slate-600">{row.periode}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{formatNumber(row.kapasitasTerpasangLps)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-600">{formatNumber(row.pemakaianAirBakuLps)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-600">{formatDecimal(row.utilisasiPersen, 1)}%</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{row.teknologi}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -982,94 +1131,132 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="inline-flex items-center gap-1 bg-slate-100 p-0.5 rounded-md border border-slate-200 mt-1">
-                  {[2026, 2025, 2024, 2023].map((yr) => (
-                    <button
-                      key={yr}
-                      type="button"
-                      onClick={() => setFilterTahun5(yr)}
-                      className={`px-1.5 py-0.5 text-[10px] font-bold rounded cursor-pointer transition-colors ${
-                        filterTahun5 === yr
-                          ? 'bg-blue-600 text-white shadow-2xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      {yr}
-                    </button>
-                  ))}
+                <div className="inline-flex items-center gap-1.5 mt-1">
+                  <SheetSwapToggle mode={viewMode5} onChange={setViewMode5} />
+                  <div className="inline-flex items-center gap-1 bg-slate-100 p-0.5 rounded-md border border-slate-200">
+                    {[2026, 2025, 2024, 2023].map((yr) => (
+                      <button
+                        key={yr}
+                        type="button"
+                        onClick={() => setFilterTahun5(yr)}
+                        className={`px-1.5 py-0.5 text-[10px] font-bold rounded cursor-pointer transition-colors ${
+                          filterTahun5 === yr
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {yr}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Chart Container - Horizontal Bar */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dataCard5}
-                  layout="vertical"
-                  margin={{ top: 8, right: 18, left: 30, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}`}
-                    domain={[0, 90]}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="namaWaduk"
-                    tick={{ fontSize: 9.5, fill: '#334155' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    width={110}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as WadukKapasitasRecord;
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {d.namaWaduk} &bull; <span className="text-blue-300">Tahun {d.tahun}</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Daya Tampung:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {formatDecimal(d.kapasitasJutaM3, 1)} Juta m³
-                            </span>
-                            <span className="text-slate-300">Luas Permukaan:</span>
-                            <span className="font-mono font-bold text-right text-emerald-300">
-                              {formatNumber(d.luasPermukaanHa)} Ha
-                            </span>
-                            <span className="text-slate-300">Elevasi Muka Air:</span>
-                            <span className="font-mono font-bold text-right text-slate-200">
-                              +{formatDecimal(d.elevasiMukaAirM, 1)} m
-                            </span>
-                            <span className="text-slate-300">Status Operasi:</span>
-                            <span className="font-semibold text-right text-slate-300">
-                              {d.status}
-                            </span>
+            {/* Container - Chart or Detail Table */}
+            {viewMode5 === 'chart' ? (
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={dataCard5}
+                    layout="vertical"
+                    margin={{ top: 8, right: 18, left: 30, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}`}
+                      domain={[0, 90]}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="namaWaduk"
+                      tick={{ fontSize: 9.5, fill: '#334155' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      width={110}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as WadukKapasitasRecord;
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {d.namaWaduk} &bull; <span className="text-blue-300">Tahun {d.tahun}</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Daya Tampung:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {formatDecimal(d.kapasitasJutaM3, 1)} Juta m³
+                              </span>
+                              <span className="text-slate-300">Luas Permukaan:</span>
+                              <span className="font-mono font-bold text-right text-emerald-300">
+                                {formatNumber(d.luasPermukaanHa)} Ha
+                              </span>
+                              <span className="text-slate-300">Elevasi Muka Air:</span>
+                              <span className="font-mono font-bold text-right text-slate-200">
+                                +{formatDecimal(d.elevasiMukaAirM, 1)} m
+                              </span>
+                              <span className="text-slate-300">Status Operasi:</span>
+                              <span className="font-semibold text-right text-slate-300">
+                                {d.status}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 italic pt-1 border-t border-slate-800">
+                              Periode Rekap: {d.periodeRekap}
+                            </p>
                           </div>
-                          <p className="text-[10px] text-slate-400 italic pt-1 border-t border-slate-800">
-                            Periode Rekap: {d.periodeRekap}
-                          </p>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="kapasitasJutaM3"
-                    name="Kapasitas Tampung (Juta m³)"
-                    fill="#2563eb"
-                    radius={[0, 4, 4, 0]}
-                    maxBarSize={16}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="kapasitasJutaM3"
+                      name="Kapasitas Tampung (Juta m³)"
+                      fill="#2563eb"
+                      radius={[0, 4, 4, 0]}
+                      maxBarSize={16}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Nama Waduk</th>
+                      <th className="py-1.5 px-2 text-center">Tahun / Periode</th>
+                      <th className="py-1.5 px-2 text-right">Daya Tampung (Juta m³)</th>
+                      <th className="py-1.5 px-2 text-right">Luas Genangan (Ha)</th>
+                      <th className="py-1.5 px-2 text-right">Elevasi Muka Air (m)</th>
+                      <th className="py-1.5 px-2 text-center">Status Operasi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {dataCard5.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.namaWaduk}</td>
+                        <td className="py-1.5 px-2 text-center text-slate-600">{row.tahun} ({row.periodeRekap})</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-600">{formatDecimal(row.kapasitasJutaM3, 1)}</td>
+                        <td className="py-1.5 px-2 text-right text-emerald-600 font-semibold">{formatNumber(row.luasPermukaanHa)}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">+{formatDecimal(row.elevasiMukaAirM, 1)}</td>
+                        <td className="py-1.5 px-2 text-center">
+                          <span className={`px-2 py-0.5 rounded-full text-[9.5px] font-sans font-semibold ${
+                            row.status === 'Optimal' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                          }`}>
+                            {row.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -1126,140 +1313,174 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="inline-flex items-center gap-1 bg-slate-100 p-0.5 rounded-md border border-slate-200 mt-1">
-                  {[2026, 2025].map((yr) => (
-                    <button
-                      key={yr}
-                      type="button"
-                      onClick={() => setFilterTahun6(yr)}
-                      className={`px-2 py-0.5 text-[10px] font-bold rounded cursor-pointer transition-colors ${
-                        filterTahun6 === yr
-                          ? 'bg-blue-600 text-white shadow-2xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      {yr}
-                    </button>
-                  ))}
+                <div className="inline-flex items-center gap-1.5 mt-1">
+                  <SheetSwapToggle mode={viewMode6} onChange={setViewMode6} />
+                  <div className="inline-flex items-center gap-1 bg-slate-100 p-0.5 rounded-md border border-slate-200">
+                    {[2026, 2025].map((yr) => (
+                      <button
+                        key={yr}
+                        type="button"
+                        onClick={() => setFilterTahun6(yr)}
+                        className={`px-2 py-0.5 text-[10px] font-bold rounded cursor-pointer transition-colors ${
+                          filterTahun6 === yr
+                            ? 'bg-blue-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {yr}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Chart Container - Stacked Column + Garis Sumbu Kanan */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart
-                  data={dataCard6}
-                  margin={{ top: 12, right: 14, left: -10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    yAxisId="left"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}`}
-                    domain={[0, 1700]}
-                  />
-                  <YAxis
-                    yAxisId="right"
-                    orientation="right"
-                    tick={{ fontSize: 10, fill: '#10b981' }}
-                    axisLine={false}
-                    tickLine={false}
-                    domain={[95, 100]}
-                    tickFormatter={(v) => `${v}%`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as LimbahB3KpliRecord;
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {label} {filterTahun6} &bull; <span className="text-emerald-300 font-mono">{formatDecimal(d.persenDiolah, 1)}% Diolah</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Limbah Padat:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {formatNumber(d.padatTon)} Ton
-                            </span>
-                            <span className="text-slate-300">Sludge B3:</span>
-                            <span className="font-mono font-bold text-right text-sky-300">
-                              {formatNumber(d.sludgeTon)} Ton
-                            </span>
-                            <span className="text-slate-300">Limbah Cair:</span>
-                            <span className="font-mono font-bold text-right text-slate-300">
-                              {formatNumber(d.cairTon)} Ton
-                            </span>
-                            <span className="text-slate-300 font-bold">Total Masuk KPLI:</span>
-                            <span className="font-mono font-bold text-right text-white">
-                              {formatNumber(d.totalTon)} Ton
-                            </span>
+            {/* Container - Chart or Detail Table */}
+            {viewMode6 === 'chart' ? (
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart
+                    data={dataCard6}
+                    margin={{ top: 12, right: 14, left: -10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}`}
+                      domain={[0, 1700]}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tick={{ fontSize: 10, fill: '#10b981' }}
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[95, 100]}
+                      tickFormatter={(v) => `${v}%`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as LimbahB3KpliRecord;
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {label} {filterTahun6} &bull; <span className="text-emerald-300 font-mono">{formatDecimal(d.persenDiolah, 1)}% Diolah</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Limbah Padat:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {formatNumber(d.padatTon)} Ton
+                              </span>
+                              <span className="text-slate-300">Sludge B3:</span>
+                              <span className="font-mono font-bold text-right text-sky-300">
+                                {formatNumber(d.sludgeTon)} Ton
+                              </span>
+                              <span className="text-slate-300">Limbah Cair:</span>
+                              <span className="font-mono font-bold text-right text-slate-300">
+                                {formatNumber(d.cairTon)} Ton
+                              </span>
+                              <span className="text-slate-300 font-bold">Total Masuk KPLI:</span>
+                              <span className="font-mono font-bold text-right text-white">
+                                {formatNumber(d.totalTon)} Ton
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-blue-200 pt-1 border-t border-slate-800">
+                              Penghasil Terbanyak: <span className="font-semibold">{d.perusahaanTerbanyak}</span>
+                            </p>
                           </div>
-                          <p className="text-[10px] text-blue-200 pt-1 border-t border-slate-800">
-                            Penghasil Terbanyak: <span className="font-semibold">{d.perusahaanTerbanyak}</span>
-                          </p>
-                        </div>
-                      );
-                    }}
-                  />
-                  <ReferenceLine
-                    yAxisId="right"
-                    y={98.0}
-                    stroke="#f59e0b"
-                    strokeDasharray="3 3"
-                    label={{
-                      value: 'Target 98%',
-                      fill: '#f59e0b',
-                      fontSize: 9.5,
-                      position: 'insideTopLeft',
-                    }}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="padatTon"
-                    name="Limbah Padat"
-                    stackId="limbah"
-                    fill="#2563eb"
-                    maxBarSize={22}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="sludgeTon"
-                    name="Sludge B3"
-                    stackId="limbah"
-                    fill="#38bdf8"
-                    maxBarSize={22}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="cairTon"
-                    name="Limbah Cair"
-                    stackId="limbah"
-                    fill="#94a3b8"
-                    radius={[3, 3, 0, 0]}
-                    maxBarSize={22}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="persenDiolah"
-                    name="% Ditangani / Diolah"
-                    stroke="#10b981"
-                    strokeWidth={2.4}
-                    dot={{ r: 3, fill: '#10b981' }}
-                    activeDot={{ r: 5 }}
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <ReferenceLine
+                      yAxisId="right"
+                      y={98.0}
+                      stroke="#f59e0b"
+                      strokeDasharray="3 3"
+                      label={{
+                        value: 'Target 98%',
+                        fill: '#f59e0b',
+                        fontSize: 9.5,
+                        position: 'insideTopLeft',
+                      }}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="padatTon"
+                      name="Limbah Padat"
+                      stackId="limbah"
+                      fill="#2563eb"
+                      maxBarSize={22}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="sludgeTon"
+                      name="Sludge B3"
+                      stackId="limbah"
+                      fill="#38bdf8"
+                      maxBarSize={22}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="cairTon"
+                      name="Limbah Cair"
+                      stackId="limbah"
+                      fill="#94a3b8"
+                      radius={[3, 3, 0, 0]}
+                      maxBarSize={22}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="persenDiolah"
+                      name="% Ditangani / Diolah"
+                      stroke="#10b981"
+                      strokeWidth={2.4}
+                      dot={{ r: 3, fill: '#10b981' }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Bulan ({filterTahun6})</th>
+                      <th className="py-1.5 px-2 text-right">Limbah Padat (Ton)</th>
+                      <th className="py-1.5 px-2 text-right">Sludge B3 (Ton)</th>
+                      <th className="py-1.5 px-2 text-right">Limbah Cair (Ton)</th>
+                      <th className="py-1.5 px-2 text-right">Total Masuk (Ton)</th>
+                      <th className="py-1.5 px-2 text-right">% Diolah</th>
+                      <th className="py-1.5 px-2">Penghasil Terbanyak</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {dataCard6.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.bulan}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-600 font-semibold">{formatNumber(row.padatTon)}</td>
+                        <td className="py-1.5 px-2 text-right text-sky-600 font-semibold">{formatNumber(row.sludgeTon)}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{formatNumber(row.cairTon)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{formatNumber(row.totalTon)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-600">{formatDecimal(row.persenDiolah, 1)}%</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{row.perusahaanTerbanyak}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -1312,7 +1533,8 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 mt-1">
+                <div className="flex items-center gap-1.5 mt-1">
+                  <SheetSwapToggle mode={viewMode7} onChange={setViewMode7} />
                   {/* Filter Tahun */}
                   <div className="inline-flex items-center bg-slate-100 p-0.5 rounded-md border border-slate-200">
                     {[2026, 2025].map((yr) => (
@@ -1348,88 +1570,121 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart Container - Clustered Column per Bulan */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dataCard7}
-                  margin={{ top: 12, right: 14, left: -14, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as LayananLimbahDomestikRecord;
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {label} {filterTahun7} &bull; <span className="text-blue-300 font-mono">{d.totalPesanan} Pesanan</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Limbah Domestik Umum:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {d.limbahDomestikUmum} Order
-                            </span>
-                            <span className="text-slate-300">Pengurasan Sumur Tinja:</span>
-                            <span className="font-mono font-bold text-right text-sky-300">
-                              {d.pengurasanSumurTinja} Order
-                            </span>
-                            <span className="text-slate-300">Aset BP Batam:</span>
-                            <span className="font-mono font-bold text-right text-slate-300">
-                              {d.pengurasanAsetBpBatam} Order
-                            </span>
-                            <span className="text-slate-300 font-bold">Total Volume:</span>
-                            <span className="font-mono font-bold text-right text-white">
-                              {formatNumber(d.totalVolumeM3)} m³ ({d.trip} Trip)
-                            </span>
-                            <span className="text-slate-300 font-bold">Penerimaan:</span>
-                            <span className="font-mono font-bold text-right text-emerald-300">
-                              {formatRupiahShort(d.jumlahRupiah)}
-                            </span>
+            {/* Container - Chart or Detail Table */}
+            {viewMode7 === 'chart' ? (
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={dataCard7}
+                    margin={{ top: 12, right: 14, left: -14, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as LayananLimbahDomestikRecord;
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {label} {filterTahun7} &bull; <span className="text-blue-300 font-mono">{d.totalPesanan} Pesanan</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Limbah Domestik Umum:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {d.limbahDomestikUmum} Order
+                              </span>
+                              <span className="text-slate-300">Pengurasan Sumur Tinja:</span>
+                              <span className="font-mono font-bold text-right text-sky-300">
+                                {d.pengurasanSumurTinja} Order
+                              </span>
+                              <span className="text-slate-300">Aset BP Batam:</span>
+                              <span className="font-mono font-bold text-right text-slate-300">
+                                {d.pengurasanAsetBpBatam} Order
+                              </span>
+                              <span className="text-slate-300 font-bold">Total Volume:</span>
+                              <span className="font-mono font-bold text-right text-white">
+                                {formatNumber(d.totalVolumeM3)} m³ ({d.trip} Trip)
+                              </span>
+                              <span className="text-slate-300 font-bold">Penerimaan:</span>
+                              <span className="font-mono font-bold text-right text-emerald-300">
+                                {formatRupiahShort(d.jumlahRupiah)}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-blue-200 pt-1 border-t border-slate-800">
+                              Zona Terbanyak: <span className="font-semibold">{d.zonaTerbanyak}</span>
+                            </p>
                           </div>
-                          <p className="text-[10px] text-blue-200 pt-1 border-t border-slate-800">
-                            Zona Terbanyak: <span className="font-semibold">{d.zonaTerbanyak}</span>
-                          </p>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="limbahDomestikUmum"
-                    name="Domestik Umum"
-                    fill="#2563eb"
-                    radius={[2, 2, 0, 0]}
-                    maxBarSize={14}
-                  />
-                  <Bar
-                    dataKey="pengurasanSumurTinja"
-                    name="Pengurasan Tinja"
-                    fill="#0284c7"
-                    radius={[2, 2, 0, 0]}
-                    maxBarSize={14}
-                  />
-                  <Bar
-                    dataKey="pengurasanAsetBpBatam"
-                    name="Aset BP Batam"
-                    fill="#94a3b8"
-                    radius={[2, 2, 0, 0]}
-                    maxBarSize={14}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="limbahDomestikUmum"
+                      name="Domestik Umum"
+                      fill="#2563eb"
+                      radius={[2, 2, 0, 0]}
+                      maxBarSize={14}
+                    />
+                    <Bar
+                      dataKey="pengurasanSumurTinja"
+                      name="Pengurasan Tinja"
+                      fill="#0284c7"
+                      radius={[2, 2, 0, 0]}
+                      maxBarSize={14}
+                    />
+                    <Bar
+                      dataKey="pengurasanAsetBpBatam"
+                      name="Aset BP Batam"
+                      fill="#94a3b8"
+                      radius={[2, 2, 0, 0]}
+                      maxBarSize={14}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Bulan ({filterTahun7})</th>
+                      <th className="py-1.5 px-2 text-right">Domestik Umum</th>
+                      <th className="py-1.5 px-2 text-right">Sumur Tinja</th>
+                      <th className="py-1.5 px-2 text-right">Aset BP Batam</th>
+                      <th className="py-1.5 px-2 text-right">Total Order</th>
+                      <th className="py-1.5 px-2 text-right">Volume (m³)</th>
+                      <th className="py-1.5 px-2 text-right">Retribusi (Rp)</th>
+                      <th className="py-1.5 px-2">Zona Terbanyak</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {dataCard7.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.bulan}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-600 font-semibold">{row.limbahDomestikUmum}</td>
+                        <td className="py-1.5 px-2 text-right text-sky-600 font-semibold">{row.pengurasanSumurTinja}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{row.pengurasanAsetBpBatam}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.totalPesanan}</td>
+                        <td className="py-1.5 px-2 text-right text-indigo-600 font-semibold">{formatNumber(row.totalVolumeM3)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-600">{formatRupiahShort(row.jumlahRupiah)}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{row.zonaTerbanyak}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -1478,7 +1733,8 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 mt-1">
+                <div className="flex items-center gap-1.5 mt-1">
+                  <SheetSwapToggle mode={viewMode8} onChange={setViewMode8} />
                   {/* Filter Tahun */}
                   <div className="inline-flex items-center bg-slate-100 p-0.5 rounded-md border border-slate-200">
                     {[2026, 2025].map((yr) => (
@@ -1512,88 +1768,115 @@ export const SpamPengelolaanLimbahVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart Container - Column + Garis Sumbu Kanan */}
-            <div className="h-64 sm:h-72 w-full mt-3">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart
-                  data={dataCard8}
-                  margin={{ top: 12, right: 14, left: -14, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    yAxisId="left"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    axisLine={{ stroke: '#cbd5e1' }}
-                    tickLine={false}
-                    tickFormatter={(v) => `${v}`}
-                    domain={[0, 220]}
-                  />
-                  <YAxis
-                    yAxisId="right"
-                    orientation="right"
-                    tick={{ fontSize: 10, fill: '#10b981' }}
-                    axisLine={false}
-                    tickLine={false}
-                    domain={[0, 180]}
-                    tickFormatter={(v) => `${v}Jt`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload || payload.length === 0) return null;
-                      const d = payload[0].payload as PengujianLabRecord & { biayaRetribusiJuta: number };
-                      return (
-                        <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
-                          <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
-                            {label} {filterTahun8} &bull; <span className="text-blue-300 font-mono">{d.sampelUji} Sampel</span>
-                          </p>
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
-                            <span className="text-slate-300">Jumlah Sampel Uji:</span>
-                            <span className="font-mono font-bold text-right text-blue-300">
-                              {d.sampelUji} Sampel
-                            </span>
-                            <span className="text-slate-300">Biaya Retribusi:</span>
-                            <span className="font-mono font-bold text-right text-emerald-300">
-                              {formatRupiahShort(d.biayaRetribusiRp)}
-                            </span>
-                            <span className="text-slate-300">Uji Terbanyak:</span>
-                            <span className="text-right text-slate-200 font-semibold truncate">
-                              {d.jenisTerbanyak}
-                            </span>
+            {/* Container - Chart or Detail Table */}
+            {viewMode8 === 'chart' ? (
+              <div className="h-64 sm:h-72 w-full mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart
+                    data={dataCard8}
+                    margin={{ top: 12, right: 14, left: -14, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      axisLine={{ stroke: '#cbd5e1' }}
+                      tickLine={false}
+                      tickFormatter={(v) => `${v}`}
+                      domain={[0, 220]}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tick={{ fontSize: 10, fill: '#10b981' }}
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 180]}
+                      tickFormatter={(v) => `${v}Jt`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload || payload.length === 0) return null;
+                        const d = payload[0].payload as PengujianLabRecord & { biayaRetribusiJuta: number };
+                        return (
+                          <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-md text-xs font-sans space-y-1">
+                            <p className="font-bold text-slate-100 border-b border-slate-700 pb-1">
+                              {label} {filterTahun8} &bull; <span className="text-blue-300 font-mono">{d.sampelUji} Sampel</span>
+                            </p>
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-0.5 text-[11px]">
+                              <span className="text-slate-300">Jumlah Sampel Uji:</span>
+                              <span className="font-mono font-bold text-right text-blue-300">
+                                {d.sampelUji} Sampel
+                              </span>
+                              <span className="text-slate-300">Biaya Retribusi:</span>
+                              <span className="font-mono font-bold text-right text-emerald-300">
+                                {formatRupiahShort(d.biayaRetribusiRp)}
+                              </span>
+                              <span className="text-slate-300">Uji Terbanyak:</span>
+                              <span className="text-right text-slate-200 font-semibold truncate">
+                                {d.jenisTerbanyak}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-blue-200 pt-1 border-t border-slate-800">
+                              Pemesan Terbanyak: <span className="font-semibold">{d.perusahaanTerbanyak}</span>
+                            </p>
                           </div>
-                          <p className="text-[10px] text-blue-200 pt-1 border-t border-slate-800">
-                            Pemesan Terbanyak: <span className="font-semibold">{d.perusahaanTerbanyak}</span>
-                          </p>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="sampelUji"
-                    name="Sampel Uji"
-                    fill="#2563eb"
-                    radius={[3, 3, 0, 0]}
-                    maxBarSize={20}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="biayaRetribusiJuta"
-                    name="Biaya Retribusi (Juta Rp)"
-                    stroke="#10b981"
-                    strokeWidth={2.4}
-                    dot={{ r: 3, fill: '#10b981' }}
-                    activeDot={{ r: 5 }}
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="sampelUji"
+                      name="Sampel Uji"
+                      fill="#2563eb"
+                      radius={[3, 3, 0, 0]}
+                      maxBarSize={20}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="biayaRetribusiJuta"
+                      name="Biaya Retribusi (Juta Rp)"
+                      stroke="#10b981"
+                      strokeWidth={2.4}
+                      dot={{ r: 3, fill: '#10b981' }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 sm:h-72 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-3">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Bulan ({filterTahun8})</th>
+                      <th className="py-1.5 px-2 text-right">Sampel Uji</th>
+                      <th className="py-1.5 px-2 text-right">Biaya Retribusi</th>
+                      <th className="py-1.5 px-2">Jenis Uji Terbanyak</th>
+                      <th className="py-1.5 px-2">Pemesan Terbanyak</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {dataCard8.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.bulan}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-600">{formatNumber(row.sampelUji)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-600">{formatRupiahShort(row.biayaRetribusiRp)}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-700">{row.jenisTerbanyak}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{row.perusahaanTerbanyak}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer */}

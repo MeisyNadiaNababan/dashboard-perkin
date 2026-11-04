@@ -36,9 +36,20 @@ import {
   BongkarMuatTerminalBatuAmparYearly,
   ArusBarangNegaraItem,
 } from './pengelolaanKepelabuhananData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
   const db = PENGELOLAAN_KEPELABUHANAN_DATA;
+
+  // --------------------------------------------------------------------------
+  // SHEET SWAP VIEW MODES (GRAFIK VS TABEL DETAIL)
+  // --------------------------------------------------------------------------
+  const [k1ViewMode, setK1ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k2ViewMode, setK2ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k3ViewMode, setK3ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k4ViewMode, setK4ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k5ViewMode, setK5ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k6ViewMode, setK6ViewMode] = useState<'chart' | 'table'>('chart');
 
   // --------------------------------------------------------------------------
   // FILTER STATES TIAP KARTU
@@ -287,78 +298,110 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
                     <option value="2025">2025</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k1ViewMode} onChange={setK1ViewMode} />
               </div>
             </div>
 
-            {/* Stacked Column Chart */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={k1Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 11, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k T`}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as JasaDermagaBulananItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>Bulan {item.bulan} {item.tahun} ({item.pelabuhan})</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              {(item.totalVolumeTon / 1000).toFixed(0)}k Ton
-                            </span>
+            {/* Stacked Column Chart vs Detail Table */}
+            {k1ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={k1Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k T`}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as JasaDermagaBulananItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>Bulan {item.bulan} {item.tahun} ({item.pelabuhan})</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                {(item.totalVolumeTon / 1000).toFixed(0)}k Ton
+                              </span>
+                            </div>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Tambat Barang:</span>
+                                <span className="font-mono font-bold">
+                                  {item.tambatBarangTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-sky-700">
+                                <span>• Tambat Penumpang:</span>
+                                <span className="font-mono font-bold">
+                                  {item.tambatPenumpangTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Dermaga Khusus (Tersus):</span>
+                                <span className="font-mono font-bold">
+                                  {item.dermagaKhususTersusTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-orange-600">
+                                <span>• Dermaga Rakyat:</span>
+                                <span className="font-mono font-bold">
+                                  {item.dermagaRakyatTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                            </div>
+                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-400">
+                              Periode Rekap: {item.rentangTanggalRekap}
+                            </div>
                           </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Tambat Barang:</span>
-                              <span className="font-mono font-bold">
-                                {item.tambatBarangTon.toLocaleString('id-ID')} Ton
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-sky-700">
-                              <span>• Tambat Penumpang:</span>
-                              <span className="font-mono font-bold">
-                                {item.tambatPenumpangTon.toLocaleString('id-ID')} Ton
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Dermaga Khusus (Tersus):</span>
-                              <span className="font-mono font-bold">
-                                {item.dermagaKhususTersusTon.toLocaleString('id-ID')} Ton
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-orange-600">
-                              <span>• Dermaga Rakyat:</span>
-                              <span className="font-mono font-bold">
-                                {item.dermagaRakyatTon.toLocaleString('id-ID')} Ton
-                              </span>
-                            </div>
-                          </div>
-                          <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-400">
-                            Periode Rekap: {item.rentangTanggalRekap}
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar dataKey="tambatBarangTon" stackId="a" fill="#2563eb" name="Tambat Barang" />
-                  <Bar dataKey="tambatPenumpangTon" stackId="a" fill="#38bdf8" name="Tambat Penumpang" />
-                  <Bar dataKey="dermagaKhususTersusTon" stackId="a" fill="#94a3b8" name="Dermaga Khusus" />
-                  <Bar dataKey="dermagaRakyatTon" stackId="a" fill="#f97316" radius={[3, 3, 0, 0]} name="Dermaga Rakyat" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="tambatBarangTon" stackId="a" fill="#2563eb" name="Tambat Barang" />
+                    <Bar dataKey="tambatPenumpangTon" stackId="a" fill="#38bdf8" name="Tambat Penumpang" />
+                    <Bar dataKey="dermagaKhususTersusTon" stackId="a" fill="#94a3b8" name="Dermaga Khusus" />
+                    <Bar dataKey="dermagaRakyatTon" stackId="a" fill="#f97316" radius={[3, 3, 0, 0]} name="Dermaga Rakyat" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Bulan / Periode</th>
+                      <th className="py-2 px-2 text-right">Barang (Ton)</th>
+                      <th className="py-2 px-2 text-right">Penumpang (Ton)</th>
+                      <th className="py-2 px-2 text-right">Tersus (Ton)</th>
+                      <th className="py-2 px-2 text-right">Rakyat (Ton)</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Total Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k1Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.bulan} {row.tahun}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.tambatBarangTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.tambatPenumpangTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.dermagaKhususTersusTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.dermagaRakyatTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {row.totalVolumeTon.toLocaleString('id-ID')} Ton
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -436,80 +479,112 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
                     <option value="2025">2025</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k2ViewMode} onChange={setK2ViewMode} />
               </div>
             </div>
 
-            {/* Clustered Column Chart per Bulan */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={k2Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="bulan"
-                    tick={{ fontSize: 11, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as KunjunganKapalBarangBulananItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>Bulan {item.bulan} {item.tahun} ({item.namaPelabuhan})</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              Total: {item.totalCall} Call
-                            </span>
+            {/* Clustered Column Chart per Bulan vs Detail Table */}
+            {k2ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={k2Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as KunjunganKapalBarangBulananItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>Bulan {item.bulan} {item.tahun} ({item.namaPelabuhan})</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                Total: {item.totalCall} Call
+                              </span>
+                            </div>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Call Dalam:</span>
+                                <span className="font-mono font-bold">{item.callDalam} Call ({(item.gtDalam / 1000).toFixed(0)}k GT)</span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Call Luar:</span>
+                                <span className="font-mono font-bold">{item.callLuar} Call ({(item.gtLuar / 1000).toFixed(0)}k GT)</span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-800 font-semibold border-t border-slate-100 pt-0.5">
+                                <span>Total Gross Tonnage:</span>
+                                <span className="font-mono font-bold text-blue-700">{(item.totalGt / 1000000).toFixed(2)} Juta GT</span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-500">
+                                <span>Tonase Barang:</span>
+                                <span className="font-mono">{(item.totalTon / 1000000).toFixed(2)} Juta Ton</span>
+                              </div>
+                            </div>
+                            {item.tipeKapalTerbanyak && (
+                              <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
+                                <span className="font-semibold text-slate-700">Tipe Kapal Terbanyak:</span>
+                                <div className="font-mono text-slate-800 mt-0.5">{item.tipeKapalTerbanyak}</div>
+                              </div>
+                            )}
                           </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Call Dalam:</span>
-                              <span className="font-mono font-bold">{item.callDalam} Call ({(item.gtDalam / 1000).toFixed(0)}k GT)</span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Call Luar:</span>
-                              <span className="font-mono font-bold">{item.callLuar} Call ({(item.gtLuar / 1000).toFixed(0)}k GT)</span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-800 font-semibold border-t border-slate-100 pt-0.5">
-                              <span>Total Gross Tonnage:</span>
-                              <span className="font-mono font-bold text-blue-700">{(item.totalGt / 1000000).toFixed(2)} Juta GT</span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-500">
-                              <span>Tonase Barang:</span>
-                              <span className="font-mono">{(item.totalTon / 1000000).toFixed(2)} Juta Ton</span>
-                            </div>
-                          </div>
-                          {item.tipeKapalTerbanyak && (
-                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
-                              <span className="font-semibold text-slate-700">Tipe Kapal Terbanyak:</span>
-                              <div className="font-mono text-slate-800 mt-0.5">{item.tipeKapalTerbanyak}</div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="callDalam"
-                    fill="#2563eb"
-                    radius={[3, 3, 0, 0]}
-                    name="Call Dalam"
-                  />
-                  <Bar
-                    dataKey="callLuar"
-                    fill="#64748b"
-                    radius={[3, 3, 0, 0]}
-                    name="Call Luar"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="callDalam"
+                      fill="#2563eb"
+                      radius={[3, 3, 0, 0]}
+                      name="Call Dalam"
+                    />
+                    <Bar
+                      dataKey="callLuar"
+                      fill="#64748b"
+                      radius={[3, 3, 0, 0]}
+                      name="Call Luar"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Bulan / Periode</th>
+                      <th className="py-2 px-2 text-right">Call Dalam (Dom)</th>
+                      <th className="py-2 px-2 text-right">Call Luar (Int)</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Total Call</th>
+                      <th className="py-2 px-2 text-right">Gross Tonnage (GT)</th>
+                      <th className="py-2 px-2 text-right text-emerald-700 bg-emerald-50/70">Tonase (Juta Ton)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k2Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.bulan} {row.tahun}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.callDalam.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.callLuar.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">{row.totalCall.toLocaleString('id-ID')} Call</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.totalGt.toLocaleString('id-ID')} GT</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          {(row.totalTon / 1000000).toFixed(2)} M Ton
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -594,89 +669,125 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
                     <option value="Mar">Mar</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k3ViewMode} onChange={setK3ViewMode} />
               </div>
             </div>
 
-            {/* Clustered Bar Horizontal (Sorted Descending) */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k3Data}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="pelabuhan"
-                    tick={{ fontSize: 10, fill: '#334155' }}
-                    width={110}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: string) =>
-                      val.length > 15 ? `${val.slice(0, 15)}…` : val
-                    }
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as KunjunganKapalPenumpangItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.pelabuhan}</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              Total: {item.totalCall.toLocaleString('id-ID')} Call
-                            </span>
-                          </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Call Dalam:</span>
-                              <span className="font-mono font-bold">
-                                {item.callDalam.toLocaleString('id-ID')} ({(item.gtDalam / 1000).toFixed(0)}k GT)
+            {/* Clustered Bar Horizontal (Sorted Descending) vs Detail Table */}
+            {k3ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k3Data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="pelabuhan"
+                      tick={{ fontSize: 10, fill: '#334155' }}
+                      width={110}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: string) =>
+                        val.length > 15 ? `${val.slice(0, 15)}…` : val
+                      }
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as KunjunganKapalPenumpangItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.pelabuhan}</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                Total: {item.totalCall.toLocaleString('id-ID')} Call
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-sky-700">
-                              <span>• Call Luar:</span>
-                              <span className="font-mono font-bold">
-                                {item.callLuar.toLocaleString('id-ID')} ({(item.gtLuar / 1000).toFixed(0)}k GT)
-                              </span>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Call Dalam:</span>
+                                <span className="font-mono font-bold">
+                                  {item.callDalam.toLocaleString('id-ID')} ({(item.gtDalam / 1000).toFixed(0)}k GT)
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-sky-700">
+                                <span>• Call Luar:</span>
+                                <span className="font-mono font-bold">
+                                  {item.callLuar.toLocaleString('id-ID')} ({(item.gtLuar / 1000).toFixed(0)}k GT)
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-800 font-semibold border-t border-slate-100 pt-0.5">
+                                <span>Total Gross Tonnage:</span>
+                                <span className="font-mono font-bold text-blue-700">{(item.totalGt / 1000000).toFixed(2)} Juta GT</span>
+                              </div>
                             </div>
-                            <div className="flex justify-between items-center text-slate-800 font-semibold border-t border-slate-100 pt-0.5">
-                              <span>Total Gross Tonnage:</span>
-                              <span className="font-mono font-bold text-blue-700">{(item.totalGt / 1000000).toFixed(2)} Juta GT</span>
+                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
+                              <span className="font-semibold text-slate-700">Tipe Kapal:</span>
+                              <div className="font-mono text-slate-800 mt-0.5">{item.tipeKapal}</div>
                             </div>
                           </div>
-                          <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
-                            <span className="font-semibold text-slate-700">Tipe Kapal:</span>
-                            <div className="font-mono text-slate-800 mt-0.5">{item.tipeKapal}</div>
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="callDalam"
-                    fill="#2563eb"
-                    radius={[0, 3, 3, 0]}
-                    name="Call Dalam"
-                  />
-                  <Bar
-                    dataKey="callLuar"
-                    fill="#38bdf8"
-                    radius={[0, 3, 3, 0]}
-                    name="Call Luar"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="callDalam"
+                      fill="#2563eb"
+                      radius={[0, 3, 3, 0]}
+                      name="Call Dalam"
+                    />
+                    <Bar
+                      dataKey="callLuar"
+                      fill="#38bdf8"
+                      radius={[0, 3, 3, 0]}
+                      name="Call Luar"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2 text-center w-8">No</th>
+                      <th className="py-2 px-2.5">Terminal / Pelabuhan</th>
+                      <th className="py-2 px-2 text-right">Call Dalam</th>
+                      <th className="py-2 px-2 text-right">Call Luar</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Total Call</th>
+                      <th className="py-2 px-2 text-right text-emerald-700 bg-emerald-50/70">Gross Tonnage (GT)</th>
+                      <th className="py-2 px-2">Tipe Armada</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k3Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-center font-mono text-slate-400">{idx + 1}</td>
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.pelabuhan}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.callDalam.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.callLuar.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {row.totalCall.toLocaleString('id-ID')} Call
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          {(row.totalGt / 1000000).toFixed(2)} M GT
+                        </td>
+                        <td className="py-1.5 px-2 text-slate-600 text-[10px]">{row.tipeKapal}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -755,91 +866,129 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
                     <option value="2025">2025</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k4ViewMode} onChange={setK4ViewMode} />
               </div>
             </div>
 
-            {/* Clustered Bar Horizontal */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k4Data}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000000).toFixed(1)}M`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="namaTerminal"
-                    tick={{ fontSize: 10, fill: '#334155' }}
-                    width={110}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: string) =>
-                      val.replace('Terminal Ferry ', '').replace('Terminal ', '').length > 15
-                        ? `${val.replace('Terminal Ferry ', '').replace('Terminal ', '').slice(0, 15)}…`
-                        : val.replace('Terminal Ferry ', '').replace('Terminal ', '')
-                    }
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as PenumpangPelabuhanItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.namaTerminal}</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              Total: {(item.totalPenumpang / 1000000).toFixed(2)}M Pax
-                            </span>
-                          </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Kedatangan:</span>
-                              <span className="font-mono font-bold">
-                                {item.kedatangan.toLocaleString('id-ID')} Pax
+            {/* Clustered Bar Horizontal vs Detail Table */}
+            {k4ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k4Data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000000).toFixed(1)}M`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="namaTerminal"
+                      tick={{ fontSize: 10, fill: '#334155' }}
+                      width={110}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: string) =>
+                        val.replace('Terminal Ferry ', '').replace('Terminal ', '').length > 15
+                          ? `${val.replace('Terminal Ferry ', '').replace('Terminal ', '').slice(0, 15)}…`
+                          : val.replace('Terminal Ferry ', '').replace('Terminal ', '')
+                      }
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as PenumpangPelabuhanItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.namaTerminal}</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                Total: {(item.totalPenumpang / 1000000).toFixed(2)}M Pax
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Keberangkatan:</span>
-                              <span className="font-mono font-bold">
-                                {item.keberangkatan.toLocaleString('id-ID')} Pax
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-700 border-t border-slate-100 pt-0.5 font-semibold">
-                              <span>Porsi Domestik / Int:</span>
-                              <span className="font-mono">{item.porsiDomestikPersen}% / {item.porsiInternasionalPersen}%</span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-500">
-                              <span>Kewarganegaraan (WNI / WNA):</span>
-                              <span className="font-mono">{item.kewarganegaraan.wniPersen}% / {item.kewarganegaraan.wnaPersen}%</span>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Kedatangan:</span>
+                                <span className="font-mono font-bold">
+                                  {item.kedatangan.toLocaleString('id-ID')} Pax
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Keberangkatan:</span>
+                                <span className="font-mono font-bold">
+                                  {item.keberangkatan.toLocaleString('id-ID')} Pax
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-700 border-t border-slate-100 pt-0.5 font-semibold">
+                                <span>Porsi Domestik / Int:</span>
+                                <span className="font-mono">{item.porsiDomestikPersen}% / {item.porsiInternasionalPersen}%</span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-500">
+                                <span>Kewarganegaraan (WNI / WNA):</span>
+                                <span className="font-mono">{item.kewarganegaraan.wniPersen}% / {item.kewarganegaraan.wnaPersen}%</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="kedatangan"
-                    fill="#2563eb"
-                    radius={[0, 3, 3, 0]}
-                    name="Kedatangan"
-                  />
-                  <Bar
-                    dataKey="keberangkatan"
-                    fill="#64748b"
-                    radius={[0, 3, 3, 0]}
-                    name="Keberangkatan"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="kedatangan"
+                      fill="#2563eb"
+                      radius={[0, 3, 3, 0]}
+                      name="Kedatangan"
+                    />
+                    <Bar
+                      dataKey="keberangkatan"
+                      fill="#64748b"
+                      radius={[0, 3, 3, 0]}
+                      name="Keberangkatan"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2 text-center w-8">No</th>
+                      <th className="py-2 px-2.5">Terminal Pelabuhan</th>
+                      <th className="py-2 px-2 text-right">Kedatangan</th>
+                      <th className="py-2 px-2 text-right">Keberangkatan</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Total Penumpang</th>
+                      <th className="py-2 px-2 text-center">Dom / Int (%)</th>
+                      <th className="py-2 px-2 text-center">WNI / WNA (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k4Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-center font-mono text-slate-400">{idx + 1}</td>
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.namaTerminal}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.kedatangan.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.keberangkatan.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {row.totalPenumpang.toLocaleString('id-ID')} Pax
+                        </td>
+                        <td className="py-1.5 px-2 text-center font-mono text-[9.5px]">
+                          {row.porsiDomestikPersen}% / {row.porsiInternasionalPersen}%
+                        </td>
+                        <td className="py-1.5 px-2 text-center font-mono text-[9.5px] text-slate-600">
+                          {row.kewarganegaraan.wniPersen}% / {row.kewarganegaraan.wnaPersen}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -878,177 +1027,223 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex items-baseline justify-end gap-1.5 shrink-0 self-end sm:self-auto text-right">
-                <span className="text-xl sm:text-2xl font-black text-slate-900 font-mono">
-                  {k5Summary.totalJutaTon}M Ton
-                </span>
-                <span className="text-[11px] font-semibold text-blue-600">
-                  {k5Summary.keteranganBiru}
-                </span>
+              <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
+                <SheetSwapToggle mode={k5ViewMode} onChange={setK5ViewMode} />
+                <div className="text-right">
+                  <div className="text-xl sm:text-2xl font-black text-slate-900 font-mono">
+                    {k5Summary.totalJutaTon}M Ton
+                  </div>
+                  <div className="text-[11px] font-semibold text-blue-600">
+                    {k5Summary.keteranganBiru}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Small Multiples: 3 Mini Column Charts Berdampingan */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
-              {/* Panel 1: Kargo Batu Ampar (Ton) */}
-              <div className="p-2.5 rounded-lg bg-slate-50/70 border border-slate-200/70 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-900 text-xs truncate">1. Kargo Umum</span>
-                    <span className="text-[9.5px] font-mono font-bold text-blue-700 bg-blue-50 px-1 py-0.2 rounded border border-blue-100">
-                      Ton
-                    </span>
+            {k5ViewMode === 'chart' ? (
+              /* Small Multiples: 3 Mini Column Charts Berdampingan */
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
+                {/* Panel 1: Kargo Batu Ampar (Ton) */}
+                <div className="p-2.5 rounded-lg bg-slate-50/70 border border-slate-200/70 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-slate-900 text-xs truncate">1. Kargo Umum</span>
+                      <span className="text-[9.5px] font-mono font-bold text-blue-700 bg-blue-50 px-1 py-0.2 rounded border border-blue-100">
+                        Ton
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-1">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-xs bg-[#2563eb]" /> Bongkar
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-xs bg-[#38bdf8]" /> B/M General
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-1">
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-xs bg-[#2563eb]" /> Bongkar
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-xs bg-[#38bdf8]" /> B/M General
-                    </span>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={k5Data} margin={{ top: 5, right: 2, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="2 2" stroke="#e2e8f0" vertical={false} />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748b' }} tickLine={false} />
+                        <YAxis
+                          tick={{ fontSize: 8.5, fill: '#64748b' }}
+                          tickLine={false}
+                          axisLine={false}
+                          tickFormatter={(v: number) => `${(v / 1000000).toFixed(1)}M`}
+                        />
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (!active || !payload || !payload.length) return null;
+                            const item = payload[0].payload as BongkarMuatTerminalBatuAmparYearly;
+                            return (
+                              <div className="bg-white/95 p-2 rounded border border-slate-200 shadow text-[10px] space-y-0.5">
+                                <div className="font-bold text-slate-900">Kargo Tahun {item.tahun}</div>
+                                <div className="text-blue-700">Bongkar: {(item.bongkarCargoTon / 1000000).toFixed(2)}M Ton</div>
+                                <div className="text-sky-700">General Cargo: {(item.bongkarMuatGeneralCargoTon / 1000000).toFixed(2)}M Ton</div>
+                                <div className="font-bold text-slate-800 border-t border-slate-100 pt-0.5">
+                                  Total: {(item.totalKargoTon / 1000000).toFixed(2)}M Ton
+                                </div>
+                              </div>
+                            );
+                          }}
+                        />
+                        <Bar dataKey="bongkarCargoTon" fill="#2563eb" radius={[2, 2, 0, 0]} />
+                        <Bar dataKey="bongkarMuatGeneralCargoTon" fill="#38bdf8" radius={[2, 2, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
 
-                <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={k5Data} margin={{ top: 5, right: 2, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="#e2e8f0" vertical={false} />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748b' }} tickLine={false} />
-                      <YAxis
-                        tick={{ fontSize: 8.5, fill: '#64748b' }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(v: number) => `${(v / 1000000).toFixed(1)}M`}
-                      />
-                      <Tooltip
-                        content={({ active, payload }) => {
-                          if (!active || !payload || !payload.length) return null;
-                          const item = payload[0].payload as BongkarMuatTerminalBatuAmparYearly;
-                          return (
-                            <div className="bg-white/95 p-2 rounded border border-slate-200 shadow text-[10px] space-y-0.5">
-                              <div className="font-bold text-slate-900">Kargo Tahun {item.tahun}</div>
-                              <div className="text-blue-700">Bongkar: {(item.bongkarCargoTon / 1000000).toFixed(2)}M Ton</div>
-                              <div className="text-sky-700">General Cargo: {(item.bongkarMuatGeneralCargoTon / 1000000).toFixed(2)}M Ton</div>
-                              <div className="font-bold text-slate-800 border-t border-slate-100 pt-0.5">
-                                Total: {(item.totalKargoTon / 1000000).toFixed(2)}M Ton
+                {/* Panel 2: Peti Kemas Batu Ampar (TEUs) */}
+                <div className="p-2.5 rounded-lg bg-slate-50/70 border border-slate-200/70 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-slate-900 text-xs truncate">2. Peti Kemas</span>
+                      <span className="text-[9.5px] font-mono font-bold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-100">
+                        TEUs
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-1">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-xs bg-[#2563eb]" /> Bongkar
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-xs bg-[#64748b]" /> Muat
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={k5Data} margin={{ top: 5, right: 2, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="2 2" stroke="#e2e8f0" vertical={false} />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748b' }} tickLine={false} />
+                        <YAxis
+                          tick={{ fontSize: 8.5, fill: '#64748b' }}
+                          tickLine={false}
+                          axisLine={false}
+                          tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k`}
+                        />
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (!active || !payload || !payload.length) return null;
+                            const item = payload[0].payload as BongkarMuatTerminalBatuAmparYearly;
+                            return (
+                              <div className="bg-white/95 p-2 rounded border border-slate-200 shadow text-[10px] space-y-0.5">
+                                <div className="font-bold text-slate-900">Peti Kemas {item.tahun}</div>
+                                <div className="text-blue-700">Bongkar: {item.bongkarTeus.toLocaleString('id-ID')} TEUs</div>
+                                <div className="text-slate-600">Muat: {item.muatTeus.toLocaleString('id-ID')} TEUs</div>
+                                <div className="font-bold text-emerald-700 border-t border-slate-100 pt-0.5">
+                                  Throughput: {item.totalTeus.toLocaleString('id-ID')} TEUs
+                                </div>
                               </div>
-                            </div>
-                          );
-                        }}
-                      />
-                      <Bar dataKey="bongkarCargoTon" fill="#2563eb" radius={[2, 2, 0, 0]} />
-                      <Bar dataKey="bongkarMuatGeneralCargoTon" fill="#38bdf8" radius={[2, 2, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                            );
+                          }}
+                        />
+                        <Bar dataKey="bongkarTeus" fill="#2563eb" radius={[2, 2, 0, 0]} />
+                        <Bar dataKey="muatTeus" fill="#64748b" radius={[2, 2, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Panel 3: Curah Cair (Ton) */}
+                <div className="p-2.5 rounded-lg bg-slate-50/70 border border-slate-200/70 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-slate-900 text-xs truncate">3. Curah Cair</span>
+                      <span className="text-[9.5px] font-mono font-bold text-amber-700 bg-amber-50 px-1 py-0.2 rounded border border-amber-100">
+                        Ton
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-1">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-xs bg-[#2563eb]" /> Bongkar
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-xs bg-[#f59e0b]" /> Muat
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={k5Data} margin={{ top: 5, right: 2, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="2 2" stroke="#e2e8f0" vertical={false} />
+                        <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748b' }} tickLine={false} />
+                        <YAxis
+                          tick={{ fontSize: 8.5, fill: '#64748b' }}
+                          tickLine={false}
+                          axisLine={false}
+                          tickFormatter={(v: number) => `${(v / 1000000).toFixed(1)}M`}
+                        />
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (!active || !payload || !payload.length) return null;
+                            const item = payload[0].payload as BongkarMuatTerminalBatuAmparYearly;
+                            return (
+                              <div className="bg-white/95 p-2 rounded border border-slate-200 shadow text-[10px] space-y-0.5">
+                                <div className="font-bold text-slate-900">Curah Cair {item.tahun}</div>
+                                <div className="text-blue-700">Bongkar: {(item.bongkarCurahCairTon / 1000000).toFixed(2)}M Ton</div>
+                                <div className="text-amber-700">Muat: {(item.muatCurahCairTon / 1000000).toFixed(2)}M Ton</div>
+                                <div className="font-bold text-slate-800 border-t border-slate-100 pt-0.5">
+                                  Total: {(item.totalCurahCairTon / 1000000).toFixed(2)}M Ton
+                                </div>
+                              </div>
+                            );
+                          }}
+                        />
+                        <Bar dataKey="bongkarCurahCairTon" fill="#2563eb" radius={[2, 2, 0, 0]} />
+                        <Bar dataKey="muatCurahCairTon" fill="#f59e0b" radius={[2, 2, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
-
-              {/* Panel 2: Peti Kemas Batu Ampar (TEUs) */}
-              <div className="p-2.5 rounded-lg bg-slate-50/70 border border-slate-200/70 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-900 text-xs truncate">2. Peti Kemas</span>
-                    <span className="text-[9.5px] font-mono font-bold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-100">
-                      TEUs
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-1">
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-xs bg-[#2563eb]" /> Bongkar
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-xs bg-[#64748b]" /> Muat
-                    </span>
-                  </div>
-                </div>
-
-                <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={k5Data} margin={{ top: 5, right: 2, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="#e2e8f0" vertical={false} />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748b' }} tickLine={false} />
-                      <YAxis
-                        tick={{ fontSize: 8.5, fill: '#64748b' }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k`}
-                      />
-                      <Tooltip
-                        content={({ active, payload }) => {
-                          if (!active || !payload || !payload.length) return null;
-                          const item = payload[0].payload as BongkarMuatTerminalBatuAmparYearly;
-                          return (
-                            <div className="bg-white/95 p-2 rounded border border-slate-200 shadow text-[10px] space-y-0.5">
-                              <div className="font-bold text-slate-900">Peti Kemas {item.tahun}</div>
-                              <div className="text-blue-700">Bongkar: {item.bongkarTeus.toLocaleString('id-ID')} TEUs</div>
-                              <div className="text-slate-600">Muat: {item.muatTeus.toLocaleString('id-ID')} TEUs</div>
-                              <div className="font-bold text-emerald-700 border-t border-slate-100 pt-0.5">
-                                Throughput: {item.totalTeus.toLocaleString('id-ID')} TEUs
-                              </div>
-                            </div>
-                          );
-                        }}
-                      />
-                      <Bar dataKey="bongkarTeus" fill="#2563eb" radius={[2, 2, 0, 0]} />
-                      <Bar dataKey="muatTeus" fill="#64748b" radius={[2, 2, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+            ) : (
+              <div className="h-52 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg mt-1">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Tahun</th>
+                      <th className="py-2 px-2 text-right">Bongkar Kargo (Ton)</th>
+                      <th className="py-2 px-2 text-right">General Cargo (Ton)</th>
+                      <th className="py-2 px-2 text-right bg-blue-50/70 text-blue-900">Total Kargo</th>
+                      <th className="py-2 px-2 text-right">Bongkar Peti Kemas</th>
+                      <th className="py-2 px-2 text-right">Muat Peti Kemas</th>
+                      <th className="py-2 px-2 text-right bg-emerald-50/70 text-emerald-900">Throughput (TEUs)</th>
+                      <th className="py-2 px-2 text-right">Curah Cair Bongkar</th>
+                      <th className="py-2 px-2 text-right">Curah Cair Muat</th>
+                      <th className="py-2 px-2.5 text-right bg-amber-50/70 text-amber-900">Total Curah Cair</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k5Data.map((row) => (
+                      <tr key={row.tahun} className="hover:bg-slate-50">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-800">{row.tahun}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.bongkarCargoTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.bongkarMuatGeneralCargoTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {row.totalKargoTon.toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.bongkarTeus.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.muatTeus.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          {row.totalTeus.toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.bongkarCurahCairTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.muatCurahCairTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2.5 text-right font-mono font-bold text-amber-700 bg-amber-50/30">
+                          {row.totalCurahCairTon.toLocaleString('id-ID')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-
-              {/* Panel 3: Curah Cair (Ton) */}
-              <div className="p-2.5 rounded-lg bg-slate-50/70 border border-slate-200/70 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-900 text-xs truncate">3. Curah Cair</span>
-                    <span className="text-[9.5px] font-mono font-bold text-amber-700 bg-amber-50 px-1 py-0.2 rounded border border-amber-100">
-                      Ton
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] text-slate-500 mb-1">
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-xs bg-[#2563eb]" /> Bongkar
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-xs bg-[#f59e0b]" /> Muat
-                    </span>
-                  </div>
-                </div>
-
-                <div className="h-44 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={k5Data} margin={{ top: 5, right: 2, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="#e2e8f0" vertical={false} />
-                      <XAxis dataKey="tahun" tick={{ fontSize: 9.5, fill: '#64748b' }} tickLine={false} />
-                      <YAxis
-                        tick={{ fontSize: 8.5, fill: '#64748b' }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(v: number) => `${(v / 1000000).toFixed(1)}M`}
-                      />
-                      <Tooltip
-                        content={({ active, payload }) => {
-                          if (!active || !payload || !payload.length) return null;
-                          const item = payload[0].payload as BongkarMuatTerminalBatuAmparYearly;
-                          return (
-                            <div className="bg-white/95 p-2 rounded border border-slate-200 shadow text-[10px] space-y-0.5">
-                              <div className="font-bold text-slate-900">Curah Cair {item.tahun}</div>
-                              <div className="text-blue-700">Bongkar: {(item.bongkarCurahCairTon / 1000000).toFixed(2)}M Ton</div>
-                              <div className="text-amber-700">Muat: {(item.muatCurahCairTon / 1000000).toFixed(2)}M Ton</div>
-                              <div className="font-bold text-slate-800 border-t border-slate-100 pt-0.5">
-                                Total: {(item.totalCurahCairTon / 1000000).toFixed(2)}M Ton
-                              </div>
-                            </div>
-                          );
-                        }}
-                      />
-                      <Bar dataKey="bongkarCurahCairTon" fill="#2563eb" radius={[2, 2, 0, 0]} />
-                      <Bar dataKey="muatCurahCairTon" fill="#f59e0b" radius={[2, 2, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -1103,7 +1298,8 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-xs">
+              <div className="flex items-center gap-2.5 text-xs">
+                <SheetSwapToggle mode={k6ViewMode} onChange={setK6ViewMode} />
                 <div className="flex items-center gap-1">
                   <span className="text-[11px] text-slate-400 font-medium">Thn:</span>
                   <select
@@ -1131,83 +1327,118 @@ export const BadanPengelolaanKepelabuhananDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Clustered Bar Horizontal (Top 10 Negara) */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k6Data}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000000).toFixed(1)}M`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="negara"
-                    tick={{ fontSize: 10, fill: '#334155' }}
-                    width={100}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as ArusBarangNegaraItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.negara}</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              Total: {(item.totalTon / 1000000).toFixed(2)}M Ton
-                            </span>
-                          </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Volume Bongkar (Impor):</span>
-                              <span className="font-mono font-bold">
-                                {item.volumeBongkarTon.toLocaleString('id-ID')} Ton
+            {k6ViewMode === 'chart' ? (
+              /* Clustered Bar Horizontal (Top 10 Negara) */
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k6Data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000000).toFixed(1)}M`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="negara"
+                      tick={{ fontSize: 10, fill: '#334155' }}
+                      width={100}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as ArusBarangNegaraItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.negara}</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                Total: {(item.totalTon / 1000000).toFixed(2)}M Ton
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Volume Muat (Ekspor):</span>
-                              <span className="font-mono font-bold">
-                                {item.volumeMuatTon.toLocaleString('id-ID')} Ton
-                              </span>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Volume Bongkar (Impor):</span>
+                                <span className="font-mono font-bold">
+                                  {item.volumeBongkarTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Volume Muat (Ekspor):</span>
+                                <span className="font-mono font-bold">
+                                  {item.volumeMuatTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-700 border-t border-slate-100 pt-0.5">
+                                <span>Terminal Pengampu:</span>
+                                <span className="font-semibold text-slate-800">{item.namaTerminal}</span>
+                              </div>
                             </div>
-                            <div className="flex justify-between items-center text-slate-700 border-t border-slate-100 pt-0.5">
-                              <span>Terminal Pengampu:</span>
-                              <span className="font-semibold text-slate-800">{item.namaTerminal}</span>
+                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500 space-y-0.5">
+                              <div><span className="font-semibold text-slate-700">Pelabuhan Utama:</span> {item.pelabuhanAsalTujuanTerbanyak}</div>
+                              <div><span className="font-semibold text-slate-700">Bendera Kapal:</span> {item.benderaKapal}</div>
                             </div>
                           </div>
-                          <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500 space-y-0.5">
-                            <div><span className="font-semibold text-slate-700">Pelabuhan Utama:</span> {item.pelabuhanAsalTujuanTerbanyak}</div>
-                            <div><span className="font-semibold text-slate-700">Bendera Kapal:</span> {item.benderaKapal}</div>
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="volumeBongkarTon"
-                    fill="#2563eb"
-                    radius={[0, 3, 3, 0]}
-                    name="Volume Bongkar"
-                  />
-                  <Bar
-                    dataKey="volumeMuatTon"
-                    fill="#64748b"
-                    radius={[0, 3, 3, 0]}
-                    name="Volume Muat"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="volumeBongkarTon"
+                      fill="#2563eb"
+                      radius={[0, 3, 3, 0]}
+                      name="Volume Bongkar"
+                    />
+                    <Bar
+                      dataKey="volumeMuatTon"
+                      fill="#64748b"
+                      radius={[0, 3, 3, 0]}
+                      name="Volume Muat"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">#</th>
+                      <th className="py-2 px-2">Negara Mitra</th>
+                      <th className="py-2 px-2 text-right">Bongkar / Impor (Ton)</th>
+                      <th className="py-2 px-2 text-right">Muat / Ekspor (Ton)</th>
+                      <th className="py-2 px-2 text-right bg-blue-50/70 text-blue-900">Total Arus (Ton)</th>
+                      <th className="py-2 px-2">Terminal Pengampu</th>
+                      <th className="py-2 px-2">Pelabuhan Utama</th>
+                      <th className="py-2 px-2.5">Bendera</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k6Data.map((row, idx) => (
+                      <tr key={row.negara} className="hover:bg-slate-50">
+                        <td className="py-1.5 px-2.5 text-slate-400 font-mono font-bold">{idx + 1}</td>
+                        <td className="py-1.5 px-2 font-bold text-slate-800">{row.negara}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.volumeBongkarTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.volumeMuatTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {row.totalTon.toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-1.5 px-2 text-slate-700 font-medium">{row.namaTerminal}</td>
+                        <td className="py-1.5 px-2 text-slate-600 truncate max-w-[120px]">{row.pelabuhanAsalTujuanTerbanyak}</td>
+                        <td className="py-1.5 px-2.5 text-slate-600">{row.benderaKapal}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}

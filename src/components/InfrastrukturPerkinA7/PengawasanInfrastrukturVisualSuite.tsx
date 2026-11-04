@@ -26,6 +26,7 @@ import {
   PENGAWASAN_INFRASTRUKTUR_MASTER_DATA,
   PaketPengawasanDetail,
 } from './pengawasanInfrastrukturVisualData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface PengawasanInfrastrukturVisualSuiteProps {
   onOpenFormulaModal?: (kpiId: string) => void;
@@ -35,6 +36,14 @@ export const PengawasanInfrastrukturVisualSuite: React.FC<
   PengawasanInfrastrukturVisualSuiteProps
 > = () => {
   const masterData = PENGAWASAN_INFRASTRUKTUR_MASTER_DATA;
+
+  // -------------------------------------------------------------
+  // Sheet Swap View Modes (Grafik vs Tabel Detail)
+  // -------------------------------------------------------------
+  const [k1ViewMode, setK1ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k2ViewMode, setK2ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k3ViewMode, setK3ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k4ViewMode, setK4ViewMode] = useState<'chart' | 'table'>('chart');
 
   // -------------------------------------------------------------
   // Filter States per Card
@@ -379,7 +388,7 @@ export const PengawasanInfrastrukturVisualSuite: React.FC<
                 </span>
               </div>
 
-              {/* Filters: Subdit, Bulan, Tahun */}
+              {/* Filters: Subdit, Bulan, Tahun & SheetSwap */}
               <div className="flex items-center gap-1.5 flex-wrap">
                 <select
                   aria-label="Filter Subdit Kartu 1"
@@ -419,113 +428,166 @@ export const PengawasanInfrastrukturVisualSuite: React.FC<
                     </option>
                   ))}
                 </select>
+
+                <SheetSwapToggle mode={k1ViewMode} onChange={setK1ViewMode} />
               </div>
             </div>
 
-            {/* List Progress Bar Horizontal (10 Paket Terendah) */}
-            <div className="space-y-2 pt-0.5">
-              {kartu1Data.paketList10.map((paket, idx) => {
-                const isHovered = hoveredPaketId1 === paket.id;
-                return (
-                  <div
-                    key={paket.id}
-                    className={`relative rounded-lg p-1.5 transition-all cursor-default border ${
-                      isHovered
-                        ? 'bg-blue-50/70 border-blue-200 shadow-2xs'
-                        : 'bg-slate-50/50 border-slate-100 hover:bg-slate-50'
-                    }`}
-                    onMouseEnter={() => setHoveredPaketId1(paket.id)}
-                    onMouseLeave={() => setHoveredPaketId1(null)}
-                  >
-                    <div className="flex items-center justify-between text-[11px] mb-1">
-                      <div className="flex items-center gap-1.5 truncate pr-2">
-                        <span className="font-mono text-[10px] text-slate-400 font-semibold w-4">
-                          {idx + 1}.
-                        </span>
-                        <span className="font-semibold text-slate-800 truncate" title={paket.namaPaket}>
-                          {paket.namaPaket}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          Renc: {paket.rencanaBulan}%
-                        </span>
-                        <span
-                          className={`font-mono font-bold text-xs ${
-                            paket.isAheadOrOnTrack ? 'text-emerald-700' : 'text-amber-700'
-                          }`}
-                        >
-                          {paket.realisasiBulan}%
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Progress Track */}
-                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden flex items-center">
-                      <div
-                        className={`h-full rounded-full transition-all duration-500 ${
-                          paket.isAheadOrOnTrack ? 'bg-emerald-500' : 'bg-amber-500'
-                        }`}
-                        style={{ width: `${Math.min(100, Math.max(0, paket.realisasiBulan))}%` }}
-                      ></div>
-                    </div>
-
-                    {/* Tooltip Hover Overlay */}
-                    {isHovered && (
-                      <div className="absolute left-6 right-6 -top-24 z-30 bg-slate-900/95 text-white text-[10.5px] p-2.5 rounded-lg shadow-xl backdrop-blur-xs border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
-                        <p className="font-bold text-blue-300 pb-1 border-b border-slate-800">
-                          {paket.kode} - {paket.namaPaket}
-                        </p>
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1 text-[10px]">
-                          <div>
-                            <span className="text-slate-400">Kategori: </span>
-                            <span className="font-semibold text-slate-200">{paket.kategoriPekerjaan}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Volume: </span>
-                            <span className="font-semibold text-slate-200">{paket.volumePekerjaan}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Kontraktor: </span>
-                            <span className="text-slate-300 truncate">{paket.kontraktor}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Supervisi: </span>
-                            <span className="text-slate-300 truncate">{paket.supervisi}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Periode: </span>
-                            <span className="text-slate-300">
-                              {paket.tglMulai} s.d. {paket.tglSelesai}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Nilai Kontrak: </span>
-                            <span className="text-amber-300 font-semibold font-mono">
-                              {paket.nilaiKontrakDisplay}
-                            </span>
-                          </div>
-                          <div className="col-span-2 pt-0.5 border-t border-slate-800/80 flex justify-between">
-                            <span>
-                              Status:{' '}
-                              <span
-                                className={
-                                  paket.isAheadOrOnTrack ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'
-                                }
-                              >
-                                {paket.isAheadOrOnTrack ? 'On Track / Ahead' : 'Terlambat'} (Deviasi:{' '}
-                                {paket.deviasiBulan > 0 ? `+${paket.deviasiBulan.toFixed(1)}` : paket.deviasiBulan.toFixed(1)}%)
-                              </span>
-                            </span>
-                            <span className="text-slate-400">Kendala: {paket.kendalaBulan}</span>
-                          </div>
+            {/* List Progress Bar Horizontal (10 Paket Terendah) ATAU Tabel Detail */}
+            {k1ViewMode === 'chart' ? (
+              <div className="space-y-2 pt-0.5">
+                {kartu1Data.paketList10.map((paket, idx) => {
+                  const isHovered = hoveredPaketId1 === paket.id;
+                  return (
+                    <div
+                      key={paket.id}
+                      className={`relative rounded-lg p-1.5 transition-all cursor-default border ${
+                        isHovered
+                          ? 'bg-blue-50/70 border-blue-200 shadow-2xs'
+                          : 'bg-slate-50/50 border-slate-100 hover:bg-slate-50'
+                      }`}
+                      onMouseEnter={() => setHoveredPaketId1(paket.id)}
+                      onMouseLeave={() => setHoveredPaketId1(null)}
+                    >
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <div className="flex items-center gap-1.5 truncate pr-2">
+                          <span className="font-mono text-[10px] text-slate-400 font-semibold w-4">
+                            {idx + 1}.
+                          </span>
+                          <span className="font-semibold text-slate-800 truncate" title={paket.namaPaket}>
+                            {paket.namaPaket}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            Renc: {paket.rencanaBulan}%
+                          </span>
+                          <span
+                            className={`font-mono font-bold text-xs ${
+                              paket.isAheadOrOnTrack ? 'text-emerald-700' : 'text-amber-700'
+                            }`}
+                          >
+                            {paket.realisasiBulan}%
+                          </span>
                         </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+
+                      {/* Progress Track */}
+                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden flex items-center">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            paket.isAheadOrOnTrack ? 'bg-emerald-500' : 'bg-amber-500'
+                          }`}
+                          style={{ width: `${Math.min(100, Math.max(0, paket.realisasiBulan))}%` }}
+                        ></div>
+                      </div>
+
+                      {/* Tooltip Hover Overlay */}
+                      {isHovered && (
+                        <div className="absolute left-6 right-6 -top-24 z-30 bg-slate-900/95 text-white text-[10.5px] p-2.5 rounded-lg shadow-xl backdrop-blur-xs border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+                          <p className="font-bold text-blue-300 pb-1 border-b border-slate-800">
+                            {paket.kode} - {paket.namaPaket}
+                          </p>
+                          <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1 text-[10px]">
+                            <div>
+                              <span className="text-slate-400">Kategori: </span>
+                              <span className="font-semibold text-slate-200">{paket.kategoriPekerjaan}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400">Volume: </span>
+                              <span className="font-semibold text-slate-200">{paket.volumePekerjaan}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400">Kontraktor: </span>
+                              <span className="text-slate-300 truncate">{paket.kontraktor}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400">Supervisi: </span>
+                              <span className="text-slate-300 truncate">{paket.supervisi}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400">Periode: </span>
+                              <span className="text-slate-300">
+                                {paket.tglMulai} s.d. {paket.tglSelesai}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400">Nilai Kontrak: </span>
+                              <span className="text-amber-300 font-semibold font-mono">
+                                {paket.nilaiKontrakDisplay}
+                              </span>
+                            </div>
+                            <div className="col-span-2 pt-0.5 border-t border-slate-800/80 flex justify-between">
+                              <span>
+                                Status:{' '}
+                                <span
+                                  className={
+                                    paket.isAheadOrOnTrack ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'
+                                  }
+                                >
+                                  {paket.isAheadOrOnTrack ? 'On Track / Ahead' : 'Terlambat'} (Deviasi:{' '}
+                                  {paket.deviasiBulan > 0 ? `+${paket.deviasiBulan.toFixed(1)}` : paket.deviasiBulan.toFixed(1)}%)
+                                </span>
+                              </span>
+                              <span className="text-slate-400">Kendala: {paket.kendalaBulan}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex-1 w-full min-h-[300px] max-h-[360px] overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">No</th>
+                      <th className="py-1.5 px-2">Kode</th>
+                      <th className="py-1.5 px-2">Nama Paket</th>
+                      <th className="py-1.5 px-2">Subdit</th>
+                      <th className="py-1.5 px-2">Kontraktor</th>
+                      <th className="py-1.5 px-2 text-right">Rencana</th>
+                      <th className="py-1.5 px-2 text-right">Realisasi</th>
+                      <th className="py-1.5 px-2 text-right">Deviasi</th>
+                      <th className="py-1.5 px-2 text-center">Status</th>
+                      <th className="py-1.5 px-2">Kendala</th>
+                      <th className="py-1.5 px-2 text-right font-black text-slate-900">Nilai Kontrak</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {kartu1Data.paketList10.map((paket, idx) => (
+                      <tr key={paket.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-slate-400 font-bold">{idx + 1}</td>
+                        <td className="py-1.5 px-2 font-bold text-slate-800 whitespace-nowrap">{paket.kode}</td>
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-900 max-w-[180px] truncate" title={paket.namaPaket}>
+                          {paket.namaPaket}
+                        </td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 whitespace-nowrap">{paket.subdit.replace('Subdit ', '')}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 max-w-[130px] truncate" title={paket.kontraktor}>{paket.kontraktor}</td>
+                        <td className="py-1.5 px-2 text-right text-slate-600">{paket.rencanaBulan}%</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{paket.realisasiBulan}%</td>
+                        <td className={`py-1.5 px-2 text-right font-bold ${paket.isAheadOrOnTrack ? 'text-emerald-700' : 'text-amber-700'}`}>
+                          {paket.deviasiBulan > 0 ? `+${paket.deviasiBulan.toFixed(1)}` : paket.deviasiBulan.toFixed(1)}%
+                        </td>
+                        <td className="py-1.5 px-2 text-center font-sans">
+                          <span className={`px-1.5 py-0.5 rounded text-[9.5px] font-bold ${
+                            paket.isAheadOrOnTrack ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                          }`}>
+                            {paket.isAheadOrOnTrack ? 'On Track' : 'Terlambat'}
+                          </span>
+                        </td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 max-w-[140px] truncate" title={paket.kendalaBulan}>
+                          {paket.kendalaBulan}
+                        </td>
+                        <td className="py-1.5 px-2 text-right text-amber-700 font-bold whitespace-nowrap">{paket.nilaiKontrakDisplay}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Card 1 */}
@@ -631,108 +693,163 @@ export const PengawasanInfrastrukturVisualSuite: React.FC<
                     </option>
                   ))}
                 </select>
+
+                <SheetSwapToggle mode={k2ViewMode} onChange={setK2ViewMode} />
               </div>
             </div>
 
-            {/* Line Chart Kurva S dengan Area Defisit */}
-            <div className="h-68 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart
-                  data={kartu2Data.curveData}
-                  margin={{ top: 12, right: 15, left: -15, bottom: 5 }}
-                >
-                  <defs>
-                    <linearGradient id="deficitGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.35} />
-                      <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.08} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis
-                    dataKey="bulanKey"
-                    tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }}
-                  />
-                  <YAxis
-                    domain={[0, 100]}
-                    tick={{ fontSize: 9.5, fill: '#64748B' }}
-                    tickFormatter={(v) => `${v}%`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        const cur = payload[0].payload;
-                        const rnc = cur.rencana;
-                        const rls = cur.realisasi;
-                        const dev =
-                          rls !== null && rls !== undefined ? (rls - rnc).toFixed(1) : null;
-                        return (
-                          <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1">
-                            <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                              Bulan {cur.bulanFull}
-                            </p>
-                            <div className="flex justify-between gap-4 text-slate-600">
-                              <span>Rencana Kumulatif:</span>
-                              <span className="font-mono font-bold text-slate-800">{rnc}%</span>
-                            </div>
-                            <div className="flex justify-between gap-4 text-blue-600">
-                              <span>Realisasi Lapangan:</span>
-                              <span className="font-mono font-bold">
-                                {rls !== null ? `${rls}%` : 'Proyeksi'}
-                              </span>
-                            </div>
-                            {dev !== null && (
-                              <div
-                                className={`flex justify-between gap-4 font-semibold pt-1 border-t border-slate-100 ${
-                                  Number(dev) >= 0 ? 'text-emerald-600' : 'text-amber-600'
-                                }`}
-                              >
-                                <span>Deviasi:</span>
-                                <span className="font-mono">
-                                  {Number(dev) > 0 ? `+${dev}` : dev}%
-                                  {Number(dev) < 0 ? ' (Tertinggal)' : ' (Ahead/On Track)'}
+            {/* Line Chart Kurva S dengan Area Defisit ATAU Tabel Detail */}
+            {k2ViewMode === 'chart' ? (
+              <div className="h-68 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart
+                    data={kartu2Data.curveData}
+                    margin={{ top: 12, right: 15, left: -15, bottom: 5 }}
+                  >
+                    <defs>
+                      <linearGradient id="deficitGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.35} />
+                        <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.08} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                    <XAxis
+                      dataKey="bulanKey"
+                      tick={{ fontSize: 10, fill: '#334155', fontWeight: 500 }}
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      tick={{ fontSize: 9.5, fill: '#64748B' }}
+                      tickFormatter={(v) => `${v}%`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const cur = payload[0].payload;
+                          const rnc = cur.rencana;
+                          const rls = cur.realisasi;
+                          const dev =
+                            rls !== null && rls !== undefined ? (rls - rnc).toFixed(1) : null;
+                          return (
+                            <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1">
+                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
+                                Bulan {cur.bulanFull}
+                              </p>
+                              <div className="flex justify-between gap-4 text-slate-600">
+                                <span>Rencana Kumulatif:</span>
+                                <span className="font-mono font-bold text-slate-800">{rnc}%</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-blue-600">
+                                <span>Realisasi Lapangan:</span>
+                                <span className="font-mono font-bold">
+                                  {rls !== null ? `${rls}%` : 'Proyeksi'}
                                 </span>
                               </div>
+                              {dev !== null && (
+                                <div
+                                  className={`flex justify-between gap-4 font-semibold pt-1 border-t border-slate-100 ${
+                                    Number(dev) >= 0 ? 'text-emerald-600' : 'text-amber-600'
+                                  }`}
+                                >
+                                  <span>Deviasi:</span>
+                                  <span className="font-mono">
+                                    {Number(dev) > 0 ? `+${dev}` : dev}%
+                                    {Number(dev) < 0 ? ' (Tertinggal)' : ' (Ahead/On Track)'}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+
+                    {/* Shading Area Defisit: saat realisasi < rencana */}
+                    <Area
+                      type="monotone"
+                      dataKey="gapRange"
+                      fill="url(#deficitGradient)"
+                      stroke="none"
+                      connectNulls={false}
+                    />
+
+                    {/* Garis Rencana */}
+                    <Line
+                      type="monotone"
+                      dataKey="rencana"
+                      name="Rencana (%)"
+                      stroke="#94A3B8"
+                      strokeWidth={2}
+                      strokeDasharray="4 4"
+                      dot={{ r: 2.5, fill: '#94A3B8' }}
+                    />
+
+                    {/* Garis Realisasi */}
+                    <Line
+                      type="monotone"
+                      dataKey="realisasi"
+                      name="Realisasi (%)"
+                      stroke="#2563EB"
+                      strokeWidth={2.5}
+                      dot={{ r: 3.5, fill: '#2563EB' }}
+                      connectNulls={false}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-68 w-full overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Bulan</th>
+                      <th className="py-1.5 px-2 text-right">Rencana Kumulatif</th>
+                      <th className="py-1.5 px-2 text-right">Realisasi Lapangan</th>
+                      <th className="py-1.5 px-2 text-right">Deviasi</th>
+                      <th className="py-1.5 px-2 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {kartu2Data.curveData.map((row) => {
+                      const rnc = row.rencana;
+                      const rls = row.realisasi;
+                      const dev = rls !== null && rls !== undefined ? Number((rls - rnc).toFixed(1)) : null;
+                      const isAhead = dev !== null && dev >= 0;
+                      return (
+                        <tr key={row.bulanKey} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-1.5 px-2 font-sans font-medium text-slate-900">{row.bulanFull}</td>
+                          <td className="py-1.5 px-2 text-right text-slate-600">{rnc}%</td>
+                          <td className="py-1.5 px-2 text-right font-bold text-blue-600">
+                            {rls !== null ? `${rls}%` : '-'}
+                          </td>
+                          <td className={`py-1.5 px-2 text-right font-bold ${
+                            dev === null ? 'text-slate-400' : isAhead ? 'text-emerald-700' : 'text-amber-700'
+                          }`}>
+                            {dev !== null ? (dev > 0 ? `+${dev}%` : `${dev}%`) : '-'}
+                          </td>
+                          <td className="py-1.5 px-2 text-center font-sans">
+                            {rls === null ? (
+                              <span className="px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-slate-100 text-slate-600">
+                                Proyeksi
+                              </span>
+                            ) : isAhead ? (
+                              <span className="px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-100 text-emerald-800">
+                                On Track
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-100 text-amber-800">
+                                Tertinggal
+                              </span>
                             )}
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-
-                  {/* Shading Area Defisit: saat realisasi < rencana */}
-                  <Area
-                    type="monotone"
-                    dataKey="gapRange"
-                    fill="url(#deficitGradient)"
-                    stroke="none"
-                    connectNulls={false}
-                  />
-
-                  {/* Garis Rencana */}
-                  <Line
-                    type="monotone"
-                    dataKey="rencana"
-                    name="Rencana (%)"
-                    stroke="#94A3B8"
-                    strokeWidth={2}
-                    strokeDasharray="4 4"
-                    dot={{ r: 2.5, fill: '#94A3B8' }}
-                  />
-
-                  {/* Garis Realisasi */}
-                  <Line
-                    type="monotone"
-                    dataKey="realisasi"
-                    name="Realisasi (%)"
-                    stroke="#2563EB"
-                    strokeWidth={2.5}
-                    dot={{ r: 3.5, fill: '#2563EB' }}
-                    connectNulls={false}
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Card 2 */}
@@ -821,68 +938,99 @@ export const PengawasanInfrastrukturVisualSuite: React.FC<
                     </option>
                   ))}
                 </select>
+
+                <SheetSwapToggle mode={k3ViewMode} onChange={setK3ViewMode} />
               </div>
             </div>
 
-            {/* Horizontal Bar Chart (Oranye, Urut Terbanyak) */}
-            <div className="h-68 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={kartu3Data.chartData}
-                  layout="vertical"
-                  margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 9.5, fill: '#64748B' }}
-                    allowDecimals={false}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="kategori"
-                    width={130}
-                    tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const item = payload[0].payload as (typeof kartu3Data.chartData)[0];
-                        return (
-                          <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1.5 max-w-xs">
-                            <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                              {item.kategori}
-                            </p>
-                            <div className="flex justify-between text-slate-700 text-[11px]">
-                              <span>Jumlah Paket Terdampak:</span>
-                              <span className="font-mono font-bold text-amber-600">
-                                {item.jumlahPaket} Paket
-                              </span>
-                            </div>
-                            <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100 space-y-0.5">
-                              <p>
-                                <span className="font-semibold text-slate-700">Subdit Terkait: </span>
-                                {item.subditTerkait}
+            {/* Horizontal Bar Chart (Oranye, Urut Terbanyak) ATAU Tabel Detail */}
+            {k3ViewMode === 'chart' ? (
+              <div className="h-68 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={kartu3Data.chartData}
+                    layout="vertical"
+                    margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 9.5, fill: '#64748B' }}
+                      allowDecimals={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="kategori"
+                      width={130}
+                      tick={{ fontSize: 9.5, fill: '#334155', fontWeight: 600 }}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const item = payload[0].payload as (typeof kartu3Data.chartData)[0];
+                          return (
+                            <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1.5 max-w-xs">
+                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
+                                {item.kategori}
                               </p>
-                              <p>
-                                <span className="font-semibold text-slate-700">Contoh Paket: </span>
-                                {item.contohPaket}
-                              </p>
+                              <div className="flex justify-between text-slate-700 text-[11px]">
+                                <span>Jumlah Paket Terdampak:</span>
+                                <span className="font-mono font-bold text-amber-600">
+                                  {item.jumlahPaket} Paket
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100 space-y-0.5">
+                                <p>
+                                  <span className="font-semibold text-slate-700">Subdit Terkait: </span>
+                                  {item.subditTerkait}
+                                </p>
+                                <p>
+                                  <span className="font-semibold text-slate-700">Contoh Paket: </span>
+                                  {item.contohPaket}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar dataKey="jumlahPaket" name="Jumlah Paket" fill="#F59E0B" radius={[0, 4, 4, 0]}>
-                    {kartu3Data.chartData.map((_, index) => (
-                      <Cell key={`cell-k3-${index}`} fill={index === 0 ? '#EA580C' : '#F59E0B'} />
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="jumlahPaket" name="Jumlah Paket" fill="#F59E0B" radius={[0, 4, 4, 0]}>
+                      {kartu3Data.chartData.map((_, index) => (
+                        <Cell key={`cell-k3-${index}`} fill={index === 0 ? '#EA580C' : '#F59E0B'} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-68 w-full overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">No</th>
+                      <th className="py-1.5 px-2">Kategori Kendala</th>
+                      <th className="py-1.5 px-2 text-right">Jumlah Paket Terdampak</th>
+                      <th className="py-1.5 px-2">Subdit Terkait</th>
+                      <th className="py-1.5 px-2">Contoh Paket</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {kartu3Data.chartData.map((item, idx) => (
+                      <tr key={item.kategori} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-slate-400 font-bold">{idx + 1}</td>
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900">{item.kategori}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-amber-600">{item.jumlahPaket} Paket</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{item.subditTerkait}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 max-w-[200px] truncate" title={item.contohPaket}>
+                          {item.contohPaket}
+                        </td>
+                      </tr>
                     ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Card 3 */}
@@ -968,86 +1116,125 @@ export const PengawasanInfrastrukturVisualSuite: React.FC<
                     </option>
                   ))}
                 </select>
+
+                <SheetSwapToggle mode={k4ViewMode} onChange={setK4ViewMode} />
               </div>
             </div>
 
-            {/* Stacked Horizontal Bar Chart */}
-            <div className="h-68 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={kartu4Data.chartData}
-                  layout="vertical"
-                  margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 9.5, fill: '#64748B' }}
-                    allowDecimals={false}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="supervisi"
-                    width={145}
-                    tick={{ fontSize: 9, fill: '#334155', fontWeight: 500 }}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const item = payload[0].payload as (typeof kartu4Data.chartData)[0];
-                        return (
-                          <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1.5 max-w-xs">
-                            <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
-                              {item.supervisi}
-                            </p>
-                            <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
-                              <span className="text-slate-500">Total Paket:</span>
-                              <span className="font-bold text-slate-800">{item.totalPaket} Paket</span>
-                              <span className="text-emerald-600">Sesuai Rencana:</span>
-                              <span className="font-bold text-emerald-700">{item.sesuaiRencana}</span>
-                              <span className="text-amber-600">Terlambat:</span>
-                              <span className="font-bold text-amber-700">{item.terlambat}</span>
-                              <span className="text-blue-600">Selesai:</span>
-                              <span className="font-bold text-blue-700">{item.selesai}</span>
-                              <span className="text-slate-500">Rata-rata Progres:</span>
-                              <span className="font-bold font-mono text-slate-800">{item.rataProgres}%</span>
-                              <span className="text-slate-500">Total Nilai Kontrak:</span>
-                              <span className="font-bold font-mono text-amber-600">
-                                {item.nilaiKontrakDisplay}
-                              </span>
+            {/* Stacked Horizontal Bar Chart ATAU Tabel Detail */}
+            {k4ViewMode === 'chart' ? (
+              <div className="h-68 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={kartu4Data.chartData}
+                    layout="vertical"
+                    margin={{ top: 8, right: 25, left: 15, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} stroke="#E2E8F0" />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 9.5, fill: '#64748B' }}
+                      allowDecimals={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="supervisi"
+                      width={145}
+                      tick={{ fontSize: 9, fill: '#334155', fontWeight: 500 }}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const item = payload[0].payload as (typeof kartu4Data.chartData)[0];
+                          return (
+                            <div className="bg-white border border-slate-200 rounded-lg shadow-lg p-2.5 text-xs space-y-1.5 max-w-xs">
+                              <p className="font-bold text-slate-900 border-b border-slate-100 pb-1">
+                                {item.supervisi}
+                              </p>
+                              <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
+                                <span className="text-slate-500">Total Paket:</span>
+                                <span className="font-bold text-slate-800">{item.totalPaket} Paket</span>
+                                <span className="text-emerald-600">Sesuai Rencana:</span>
+                                <span className="font-bold text-emerald-700">{item.sesuaiRencana}</span>
+                                <span className="text-amber-600">Terlambat:</span>
+                                <span className="font-bold text-amber-700">{item.terlambat}</span>
+                                <span className="text-blue-600">Selesai:</span>
+                                <span className="font-bold text-blue-700">{item.selesai}</span>
+                                <span className="text-slate-500">Rata-rata Progres:</span>
+                                <span className="font-bold font-mono text-slate-800">{item.rataProgres}%</span>
+                                <span className="text-slate-500">Total Nilai Kontrak:</span>
+                                <span className="font-bold font-mono text-amber-600">
+                                  {item.nilaiKontrakDisplay}
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+                                <span className="font-semibold text-slate-700">Volume: </span>
+                                {item.volumeDisplay}
+                              </div>
                             </div>
-                            <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
-                              <span className="font-semibold text-slate-700">Volume: </span>
-                              {item.volumeDisplay}
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar
-                    dataKey="sesuaiRencana"
-                    name="Sesuai Rencana"
-                    stackId="supervisiStack"
-                    fill="#10B981"
-                  />
-                  <Bar
-                    dataKey="terlambat"
-                    name="Terlambat"
-                    stackId="supervisiStack"
-                    fill="#F59E0B"
-                  />
-                  <Bar
-                    dataKey="selesai"
-                    name="Selesai"
-                    stackId="supervisiStack"
-                    fill="#2563EB"
-                    radius={[0, 4, 4, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar
+                      dataKey="sesuaiRencana"
+                      name="Sesuai Rencana"
+                      stackId="supervisiStack"
+                      fill="#10B981"
+                    />
+                    <Bar
+                      dataKey="terlambat"
+                      name="Terlambat"
+                      stackId="supervisiStack"
+                      fill="#F59E0B"
+                    />
+                    <Bar
+                      dataKey="selesai"
+                      name="Selesai"
+                      stackId="supervisiStack"
+                      fill="#2563EB"
+                      radius={[0, 4, 4, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-68 w-full overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                    <tr>
+                      <th className="py-1.5 px-2">Supervisi / Konsultan</th>
+                      <th className="py-1.5 px-2 text-right">Total Paket</th>
+                      <th className="py-1.5 px-2 text-right text-emerald-700">Sesuai</th>
+                      <th className="py-1.5 px-2 text-right text-amber-700">Terlambat</th>
+                      <th className="py-1.5 px-2 text-right text-blue-700">Selesai</th>
+                      <th className="py-1.5 px-2 text-right">Rata Progres</th>
+                      <th className="py-1.5 px-2 text-right font-black text-slate-900">Nilai Kontrak</th>
+                      <th className="py-1.5 px-2">Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {kartu4Data.chartData.map((item) => (
+                      <tr key={item.supervisi} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-semibold text-slate-900 max-w-[170px] truncate" title={item.supervisi}>
+                          {item.supervisi}
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-800">{item.totalPaket}</td>
+                        <td className="py-1.5 px-2 text-right text-emerald-600 font-bold">{item.sesuaiRencana}</td>
+                        <td className="py-1.5 px-2 text-right text-amber-600 font-bold">{item.terlambat}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-600 font-bold">{item.selesai}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{item.rataProgres}%</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-amber-700 whitespace-nowrap">{item.nilaiKontrakDisplay}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600 max-w-[180px] truncate" title={item.volumeDisplay}>
+                          {item.volumeDisplay}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Card 4 */}

@@ -19,6 +19,7 @@ import {
   PaketKategoriPekerjaanItem,
   PaketBswItem,
 } from './pembangunanInfrastrukturVisualData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 interface PembangunanInfrastrukturVisualSuiteProps {
   onOpenFormulaModal?: (kpiId: string) => void;
@@ -37,6 +38,16 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
   PembangunanInfrastrukturVisualSuiteProps
 > = () => {
   const masterData = PEMBANGUNAN_INFRASTRUKTUR_MASTER_DATA;
+
+  // =========================================================================
+  // SHEET SWAP VIEW MODES (GRAFIK / TABEL DETAIL)
+  // =========================================================================
+  const [k1ViewMode, setK1ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k2ViewMode, setK2ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k3ViewMode, setK3ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k4ViewMode, setK4ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k5ViewMode, setK5ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k6ViewMode, setK6ViewMode] = useState<'chart' | 'table'>('table');
 
   // =========================================================================
   // STATE FILTERS
@@ -272,89 +283,128 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
               </span>
             </div>
 
-            {/* Filter Bar: Tahun & Jenis Utilitas */}
-            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
-              <select
-                aria-label="Filter Tahun ROW Utilitas"
-                value={k1Tahun}
-                onChange={(e) => setK1Tahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                {masterData.metadata.tahunList.map((th) => (
-                  <option key={th} value={th}>
-                    Tahun {th}
-                  </option>
-                ))}
-              </select>
+            {/* Filter Bar: Tahun & Jenis Utilitas + SheetSwapToggle */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1 text-[11px]">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Tahun ROW Utilitas"
+                  value={k1Tahun}
+                  onChange={(e) => setK1Tahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.metadata.tahunList.map((th) => (
+                    <option key={th} value={th}>
+                      Tahun {th}
+                    </option>
+                  ))}
+                </select>
 
-              <select
-                aria-label="Filter Jenis Utilitas"
-                value={k1JenisUtilitas}
-                onChange={(e) => setK1JenisUtilitas(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                <option value="Semua Utilitas">Semua Utilitas</option>
-                <option value="Fiber Optik">Fiber Optik</option>
-                <option value="Listrik">Listrik</option>
-                <option value="Air">Air Bersih</option>
-                <option value="Gas">Gas Bumi</option>
-                <option value="Telekomunikasi">Telekomunikasi</option>
-              </select>
+                <select
+                  aria-label="Filter Jenis Utilitas"
+                  value={k1JenisUtilitas}
+                  onChange={(e) => setK1JenisUtilitas(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  <option value="Semua Utilitas">Semua Utilitas</option>
+                  <option value="Fiber Optik">Fiber Optik</option>
+                  <option value="Listrik">Listrik</option>
+                  <option value="Air">Air Bersih</option>
+                  <option value="Gas">Gas Bumi</option>
+                  <option value="Telekomunikasi">Telekomunikasi</option>
+                </select>
+              </div>
+
+              <SheetSwapToggle mode={k1ViewMode} onChange={setK1ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Stacked Column Bulanan */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={k1Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="bulan"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      fiberOptik: 'Fiber Optik',
-                      listrik: 'Jaringan Listrik',
-                      air: 'Pipa Air Bersih',
-                      gas: 'Pipa Gas Bumi',
-                      telekomunikasi: 'Telekomunikasi Seluler',
-                    };
-                    return [`${num} Izin`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `Bulan ${label} • Total: ${p.totalIzin} Izin (${formatNumberId(p.totalGalianMeter)} m Galian)\nLokasi: ${p.lokasiTerbanyak}`;
-                    }
-                    return `Bulan ${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="fiberOptik" name="fiberOptik" stackId="utilitas" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={15} />
-                <Bar dataKey="listrik" name="listrik" stackId="utilitas" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={15} />
-                <Bar dataKey="air" name="air" stackId="utilitas" fill="#0284c7" radius={[0, 0, 0, 0]} barSize={15} />
-                <Bar dataKey="gas" name="gas" stackId="utilitas" fill="#0d9488" radius={[0, 0, 0, 0]} barSize={15} />
-                <Bar dataKey="telekomunikasi" name="telekomunikasi" stackId="utilitas" fill="#64748b" radius={[2, 2, 0, 0]} barSize={15} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Section: Chart or Detail Table */}
+          {k1ViewMode === 'chart' ? (
+            <div className="flex-1 w-full min-h-0 my-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={k1Data} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="bulan"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        fiberOptik: 'Fiber Optik',
+                        listrik: 'Jaringan Listrik',
+                        air: 'Pipa Air Bersih',
+                        gas: 'Pipa Gas Bumi',
+                        telekomunikasi: 'Telekomunikasi Seluler',
+                      };
+                      return [`${num} Izin`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `Bulan ${label} • Total: ${p.totalIzin} Izin (${formatNumberId(p.totalGalianMeter)} m Galian)\nLokasi: ${p.lokasiTerbanyak}`;
+                      }
+                      return `Bulan ${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="fiberOptik" name="fiberOptik" stackId="utilitas" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={15} />
+                  <Bar dataKey="listrik" name="listrik" stackId="utilitas" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={15} />
+                  <Bar dataKey="air" name="air" stackId="utilitas" fill="#0284c7" radius={[0, 0, 0, 0]} barSize={15} />
+                  <Bar dataKey="gas" name="gas" stackId="utilitas" fill="#0d9488" radius={[0, 0, 0, 0]} barSize={15} />
+                  <Bar dataKey="telekomunikasi" name="telekomunikasi" stackId="utilitas" fill="#64748b" radius={[2, 2, 0, 0]} barSize={15} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-left border-collapse text-[10.5px]">
+                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th className="py-1.5 px-2">Bulan ({k1Tahun})</th>
+                    <th className="py-1.5 px-2 text-right">Fiber Optik</th>
+                    <th className="py-1.5 px-2 text-right">Listrik</th>
+                    <th className="py-1.5 px-2 text-right">Air</th>
+                    <th className="py-1.5 px-2 text-right">Gas</th>
+                    <th className="py-1.5 px-2 text-right">Telko</th>
+                    <th className="py-1.5 px-2 text-right font-black text-slate-900">Total Izin</th>
+                    <th className="py-1.5 px-2 text-right">Galian (m)</th>
+                    <th className="py-1.5 px-2">Lokasi Terbanyak</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {k1Data.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.bulan}</td>
+                      <td className="py-1.5 px-2 text-right text-blue-600 font-semibold">{row.fiberOptik}</td>
+                      <td className="py-1.5 px-2 text-right text-sky-600 font-semibold">{row.listrik}</td>
+                      <td className="py-1.5 px-2 text-right text-cyan-600">{row.air}</td>
+                      <td className="py-1.5 px-2 text-right text-teal-600">{row.gas}</td>
+                      <td className="py-1.5 px-2 text-right text-slate-600">{row.telekomunikasi}</td>
+                      <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.totalIzin}</td>
+                      <td className="py-1.5 px-2 text-right text-slate-700">{formatNumberId(row.totalGalianMeter)}</td>
+                      <td className="py-1.5 px-2 font-sans text-slate-600">{row.lokasiTerbanyak}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer Kecil */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
@@ -401,91 +451,134 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
               </span>
             </div>
 
-            {/* Filter Bar: Tahun & Bulan */}
-            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
-              <select
-                aria-label="Filter Tahun Galian"
-                value={k2Tahun}
-                onChange={(e) => setK2Tahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                {masterData.metadata.tahunList.slice(0, 2).map((th) => (
-                  <option key={th} value={th}>
-                    Tahun {th}
-                  </option>
-                ))}
-              </select>
+            {/* Filter Bar: Tahun & Bulan + SheetSwapToggle */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1 text-[11px]">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Tahun Galian"
+                  value={k2Tahun}
+                  onChange={(e) => setK2Tahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.metadata.tahunList.slice(0, 2).map((th) => (
+                    <option key={th} value={th}>
+                      Tahun {th}
+                    </option>
+                  ))}
+                </select>
 
-              <select
-                aria-label="Filter Bulan Galian"
-                value={k2Bulan}
-                onChange={(e) => setK2Bulan(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                <option value="Semua">Semua Bulan (Tahunan)</option>
-                <option value="Januari">Januari</option>
-                <option value="Februari">Februari</option>
-              </select>
+                <select
+                  aria-label="Filter Bulan Galian"
+                  value={k2Bulan}
+                  onChange={(e) => setK2Bulan(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  <option value="Semua">Semua Bulan (Tahunan)</option>
+                  <option value="Januari">Januari</option>
+                  <option value="Februari">Februari</option>
+                </select>
+              </div>
+
+              <SheetSwapToggle mode={k2ViewMode} onChange={setK2ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Clustered Horizontal Bar */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={k2Data}
-                margin={{ top: 5, right: 25, left: 125, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}m`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="jenisUtilitas"
-                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={120}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    return [
-                      `${formatNumberId(num)} meter`,
-                      name === 'galianTerbukaM' ? 'Galian Terbuka' : 'Galian Crossing',
-                    ];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      const warning =
-                        p.izinAkanBerakhir90Hari > 0
-                          ? `\n⚠️ PERINGATAN: ${p.izinAkanBerakhir90Hari} izin akan berakhir dalam 90 hari!`
-                          : '';
-                      return `${label} • Total: ${formatNumberId(p.totalGalianM)} m\nLokasi Terbanyak: ${p.lokasiDominan}${warning}`;
-                    }
-                    return `${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="galianTerbukaM" name="galianTerbukaM" fill="#2563eb" radius={[0, 2, 2, 0]} barSize={10} />
-                <Bar dataKey="galianCrossingM" name="galianCrossingM" fill="#94a3b8" radius={[0, 2, 2, 0]} barSize={10} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Section: Chart or Detail Table */}
+          {k2ViewMode === 'chart' ? (
+            <div className="flex-1 w-full min-h-0 my-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={k2Data}
+                  margin={{ top: 5, right: 25, left: 125, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}m`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="jenisUtilitas"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={120}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      return [
+                        `${formatNumberId(num)} meter`,
+                        name === 'galianTerbukaM' ? 'Galian Terbuka' : 'Galian Crossing',
+                      ];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        const warning =
+                          p.izinAkanBerakhir90Hari > 0
+                            ? `\n⚠️ PERINGATAN: ${p.izinAkanBerakhir90Hari} izin akan berakhir dalam 90 hari!`
+                            : '';
+                        return `${label} • Total: ${formatNumberId(p.totalGalianM)} m\nLokasi Terbanyak: ${p.lokasiDominan}${warning}`;
+                      }
+                      return `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="galianTerbukaM" name="galianTerbukaM" fill="#2563eb" radius={[0, 2, 2, 0]} barSize={10} />
+                  <Bar dataKey="galianCrossingM" name="galianCrossingM" fill="#94a3b8" radius={[0, 2, 2, 0]} barSize={10} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-left border-collapse text-[10.5px]">
+                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th className="py-1.5 px-2">Jenis Utilitas</th>
+                    <th className="py-1.5 px-2 text-right">Galian Terbuka (m)</th>
+                    <th className="py-1.5 px-2 text-right">Crossing (m)</th>
+                    <th className="py-1.5 px-2 text-right font-black text-slate-900">Total (m)</th>
+                    <th className="py-1.5 px-2 text-right">Total (km)</th>
+                    <th className="py-1.5 px-2 text-center">Izin &lt;90 Hari</th>
+                    <th className="py-1.5 px-2">Lokasi Dominan</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {k2Data.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.jenisUtilitas}</td>
+                      <td className="py-1.5 px-2 text-right text-blue-600 font-semibold">{formatNumberId(row.galianTerbukaM)}</td>
+                      <td className="py-1.5 px-2 text-right text-slate-600">{formatNumberId(row.galianCrossingM)}</td>
+                      <td className="py-1.5 px-2 text-right font-bold text-slate-900">{formatNumberId(row.totalGalianM)}</td>
+                      <td className="py-1.5 px-2 text-right text-indigo-600 font-semibold">{(row.totalGalianM / 1000).toFixed(2)}</td>
+                      <td className="py-1.5 px-2 text-center">
+                        {row.izinAkanBerakhir90Hari > 0 ? (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-sans font-bold bg-amber-100 text-amber-800">
+                            {row.izinAkanBerakhir90Hari} izin
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 font-sans text-[10px]">-</span>
+                        )}
+                      </td>
+                      <td className="py-1.5 px-2 font-sans text-slate-600">{row.lokasiDominan}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer Kecil */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
@@ -540,8 +633,8 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
               </span>
             </div>
 
-            {/* Filter Bar: Tahun */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar: Tahun + SheetSwapToggle */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Tahun ROW Penghijauan"
                 value={k3Tahun}
@@ -554,60 +647,95 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
                   </option>
                 ))}
               </select>
+
+              <SheetSwapToggle mode={k3ViewMode} onChange={setK3ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Stacked Column Luas Penghijauan */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={k3Data} margin={{ top: 10, right: 15, left: -5, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis
-                  dataKey="bulan"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `${Math.round(val / 1000)}k m²`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      tamanM2: 'Penghijauan Taman',
-                      medianM2: 'Penghijauan Median Jalan',
-                      potGantungM2: 'Pot Gantung / Estetika',
-                      pohonPeneduhM2: 'Pohon Peneduh Jalan',
-                    };
-                    return [`${formatNumberId(num)} m²`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `Bulan ${label} • Total: ${formatNumberId(p.totalLuasM2)} m² (${p.jumlahIzin} Izin)\nLokasi Terbanyak: ${p.lokasiTerbanyak}`;
-                    }
-                    return `Bulan ${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="tamanM2" name="tamanM2" stackId="hijau" fill="#10b981" radius={[0, 0, 0, 0]} barSize={16} />
-                <Bar dataKey="medianM2" name="medianM2" stackId="hijau" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={16} />
-                <Bar dataKey="potGantungM2" name="potGantungM2" stackId="hijau" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={16} />
-                <Bar dataKey="pohonPeneduhM2" name="pohonPeneduhM2" stackId="hijau" fill="#059669" radius={[2, 2, 0, 0]} barSize={16} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Section: Chart or Detail Table */}
+          {k3ViewMode === 'chart' ? (
+            <div className="flex-1 w-full min-h-0 my-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={k3Data} margin={{ top: 10, right: 15, left: -5, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis
+                    dataKey="bulan"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `${Math.round(val / 1000)}k m²`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        tamanM2: 'Penghijauan Taman',
+                        medianM2: 'Penghijauan Median Jalan',
+                        potGantungM2: 'Pot Gantung / Estetika',
+                        pohonPeneduhM2: 'Pohon Peneduh Jalan',
+                      };
+                      return [`${formatNumberId(num)} m²`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `Bulan ${label} • Total: ${formatNumberId(p.totalLuasM2)} m² (${p.jumlahIzin} Izin)\nLokasi Terbanyak: ${p.lokasiTerbanyak}`;
+                      }
+                      return `Bulan ${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="tamanM2" name="tamanM2" stackId="hijau" fill="#10b981" radius={[0, 0, 0, 0]} barSize={16} />
+                  <Bar dataKey="medianM2" name="medianM2" stackId="hijau" fill="#2563eb" radius={[0, 0, 0, 0]} barSize={16} />
+                  <Bar dataKey="potGantungM2" name="potGantungM2" stackId="hijau" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={16} />
+                  <Bar dataKey="pohonPeneduhM2" name="pohonPeneduhM2" stackId="hijau" fill="#059669" radius={[2, 2, 0, 0]} barSize={16} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-left border-collapse text-[10.5px]">
+                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th className="py-1.5 px-2">Bulan ({k3Tahun})</th>
+                    <th className="py-1.5 px-2 text-right">Taman (m²)</th>
+                    <th className="py-1.5 px-2 text-right">Median (m²)</th>
+                    <th className="py-1.5 px-2 text-right">Pot Gantung</th>
+                    <th className="py-1.5 px-2 text-right">Peneduh (m²)</th>
+                    <th className="py-1.5 px-2 text-right font-black text-slate-900">Total Luas</th>
+                    <th className="py-1.5 px-2 text-center">Izin</th>
+                    <th className="py-1.5 px-2">Lokasi Terbanyak</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {k3Data.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.bulan}</td>
+                      <td className="py-1.5 px-2 text-right text-emerald-600 font-semibold">{formatNumberId(row.tamanM2)}</td>
+                      <td className="py-1.5 px-2 text-right text-blue-600 font-semibold">{formatNumberId(row.medianM2)}</td>
+                      <td className="py-1.5 px-2 text-right text-sky-600">{formatNumberId(row.potGantungM2)}</td>
+                      <td className="py-1.5 px-2 text-right text-teal-600">{formatNumberId(row.pohonPeneduhM2)}</td>
+                      <td className="py-1.5 px-2 text-right font-bold text-slate-900">{formatNumberId(row.totalLuasM2)}</td>
+                      <td className="py-1.5 px-2 text-center font-bold text-blue-700 font-sans">{row.jumlahIzin}</td>
+                      <td className="py-1.5 px-2 font-sans text-slate-600">{row.lokasiTerbanyak}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer Kecil */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
@@ -666,8 +794,8 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
               </span>
             </div>
 
-            {/* Filter Bar: Wilayah */}
-            <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+            {/* Filter Bar: Wilayah + SheetSwapToggle */}
+            <div className="flex items-center justify-between gap-1.5 mb-1 text-[11px]">
               <select
                 aria-label="Filter Wilayah Jalan"
                 value={k4Wilayah}
@@ -680,67 +808,107 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
                   </option>
                 ))}
               </select>
+
+              <SheetSwapToggle mode={k4ViewMode} onChange={setK4ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Stacked Bar Horizontal */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={k4Data}
-                margin={{ top: 5, right: 25, left: 110, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `${val} km`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="kelasJalan"
-                  tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={105}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      baikKm: 'Kondisi Baik',
-                      sedangKm: 'Kondisi Sedang',
-                      rusakRinganKm: 'Rusak Ringan',
-                      rusakBeratKm: 'Rusak Berat',
-                    };
-                    return [`${num.toFixed(1)} km`, map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `${label} • Total: ${p.totalPanjangKm.toFixed(1)} km\nLebar Rerata: ${p.lebarRataRataMeter} m\nPerkerasan: ${p.materialPerkerasan}`;
-                    }
-                    return `${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="baikKm" name="baikKm" stackId="jalan" fill="#10b981" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="sedangKm" name="sedangKm" stackId="jalan" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="rusakRinganKm" name="rusakRinganKm" stackId="jalan" fill="#f59e0b" radius={[0, 0, 0, 0]} barSize={18} />
-                <Bar dataKey="rusakBeratKm" name="rusakBeratKm" stackId="jalan" fill="#ef4444" radius={[0, 3, 3, 0]} barSize={18} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Section: Chart or Detail Table */}
+          {k4ViewMode === 'chart' ? (
+            <div className="flex-1 w-full min-h-0 my-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={k4Data}
+                  margin={{ top: 5, right: 25, left: 110, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `${val} km`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="kelasJalan"
+                    tick={{ fontSize: 9.5, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={105}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        baikKm: 'Kondisi Baik',
+                        sedangKm: 'Kondisi Sedang',
+                        rusakRinganKm: 'Rusak Ringan',
+                        rusakBeratKm: 'Rusak Berat',
+                      };
+                      return [`${num.toFixed(1)} km`, map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `${label} • Total: ${p.totalPanjangKm.toFixed(1)} km\nLebar Rerata: ${p.lebarRataRataMeter} m\nPerkerasan: ${p.materialPerkerasan}`;
+                      }
+                      return `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="baikKm" name="baikKm" stackId="jalan" fill="#10b981" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="sedangKm" name="sedangKm" stackId="jalan" fill="#3b82f6" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="rusakRinganKm" name="rusakRinganKm" stackId="jalan" fill="#f59e0b" radius={[0, 0, 0, 0]} barSize={18} />
+                  <Bar dataKey="rusakBeratKm" name="rusakBeratKm" stackId="jalan" fill="#ef4444" radius={[0, 3, 3, 0]} barSize={18} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-left border-collapse text-[10.5px]">
+                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th className="py-1.5 px-2">Kelas Jalan</th>
+                    <th className="py-1.5 px-2">Wilayah</th>
+                    <th className="py-1.5 px-2 text-right">Baik (km)</th>
+                    <th className="py-1.5 px-2 text-right">Sedang (km)</th>
+                    <th className="py-1.5 px-2 text-right">R. Ringan</th>
+                    <th className="py-1.5 px-2 text-right">R. Berat</th>
+                    <th className="py-1.5 px-2 text-right font-black text-slate-900">Total (km)</th>
+                    <th className="py-1.5 px-2 text-right">Mantap (%)</th>
+                    <th className="py-1.5 px-2">Perkerasan</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {k4Data.map((row, idx) => {
+                    const mantapPct = row.totalPanjangKm > 0 ? (((row.baikKm + row.sedangKm) / row.totalPanjangKm) * 100).toFixed(1) : '0';
+                    return (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.kelasJalan}</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{k4Wilayah}</td>
+                        <td className="py-1.5 px-2 text-right text-emerald-600 font-semibold">{row.baikKm.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-blue-600 font-semibold">{row.sedangKm.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-amber-600">{row.rusakRinganKm.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right text-rose-600">{row.rusakBeratKm.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-slate-900">{row.totalPanjangKm.toFixed(1)}</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-emerald-700">{mantapPct}%</td>
+                        <td className="py-1.5 px-2 font-sans text-slate-600">{row.materialPerkerasan}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer Kecil */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
@@ -791,92 +959,129 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
               </span>
             </div>
 
-            {/* Filter Bar: Tahun & Subdit */}
-            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
-              <select
-                aria-label="Filter Tahun Paket Infrastruktur"
-                value={k5Tahun}
-                onChange={(e) => setK5Tahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                {masterData.metadata.tahunList.slice(0, 2).map((th) => (
-                  <option key={th} value={th}>
-                    Tahun {th}
-                  </option>
-                ))}
-              </select>
+            {/* Filter Bar: Tahun & Subdit + SheetSwapToggle */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1 text-[11px]">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Tahun Paket Infrastruktur"
+                  value={k5Tahun}
+                  onChange={(e) => setK5Tahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.metadata.tahunList.slice(0, 2).map((th) => (
+                    <option key={th} value={th}>
+                      Tahun {th}
+                    </option>
+                  ))}
+                </select>
 
-              <select
-                aria-label="Filter Subdit Infrastruktur"
-                value={k5Subdit}
-                onChange={(e) => setK5Subdit(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                {masterData.metadata.subditList.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+                <select
+                  aria-label="Filter Subdit Infrastruktur"
+                  value={k5Subdit}
+                  onChange={(e) => setK5Subdit(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.metadata.subditList.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <SheetSwapToggle mode={k5ViewMode} onChange={setK5ViewMode} />
             </div>
           </div>
 
-          {/* Chart Section: Clustered Horizontal Bar */}
-          <div className="flex-1 w-full min-h-0 my-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={k5Data}
-                margin={{ top: 5, right: 25, left: 145, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
-                  tickFormatter={(val) => `Rp ${val}M`}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="kategoriPekerjaan"
-                  tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
-                  axisLine={{ stroke: '#E2E8F0' }}
-                  tickLine={false}
-                  width={140}
-                />
-                <Tooltip
-                  formatter={(val: any, name: any) => {
-                    const num = Number(val);
-                    const map: Record<string, string> = {
-                      nilaiPaguM: 'Nilai Pagu Anggaran',
-                      nilaiHpsM: 'Nilai HPS Tender',
-                      nilaiKontrakM: 'Nilai Kontrak Riil',
-                    };
-                    return [formatRupiahMiliar(num), map[name] || name];
-                  }}
-                  labelFormatter={(label, items) => {
-                    const p = items && items[0]?.payload;
-                    if (p) {
-                      return `${label} • ${p.jumlahPaket} Paket\nPekerjaan Utama: ${p.jenisPekerjaanUtama}\nEfisiensi Tender: ${p.efisiensiTenderPct}% hemat terhadap pagu`;
-                    }
-                    return `${label}`;
-                  }}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
-                    fontSize: '11px',
-                    fontFamily: 'monospace',
-                  }}
-                />
-                <Bar dataKey="nilaiPaguM" name="nilaiPaguM" fill="#94a3b8" radius={[0, 2, 2, 0]} barSize={9} />
-                <Bar dataKey="nilaiHpsM" name="nilaiHpsM" fill="#60a5fa" radius={[0, 2, 2, 0]} barSize={9} />
-                <Bar dataKey="nilaiKontrakM" name="nilaiKontrakM" fill="#2563eb" radius={[0, 2, 2, 0]} barSize={9} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Section: Chart or Detail Table */}
+          {k5ViewMode === 'chart' ? (
+            <div className="flex-1 w-full min-h-0 my-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={k5Data}
+                  margin={{ top: 5, right: 25, left: 145, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `Rp ${val}M`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="kategoriPekerjaan"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={140}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      const map: Record<string, string> = {
+                        nilaiPaguM: 'Nilai Pagu Anggaran',
+                        nilaiHpsM: 'Nilai HPS Tender',
+                        nilaiKontrakM: 'Nilai Kontrak Riil',
+                      };
+                      return [formatRupiahMiliar(num), map[name] || name];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `${label} • ${p.jumlahPaket} Paket\nPekerjaan Utama: ${p.jenisPekerjaanUtama}\nEfisiensi Tender: ${p.efisiensiTenderPct}% hemat terhadap pagu`;
+                      }
+                      return `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar dataKey="nilaiPaguM" name="nilaiPaguM" fill="#94a3b8" radius={[0, 2, 2, 0]} barSize={9} />
+                  <Bar dataKey="nilaiHpsM" name="nilaiHpsM" fill="#60a5fa" radius={[0, 2, 2, 0]} barSize={9} />
+                  <Bar dataKey="nilaiKontrakM" name="nilaiKontrakM" fill="#2563eb" radius={[0, 2, 2, 0]} barSize={9} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-left border-collapse text-[10.5px]">
+                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th className="py-1.5 px-2">Kategori Pekerjaan</th>
+                    <th className="py-1.5 px-2 text-center">Paket</th>
+                    <th className="py-1.5 px-2 text-right">Pagu (M)</th>
+                    <th className="py-1.5 px-2 text-right">HPS (M)</th>
+                    <th className="py-1.5 px-2 text-right font-black text-slate-900">Kontrak (M)</th>
+                    <th className="py-1.5 px-2 text-right">Hemat (%)</th>
+                    <th className="py-1.5 px-2">Pekerjaan Utama</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {k5Data.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-1.5 px-2 font-sans font-medium text-slate-800">{row.kategoriPekerjaan}</td>
+                      <td className="py-1.5 px-2 text-center font-bold text-blue-700">{row.jumlahPaket}</td>
+                      <td className="py-1.5 px-2 text-right text-slate-600">Rp {row.nilaiPaguM.toFixed(1)}M</td>
+                      <td className="py-1.5 px-2 text-right text-sky-600">Rp {row.nilaiHpsM.toFixed(1)}M</td>
+                      <td className="py-1.5 px-2 text-right font-bold text-slate-900">Rp {row.nilaiKontrakM.toFixed(1)}M</td>
+                      <td className="py-1.5 px-2 text-right font-semibold text-emerald-600">+{row.efisiensiTenderPct}%</td>
+                      <td className="py-1.5 px-2 font-sans text-slate-600 max-w-[150px] truncate" title={row.jenisPekerjaanUtama}>
+                        {row.jenisPekerjaanUtama}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer Kecil */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
@@ -918,90 +1123,152 @@ export const PembangunanInfrastrukturVisualSuite: React.FC<
               </span>
             </div>
 
-            {/* Filter Bar: Tahun & Kategori Pekerjaan */}
-            <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[11px]">
-              <select
-                aria-label="Filter Tahun BSW"
-                value={k6Tahun}
-                onChange={(e) => setK6Tahun(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                {masterData.metadata.tahunList.slice(0, 2).map((th) => (
-                  <option key={th} value={th}>
-                    Tahun {th}
-                  </option>
-                ))}
-              </select>
+            {/* Filter Bar: Tahun & Kategori Pekerjaan + SheetSwapToggle */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1 text-[11px]">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <select
+                  aria-label="Filter Tahun BSW"
+                  value={k6Tahun}
+                  onChange={(e) => setK6Tahun(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.metadata.tahunList.slice(0, 2).map((th) => (
+                    <option key={th} value={th}>
+                      Tahun {th}
+                    </option>
+                  ))}
+                </select>
 
-              <select
-                aria-label="Filter Kategori BSW"
-                value={k6Kategori}
-                onChange={(e) => setK6Kategori(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
-              >
-                {masterData.metadata.kategoriBswList.map((k) => (
-                  <option key={k} value={k}>
-                    {k}
-                  </option>
-                ))}
-              </select>
+                <select
+                  aria-label="Filter Kategori BSW"
+                  value={k6Kategori}
+                  onChange={(e) => setK6Kategori(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded px-2 py-0.5 text-[11px] font-medium outline-none hover:bg-slate-100 cursor-pointer"
+                >
+                  {masterData.metadata.kategoriBswList.map((k) => (
+                    <option key={k} value={k}>
+                      {k}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <SheetSwapToggle mode={k6ViewMode} onChange={setK6ViewMode} />
             </div>
           </div>
 
-          {/* Table Section: 8 Paket Terbesar */}
-          <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto">
-            <table className="w-full text-[11px] text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 text-slate-500 font-bold bg-slate-50/80">
-                  <th className="py-1.5 px-2">Nama Paket</th>
-                  <th className="py-1.5 px-2">Kategori</th>
-                  <th className="py-1.5 px-2">PPK</th>
-                  <th className="py-1.5 px-2">Kontraktor</th>
-                  <th className="py-1.5 px-2 min-w-[130px]">Nilai Kontrak</th>
-                  <th className="py-1.5 px-2 text-right">Volume (m³)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {k6Data.map((row) => {
-                  const barPct = Math.round((row.nilaiKontrakM / maxKontrakBsw) * 100);
-                  return (
-                    <tr key={row.id} className="hover:bg-blue-50/40 transition-colors">
-                      <td className="py-1 px-2 font-bold text-slate-900 max-w-[170px] truncate" title={row.namaPaket}>
-                        {row.namaPaket}
-                      </td>
-                      <td className="py-1 px-2 whitespace-nowrap">
-                        <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
-                          {row.kategoriPekerjaan}
-                        </span>
-                      </td>
-                      <td className="py-1 px-2 text-slate-600 text-[10px] whitespace-nowrap">
-                        {row.ppk.replace('PPK ', '')}
-                      </td>
-                      <td className="py-1 px-2 text-slate-700 max-w-[120px] truncate" title={row.kontraktor}>
-                        {row.kontraktor}
-                      </td>
-                      <td className="py-1 px-2">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-mono text-slate-900 font-bold text-[10.5px] w-14 shrink-0">
-                            {formatRupiahMiliar(row.nilaiKontrakM)}
+          {/* Section: Chart or Detail Table */}
+          {k6ViewMode === 'chart' ? (
+            <div className="flex-1 w-full min-h-0 my-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={k6Data}
+                  margin={{ top: 5, right: 30, left: 140, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 9.5, fill: '#64748B', fontFamily: 'monospace' }}
+                    tickFormatter={(val) => `Rp ${val}M`}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="namaPaket"
+                    tick={{ fontSize: 9, fill: '#1E293B', fontWeight: 600 }}
+                    axisLine={{ stroke: '#E2E8F0' }}
+                    tickLine={false}
+                    width={135}
+                    tickFormatter={(val) => val.length > 22 ? `${val.substring(0, 22)}...` : val}
+                  />
+                  <Tooltip
+                    formatter={(val: any, name: any) => {
+                      const num = Number(val);
+                      return [formatRupiahMiliar(num), 'Nilai Kontrak'];
+                    }}
+                    labelFormatter={(label, items) => {
+                      const p = items && items[0]?.payload;
+                      if (p) {
+                        return `${label}\nKategori: ${p.kategoriPekerjaan} • PPK: ${p.ppk}\nKontraktor: ${p.kontraktor}\nVolume Cut & Fill: ${formatNumberId(p.volumePekerjaanM3)} m³`;
+                      }
+                      return `${label}`;
+                    }}
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                  <Bar
+                    dataKey="nilaiKontrakM"
+                    name="Nilai Kontrak"
+                    fill="#2563eb"
+                    radius={[0, 3, 3, 0]}
+                    barSize={14}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex-1 w-full min-h-0 my-1 overflow-x-auto overflow-y-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-[11px] text-left border-collapse">
+                <thead className="sticky top-0 bg-slate-100 text-slate-700 font-bold border-b border-slate-200 z-10">
+                  <tr>
+                    <th className="py-1.5 px-2">Nama Paket</th>
+                    <th className="py-1.5 px-2">Kategori</th>
+                    <th className="py-1.5 px-2">PPK</th>
+                    <th className="py-1.5 px-2">Kontraktor</th>
+                    <th className="py-1.5 px-2 min-w-[130px]">Nilai Kontrak</th>
+                    <th className="py-1.5 px-2 text-right">Volume (m³)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {k6Data.map((row) => {
+                    const barPct = Math.round((row.nilaiKontrakM / maxKontrakBsw) * 100);
+                    return (
+                      <tr key={row.id} className="hover:bg-blue-50/40 transition-colors">
+                        <td className="py-1 px-2 font-sans font-bold text-slate-900 max-w-[170px] truncate" title={row.namaPaket}>
+                          {row.namaPaket}
+                        </td>
+                        <td className="py-1 px-2 whitespace-nowrap font-sans">
+                          <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
+                            {row.kategoriPekerjaan}
                           </span>
-                          <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-blue-600 rounded-full"
-                              style={{ width: `${barPct}%` }}
-                            />
+                        </td>
+                        <td className="py-1 px-2 font-sans text-slate-600 text-[10px] whitespace-nowrap">
+                          {row.ppk.replace('PPK ', '')}
+                        </td>
+                        <td className="py-1 px-2 font-sans text-slate-700 max-w-[120px] truncate" title={row.kontraktor}>
+                          {row.kontraktor}
+                        </td>
+                        <td className="py-1 px-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono text-slate-900 font-bold text-[10.5px] w-14 shrink-0">
+                              {formatRupiahMiliar(row.nilaiKontrakM)}
+                            </span>
+                            <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-blue-600 rounded-full"
+                                style={{ width: `${barPct}%` }}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-1 px-2 text-right font-mono font-bold text-blue-700 whitespace-nowrap">
-                        {formatNumberId(row.volumePekerjaanM3)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        </td>
+                        <td className="py-1 px-2 text-right font-mono font-bold text-blue-700 whitespace-nowrap">
+                          {formatNumberId(row.volumePekerjaanM3)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Footer Kecil */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">

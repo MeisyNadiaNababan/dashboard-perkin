@@ -38,9 +38,20 @@ import {
   MuatanEmpuItem,
   RutePenerbanganLangsungItem,
 } from './kawasanBandaraData';
+import { SheetSwapToggle } from '../SheetSwapToggle';
 
 export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
   const db = KAWASAN_BANDARA_DATA;
+
+  // --------------------------------------------------------------------------
+  // SHEET SWAP VIEW MODES (GRAFIK VS TABEL DETAIL)
+  // --------------------------------------------------------------------------
+  const [k1ViewMode, setK1ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k2ViewMode, setK2ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k3ViewMode, setK3ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k4ViewMode, setK4ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k5ViewMode, setK5ViewMode] = useState<'chart' | 'table'>('chart');
+  const [k6ViewMode, setK6ViewMode] = useState<'chart' | 'table'>('chart');
 
   // --------------------------------------------------------------------------
   // FILTER STATES TIAP KARTU
@@ -446,81 +457,111 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
                     <option value="Berangkat">Berangkat (D)</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k1ViewMode} onChange={setK1ViewMode} />
               </div>
             </div>
 
-            {/* Stacked Column Chart */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={k1Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="triwulan"
-                    tick={{ fontSize: 11, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k`}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.triwulan} {item.tahun}</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              {item.totalPenumpang.toLocaleString('id-ID')} Pax
-                            </span>
+            {/* Stacked Column Chart vs Detail Table */}
+            {k1ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={k1Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="triwulan"
+                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k`}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.triwulan} {item.tahun}</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                {item.totalPenumpang.toLocaleString('id-ID')} Pax
+                              </span>
+                            </div>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Penumpang Dewasa:</span>
+                                <span className="font-mono font-bold">
+                                  {item.penumpangDewasa.toLocaleString('id-ID')}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-sky-700">
+                                <span>• Penumpang Anak:</span>
+                                <span className="font-mono font-bold">
+                                  {item.penumpangAnak.toLocaleString('id-ID')}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Penumpang Bayi:</span>
+                                <span className="font-mono font-bold">
+                                  {item.penumpangBayi.toLocaleString('id-ID')}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] bg-slate-50 p-1.5 rounded text-slate-600 space-y-0.5">
+                              <div className="font-semibold text-slate-800">Penumpang Transit:</div>
+                              <div className="flex justify-between">
+                                <span>Dewasa / Anak / Bayi:</span>
+                                <span className="font-mono font-bold">
+                                  {item.transitDewasa.toLocaleString('id-ID')} / {item.transitAnak.toLocaleString('id-ID')} / {item.transitBayi.toLocaleString('id-ID')}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-blue-600 font-bold">
+                                <span>Total Transit:</span>
+                                <span className="font-mono">{item.totalTransit.toLocaleString('id-ID')} Pax</span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Penumpang Dewasa:</span>
-                              <span className="font-mono font-bold">
-                                {item.penumpangDewasa.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-sky-700">
-                              <span>• Penumpang Anak:</span>
-                              <span className="font-mono font-bold">
-                                {item.penumpangAnak.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Penumpang Bayi:</span>
-                              <span className="font-mono font-bold">
-                                {item.penumpangBayi.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] bg-slate-50 p-1.5 rounded text-slate-600 space-y-0.5">
-                            <div className="font-semibold text-slate-800">Penumpang Transit:</div>
-                            <div className="flex justify-between">
-                              <span>Dewasa / Anak / Bayi:</span>
-                              <span className="font-mono font-bold">
-                                {item.transitDewasa.toLocaleString('id-ID')} / {item.transitAnak.toLocaleString('id-ID')} / {item.transitBayi.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-blue-600 font-bold">
-                              <span>Total Transit:</span>
-                              <span className="font-mono">{item.totalTransit.toLocaleString('id-ID')} Pax</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar dataKey="penumpangDewasa" stackId="a" fill="#2563eb" name="Dewasa" />
-                  <Bar dataKey="penumpangAnak" stackId="a" fill="#38bdf8" name="Anak" />
-                  <Bar dataKey="penumpangBayi" stackId="a" fill="#94a3b8" radius={[3, 3, 0, 0]} name="Bayi" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="penumpangDewasa" stackId="a" fill="#2563eb" name="Dewasa" />
+                    <Bar dataKey="penumpangAnak" stackId="a" fill="#38bdf8" name="Anak" />
+                    <Bar dataKey="penumpangBayi" stackId="a" fill="#94a3b8" radius={[3, 3, 0, 0]} name="Bayi" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Triwulan / Periode</th>
+                      <th className="py-2 px-2 text-right">Dewasa (Pax)</th>
+                      <th className="py-2 px-2 text-right">Anak (Pax)</th>
+                      <th className="py-2 px-2 text-right">Bayi (Pax)</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Total Penumpang</th>
+                      <th className="py-2 px-2 text-right text-emerald-700 bg-emerald-50/70">Total Transit</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k1Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.triwulan} {row.tahun}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.penumpangDewasa.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.penumpangAnak.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.penumpangBayi.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">{row.totalPenumpang.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">{row.totalTransit.toLocaleString('id-ID')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -602,109 +643,143 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
                     <option value="Internasional">Internasional</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k2ViewMode} onChange={setK2ViewMode} />
               </div>
             </div>
 
-            {/* Clustered Column + Line Chart */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={k2Data} margin={{ top: 10, right: 15, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="triwulan"
-                    tick={{ fontSize: 11, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <YAxis
-                    yAxisId="left"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <YAxis
-                    yAxisId="right"
-                    orientation="right"
-                    tick={{ fontSize: 10, fill: '#16a34a' }}
-                    domain={[60, 100]}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(v: number) => `${v}%`}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.triwulan} {k2Tahun}</span>
-                            <span className="font-mono text-emerald-600 font-black">
-                              LF: {item.keterisianKursiPersen}%
-                            </span>
+            {/* Clustered Column + Line Chart vs Detail Table */}
+            {k2ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={k2Data} margin={{ top: 10, right: 15, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="triwulan"
+                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tick={{ fontSize: 10, fill: '#16a34a' }}
+                      domain={[60, 100]}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(v: number) => `${v}%`}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.triwulan} {k2Tahun}</span>
+                              <span className="font-mono text-emerald-600 font-black">
+                                LF: {item.keterisianKursiPersen}%
+                              </span>
+                            </div>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Flight Datang:</span>
+                                <span className="font-mono font-bold">
+                                  {item.penerbanganDatang.toLocaleString('id-ID')}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Flight Berangkat:</span>
+                                <span className="font-mono font-bold">
+                                  {item.penerbanganBerangkat.toLocaleString('id-ID')}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-900 font-bold border-t border-slate-100 pt-1">
+                                <span>Total Pergerakan:</span>
+                                <span className="font-mono text-blue-600 font-black">
+                                  {item.totalPenerbangan.toLocaleString('id-ID')} Flight
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-500 pt-0.5">
+                                <span>Kapasitas Kursi:</span>
+                                <span className="font-mono">
+                                  {item.kapasitasKursi.toLocaleString('id-ID')} Kursi
+                                </span>
+                              </div>
+                            </div>
+                            {item.tipePesawatTerbanyak && (
+                              <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
+                                <span className="font-semibold text-slate-700">Tipe Pesawat Terbanyak:</span>
+                                <div className="font-mono text-slate-800 mt-0.5">{item.tipePesawatTerbanyak}</div>
+                              </div>
+                            )}
                           </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Flight Datang:</span>
-                              <span className="font-mono font-bold">
-                                {item.penerbanganDatang.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Flight Berangkat:</span>
-                              <span className="font-mono font-bold">
-                                {item.penerbanganBerangkat.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-900 font-bold border-t border-slate-100 pt-1">
-                              <span>Total Pergerakan:</span>
-                              <span className="font-mono text-blue-600 font-black">
-                                {item.totalPenerbangan.toLocaleString('id-ID')} Flight
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-500 pt-0.5">
-                              <span>Kapasitas Kursi:</span>
-                              <span className="font-mono">
-                                {item.kapasitasKursi.toLocaleString('id-ID')} Kursi
-                              </span>
-                            </div>
-                          </div>
-                          {item.tipePesawatTerbanyak && (
-                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
-                              <span className="font-semibold text-slate-700">Tipe Pesawat Terbanyak:</span>
-                              <div className="font-mono text-slate-800 mt-0.5">{item.tipePesawatTerbanyak}</div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="penerbanganDatang"
-                    fill="#2563eb"
-                    radius={[3, 3, 0, 0]}
-                    name="Penerbangan Datang"
-                  />
-                  <Bar
-                    yAxisId="left"
-                    dataKey="penerbanganBerangkat"
-                    fill="#64748b"
-                    radius={[3, 3, 0, 0]}
-                    name="Penerbangan Berangkat"
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="keterisianKursiPersen"
-                    stroke="#16a34a"
-                    strokeWidth={2.5}
-                    dot={{ r: 4, fill: '#16a34a', strokeWidth: 1.5, stroke: '#fff' }}
-                    name="Keterisian Kursi (%)"
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="penerbanganDatang"
+                      fill="#2563eb"
+                      radius={[3, 3, 0, 0]}
+                      name="Penerbangan Datang"
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey="penerbanganBerangkat"
+                      fill="#64748b"
+                      radius={[3, 3, 0, 0]}
+                      name="Penerbangan Berangkat"
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="keterisianKursiPersen"
+                      stroke="#16a34a"
+                      strokeWidth={2.5}
+                      dot={{ r: 4, fill: '#16a34a', strokeWidth: 1.5, stroke: '#fff' }}
+                      name="Keterisian Kursi (%)"
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Triwulan / Periode</th>
+                      <th className="py-2 px-2 text-right">Flight Datang</th>
+                      <th className="py-2 px-2 text-right">Flight Berangkat</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Total Pergerakan</th>
+                      <th className="py-2 px-2 text-right">Kapasitas Kursi</th>
+                      <th className="py-2 px-2 text-right text-emerald-700 bg-emerald-50/70">Load Factor (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k2Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.triwulan} {k2Tahun}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.penerbanganDatang.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.penerbanganBerangkat.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">{row.totalPenerbangan.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.kapasitasKursi.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">
+                            {row.keterisianKursiPersen}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -788,90 +863,131 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
                     <option value="TW IV">TW IV</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k3ViewMode} onChange={setK3ViewMode} />
               </div>
             </div>
 
-            {/* Horizontal Bar Chart (Top 10 Operators) */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k3Data}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="operator"
-                    tick={{ fontSize: 10, fill: '#334155' }}
-                    width={110}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: string) =>
-                      val.length > 15 ? `${val.slice(0, 15)}…` : val
-                    }
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as PenumpangOperatorItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.operator}</span>
-                            <span className="font-mono text-xs px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded font-bold">
-                              {item.kodeIcao} / {item.kodeIata}
-                            </span>
-                          </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Total Penumpang:</span>
-                              <span className="font-mono font-bold">
-                                {item.jumlahPenumpang.toLocaleString('id-ID')} Pax
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-slate-600">
-                              <span>• Pergerakan Penerbangan:</span>
-                              <span className="font-mono font-bold">
-                                {item.jumlahPenerbangan.toLocaleString('id-ID')} Flight
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-emerald-700 font-bold border-t border-slate-100 pt-1">
-                              <span>Pangsa Pasar:</span>
-                              <span className="font-mono font-black">{item.pangsaPersen}%</span>
-                            </div>
-                          </div>
-                          <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
-                            <span className="font-semibold text-slate-700">Rute Asal-Tujuan Terbanyak:</span>
-                            <div className="font-mono text-slate-800 mt-0.5">{item.ruteAsalTujuanTerbanyak}</div>
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="jumlahPenumpang"
-                    fill="#2563eb"
-                    radius={[0, 4, 4, 0]}
-                    name="Jumlah Penumpang"
+            {/* Horizontal Bar Chart (Top 10 Operators) vs Detail Table */}
+            {k3ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k3Data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
                   >
-                    {k3Data.map((_, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={index === 0 ? '#2563eb' : index < 3 ? '#3b82f6' : '#60a5fa'}
-                      />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="operator"
+                      tick={{ fontSize: 10, fill: '#334155' }}
+                      width={110}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: string) =>
+                        val.length > 15 ? `${val.slice(0, 15)}…` : val
+                      }
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as PenumpangOperatorItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.operator}</span>
+                              <span className="font-mono text-xs px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded font-bold">
+                                {item.kodeIcao} / {item.kodeIata}
+                              </span>
+                            </div>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Total Penumpang:</span>
+                                <span className="font-mono font-bold">
+                                  {item.jumlahPenumpang.toLocaleString('id-ID')} Pax
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600">
+                                <span>• Pergerakan Penerbangan:</span>
+                                <span className="font-mono font-bold">
+                                  {item.jumlahPenerbangan.toLocaleString('id-ID')} Flight
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-emerald-700 font-bold border-t border-slate-100 pt-1">
+                                <span>Pangsa Pasar:</span>
+                                <span className="font-mono font-black">{item.pangsaPersen}%</span>
+                              </div>
+                            </div>
+                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500">
+                              <span className="font-semibold text-slate-700">Rute Asal-Tujuan Terbanyak:</span>
+                              <div className="font-mono text-slate-800 mt-0.5">{item.ruteAsalTujuanTerbanyak}</div>
+                            </div>
+                          </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="jumlahPenumpang"
+                      fill="#2563eb"
+                      radius={[0, 4, 4, 0]}
+                      name="Jumlah Penumpang"
+                    >
+                      {k3Data.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={index === 0 ? '#2563eb' : index < 3 ? '#3b82f6' : '#60a5fa'}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2 text-center w-8">No</th>
+                      <th className="py-2 px-2.5">Maskapai Penerbangan</th>
+                      <th className="py-2 px-2 text-center">Kode</th>
+                      <th className="py-2 px-2 text-right">Flight</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Penumpang (Pax)</th>
+                      <th className="py-2 px-2 text-right text-emerald-700 bg-emerald-50/70">Pangsa (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k3Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-center font-mono text-slate-400">{idx + 1}</td>
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">
+                          <div>{row.operator}</div>
+                          <div className="text-[9.5px] font-normal text-slate-500 truncate max-w-[150px]">{row.ruteAsalTujuanTerbanyak}</div>
+                        </td>
+                        <td className="py-1.5 px-2 text-center">
+                          <span className="font-mono text-[9.5px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-bold">
+                            {row.kodeIata || row.kodeIcao}
+                          </span>
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.jumlahPenerbangan.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">{row.jumlahPenumpang.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">
+                            {row.pangsaPersen}%
+                          </span>
+                        </td>
+                      </tr>
                     ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -953,83 +1069,113 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
                     <option value="Berangkat">Berangkat</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k4ViewMode} onChange={setK4ViewMode} />
               </div>
             </div>
 
-            {/* Clustered Column Chart */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={k4Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="triwulan"
-                    tick={{ fontSize: 11, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000000).toFixed(1)}k T`}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.triwulan} {k4Tahun}</span>
-                            <span className="font-mono text-blue-600 font-black">
-                              Total: {(item.totalMuatanKg / 1000).toLocaleString('id-ID')} Ton
-                            </span>
+            {/* Clustered Column Chart vs Detail Table */}
+            {k4ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={k4Data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis
+                      dataKey="triwulan"
+                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000000).toFixed(1)}k T`}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.triwulan} {k4Tahun}</span>
+                              <span className="font-mono text-blue-600 font-black">
+                                Total: {(item.totalMuatanKg / 1000).toLocaleString('id-ID')} Ton
+                              </span>
+                            </div>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-slate-700">
+                                <span>• Bagasi Penumpang:</span>
+                                <span className="font-mono font-bold">
+                                  {item.bagasiKg.toLocaleString('id-ID')} Kg ({(item.bagasiKg / 1000).toFixed(0)} T)
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Kargo Logistik:</span>
+                                <span className="font-mono font-bold">
+                                  {item.kargoKg.toLocaleString('id-ID')} Kg ({(item.kargoKg / 1000).toFixed(0)} T)
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-amber-700">
+                                <span>• Pos Udara:</span>
+                                <span className="font-mono font-bold">
+                                  {item.posKg.toLocaleString('id-ID')} Kg ({(item.posKg / 1000).toFixed(1)} T)
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-slate-700">
-                              <span>• Bagasi Penumpang:</span>
-                              <span className="font-mono font-bold">
-                                {item.bagasiKg.toLocaleString('id-ID')} Kg ({(item.bagasiKg / 1000).toFixed(0)} T)
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Kargo Logistik:</span>
-                              <span className="font-mono font-bold">
-                                {item.kargoKg.toLocaleString('id-ID')} Kg ({(item.kargoKg / 1000).toFixed(0)} T)
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center text-amber-700">
-                              <span>• Pos Udara:</span>
-                              <span className="font-mono font-bold">
-                                {item.posKg.toLocaleString('id-ID')} Kg ({(item.posKg / 1000).toFixed(1)} T)
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="bagasiKg"
-                    fill="#64748b"
-                    radius={[3, 3, 0, 0]}
-                    name="Bagasi (Kg)"
-                  />
-                  <Bar
-                    dataKey="kargoKg"
-                    fill="#2563eb"
-                    radius={[3, 3, 0, 0]}
-                    name="Kargo (Kg)"
-                  />
-                  <Bar
-                    dataKey="posKg"
-                    fill="#f59e0b"
-                    radius={[3, 3, 0, 0]}
-                    name="Pos (Kg)"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="bagasiKg"
+                      fill="#64748b"
+                      radius={[3, 3, 0, 0]}
+                      name="Bagasi (Kg)"
+                    />
+                    <Bar
+                      dataKey="kargoKg"
+                      fill="#2563eb"
+                      radius={[3, 3, 0, 0]}
+                      name="Kargo (Kg)"
+                    />
+                    <Bar
+                      dataKey="posKg"
+                      fill="#f59e0b"
+                      radius={[3, 3, 0, 0]}
+                      name="Pos (Kg)"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5">Triwulan / Periode</th>
+                      <th className="py-2 px-2 text-right">Bagasi (Ton)</th>
+                      <th className="py-2 px-2 text-right text-blue-700">Kargo (Ton)</th>
+                      <th className="py-2 px-2 text-right text-amber-700">Pos (Ton)</th>
+                      <th className="py-2 px-2 text-right text-slate-900 bg-slate-200/60 font-black">Total Muatan (Ton)</th>
+                      <th className="py-2 px-2 text-right">Total (Kg)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k4Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">{row.triwulan} {k4Tahun}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-700">{row.bagasiTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">{row.kargoTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-amber-700 bg-amber-50/30">{row.posTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-black text-slate-900 bg-slate-100/70">{Math.round(row.totalMuatanKg / 1000).toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono text-slate-500 text-[9.5px]">{row.totalMuatanKg.toLocaleString('id-ID')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -1115,91 +1261,128 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
                     <option value="TW IV">TW IV</option>
                   </select>
                 </div>
+                <SheetSwapToggle mode={k5ViewMode} onChange={setK5ViewMode} />
               </div>
             </div>
 
-            {/* Clustered Bar Horizontal (Top 8 Operators) */}
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={k5Data}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fontSize: 10, fill: '#64748b' }}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k T`}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="operator"
-                    tick={{ fontSize: 10, fill: '#334155' }}
-                    width={110}
-                    tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val: string) =>
-                      val.replace('PT ', '').length > 15
-                        ? `${val.replace('PT ', '').slice(0, 15)}…`
-                        : val.replace('PT ', '')
-                    }
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const item = payload[0].payload as MuatanEmpuItem;
-                      return (
-                        <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
-                          <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
-                            <span>{item.operator}</span>
-                            <span className="font-mono text-blue-600 font-bold">
-                              {item.totalTon.toLocaleString('id-ID')} Ton
-                            </span>
-                          </div>
-                          <div className="space-y-0.5 text-[11px]">
-                            <div className="flex justify-between items-center text-blue-700">
-                              <span>• Muatan Kargo:</span>
-                              <span className="font-mono font-bold">
-                                {item.kargoTon.toLocaleString('id-ID')} Ton
+            {/* Clustered Bar Horizontal (Top 8 Operators) vs Detail Table */}
+            {k5ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k5Data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: number) => `${(val / 1000).toFixed(0)}k T`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="operator"
+                      tick={{ fontSize: 10, fill: '#334155' }}
+                      width={110}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                      tickFormatter={(val: string) =>
+                        val.replace('PT ', '').length > 15
+                          ? `${val.replace('PT ', '').slice(0, 15)}…`
+                          : val.replace('PT ', '')
+                      }
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        const item = payload[0].payload as MuatanEmpuItem;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-md text-xs space-y-1.5 max-w-xs">
+                            <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                              <span>{item.operator}</span>
+                              <span className="font-mono text-blue-600 font-bold">
+                                {item.totalTon.toLocaleString('id-ID')} Ton
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-amber-700">
-                              <span>• Muatan Pos:</span>
-                              <span className="font-mono font-bold">
-                                {item.posTon.toLocaleString('id-ID')} Ton
-                              </span>
+                            <div className="space-y-0.5 text-[11px]">
+                              <div className="flex justify-between items-center text-blue-700">
+                                <span>• Muatan Kargo:</span>
+                                <span className="font-mono font-bold">
+                                  {item.kargoTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-amber-700">
+                                <span>• Muatan Pos:</span>
+                                <span className="font-mono font-bold">
+                                  {item.posTon.toLocaleString('id-ID')} Ton
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-slate-600 pt-0.5 border-t border-slate-100">
+                                <span>Jenis Penerbangan:</span>
+                                <span className="font-semibold text-slate-800">{item.jenisPenerbangan}</span>
+                              </div>
                             </div>
-                            <div className="flex justify-between items-center text-slate-600 pt-0.5 border-t border-slate-100">
-                              <span>Jenis Penerbangan:</span>
-                              <span className="font-semibold text-slate-800">{item.jenisPenerbangan}</span>
+                            <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500 space-y-0.5">
+                              <div><span className="font-semibold text-slate-700">Tipe Pesawat:</span> {item.tipePesawat}</div>
+                              <div><span className="font-semibold text-slate-700">No Penerbangan:</span> {item.nomorPenerbanganContoh}</div>
                             </div>
                           </div>
-                          <div className="pt-1 mt-1 border-t border-slate-100 text-[10px] text-slate-500 space-y-0.5">
-                            <div><span className="font-semibold text-slate-700">Tipe Pesawat:</span> {item.tipePesawat}</div>
-                            <div><span className="font-semibold text-slate-700">No Penerbangan:</span> {item.nomorPenerbanganContoh}</div>
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="kargoTon"
-                    fill="#2563eb"
-                    name="Kargo (Ton)"
-                    radius={[0, 3, 3, 0]}
-                  />
-                  <Bar
-                    dataKey="posTon"
-                    fill="#f59e0b"
-                    name="Pos (Ton)"
-                    radius={[0, 3, 3, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                        );
+                      }}
+                    />
+                    <Bar
+                      dataKey="kargoTon"
+                      fill="#2563eb"
+                      name="Kargo (Ton)"
+                      radius={[0, 3, 3, 0]}
+                    />
+                    <Bar
+                      dataKey="posTon"
+                      fill="#f59e0b"
+                      name="Pos (Ton)"
+                      radius={[0, 3, 3, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2 text-center w-8">No</th>
+                      <th className="py-2 px-2.5">Perusahaan Ekspedisi (EMPU)</th>
+                      <th className="py-2 px-2 text-right text-blue-700">Kargo (Ton)</th>
+                      <th className="py-2 px-2 text-right text-amber-700">Pos (Ton)</th>
+                      <th className="py-2 px-2 text-right text-slate-900 bg-slate-200/60 font-black">Total (Ton)</th>
+                      <th className="py-2 px-2 text-center">Jenis Flight</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k5Data.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-center font-mono text-slate-400">{idx + 1}</td>
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">
+                          <div>{row.operator}</div>
+                          <div className="text-[9.5px] font-normal text-slate-500">Tipe: {row.tipePesawat}</div>
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">{row.kargoTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-amber-700 bg-amber-50/30">{row.posTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-black text-slate-900 bg-slate-100/70">{row.totalTon.toLocaleString('id-ID')}</td>
+                        <td className="py-1.5 px-2 text-center">
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-slate-100 text-slate-700">
+                            {row.jenisPenerbangan}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
@@ -1215,7 +1398,7 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
         </div>
 
         {/* ------------------------------------------------------------------ */}
-        {/* KARTU 6: Rute Penerbangan Langsung dari Batam (Tabel Ringkas)      */}
+        {/* KARTU 6: Rute Penerbangan Langsung dari Batam (Sheet Swap)         */}
         {/* ------------------------------------------------------------------ */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 flex flex-col justify-between">
           <div>
@@ -1243,51 +1426,93 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
               </div>
             </div>
 
-            {/* Subheader / Legend */}
+            {/* Subheader / Legend + Sheet Swap Toggle */}
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 text-[11px] text-slate-600">
               <span className="flex items-center gap-1 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-600" /> Frekuensi Penerbangan per Minggu
               </span>
-              <span className="text-[10px] text-slate-400">
-                10 Destinasi Teratas
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-slate-400 hidden sm:inline">10 Destinasi Teratas</span>
+                <SheetSwapToggle mode={k6ViewMode} onChange={setK6ViewMode} />
+              </div>
             </div>
 
-            {/* Tabel Ringkas 10 Baris dengan Mini Bar Inline */}
-            <div className="h-64 w-full overflow-y-auto pr-1">
-              <table className="w-full text-[11px]">
-                <thead>
-                  <tr className="border-b border-slate-200 text-slate-400 text-left font-medium">
-                    <th className="py-1 px-1.5">Kota Tujuan</th>
-                    <th className="py-1 px-1.5">Operator</th>
-                    <th className="py-1 px-1.5">Jenis</th>
-                    <th className="py-1 px-1.5 text-right">Frek/Minggu</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {k6Data.map((r, idx) => {
-                    const maxFrek = 126;
-                    const barWidth = Math.round((r.frekuensiPerMinggu / maxFrek) * 100);
-                    return (
-                      <tr
-                        key={idx}
-                        className="hover:bg-slate-50/80 transition-colors group"
-                        title={`${r.kotaTujuan} - ${r.namaBandara} | Operator: ${r.operator} | Load Factor: ${r.loadFactorPersen}%`}
-                      >
-                        <td className="py-1 px-1.5">
-                          <div className="font-semibold text-slate-900 truncate max-w-[120px] sm:max-w-[140px]">
-                            {r.kotaTujuan}
-                          </div>
-                          <div className="text-[9.5px] text-slate-400 font-mono">
-                            LF {r.loadFactorPersen}%
-                          </div>
+            {/* Visual Bar Chart vs Detail Table */}
+            {k6ViewMode === 'chart' ? (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={k6Data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 10, fill: '#64748b' }}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="kotaTujuan"
+                      tick={{ fontSize: 10, fill: '#334155' }}
+                      width={100}
+                      tickLine={false}
+                      axisLine={{ stroke: '#e2e8f0' }}
+                    />
+                    <Tooltip
+                      formatter={(val: any, name: any, item: any) => [
+                        `${val} flight/minggu (LF: ${item.payload.loadFactorPersen}%)`,
+                        `Frekuensi Rute (${item.payload.operator})`,
+                      ]}
+                      contentStyle={{
+                        backgroundColor: '#FFFFFF',
+                        borderColor: '#E2E8F0',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontFamily: 'sans-serif',
+                      }}
+                    />
+                    <Bar
+                      dataKey="frekuensiPerMinggu"
+                      fill="#2563eb"
+                      radius={[0, 4, 4, 0]}
+                      name="Frekuensi / Minggu"
+                    >
+                      {k6Data.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={index === 0 ? '#1d4ed8' : index < 3 ? '#2563eb' : '#60a5fa'}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-64 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead className="bg-slate-100 sticky top-0 font-bold text-slate-700 border-b border-slate-200 z-10">
+                    <tr>
+                      <th className="py-2 px-2 text-center w-8">No</th>
+                      <th className="py-2 px-2.5">Kota &amp; Bandara Tujuan</th>
+                      <th className="py-2 px-2">Operator Utama</th>
+                      <th className="py-2 px-2 text-center">Jenis</th>
+                      <th className="py-2 px-2 text-right text-blue-700 bg-blue-50/70">Frek/Minggu</th>
+                      <th className="py-2 px-2 text-right text-emerald-700 bg-emerald-50/70">Load Factor</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {k6Data.map((r, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-1.5 px-2 text-center font-mono text-slate-400">{idx + 1}</td>
+                        <td className="py-1.5 px-2.5 font-bold text-slate-900">
+                          <div>{r.kotaTujuan}</div>
+                          <div className="text-[9.5px] font-normal text-slate-500">{r.namaBandara}</div>
                         </td>
-                        <td className="py-1 px-1.5">
-                          <div className="text-slate-600 truncate max-w-[120px] sm:max-w-[160px]">
-                            {r.operator}
-                          </div>
-                        </td>
-                        <td className="py-1 px-1.5">
+                        <td className="py-1.5 px-2 text-slate-600 truncate max-w-[140px]">{r.operator}</td>
+                        <td className="py-1.5 px-2 text-center">
                           <span
                             className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
                               r.jenis === 'Domestik'
@@ -1295,28 +1520,23 @@ export const BadanPengelolaanKawasanBandaraDeepDive: React.FC = () => {
                                 : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                             }`}
                           >
-                            {r.jenis === 'Domestik' ? 'Dom' : 'Int'}
+                            {r.jenis}
                           </span>
                         </td>
-                        <td className="py-1 px-1.5 text-right font-mono">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <div className="w-12 bg-slate-100 h-1.5 rounded-full overflow-hidden shrink-0 hidden sm:block">
-                              <div
-                                className="bg-blue-600 h-full rounded-full"
-                                style={{ width: `${barWidth}%` }}
-                              />
-                            </div>
-                            <span className="font-black text-slate-900 font-mono text-[11px] shrink-0">
-                              {r.frekuensiPerMinggu}x
-                            </span>
-                          </div>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-blue-700 bg-blue-50/30">
+                          {r.frekuensiPerMinggu}x
+                        </td>
+                        <td className="py-1.5 px-2 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">
+                            {r.loadFactorPersen}%
+                          </span>
                         </td>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Footer Metadata */}
