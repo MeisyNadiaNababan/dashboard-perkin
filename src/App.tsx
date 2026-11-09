@@ -529,15 +529,15 @@ export default function App() {
             <button
               onClick={() => setIsUnitsDrawerOpen(true)}
               className="flex items-center gap-1 text-[#1F3864] hover:text-blue-700 font-bold hover:underline cursor-pointer"
-              title="Buka Direktori 24 Unit Kerja BP Batam"
+              title="Buka Direktori Dashboard Pimpinan & Deputi BP Batam"
             >
               <Layers className="w-3 h-3 text-[#4E79A7]" />
-              <span>Unit Aktif: {currentUnit.name} ({currentUnit.code})</span>
+              <span>Dashboard Aktif: {currentUnit.name} ({currentUnit.code})</span>
             </button>
             <span className="text-slate-300">|</span>
             <span className="hidden sm:inline font-mono text-emerald-700 font-bold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{BP_BATAM_24_UNITS.filter((u) => u.status === 'active').length} dari 24 Unit Aktif Siap Pakai</span>
+              <span>{BP_BATAM_24_UNITS.filter((u) => u.status === 'active').length} Dashboard Pimpinan &amp; Deputi Siap Pakai</span>
             </span>
             <span className="text-slate-300 hidden sm:inline">|</span>
             <span className="hidden md:inline font-mono">

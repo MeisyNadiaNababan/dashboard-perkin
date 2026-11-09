@@ -348,7 +348,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenUnitsDrawer}
               className="flex items-center gap-1.5 px-2.5 py-1 bg-[#1A3358] hover:bg-[#234575] text-white rounded-lg border border-blue-400/40 text-xs font-bold cursor-pointer transition-all shadow-xs"
-              title="Ganti Unit Kerja (24 Unit)"
+              title="Ganti Dashboard Pimpinan & Deputi (Kepala BP & Deputi A1-A7)"
             >
               <span className={`w-2 h-2 rounded-full ${
                 currentUnit.status === 'active'
@@ -371,14 +371,14 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right: Quick Action Buttons */}
         <div className="flex items-center gap-2 shrink-0 text-xs">
-          {/* 24 Units Directory Button */}
+          {/* Executive Dashboards Directory Button */}
           <button
             onClick={onOpenUnitsDrawer}
             className="flex items-center gap-1.5 text-xs bg-[#162D4D] hover:bg-[#203D68] text-sky-200 px-3 py-1.5 rounded-lg border border-sky-500/30 font-semibold cursor-pointer transition-all shadow-xs"
-            title={`Buka Direktori 24 Unit Kerja BP Batam (${activeUnitsCount} Aktif${onProgressUnitsCount > 0 ? `, ${onProgressUnitsCount} On Progress` : ''})`}
+            title={`Buka Direktori Dashboard Pimpinan & Deputi BP Batam (${activeUnitsCount} Aktif)`}
           >
             <Layers className="w-3.5 h-3.5 text-sky-400" />
-            <span>24 Unit Kerja</span>
+            <span>Pimpinan &amp; Deputi</span>
             <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-400/40">
               {activeUnitsCount} Aktif
             </span>

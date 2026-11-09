@@ -47,7 +47,14 @@ export const UnitsDrawer: React.FC<UnitsDrawerProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'active' | 'on_progress' | 'ready_to_build'>('ALL');
 
-  const categories = ['ALL', 'Pimpinan', 'Biro', 'Direktorat', 'Pusat', 'Badan Usaha', 'Satuan'];
+  // Dynamically derive active categories
+  const categories = useMemo(() => {
+    const cats = ['ALL'];
+    BP_BATAM_24_UNITS.forEach((u) => {
+      if (!cats.includes(u.category)) cats.push(u.category);
+    });
+    return cats;
+  }, []);
 
   // Realtime dynamic metrics computed from actual unit definitions
   const totalUnits = BP_BATAM_24_UNITS.length;
@@ -77,21 +84,21 @@ export const UnitsDrawer: React.FC<UnitsDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs font-sans select-none animate-in fade-in duration-150">
-      <div className="relative w-full max-w-2xl bg-white border border-slate-300 shadow-xl flex flex-col max-h-[72vh] overflow-hidden rounded-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/60 backdrop-blur-xs font-sans select-none animate-in fade-in duration-150">
+      <div className="relative w-full max-w-4xl bg-white border border-slate-300 shadow-2xl flex flex-col max-h-[82vh] overflow-hidden rounded-xl">
         {/* Top Header - Compact */}
-        <div className="bg-[#0F1E36] text-white px-3 py-1.5 flex items-center justify-between border-b border-slate-800">
+        <div className="bg-[#0F1E36] text-white px-3.5 py-2 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-extrabold text-[10px] shadow-xs border border-blue-400/30">
+            <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-extrabold text-xs shadow-xs border border-blue-400/30">
               {totalUnits}
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <h3 className="text-xs font-bold tracking-tight">
-                  Direktori 24 Unit Kerja BP Batam
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-bold tracking-tight">
+                  Direktori Dashboard Pimpinan &amp; Deputi BP Batam
                 </h3>
-                <span className="text-[8.5px] font-bold px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 rounded-full flex items-center gap-1">
-                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[9px] font-bold px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 rounded-full flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   {activeCount} Aktif
                 </span>
                 {onProgressCount > 0 && (
@@ -108,7 +115,7 @@ export const UnitsDrawer: React.FC<UnitsDrawerProps> = ({
             onClick={onClose}
             className="p-1 hover:bg-slate-800 text-slate-300 hover:text-white rounded cursor-pointer transition-colors"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -286,15 +293,15 @@ export const UnitsDrawer: React.FC<UnitsDrawerProps> = ({
         </div>
 
         {/* Drawer Footer - Realtime Active Count */}
-        <div className="px-3 py-1.5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] text-slate-600">
+        <div className="px-3.5 py-2 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] text-slate-600">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-bold text-slate-800">
-              Total: {totalUnits} Unit Kerja
+              Total: {totalUnits} Dashboard Pimpinan &amp; Deputi
             </span>
             <span className="text-slate-300 hidden sm:inline">|</span>
             <span className="text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{activeCount} Aktif</span>
+              <span>{activeCount} Siap Pakai &amp; Terintegrasi</span>
             </span>
             {onProgressCount > 0 && (
               <span className="text-amber-800 font-bold flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-300">
@@ -302,10 +309,6 @@ export const UnitsDrawer: React.FC<UnitsDrawerProps> = ({
                 <span>{onProgressCount} On Progress</span>
               </span>
             )}
-            <span className="text-slate-300 hidden sm:inline">|</span>
-            <span className="text-slate-500 text-[10px]">
-              {readyCount} Rancang
-            </span>
           </div>
 
           <div className="flex items-center gap-2">
