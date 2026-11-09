@@ -165,9 +165,9 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
 
         {/* KPI 3: EFISIENSI PENGENDALIAN KEHILANGAN AIR (NRW) - WHITE CARD */}
         <div
-          onClick={() => onSelectUnit?.('bu-spam-fasling')}
+          onClick={() => onSelectUnit?.('bu-rumah-sakit')}
           className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
-          title="Efisiensi Pengendalian Kehilangan Air / Non-Revenue Water (BU SPAM Fasling)"
+          title="Efisiensi Pengendalian Kehilangan Air / Non-Revenue Water"
         >
           <div className="flex items-center justify-between gap-1 mb-1">
             <span className="text-[11px] font-bold text-slate-800 tracking-tight truncate flex items-center gap-1.5">
@@ -192,7 +192,7 @@ export const PelayananUmumKpiRow: React.FC<PelayananUmumKpiRowProps> = ({
 
         {/* KPI 4: TINGKAT KEPATUHAN SERTIFIKASI & BAKU MUTU LINGKUNGAN - WHITE CARD */}
         <div
-          onClick={() => onSelectUnit?.('bu-spam-fasling')}
+          onClick={() => onSelectUnit?.('dit-pam-aset')}
           className="bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 px-2.5 py-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
           title="Kepatuhan Sertifikasi Mutu & Pengolahan Limbah KPLI B3"
         >

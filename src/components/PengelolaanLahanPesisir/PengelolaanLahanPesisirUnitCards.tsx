@@ -4,6 +4,7 @@ import {
   MapPin,
   Anchor,
   ShieldCheck,
+  Trees,
   TrendingUp,
   ArrowRight,
   ExternalLink,
@@ -32,6 +33,8 @@ export const PengelolaanLahanPesisirUnitCards: React.FC<
         return <Anchor className="w-5 h-5 text-cyan-600" />;
       case 'dit-pengendalian-lahan':
         return <ShieldCheck className="w-5 h-5 text-emerald-600" />;
+      case 'dit-lingkungan-hidup':
+        return <Trees className="w-5 h-5 text-emerald-700" />;
       default:
         return <Building2 className="w-5 h-5 text-blue-600" />;
     }
@@ -46,6 +49,8 @@ export const PengelolaanLahanPesisirUnitCards: React.FC<
         return 'border-t-4 border-t-cyan-600';
       case 'dit-pengendalian-lahan':
         return 'border-t-4 border-t-emerald-600';
+      case 'dit-lingkungan-hidup':
+        return 'border-t-4 border-t-emerald-700';
       default:
         return 'border-t-4 border-t-slate-600';
     }

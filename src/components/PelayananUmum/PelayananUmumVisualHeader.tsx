@@ -4,7 +4,7 @@ import {
   Building2,
   Stethoscope,
   Shield,
-  Droplets,
+  Megaphone,
   Layers,
   FileCode2,
   Download,
@@ -63,6 +63,14 @@ export const PelayananUmumVisualHeader: React.FC<VisualHeaderProps> = ({
             <button
               onClick={() => onSelectSubView('deep_dive')}
               className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer border border-white/10"
+              title="Klik untuk Deep-Dive Diseminasi Informasi"
+            >
+              <Megaphone className="w-3.5 h-3.5 text-blue-300" />
+              <span>Dit. Diseminasi Informasi</span>
+            </button>
+            <button
+              onClick={() => onSelectSubView('deep_dive')}
+              className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer border border-white/10"
               title="Klik untuk Deep-Dive RSBP"
             >
               <Stethoscope className="w-3.5 h-3.5 text-rose-300" />
@@ -76,15 +84,7 @@ export const PelayananUmumVisualHeader: React.FC<VisualHeaderProps> = ({
               <Shield className="w-3.5 h-3.5 text-amber-300" />
               <span>Dit. Pengamanan Aset (12 DS)</span>
             </button>
-            <button
-              onClick={() => onSelectSubView('deep_dive')}
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer border border-white/10"
-              title="Klik untuk Deep-Dive SPAM Fasling"
-            >
-              <Droplets className="w-3.5 h-3.5 text-cyan-300" />
-              <span>BU SPAM Fasling (91 DS)</span>
-            </button>
-            <span className="text-xs text-blue-300 font-mono hidden sm:inline">• Total 121 Dataset Terverifikasi</span>
+            <span className="text-xs text-blue-300 font-mono hidden sm:inline">• 3 Unit Deep-Dive Aktif</span>
           </div>
         </div>
 

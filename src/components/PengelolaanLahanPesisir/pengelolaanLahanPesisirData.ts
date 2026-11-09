@@ -449,4 +449,30 @@ export const UNIT_PILAR_LAHAN: UnitPilarLahanItem[] = [
       'Pipeline Penertiban SP 1, SP 2, SP 3 hingga SK Pembatalan',
     ],
   },
+  {
+    id: 'dit-lingkungan-hidup',
+    kode: 'DLHK',
+    nama: 'Direktorat Lingkungan Hidup dan Kehutanan',
+    namaPendek: 'Lingkungan & Kehutanan',
+    pejabat: 'Direktur Lingkungan Hidup dan Kehutanan',
+    paguDipa: 0,
+    paguFormatted: 'Rp 0 Miliar',
+    realisasiDipa: 0,
+    persenSerapan: 0,
+    jumlahDataset: 0,
+    halamanPdf: 'Atribut Dikosongkan',
+    deskripsi:
+      'Unit kerja pengampu pengelolaan kelestarian lingkungan hidup, tata kelola kawasan hutan, dan keberlanjutan ekosistem di kawasan KPBPB Batam.',
+    highlightMetrics: [
+      { label: 'Status Integrasi', value: 'Dikosongkan', subtext: 'Sesuai Arahan Perkin' },
+      { label: 'Dataset Aktif', value: '0 DS', subtext: 'Menunggu Pemetaan' },
+      { label: 'Visualisasi', value: 'Standby', subtext: 'Siap Integrasi Data' },
+    ],
+    keyCapabilities: [
+      'Pengelolaan Kelestarian Lingkungan Hidup',
+      'Tata Kelola & Konservasi Kawasan Hutan',
+      'Pengawasan Kepatuhan Lingkungan AMDAL / UKL-UPL',
+      'Keberlanjutan Ekosistem Spasial Kawasan Batam',
+    ],
+  },
 ];

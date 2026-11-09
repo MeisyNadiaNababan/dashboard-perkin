@@ -22,6 +22,7 @@ import {
   ArrowUpRight,
   Sparkles,
   Compass,
+  Trees,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -217,6 +218,12 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
       ? 'dit-pesisir-reklamasi'
       : selectedUnitId === 'dit-pengendalian-lahan' || selectedUnitId === 'pengendalian'
       ? 'dit-pengendalian-lahan'
+      : selectedUnitId === 'dit-lingkungan-hidup' ||
+        selectedUnitId === 'lingkungan-hidup' ||
+        selectedUnitId === 'dir-lingkungan-hidup' ||
+        selectedUnitId === 'dit-lingkungan-hidup-kehutanan' ||
+        selectedUnitId === 'dir-lingkungan-hidup-kehutanan'
+      ? 'dit-lingkungan-hidup'
       : 'dit-pertanahan';
 
   // Sheet Swap States for Dit. Pesisir & Reklamasi
@@ -229,19 +236,19 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3.5 font-sans">
-      {/* 1. Header with Tab Switcher for 3 Units (Identical to Deputi A2) */}
+      {/* 1. Header with Tab Switcher for 4 Units (Identical to Deputi A2) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div>
           <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
-            Unit Deep-Dive Center: Pengelolaan Pertanahan, Pesisir &amp; Pengendalian
+            Unit Deep-Dive Center: Pengelolaan Pertanahan, Pesisir, Pengendalian &amp; Lingkungan Hidup
           </h3>
           <p className="text-[11px] text-slate-500 mt-0.5">
-            Analisis granular 3 unit kerja pengampu Perkin DEP-A3 berdasarkan atribut Buku Satu Data BP Batam
+            Analisis granular unit kerja pengampu Perkin DEP-A3 berdasarkan atribut Buku Satu Data BP Batam
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="inline-flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80">
+        <div className="inline-flex flex-wrap items-center gap-1 bg-slate-100/90 p-1 rounded-xl self-start sm:self-auto border border-slate-200/80">
           <button
             onClick={() => onSelectUnit('dit-pertanahan')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
@@ -277,6 +284,19 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
           >
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Dit. Pengendalian (4 DS)</span>
+          </button>
+
+          <button
+            onClick={() => onSelectUnit('dit-lingkungan-hidup')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              activeUnit === 'dit-lingkungan-hidup'
+                ? 'bg-blue-600 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+            title="Direktorat Lingkungan Hidup dan Kehutanan"
+          >
+            <Trees className="w-3.5 h-3.5" />
+            <span>Dir. Lingkungan Hidup dan Kehutanan</span>
           </button>
         </div>
       </div>
@@ -843,6 +863,79 @@ export const PengelolaanLahanPesisirDeepDiveCenter: React.FC<
               <div className="pt-2 border-t border-slate-100 mt-2 flex items-center justify-between text-[10px] text-slate-500">
                 <span>Efektivitas Pengawasan: 89,4%</span>
                 <span className="font-bold text-emerald-700">422 Lokasi Terawasi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================================== */}
+      {/* 4. TAB KONTEN 4: DIR. LINGKUNGAN HIDUP DAN KEHUTANAN                  */}
+      {/* Atribut dan Visualisasi Data Dikosongkan Sementara Sesuai Permintaan  */}
+      {/* ==================================================================== */}
+      {activeUnit === 'dit-lingkungan-hidup' && (
+        <div className="space-y-4">
+          {/* Header Banner Unit */}
+          <div className="bg-slate-50/80 rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100/90 border border-emerald-200/90 flex items-center justify-center text-emerald-700 shrink-0 shadow-2xs">
+                <Trees className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-bold">
+                    DLHK
+                  </span>
+                  <h3 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
+                    Direktorat Lingkungan Hidup dan Kehutanan
+                  </h3>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                    DEP-A3
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Unit kerja pengampu pengelolaan lingkungan hidup, tata kelola kawasan hutan, dan keberlanjutan ekosistem KPBPB Batam
+                </p>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                Atribut &amp; Visualisasi Dikosongkan
+              </span>
+            </div>
+          </div>
+
+          {/* Area Kosong / Placeholder Canvas */}
+          <div className="bg-white rounded-xl border-2 border-dashed border-slate-200 p-8 sm:p-12 text-center flex flex-col items-center justify-center min-h-[360px]">
+            <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-4 shadow-2xs">
+              <Trees className="w-8 h-8 text-emerald-600/70" />
+            </div>
+
+            <h4 className="text-base font-bold text-slate-800 mb-1.5">
+              Belum Ada Atribut dan Visualisasi Data
+            </h4>
+            <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed mb-6">
+              Lembar kerja untuk <strong>Direktorat Lingkungan Hidup dan Kehutanan</strong> telah ditambahkan pada Unit Deep-Dive DEP-A3. Seluruh atribut kinerja dan visualisasi data saat ini dikosongkan terlebih dahulu sesuai arahan.
+            </p>
+
+            {/* Dotted Placeholder Slot Boxes */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl text-left">
+              <div className="p-3.5 rounded-lg border border-slate-200/80 bg-slate-50/50 flex flex-col justify-between h-24">
+                <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider">Slot Visualisasi 01</span>
+                <span className="text-xs text-slate-400 italic">Menunggu penetapan atribut dataset</span>
+                <span className="text-[9.5px] font-mono text-slate-300">Format: Chart / Table</span>
+              </div>
+              <div className="p-3.5 rounded-lg border border-slate-200/80 bg-slate-50/50 flex flex-col justify-between h-24">
+                <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider">Slot Visualisasi 02</span>
+                <span className="text-xs text-slate-400 italic">Menunggu penetapan atribut dataset</span>
+                <span className="text-[9.5px] font-mono text-slate-300">Format: Chart / Table</span>
+              </div>
+              <div className="p-3.5 rounded-lg border border-slate-200/80 bg-slate-50/50 flex flex-col justify-between h-24">
+                <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider">Slot Visualisasi 03</span>
+                <span className="text-xs text-slate-400 italic">Menunggu penetapan atribut dataset</span>
+                <span className="text-[9.5px] font-mono text-slate-300">Format: Chart / Table</span>
               </div>
             </div>
           </div>

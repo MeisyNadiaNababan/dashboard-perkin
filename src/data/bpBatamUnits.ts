@@ -115,6 +115,7 @@ export const BP_BATAM_24_UNITS: BpBatamUnit[] = [
       'Dit. Pengelolaan Lahan (15 Dataset - Hal 6-8): SKPT/SPPT, Pecah/Revisi PL, Hak Atas Tanah, 9 SWP',
       'Dit. Kawasan Pesisir & Reklamasi (4 Dataset - Hal 13-14): PKKPRL, Perizinan Reklamasi 162,8 Ha, Zonasi',
       'Dit. Pengendalian Lahan (4 Dataset - Hal 11): Pengawasan 93,8%, Rekuperasi 94,6 Ha, Evaluasi SP 1-3',
+      'Dir. Lingkungan Hidup dan Kehutanan (Atribut Data Dikosongkan Sementara)',
     ],
   },
   {

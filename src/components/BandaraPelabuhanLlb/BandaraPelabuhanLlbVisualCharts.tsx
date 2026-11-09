@@ -371,43 +371,19 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                       <span className="text-[10px] font-bold text-slate-800">
                         Tren Skor IKM Gabungan (2021 - 2026)
                       </span>
-                      <SheetSwapToggle mode={ikmTrendViewMode} onChange={setIkmTrendViewMode} />
                     </div>
-                    {ikmTrendViewMode === 'chart' ? (
-                      <div className="h-24 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={IKM_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                            <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                            <YAxis domain={[75, 95]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                            <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor IKM']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                            <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} name="Target" />
-                            <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} name="Realisasi IKM" />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                    ) : (
-                      <div className="h-24 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                        <table className="w-full text-left text-[10px] border-collapse">
-                          <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[9px] z-10 border-b border-slate-200">
-                            <tr>
-                              <th className="px-2 py-1">Tahun</th>
-                              <th className="px-2 py-1 text-right">Target</th>
-                              <th className="px-2 py-1 text-right">Realisasi IKM</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {IKM_TREND_ANNUAL.map((t, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50">
-                                <td className="px-2 py-0.5 font-mono font-bold">{t.tahun}</td>
-                                <td className="px-2 py-0.5 text-right font-mono text-slate-500">{t.target.toFixed(1)}</td>
-                                <td className="px-2 py-0.5 text-right font-mono font-bold text-blue-600">{t.skor.toFixed(1)}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={IKM_TREND_ANNUAL} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis dataKey="tahun" tick={{ fontSize: 8, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <YAxis domain={[75, 95]} tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any) => [`${v} Poin`, 'Skor IKM']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Line type="monotone" dataKey="target" stroke="#94A3B8" strokeDasharray="3 3" strokeWidth={1.5} dot={false} name="Target" />
+                          <Line type="monotone" dataKey="skor" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: '#2563EB' }} name="Realisasi IKM" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
 
                   {/* Box 2: Capaian Nilai vs Bobot Lokus */}
@@ -416,49 +392,25 @@ export const BandaraPelabuhanLlbVisualCharts: React.FC<
                       <span className="text-[10px] font-bold text-slate-800">
                         Capaian Nilai vs Bobot 5 Lokus Layanan
                       </span>
-                      <SheetSwapToggle mode={ikmBarViewMode} onChange={setIkmBarViewMode} />
                     </div>
-                    {ikmBarViewMode === 'chart' ? (
-                      <div className="h-24 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={IKM_LOKUS_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                            <XAxis
-                              dataKey="komponen"
-                              tick={{ fontSize: 7, fill: '#64748B' }}
-                              axisLine={false}
-                              tickLine={false}
-                              tickFormatter={(val) => val.split(' ')[0]}
-                            />
-                            <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                            <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'bobot' ? 'Bobot (%)' : 'Nilai IKM']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
-                            <Bar dataKey="bobot" fill="#CBD5E1" radius={[2, 2, 0, 0]} name="bobot" />
-                            <Bar dataKey="nilai" fill="#3B82F6" radius={[2, 2, 0, 0]} name="nilai" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    ) : (
-                      <div className="h-24 w-full overflow-y-auto overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                        <table className="w-full text-left text-[10px] border-collapse">
-                          <thead className="sticky top-0 bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider text-[9px] z-10 border-b border-slate-200">
-                            <tr>
-                              <th className="px-2 py-1">Lokus</th>
-                              <th className="px-2 py-1 text-right">Bobot</th>
-                              <th className="px-2 py-1 text-right">Nilai</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {IKM_LOKUS_TABLE_DATA.map((row, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50">
-                                <td className="px-2 py-0.5 truncate max-w-[120px] font-medium">{row.komponen}</td>
-                                <td className="px-2 py-0.5 text-right font-mono text-slate-500">{row.bobot}%</td>
-                                <td className="px-2 py-0.5 text-right font-mono font-bold text-blue-600">{row.nilai.toFixed(2)}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
+                    <div className="h-24 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={IKM_LOKUS_TABLE_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                          <XAxis
+                            dataKey="komponen"
+                            tick={{ fontSize: 7, fill: '#64748B' }}
+                            axisLine={false}
+                            tickLine={false}
+                            tickFormatter={(val) => val.split(' ')[0]}
+                          />
+                          <YAxis tick={{ fontSize: 7.5, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(v: any, name: any) => [`${v}`, name === 'bobot' ? 'Bobot (%)' : 'Nilai IKM']} contentStyle={{ fontSize: '10px', borderRadius: '6px' }} />
+                          <Bar dataKey="bobot" fill="#CBD5E1" radius={[2, 2, 0, 0]} name="bobot" />
+                          <Bar dataKey="nilai" fill="#3B82F6" radius={[2, 2, 0, 0]} name="nilai" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 </div>
               </div>
